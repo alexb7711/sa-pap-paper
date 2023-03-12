@@ -1,10 +1,7 @@
-milp-approach.bbl
-milp-approach.dvi
-milp-approach.tex
-milp-approach.tex~
-preamble.pdf
-preamble.tex
-preamble.tex~
+*.bbl
+*.dvi
+*.tex
+*.tex~
 img/berth.aux
 img/berth.tex
 img/find-free.aux

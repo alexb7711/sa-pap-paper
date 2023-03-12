@@ -1,8 +1,6 @@
 #+name: eq:constraints
-#+begin_export latex
 \begin{multicols}{2}
 \begin{subequations}
-\label{eq:constraints}
   \begin{equation}
       \label{seq:c0}
       u_i - d_j - (\sigma_{ij} - 1)T \ge 0
@@ -77,4 +75,3 @@
   \end{equation}
 \end{subequations}
 \end{multicols}
-#+end_export
