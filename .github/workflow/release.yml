@@ -1,0 +1,19 @@
+name: LaTeX Release
+
+on:
+  push:
+    tags: 'v*.**'
+
+jobs:
+  pre-release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
+    - uses: arduino/setup-task@v1
+    - run: task clean && task
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "sa-pap.pdf"
+        # bodyFile: "README.org"
