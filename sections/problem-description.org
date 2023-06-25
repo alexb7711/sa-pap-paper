@@ -12,7 +12,7 @@ into, $v_i$, and the initial State Of Charge (SOC), $\eta_i$.
 
 It is assumed that each visit occurs over the time horizon $T = \{t : t_0 \le t \le t_f \}$. The set of all arrivals is
 represented by the set $\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}$. The
-concept of "arrivals" is derived from the PAP [[cite:&qarebagh-2019-optim-sched]]. This idea of arrivals is useful in the
+concept of "arrivals" is derived from the PAP [cite:@qarebagh-2019-optim-sched]. This idea of arrivals is useful in the
 sense that it is easy to describe the state of any arbitrary arrival; however, although a bus may revisit the station
 multiple times, the model assumes that each arrival is unique (i.e. no two bus arrives twice) therefore a system must be
 put in place to track each bus over each arrival. That is why a bus identifier is placed in the tuple, and in that way
@@ -24,7 +24,7 @@ buses charging simultaneously. The amount of time the bus is allowed to charge i
 and required departure time, $[a_i, e_i]$. Although a bus must be placed in a queue, if a bus does not require much
 charge, or none at all, partial charges, or no charging, is allowed. It is not allowed for the bus to charge over its
 battery capacity limit. The battery charging rate is modeled as linear, which remains accurate up to about an SOC of 80%
-charge [[cite:li-2016-batter-elect]].
+charge [cite:@li-2016-batter-elect].
 
 Each bus arrival, with the exception of the last arrival for each bus, has a paired "route" that the bus must perform.
 This route, as one would expect, causes the bus to discharge by some certain amount. This paper assumes an average

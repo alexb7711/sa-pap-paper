@@ -151,11 +151,11 @@ arrives for visit $i$.
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$ (i.e. cost of
 using the charger multiplied by the usage time). The second term is the penalty function that is either enabled or
-disabled by $\phi_i$ [[cite:&luenberger-2008-penal-barrier-method]]. $\phi_i$ is enabled when the initial charge, $\eta_i$, is less
+disabled by $\phi_i$ [cite:@luenberger-2008-penal-barrier-method]. $\phi_i$ is enabled when the initial charge, $\eta_i$, is less
 than the allowed minimum charge, $m\kappa_{b_i}$. This is further discussed in [[#sec:constraints]]. Note that the variables
 $\phi_i$ and $\eta_i$ are both decision variables that are being multiplied together. This is called a bilinear term. Using a
-traditional MILP solver, this would require linearization [[cite:&rodriguez-2013-compar-asses]]; however, because SA handles
-nonlinearities easily these bilinear terms will be ignored [[cite:&radosavljevic-2018-metah-optim]].
+traditional MILP solver, this would require linearization [cite:@rodriguez-2013-compar-asses]; however, because SA handles
+nonlinearities easily these bilinear terms will be ignored [cite:@radosavljevic-2018-metah-optim].
 
 The demand cost quantifies the amount of power being used over a given period and adjusts the cost accordingly. The
 consumption cost calculates the total amount of power being consumed by the chargers. The consumption cost is merely the

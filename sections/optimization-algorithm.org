@@ -5,7 +5,7 @@
 This final section combines the generation algorithms and the optimization problem into a single algorithm. It begins
 with an introduction to a general SA algorithm which will be used to springboard into the construction of the SA PAP
 algorithm. For the case of the pseudo SA algorithm to be presented, the notation pesented will be self-contained and not
-related to any of the variables presented for SA PAP thus far. Consider [[alg:sa-pseudo]] [[cite:&henderson-1989-theor-pract]].
+related to any of the variables presented for SA PAP thus far. Consider [[alg:sa-pseudo]] [cite:@henderson-1989-theor-pract].
 $\omega$ and $\omega'$ are the current solution and the candidate solution, respectively. $t_k$ is the temperature cooling
 schedule, $T$ is the initial temperature that will iterate until $k = K$. $M_k$ is the repetition counter, it defines
 the number of iterations to execute for each temperture $t_k$.
@@ -93,4 +93,3 @@ updates the current solution with the candidate solution depending on the fitnes
         }     % For \Tau
     }         % Begin
 \end{algorithm}
-

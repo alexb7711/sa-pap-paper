@@ -3,12 +3,12 @@
 #+EMAIL: A01704744@usu.edu
 #+LANGUAGE: en
 
-# =========================================================================================================================
+# ======================================================================================================================
 # Preamble
 
 #+include: sections/preamble.org
 
-# =========================================================================================================================
+# ======================================================================================================================
 # Document
 
 #+include: sections/introduction.org
@@ -17,7 +17,9 @@
 #+include: sections/simulated-annealing.org
 #+include: sections/optimization-algorithm.org
 
-bibliographystyle:plain
-bibliography:~/Documents/literature/ref.bib
+* References
+#+bibliographystyle:plain
+#+bibliography:~/Documents/literature/ref.bib
+#+print_bibliography:
 
 #  LocalWords:  SA
