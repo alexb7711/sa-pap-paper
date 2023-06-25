@@ -5,7 +5,7 @@ version: '3'
 
 env:
   TARGET : sa-pap.pdf
-  IMG_DIR: ./sections/img
+  IMG_DIR: ./sections/img/
   DOC    : main    																															# Name of main source file
 
 ################################################################################
@@ -41,12 +41,13 @@ tasks:
       - ./img/*.png
     vars:
       IMG_SRC:
-        sh: ls {{.IMG_DIR}} | grep ".puml$"
+        sh: ls {{.IMG_DIR}} | grep ".puml"
     cmds:
       - |
-        for i in {{.IMG_SRC | catLines}}
+        for f in {{.IMG_SRC | catLines}}
         do
-          plantuml -tpng ${f}
+          echo "Compiling ${f}"
+          plantuml -tpng {{.IMG_DIR}}/${f}
         done
     silent: true
 
@@ -82,4 +83,4 @@ tasks:
         # Clean up the document files
         rm -f {{.TARGET}}
         latexmk -silent -c {{.DOC_SRC}}
-    silent: false
+    silent: true

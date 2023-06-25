@@ -7,6 +7,7 @@
 *.log
 *.out
 *.toc
+*.pdf
 img/berth.aux
 img/berth.tex
 img/find-free.aux
@@ -33,3 +34,4 @@ sections/img/route_generation.utxt
 sections/img/route_yaml.png
 sections/img/route_yaml.utxt
 sections/img/schedule_yaml.png
+.task/
