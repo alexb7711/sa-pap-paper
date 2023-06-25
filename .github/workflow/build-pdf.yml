@@ -1,0 +1,19 @@
+name: LaTeX Build
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_call:
+
+jobs:
+  build:
+    name: "Build PDF"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk plantuml
+    - uses: arduino/setup-task@v1
+    - run: task clean && task
+    - uses: actions/upload-artifact@v3
+      with:
+        path: ./sa-pap.pdf
