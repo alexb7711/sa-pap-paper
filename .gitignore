@@ -6,7 +6,6 @@
 *.fls
 *.log
 *.out
-*.tex
 *.toc
 img/berth.aux
 img/berth.tex

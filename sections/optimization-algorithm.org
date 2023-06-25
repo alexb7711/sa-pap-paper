@@ -1,0 +1,95 @@
+* Optimization Algorithm
+:PROPERTIES:
+:CUSTOM_ID: optimization-algorithm
+:END:
+This final section combines the generation algorithms and the optimization problem into a single algorithm. It begins
+with an introduction to a general SA algorithm which will be used to springboard into the construction of the SA PAP
+algorithm. For the case of the pseudo SA algorithm to be presented, the notation pesented will be self-contained and not
+related to any of the variables presented for SA PAP thus far. Consider [[alg:sa-pseudo]] [cite:@henderson-1989-theor-pract].
+$\omega$ and $\omega'$ are the current solution and the candidate solution, respectively. $t_k$ is the temperature cooling
+schedule, $T$ is the initial temperature that will iterate until $k = K$. $M_k$ is the repetition counter, it defines
+the number of iterations to execute for each temperture $t_k$.
+
+The algorithm behaves as follows: initialize the SA algorithm with an initial solution, temperature schedule, and
+repetition schedule. The first loops until $T = t_K$, the second loop finished whin $m = M_k$. For each loop, create a
+new solution, calculate the difference in the fitness of $\omega$ and $\omega'$. Update $\omega$ with $\omega'$ if the candidate solution is
+better. Update $\omega$ with $\omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$ if the candidate solution is worse than the
+current solution. This is repeated until the stopping criteria is met.
+
+#+name: alg:sa-pseudo
+\begin{algorithm}[H]
+\caption{Pseudo-code for SA}
+    \LinesNumbered
+    \TitleOfAlgo{SA Pseudo-Code}
+
+    \SetKwFunction{f}{f}
+    \Begin
+    {
+        Select an initial solution $\omega \in W$\;
+        Select the temperature change counter $k=0$\;
+        Select a temperature cooling schedule $t_k$\;
+        Select an initial temperature $T = t_0 \geq 0$\;
+        Set the initial inactive time for each charger to the time horizon $\forall q \in \Qset : \C_q \in \{[0,T]\}$\;
+        Select a repetition schedule $M_k$, that defines the number of iterations executed at each temerature $t_k$\;
+
+        \While{Stopping criterion not met}
+        {
+            Set repetition counter $m \rightarrow 0$\;
+            \While{$m = M_k$}
+            {
+                Generate a new solution $\omega' \in N(\omega)$\;
+                Calculate $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$}\;
+                \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
+                \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
+                $m \rightarrow m+1$\;
+            }
+
+        $k \rightarrow k+1$\;
+        }
+    }
+\end{algorithm}
+
+The objective now is to outline SA-PAP in [[alg:sa-pap]]. Lines 2-4 initialize the SA algorithm by defining the initial
+temperature, selecting the cooling schedule, and setting the repetition schedule. Line 5 loops through each of the step
+in the temperature schedule $\Tau \in \{ \Tau_0, \Tau_1, ..., \Tau_m \}$. Lines 6 and 7 generate a new solution and
+calculates its fitness. $\nu$ in this context is defined as $\nu = (u, d, v, \eta)$ Lines 8 through 13 updates the solution
+depending on if the new solution is better or worse than the previous solution. Line 14 iterates through the repetition
+schedule, $k \in \{1, 2, ..., K\}$. Lines 15-23 perturbs the previously generated solution, calculates its fitness, and
+updates the current solution with the candidate solution depending on the fitness.
+
+#+name: alg:sa-pap
+\begin{algorithm}[H]
+\caption{Simulated annealing approach to the position allocation problem}
+    \LinesNumbered
+    \TitleOfAlgo{SA PAP}
+    \KwIn{$\I$}
+    \KwOut{$\I'$}
+
+    \SetKwFunction{CoolingEquation}{CoolingEquation}
+    \SetKwFunction{ScheduleGeneration}{ScheduleGeneration}
+    \SetKwFunction{PerturbSchedule}{PerturbSchedule}
+    \SetKwFunction{J}{J}
+
+    \Begin
+    {
+        Initialize temperature $\Tau_0$\;
+        Select cooling equation $\Tau_{M} \leftarrow$ \CoolingEquation{$\Tau_0$}\;
+        Set a repetition schedule $K$\;
+
+        \For{$\Tau_m \in \{\Tau_0, \Tau_1, ..., \Tau_M\}$}
+        {
+            Generate a new solution $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$}\;
+            Calculate $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$}\;
+            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
+            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
+
+            \For{$k \in \{1, 2, ..., K\}$}
+            {
+                Perturb the solution and reassess $\upsilon' \in Y \leftarrow$ \PerturbSchedule{$\I$}\;
+                Calculate $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$}\;
+                \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
+                \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
+            } % For k
+        }     % For \Tau
+    }         % Begin
+\end{algorithm}
