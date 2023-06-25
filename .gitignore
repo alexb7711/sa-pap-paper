@@ -1,7 +1,13 @@
 *.bbl
 *.dvi
-*.tex
 *.tex~
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.tex
+*.toc
 img/berth.aux
 img/berth.tex
 img/find-free.aux
