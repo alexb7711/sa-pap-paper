@@ -29,6 +29,8 @@ tasks:
         latexmk --version >/dev/null 2>&1 && (echo "latexmk installed!") || (echo "ERROR: latexmk is required."; exit 1)
         pdflatex --version >/dev/null 2>&1 && (echo "pdflatex installed!") || (echo "ERROR: pdflatex is required."; exit 1)
         plantuml --version >/dev/null 2>&1 && (echo "plantuml installed!") || (echo "ERROR: plantuml is required."; exit 1)
+        plantuml --version
+        plantuml --version >/dev/null 2>&1 && (echo "plantuml installed!") || (echo "ERROR: plantuml is required."; exit 1)
     silent: true
 
 ##==============================================================================
