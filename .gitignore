@@ -19,3 +19,17 @@ img/spacial-temporal-constr.fdb_latexmk
 img/spacial-temporal-constr.fls
 img/spacial-temporal-constr.log
 img/spacial-temporal-constr.tex
+sections/img/charge_perturb.png
+sections/img/charge_perturb.utxt
+sections/img/charge_solution.png
+sections/img/charge_solution.utxt
+sections/img/feh_043708_000001_route_generation.png
+sections/img/general_yaml.png
+sections/img/general_yaml.utxt
+sections/img/program_overview.png
+sections/img/program_overview.utxt
+sections/img/route_generation.png
+sections/img/route_generation.utxt
+sections/img/route_yaml.png
+sections/img/route_yaml.utxt
+sections/img/schedule_yaml.png
