@@ -46,8 +46,11 @@ tasks:
       - |
         for f in {{.IMG_SRC | catLines}}
         do
-          echo "Compiling ${f}"
-          [ $f != "general_yaml.puml" ] && plantuml -tpng {{.IMG_DIR}}/${f}
+          if [ $f != "general_yaml.puml" ] && [ $f != "route_yaml.puml" ]
+          then
+            echo "Compiling ${f}"
+            plantuml -tpng {{.IMG_DIR}}/${f}
+          fi
         done
     silent: true
 
