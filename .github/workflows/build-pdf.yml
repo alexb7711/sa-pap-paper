@@ -19,7 +19,7 @@ jobs:
         version: 3.x
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Plantuml
-      uses: cloudbees/plantuml-github-action@master
+      uses: holowinski/plantuml-github-action@main
       with:
         args: -v -tpng "sections/img/*.pml"
     - name: Build PDF
