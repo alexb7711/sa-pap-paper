@@ -22,8 +22,6 @@ jobs:
       uses: cloudbees/plantuml-github-action@master
       with:
         args: -v -tpng "sections/img/*.puml"
-    - name: Move Images
-      run: mv "/github/workspace/sections/img" "sections/img"
     - name: Build PDF
       run: task clean && task
     - name: Upload Artifact
