@@ -22,8 +22,8 @@ jobs:
       uses: cloudbees/plantuml-github-action@master
       with:
         args: -v -tpng ./sections/img/*.puml
-    - name: Build PDF
-      # run: task clean && task
+    # - name: Build PDF
+    #    run: task clean && task
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
