@@ -18,12 +18,16 @@ jobs:
       with:
         version: 3.x
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Plantuml
-      uses: cloudbees/plantuml-github-action@master
+    - name: Clean Project
+      run: task clean
+    - name: List Project
+      run: ls -R
+    - name: PlantUML
+      uses: holowinski/plantuml-github-action@main
       with:
-        args: -v -tpng -o "./sections/img/" "./sections/img/*.puml"
+        args: -v -tpng "sections/img/*.pml"
     - name: Build PDF
-      run: task clean && task
+      run: task
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "sa-pap.pdf"
