@@ -11,23 +11,19 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Update and Intall Dependencies 
-      run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
+    # - name: Update and Intall Dependencies 
+    #   run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
     - name: Setup go-task
       uses: arduino/setup-task@v1
       with:
         version: 3.x
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Plantuml
-      id: plantuml
-      uses: grassedge/generate-plantuml-action@master
-      with:
-        path: ./sections/img/
-        message: "Render PlantUML files"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: cloudbees/plantuml-github-action@master
+        with:
+            args: -v -tpng ./sections/img/*.puml
     - name: Build PDF
-      run: task clean && task
+      # run: task clean && task
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
