@@ -20,6 +20,8 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Clean Project
       run: task clean
+    - name: List Project
+      run: ls -R
     - name: PlantUML
       uses: holowinski/plantuml-github-action@main
       with:
