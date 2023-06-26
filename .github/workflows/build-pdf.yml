@@ -11,22 +11,22 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Update and Intall Dependencies 
-      run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
-    - name: Setup go-task
-      uses: arduino/setup-task@v1
-      with:
-        version: 3.x
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Update and Intall Dependencies 
+    #   run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
+    # - name: Setup go-task
+    #   uses: arduino/setup-task@v1
+    #   with:
+    #     version: 3.x
+    #     repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: PlantUML
       uses: holowinski/plantuml-github-action@main
       with:
         args: -v -tpng "sections/img/*.pml"
     - name: Move PlantUML
-      run: mv ".github/workspaces/sections/img/" "sections/"
-    - name: Build PDF
-      run: task clean && task
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./sa-pap.pdf
+      run: ls -R
+    # - name: Build PDF
+    #   run: task clean && task
+    # - name: Upload Artifact
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     path: ./sa-pap.pdf
