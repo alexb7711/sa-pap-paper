@@ -21,7 +21,7 @@ jobs:
     - name: Plantuml
       uses: cloudbees/plantuml-github-action@master
       with:
-        args: -v -tpng ./sections/img/*.puml
+        args: -v -tpng -o "./sections/img/" "./sections/img/*.puml"
     - name: Build PDF
       run: task clean && task
     - name: Upload Artifact
