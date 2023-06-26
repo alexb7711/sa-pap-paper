@@ -16,7 +16,6 @@ tasks:
   default:
     cmds:
       - task: precheck
-      - task: images
       - task: pdf
 
 ##==============================================================================
@@ -28,7 +27,6 @@ tasks:
         echo "Checking the programs required for the build are installed..."
         latexmk --version >/dev/null 2>&1 && (echo "latexmk installed!") || (echo "ERROR: latexmk is required."; exit 1)
         pdflatex --version >/dev/null 2>&1 && (echo "pdflatex installed!") || (echo "ERROR: pdflatex is required."; exit 1)
-        plantuml --version >/dev/null 2>&1 && (echo "plantuml installed!") || (echo "ERROR: plantuml is required."; exit 1)
     silent: true
 
 ##==============================================================================
@@ -36,18 +34,21 @@ tasks:
   images:
     desc: "Creates a PDF of all the files in {{.IMG_DIR}}."
     sources:
-      - ./img/*.puml
+      - ./img/*.pml
     generates:
       - ./img/*.png
     vars:
       IMG_SRC:
-        sh: ls {{.IMG_DIR}} | grep ".puml"
+        sh: ls {{.IMG_DIR}} | grep ".pml"
     cmds:
       - |
         for f in {{.IMG_SRC | catLines}}
         do
-          echo "Compiling ${f}"
-          plantuml -tpng {{.IMG_DIR}}/${f}
+          if [ $f != "general_yaml.pml" ] && [ $f != "route_yaml.pml" ]
+          then
+            echo "Compiling ${f}"
+            plantuml -tpng {{.IMG_DIR}}/${f}
+          fi
         done
     silent: true
 
@@ -78,7 +79,7 @@ tasks:
         # Clean up {{.IMG_DIR}}
         for f in $(find {{.IMG_DIR}} -maxdepth 1 -type f)
         do
-          [ ${f##*.} != "puml" ] && [ ${f##*.} != "jpg" ] && [ ${f##*.} != "org" ]  && rm ${f}
+          [ ${f##*.} != "pml" ] && [ ${f##*.} != "jpg" ] && [ ${f##*.} != "org" ]  && rm ${f}
         done
         # Clean up the document files
         rm -f {{.TARGET}}
