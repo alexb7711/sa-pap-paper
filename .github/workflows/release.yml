@@ -23,7 +23,7 @@ jobs:
       with:
         args: -v -tpng ./sections/img/*.puml
     - name: Build PDF
-       run: task clean && task
+      run: task clean && task
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "sa-pap.pdf"
