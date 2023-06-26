@@ -19,9 +19,9 @@ jobs:
         version: 3.x
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Plantuml
-        uses: cloudbees/plantuml-github-action@master
-        with:
-            args: -v -tpng ./sections/img/*.puml
+      uses: cloudbees/plantuml-github-action@master
+      with:
+        args: -v -tpng ./sections/img/*.puml
     - name: Build PDF
       # run: task clean && task
     - name: Upload Artifact
