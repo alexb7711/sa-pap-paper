@@ -1,0 +1,5 @@
+#+title: Simulated Annealing Position Allocation Problem Paper
+#+autor: Alexander Brown
+#+date: \today
+
+This paper discusses the research behind the Simulated Annealing (SA) approach to solving the Position Allocation Problem (PAP). This paper is based off the theory of SA as well as some of my previous work on the PAP
