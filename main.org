@@ -1,5 +1,5 @@
 #+TITLE: Bus Charging Schedule Simulated Annealing with MILP Constraints
-#+DATE: \today
+#+DATE: \today: {VERSION}
 #+EMAIL: A01704744@usu.edu
 #+LANGUAGE: en
 
