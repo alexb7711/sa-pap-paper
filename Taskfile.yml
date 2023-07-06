@@ -73,7 +73,7 @@ tasks:
         sh: git describe --tags
     cmds:
       - |
-        sed -i 's/{VERSION}/{{.VERSION}}/' {{.MAIN}}
+        sed -i 's/\\date{\\today/\\date{\\today:{{.VERSION}}/' {{.MAIN}}
     silent: true
 
 ##==============================================================================
