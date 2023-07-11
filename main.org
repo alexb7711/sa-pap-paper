@@ -19,7 +19,8 @@
 
 * References
 #+bibliographystyle:plain
-#+bibliography:~/Documents/literature/ref.bib
+#+bibliography:citation-database/lit-ref.bib
+#+bibliography:citation-database/lib-ref.bib
 #+print_bibliography:
 
-#  LocalWords:  SA
+# LocalWords: SA
