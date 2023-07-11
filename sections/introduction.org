@@ -3,9 +3,9 @@
 :CUSTOM_ID: sec:introduction
 :END:
 
-This document outlines a simulated annealing (SA) approach to the bus charging scheduling problem that utilizes Mixed
+This document outlines a Simulated Annealing (SA) approach to the bus charging scheduling problem that utilizes Mixed
 Integer Linear Programming (MILP) constraints to determine feasible charging schedules. The problem involves generating
-an optimal charging schedule for a fleet of Battery Electric Buses (BEB) based on a set of routes and a mix of fast and
+an optimal charging schedule for a fleet of Battery Electric Buses (BEBs) based on a set of routes and a mix of fast and
 slow chargers. The aim is to minimize both the consumption cost (amount of electricity used over a certain time) and the
 demand cost (rate at which electricity is being used) while ensuring that the buses maintain sufficient charge to
 complete their workday without delays.
