@@ -5,7 +5,7 @@
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
 function is required to allow comparisons between candidate solutions. In the context of this formulation, the objective
 function is broken down into two major components as alluded in the introduction: consumption cost, demand cost,
-assignment cost, as well as a penalty for undercharging a bus. The constraints ensure that candidate solutions are in
+assignment cost, as well as a penalty for under-charging a bus. The constraints ensure that candidate solutions are in
 the feasible region. They are composed of a series of equations defined by decision variables which are unknown
 variables that are manipulated in the attempt to optimize the objective functions and input variables predefined input
 variables that are assumed to be known. Furthermore, the decision variables have components that are directly and
@@ -18,9 +18,10 @@ indirectly manipulated. This will be further discussed in [[#sec:decision-variab
 :CUSTOM_ID: sec:parameter-definitions
 :END:
 This section defines the input variables and decision variables used by the system. The input variables are the
-parameters that are assumed to be known prior to optimizing the system. The decision variables are the values that the
-SA algorithm has the freedom to manipulate. The values produced by the SA algorithm will be interpreted as a candidate
-charging solution. This is further described in [[#sec:simulated-annealing]].
+parameters that are assumed to be known prior to optimizing the system. These are discussed next in
+[[#sec:input-variables]]. The decision variables are the values that the SA algorithm has the freedom to manipulate. The
+values produced by the SA algorithm will be interpreted as a candidate scheduling solution. This is further described in
+[[#sec:simulated-annealing]].
 
 *** Input Variables
 :PROPERTIES:
@@ -50,11 +51,11 @@ visit IDs $\{ 1,2,3,1\}$, using a starting index of 1, $\xi_1 = 4$. This is foun
 first element in $\Iset_b$, which is 1. The next step is to find the next occurrenc of bus 1 in the sequence. In this
 exapmple, the next index for bus 1 is $i= 4$. $a_i$ and $e_i$ are the arrival and departure times of bus visit $i$ to
 the station, respectively. $k$ represents the local iteration search for the SA algorithm. This is further discussed in
-[[#sec:simulated-annealing]]. Lastly, $r_q$ represents the rate of charge for the charger in queue $q$.
+[[#sec:simulated-annealing]]. Lastly, $r_q$ represents the power supplied from the charger in queue $q$.
 
 #+name: eq:batinit
 \begin{equation}
-  \eta_{i \in \Isetinit} = \alpha_b \cdot \kappa_b \text{,}
+  \eta_{i \in \Isetinit} = \alpha_b \cdot \kappa_b
 \end{equation}
 
 *** Decision Variables
@@ -62,7 +63,7 @@ the station, respectively. $k$ represents the local iteration search for the SA 
 :CUSTOM_ID: sec:decision-variables
 :END:
 Decision variables are the defined by the optimizer and are therefore unknown prior to running the optimization
-algorithm. In this case the optimizer is SA. Once SA has been run, each of the decision variables will be specified and
+algorithm. In this case the optimizer is SA. Once the SA has been run, each of the decision variables will be specified and
 the fitness of the solution will be determined by the objection functions The variables will be broken into two
 sections: direct and indirect decision variables. Decision variables that are direct are values that the system has
 direct control over and indirect variables are those that are influenced by the direct.
@@ -72,11 +73,10 @@ direct control over and indirect variables are those that are influenced by the 
 :CUSTOM_ID: sec:direct-decision-variables
 :END:
 Decision variables that are direct are variables that can be immediately chosen by SA. The first two variables are $u_i$
-and $d_i \; \forall i \in \Iset$. They represent the initial and final charging times. These values must remain within
-range of the arrival time and departure time for visit $i$, $[a_i, e_i]$. $\mu_h$ and $theta_h$ are binary decision
-variables, $\mu_h, \theta_h \in \{0, 1\}$. $\mu_h = 1$ when $u_i \le dt_h$, and is 0 otherwise. $\theta_h = 1$ when $d_i
-\ge dt_h$ and is 0 otherwise. The last direct decision variable is the queue that bus visit $i$ can be placed in to
-charge, $v_i \in \Qset$.
+and $d_i \; \forall i \in \Iset$. They represent the initial and final charging times. These values must remain within range of
+the arrival time and departure time for visit $i$, $[a_i, e_i]$. $\mu_h$ and $\theta_h$ are binary decision variables, $\mu_h,
+\theta_h \in \{0, 1\}$. $\mu_h = 1$ when $u_i \le dt_h$, and is 0 otherwise. $\theta_h = 1$ when $d_i \ge dt_h$ and is 0 otherwise. The
+last direct decision variable is the queue that bus visit $i$ can be placed in to charge, $v_i \in \Qset$.
 
 **** Indirect Decision Variables
 :PROPERTIES:
@@ -95,21 +95,20 @@ accumulated over route $i$.
   \eta_{\xi_i} = \eta_i + r_{v_i}s_i - \Delta_i
 \end{equation}
 
-$\iota_h = 1$ when $\mu$ and $\theta$ are both active. $\phi_i$ is a boolean decision variable, $\phi_i \in \{0,1\}$,
-that either enables or disables the charge penalty defined in [[#sec:objective-function]]. $\sigma_{ij}$ and $\psi_{ij}$ are
-used to indicate whether a visit pair $(i, j)$ overlap the same space as show in [[fig:spacial-and-temporal-constr]]. A
-little more formally, [[eq:bus-spat-temp]] describes the relationship that $\sigma_{ij}$ and $\phi_{ij}$ uphold. That is,
-for every visit, if the start charge time of either visit $i$ or $j$ is greater than end charge time of the other, then
-$\sigma_{ij}$ is active. Similarly, if the queue for visit $i$ and $j$ are different, then $\psi_{ij}$ is active. These
-variables will be further elaborated on in [[#sec:constraints]].
+$\iota_h \in \{0,1\} = 1$ when $\mu_h$ and $\theta_h$ are both active and is covered in [[#sec:objective-function]]. $\phi_i$ is a boolean
+decision variable, $\phi_i \in \{0,1\}$, that either enables or disables the charge penalty defined in
+[[#sec:objective-function]]. $\sigma_{ij}$ and $\psi_{ij}$ are used to indicate whether a visit pair $(i, j)$ overlap the same space
+as show in [[fig:spacial-and-temporal-constr]]. A little more formally, [[eq:bus-spat-temp]] describes the relationship that
+$\sigma_{ij}$ and $\phi_{ij}$ uphold. That is, for every visit, if the start charge time of either visit $i$ or $j$ is greater
+than end charge time of the other, then $\sigma_{ij}$ is active. Similarly, if the queue for visit $i$ and $j$ are different,
+then $\psi_{ij}$ is active. These variables will be further elaborated on in [[#sec:constraints]].
 
 #+name: eq:bus-spat-temp
 \begin{subequations}
-
 \begin{equation}
   \sigma_{ij} =
   \begin{cases}
-    1 & \text{if } u_i \ge d_j \\
+    1 & \text{if } u_i \ge d_j, \; i \ne j\\
     0 & \text{otherwise}
   \end{cases}
 \end{equation}
@@ -117,11 +116,10 @@ variables will be further elaborated on in [[#sec:constraints]].
 \begin{equation}
   \psi_{ij} =
   \begin{cases}
-    1 & \text{if } v_i \ge v_j \\
+    1 & \text{if } v_i \ge v_j,\; i \ne j\\
     0 & \text{otherwise}
   \end{cases}
 \end{equation}
-
 \end{subequations}
 
 $p_d$ is the demand cost of the overall charging schedule. It is calculated after all the decision variables have been
@@ -165,15 +163,15 @@ charger will be utilized, $s_i$.
 
 #+name: eq:consumption-cost
 \begin{equation}
-  \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
+  \sum_{i=1}^I r_{v_i}s_i
 \end{equation}
 
-The demand cost is calculated based on 15 minute increments (900 s). This cost is also referred to as the peak 15. The
+The demand cost is calculated based on 15 minute increments (0.25 hours). This cost is also referred to as the peak 15. The
 average power used over an arbitrary 15 minute interval is represented by [[eq:p15]].
 
 #+name: eq:p15
 \begin{equation}
-p_{15}(t) = 1/900 \int_{t-900}^{t} p(\tau) d\tau
+p_{15}(t) = 0.25 \int_{t-0.25}^{t} p(\tau) d\tau
 \end{equation}
 
 Worst case must be assumed to always ensure enough power is supplied; therefore, the maximum value found is retained as
@@ -195,7 +193,7 @@ p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
 
 [[eq:pdem]], again, retains the largest $p_{dem}$ value with a starting fixed value of $p_{fix}$. To write the total power
 demand at any discrete time, consider [[eq:discrete-power]]. Let $\omega_h \in \omega$ be the discrete power demand at time step $h$
-where $h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}$ and $H = \frac{T}{900}$. For conciseness of notation we will abuse $t_h$ to denote
+where $h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}$ and $H = \frac{T}{0.25}$. For conciseness of notation we will abuse $t_h$ to denote
 the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2, ..., H
 \}$. Let $\iota_h$ be a binary decision variable that is enabled if charger $v_i \in \Qset$ is enabled in the time frame
 $dt_h$. Let the power usage of charger $v_i$ be denoted as $r_{v_i}$.
@@ -217,7 +215,7 @@ To write the power cost, [[eq:consumption-cost]] and [[eq:pd-dis]] are added tog
 
 #+name: eq:pc
 \begin{equation}
-\PC = p_d + \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
+\PC = p^h_d + \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
 \end{equation}
 
 ** Constraints
@@ -262,6 +260,6 @@ than the detach time which is less than the time the bus exits the station and a
 
 The last set of constraints \ref{seq:c13} - \ref{seq:c17} set the rules for the decision variable $\iota_h$.
 \ref{seq:c13} and \ref{seq:c14} ensure that the initial charge time for visit $i$, $u_i$, is greater than the discrete
-time, $900 \cdot h$, being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, $d_i$,
+time, $0.25 \cdot h$, being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, $d_i$,
 is less than the next discrete time step, $dt_h$. The final constraint \ref{seq:c17} is the discrete representation of
 whether charger $v_i \in \Qset$ is active.
