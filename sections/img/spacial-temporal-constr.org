@@ -44,7 +44,7 @@
 
     \end{tikzpicture}
   }}
-  \caption{Visualization of the temporal and spatial aspect of the aspect of the schedule.}
+  \caption{Visualization of the temporal and spatial aspect of the aspect of the schedule. The grey rectangle labeled $D$ represents the time that the charger in queue 2 is active. $a_D$ represents the arrival time for bus $D$. The diagram indicates that $D$ arrives prior to the inital charge time, $u_D$. $d_D$ is the detatch time for bus $D$, which is before the departure time $e_D$. Physically, that represents bus $D$ being idle between $a_D$ and $u_D$ while its waiting to be charged, charging between $u_D$ and $d_D$, and idle again between $d_D$ and $e_D$ waiting to depart on the next route.}
   \label{fig:spacial-and-temporal-constr}
 \end{figure}
 #+end_export
