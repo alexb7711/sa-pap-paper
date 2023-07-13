@@ -1,4 +1,4 @@
-% Created 2023-07-11 Tue 19:20
+% Created 2023-07-12 Wed 20:23
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -434,7 +434,7 @@ be over-charged, and departs on time. The aforementioned constraints are shown i
   \end{equation}
   \begin{equation}
       \label{seq:c11}
-      m_{k_i} - m\kappa_{b_i} < T \phi_{i}
+      m_{k_i} - \eta_{i} > T \phi_{i}
   \end{equation}
   \begin{equation}
       \label{seq:c12}
@@ -464,11 +464,11 @@ be over-charged, and departs on time. The aforementioned constraints are shown i
 \label{eq:constraints}
 \end{multicols}
 
-Constraints \ref{seq:c0}-\ref{seq:c4} are the ``queuing constraints''. They are used to prevent overlapping in both
-spatially and temporally as shown in \ref{fig:spacial-and-temporal-constr}. The y-axis represents the possible queues for a
-bus visit to be placed into, and the x-axis represents the time that can be reserved for each visit. The shaded
-rectangles represent time that has been scheduled and the queue allocated for each bus visit. The set of constraints
-\ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
+Constraints \ref{seq:c0}-\ref{seq:c4} are the ``queuing constraints''. They are preventing overlap in both spatially and
+temporally as shown in \ref{fig:spacial-and-temporal-constr}. The y-axis represents the possible queues for a bus visit to be
+placed into, and the x-axis represents the time that can be reserved for each visit. The shaded rectangles represent
+time that has been scheduled, and the queue allocated for each bus visit. The set of constraints \ref{seq:c0} -
+\ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
 
 \begin{figure}[h!]
   \centering
@@ -514,33 +514,33 @@ rectangles represent time that has been scheduled and the queue allocated for ea
 
     \end{tikzpicture}
   }}
-  \caption{Visualization of the temporal and spatial aspect of the aspect of the schedule.}
+  \caption{Visualization of the temporal and spatial aspect of the aspect of the schedule. The grey rectangle labeled $D$ represents the time that the charger in queue 2 is active. $a_D$ represents the arrival time for bus $D$. The diagram indicates that $D$ arrives prior to the inital charge time, $u_D$. $d_D$ is the detatch time for bus $D$, which is before the departure time $e_D$. Physically, that represents bus $D$ being idle between $a_D$ and $u_D$ while its waiting to be charged, charging between $u_D$ and $d_D$, and idle again between $d_D$ and $e_D$ waiting to depart on the next route.}
   \label{fig:spacial-and-temporal-constr}
 \end{figure}
 
 Constraint \ref{seq:c4} states that the starting service time for bus \(j\), \(u_j\), must be greater than the starting time
 of bus \(i\), \(u_i\), plus its service time, \(s_i\). The last term utilizes big-M notation to activate or deactivate the
-constraint. A value of \(\sigma_{ij} = 1\) will activate the constraint to ensure that \(i\) is complete before \(j\) is
-allowed to begin being serviced. If \(\sigma_{ij} = 0\), then the constraint is of the form \(T + u_j + s_j > u_i\)
-rendering the constraint ``inactive'' because \(u_i\) cannot be larger than \(d_i\). This effectively allows the charging
-windows of the vehicle to overlap.
+constraint. A value of \(\sigma_{ij} = 1\) will activate the constraint to ensure that bus \(i\) is complete before bus \(j\) is
+allowed to begin being serviced. If \(\sigma_{ij} = 0\), then the constraint is of the form \(T + u_j + s_j > u_i\) rendering the
+constraint ``inactive'' because \(u_i\) cannot be larger than \(d_i\). This effectively allows the charging windows of the
+vehicle to overlap.
 
 Similarly, \(\phi_{ij}\) determines whether the vehicles will be charging in the same queue. If \(\phi_{ij} = 1\) then
-\eqref{seq:c1} is rendered active and vehicle \(i\) and \(j\) must be charging in different queues. If \(\phi_{ij} = 0\) then
-the constraint is deactivated and the vehicle queue assignments may be the same.
+\eqref{seq:c1} is rendered active and vehicle \(i\) and \(j\) must be charging in different queues. If \(\phi_{ij} = 0\) then the
+constraint is deactivated and the vehicle queue assignments may be the same.
 
-\ref{seq:c5} calculates the discharge for the route after visit \(i\). \ref{seq:c6} forms describes the service time of
-the bus. \ref{seq:c7} calculates the initial charge for the next visit for bus \(b_i\). \ref{seq:c7} ensures that the bus
-is not being over-charged. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in \ref{eq:ac}.
-This is done by checking if the initial charge for visit \(i\) is greater than or equal to the minimum allowed charge.
+\ref{seq:c5} calculates the discharge for the route after visit \(i\). \ref{seq:c6} describes the service time of the bus.
+\ref{seq:c7} calculates the initial charge for the next visit for bus \(b_i\). \ref{seq:c7} ensures that the bus is not
+being over-charged. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in \ref{eq:ac}. This is
+done by checking if the initial charge for visit \(i\) is greater than or equal to the minimum allowed charge.
 \ref{seq:c10} ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less
 than the detach time which is less than the time the bus exits the station and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c13} - \ref{seq:c17} set the rules for the decision variable \(\iota_h\).
-\ref{seq:c13} and \ref{seq:c14} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete
-time, \(0.25 \cdot h\), being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, \(d_i\),
-is less than the next discrete time step, \(dt_h\). The final constraint \ref{seq:c17} is the discrete representation of
-whether charger \(v_i \in \Qset\) is active.
+The last set of constraints \ref{seq:c13} - \ref{seq:c17} set the rules for the decision variable \(\iota_h\). \ref{seq:c13}
+and \ref{seq:c14} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete time, \(0.25 \cdot
+h\), being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, \(d_i\), is less than the
+next discrete time step, \(dt_h\). The final constraint \ref{seq:c17} is the discrete representation of whether charger
+\(v_i \in \Qset\) is active.
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
@@ -619,12 +619,9 @@ assign new visits to a charger, adjust a bus visits initial and final charge tim
 remove a bus from a charger, and place a bus visit into a new time slot/queue. Each generator will be discussed in more
 detail in \ref{sec:generators}.
 
-These generator mechanisms will in turn be utilized by three wrapper functions. The purpose of the route generation to
-create a set of bus route data to feed to the SA algorithm. Although, strictly speaking, is not a part of the SA
-algorithm. It is vital in specifying the initial conditions and ``setting the stage'' for the SA algorithm to solve. The
-schedule generation is to used create candidate solutions for SA to compare with other solutions, and the perturb
-schedule generator is used to take a candidate solution and alter it slightly in an attempt to fall into a global/local
-minimum.
+These generator mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
+candidate solutions for SA to compare with other solutions, and the perturb schedule generator is used to take a
+candidate solution and alter it slightly in an attempt to fall into a global/local minimum.
 
 \subsubsection{Generator Input/Output}
 \label{sec:generator-input-output}
@@ -634,8 +631,8 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org8f218dd}
-Each generator has the tuple input of (\(i, \I, \C\)) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\)
+\label{sec:org23e8b0a}
+Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\)
 (\ref{sec:problem-description}), that describes the set of visits generated by the route generation algorithm
 (\ref{sec:route-gen}), and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\). In other words, \(\C\)
 defines the set of times when the chargers are not being utilized or are ``inactive''.
@@ -658,7 +655,7 @@ Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:orgc219b3e}
+\label{sec:org44a91de}
 The output is a modified visit, noted as \(\I_i'\). In actuality only the decision variables are being altered which is a
 subset of \(\I_i\). Let this subset be defined by \(x_i' \equiv (v_i, u_i, d_i) \subset \I_i\) which is the chosen queue, initial
 charge time, and detach time from the generator, \((v_i, u_i, d_i)\). The nature of SA implies that the generators have a
@@ -699,10 +696,10 @@ is valid and returns a random charging time, \([u_i, d_i]\), if it is. Line 7 re
         $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the arrival time for visit $i$}
         $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the departure time for visit $i$}
 
-        %\tcc{Randomly select a free time, $j$, from any charger $q \in \Q$ that is within the time frame $[a_i e_i]$}
+        \tcc{Randomly select a free time, $j$, from any charger $q \in \Q$ that is within the time frame $[a_i e_i]$}
         \While {$C_q^j \in \{[a_i, e_i]\} \subset \U_{\C}$}
         {
-            % \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow\findFreeTime{C_q^j, ($a_i, e_i)} \not\in \varnothing$}
+            \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j, (a_i, e_i)$} $\not\in \varnothing$}
             {
                 \Return{$\I_i' \leftarrow x_i'$} \tcc*[f]{Return visit}
             }
@@ -1282,7 +1279,7 @@ updates the current solution with the candidate solution depending on the fitnes
 \end{algorithm}
 
 \section{References}
-\label{sec:org0512ff9}
+\label{sec:org5b8b947}
 \noindent
 Andre A. Keller (2019). \emph{Multi-Objective Optimization In Theory and Practice {II}: Metaheuristic Algorithms}, {BENTHAM} {SCIENCE} {PUBLISHERS}.
 

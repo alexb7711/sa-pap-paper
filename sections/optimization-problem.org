@@ -232,34 +232,34 @@ be over-charged, and departs on time. The aforementioned constraints are shown i
 
 # Org mode is a little silly and does not take normal referencing syntax. This note is for future reference.
 
-Constraints \ref{seq:c0}-\ref{seq:c4} are the "queuing constraints". They are used to prevent overlapping in both
-spatially and temporally as shown in [[fig:spacial-and-temporal-constr]]. The y-axis represents the possible queues for a
-bus visit to be placed into, and the x-axis represents the time that can be reserved for each visit. The shaded
-rectangles represent time that has been scheduled and the queue allocated for each bus visit. The set of constraints
-\ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
+Constraints \ref{seq:c0}-\ref{seq:c4} are the "queuing constraints". They are preventing overlap in both spatially and
+temporally as shown in [[fig:spacial-and-temporal-constr]]. The y-axis represents the possible queues for a bus visit to be
+placed into, and the x-axis represents the time that can be reserved for each visit. The shaded rectangles represent
+time that has been scheduled, and the queue allocated for each bus visit. The set of constraints \ref{seq:c0} -
+\ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
 
 #+include: "img/spacial-temporal-constr.org"
 
 Constraint \ref{seq:c4} states that the starting service time for bus $j$, $u_j$, must be greater than the starting time
 of bus $i$, $u_i$, plus its service time, $s_i$. The last term utilizes big-M notation to activate or deactivate the
-constraint. A value of $\sigma_{ij} = 1$ will activate the constraint to ensure that $i$ is complete before $j$ is
-allowed to begin being serviced. If $\sigma_{ij} = 0$, then the constraint is of the form $T + u_j + s_j > u_i$
-rendering the constraint "inactive" because $u_i$ cannot be larger than $d_i$. This effectively allows the charging
-windows of the vehicle to overlap.
+constraint. A value of $\sigma_{ij} = 1$ will activate the constraint to ensure that bus $i$ is complete before bus $j$ is
+allowed to begin being serviced. If $\sigma_{ij} = 0$, then the constraint is of the form $T + u_j + s_j > u_i$ rendering the
+constraint "inactive" because $u_i$ cannot be larger than $d_i$. This effectively allows the charging windows of the
+vehicle to overlap.
 
 Similarly, $\phi_{ij}$ determines whether the vehicles will be charging in the same queue. If $\phi_{ij} = 1$ then
-\eqref{seq:c1} is rendered active and vehicle $i$ and $j$ must be charging in different queues. If $\phi_{ij} = 0$ then
-the constraint is deactivated and the vehicle queue assignments may be the same.
+\eqref{seq:c1} is rendered active and vehicle $i$ and $j$ must be charging in different queues. If $\phi_{ij} = 0$ then the
+constraint is deactivated and the vehicle queue assignments may be the same.
 
-\ref{seq:c5} calculates the discharge for the route after visit $i$. \ref{seq:c6} forms describes the service time of
-the bus. \ref{seq:c7} calculates the initial charge for the next visit for bus $b_i$. \ref{seq:c7} ensures that the bus
-is not being over-charged. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in [[eq:ac]].
-This is done by checking if the initial charge for visit $i$ is greater than or equal to the minimum allowed charge.
+\ref{seq:c5} calculates the discharge for the route after visit $i$. \ref{seq:c6} describes the service time of the bus.
+\ref{seq:c7} calculates the initial charge for the next visit for bus $b_i$. \ref{seq:c7} ensures that the bus is not
+being over-charged. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in [[eq:ac]]. This is
+done by checking if the initial charge for visit $i$ is greater than or equal to the minimum allowed charge.
 \ref{seq:c10} ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less
 than the detach time which is less than the time the bus exits the station and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c13} - \ref{seq:c17} set the rules for the decision variable $\iota_h$.
-\ref{seq:c13} and \ref{seq:c14} ensure that the initial charge time for visit $i$, $u_i$, is greater than the discrete
-time, $0.25 \cdot h$, being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, $d_i$,
-is less than the next discrete time step, $dt_h$. The final constraint \ref{seq:c17} is the discrete representation of
-whether charger $v_i \in \Qset$ is active.
+The last set of constraints \ref{seq:c13} - \ref{seq:c17} set the rules for the decision variable $\iota_h$. \ref{seq:c13}
+and \ref{seq:c14} ensure that the initial charge time for visit $i$, $u_i$, is greater than the discrete time, $0.25 \cdot
+h$, being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, $d_i$, is less than the
+next discrete time step, $dt_h$. The final constraint \ref{seq:c17} is the discrete representation of whether charger
+$v_i \in \Qset$ is active.
