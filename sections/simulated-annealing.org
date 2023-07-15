@@ -75,7 +75,7 @@ f(x,x',T) =
 
 ** Generation Mechanisms
 :PROPERTIES:
-:CUSTOM_ID: sec:generators
+:CUSTOM_ID: sec:generation-mechanisms
 :END:
 Generation mechanisms in SA are used to generate random solutions to propose to the optimizer, these are known as
 candidate solutions. In the case of the problem statement made in [[#sec:problem-description]], five generation mechanism
@@ -178,21 +178,19 @@ and returns a random charging time, $[u_i, d_i]$, if it is. Line 7 returns the n
     }
 \end{algorithm}
 
-The algorithm to find free time is defined in [[alg:find-free-time]]. $L$ and $U$ are the lower and upper bound of the time
+The algorithm to find free time is defined in \ref{alg:find-free-time}. $L$ and $U$ are the lower and upper bound of the time
 between scheduled times. The possible use cases are depicted in [[fig:find-free]]. In each case depicted by [[fig:find-free]],
 the red line shows the arrival and departure time for an arbitrary bus visit, $i$. The blue lines indicate reigons in
 which charger $q$ is active. $C \in \C_q \subset \C$ represents one of the regions between the blue lines, $[L, U]$ which stand
-for the lower and upper portions of the regions, respectively. The output of [[alg:find-free-time]] is a range for which the
-bus may be charged and the empty set if it cannot. As an example, consider a bus that is in the process of being
-scheduled and it encounters a situation similar to \autoref{subfig:egu}. That is, the only scheduling constraint is that
-the arrival time is before charger $q$ is available to charge the bus. Therefore, the bus must wait intil $L$ before
-changer $q$ may charge it. Furthermore, the range that $u_i$ must be selected from is $[L,e]$.
+for the lower and upper portions of the regions, respectively. The output of \ref{alg:find-free-time}. That is, the only
+scheduling constraint is that the arrival time is before charger $q$ is available to charge the bus. Therefore, the bus
+must wait intil $L$ before changer $q$ may charge it. Furthermore, the range that $u_i$ must be selected from is
+$[L,e]$.
 
 #+include: "img/find-free.org"
 
-#+name: alg:find-free-time
 \begin{algorithm}[H]
-\caption{Find free time algorithm searches and returns the available time frames}
+\caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(L,U,a,e)$}
@@ -220,7 +218,7 @@ changer $q$ may charge it. Furthermore, the range that $u_i$ must be selected fr
                 u $\leftarrow$ $\U_{[a,L], [U,e]}$\;
                 d $\leftarrow$ $\U_{[u,L], [u,e]}$\;
         }
-        \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid})})
+        \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
         {
                 u $\leftarrow$ $\varnothing$\;
                 d $\leftarrow$ $\varnothing$\;

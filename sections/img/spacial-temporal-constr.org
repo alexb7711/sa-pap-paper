@@ -1,6 +1,6 @@
 #+name: fig:spacial-and-temporal-constr
 #+begin_export latex
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \centering
   \scalebox{0.5}{
   \centerline{
