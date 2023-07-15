@@ -17,8 +17,8 @@ iteration count (temperature change counter) [cite:@keller-2019-multi-objec].
 The initial temperature and cooling schedule are used to regulate the speed at which the solution attempts to converge
 to the best known solution. When the temperature is high, SA encourages exploration. As it cools down (in accordance to
 the cooling schedule), it begins to encourage local exploitation of the solution
-[cite:@rutenbar-1989-simul-anneal-algor;@henderson-1989-theor-pract]]. There are three basic types of cooling equations as
-shown in [[fig:cool]] [cite:@keller-2019-multi-objec]. The different types merely dictate the rate at which the algorithm
+[cite:@rutenbar-1989-simul-anneal-algor;@henderson-1989-theor-pract]]. There are three basic types of cooling equations
+as shown in [[fig:cool]] [cite:@keller-2019-multi-objec]. The different types merely dictate the rate at which the algorithm
 progressively disallows exploration. A linear cooling schedule is defined by [[eq:cool0]].
 
 #+name: eq:cool0
@@ -150,9 +150,8 @@ periods that contain the time the bus is at the station, $[a_i, e_i]$. $\U_{\cdo
 randomly with a uniform distribution from the set $\{\cdot\}$. Line 6 verifies that the inactive period selected is valid
 and returns a random charging time, $[u_i, d_i]$, if it is. Line 7 returns the new visit.
 
-#+name: alg:new-visit
 \begin{algorithm}[H]
-\caption{New visit algorithm}
+\caption{New visit algorithm} \label{alg:new-visit}
     \LinesNumbered
     \TitleOfAlgo{New Visit}
     \KwIn{($\Sol$)}
@@ -178,14 +177,14 @@ and returns a random charging time, $[u_i, d_i]$, if it is. Line 7 returns the n
     }
 \end{algorithm}
 
-The algorithm to find free time is defined in \ref{alg:find-free-time}. $L$ and $U$ are the lower and upper bound of the time
-between scheduled times. The possible use cases are depicted in [[fig:find-free]]. In each case depicted by [[fig:find-free]],
-the red line shows the arrival and departure time for an arbitrary bus visit, $i$. The blue lines indicate reigons in
-which charger $q$ is active. $C \in \C_q \subset \C$ represents one of the regions between the blue lines, $[L, U]$ which stand
-for the lower and upper portions of the regions, respectively. The output of \ref{alg:find-free-time}. That is, the only
-scheduling constraint is that the arrival time is before charger $q$ is available to charge the bus. Therefore, the bus
-must wait intil $L$ before changer $q$ may charge it. Furthermore, the range that $u_i$ must be selected from is
-$[L,e]$.
+The function =findFreeTime= in \ref{alg:new-visit} is defined in \ref{alg:find-free-time}. $L$ and $U$ are the lower
+and upper bound of the time between scheduled times. The possible use cases are depicted in [[fig:find-free]]. In each case
+depicted by [[fig:find-free]], the red line shows the arrival and departure time for an arbitrary bus visit, $i$. The blue
+lines indicate reigons in which charger $q$ is active. $C \in \C_q \subset \C$ represents one of the regions between the blue
+lines, $[L, U]$ which stand for the lower and upper portions of the regions, respectively. The output of
+\ref{alg:find-free-time}. That is, the only scheduling constraint is that the arrival time is before charger $q$ is
+available to charge the bus. Therefore, the bus must wait intil $L$ before changer $q$ may charge it. Furthermore, the
+range that $u_i$ must be selected from is $[L,e]$.
 
 #+include: "img/find-free.org"
 
@@ -232,15 +231,14 @@ $[L,e]$.
 :PROPERTIES:
 :CUSTOM_ID: slide-visit
 :END:
-Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
-some room to move $u_i$ and $d_i$ within the window $[a_i, e_i]$. Two new values, $u_i$ and $d_i$ are selected with a
-uniform distribution to satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 randomly loops through the other
-inactive time frames from charger $v_i$ that is within the time that the bus is at the station, $[a_i, e_i]$. Line 3
-verifies the time frame previously selected and returns a new charging time. Line 4 returns the new visit.
+Slide visit (\ref{alg:slide-visit}) is used for buses that have already been scheduled. Because of the constraint
+\ref{seq:c10} there may be some room to move $u_i$ and $d_i$ within the window $[a_i, e_i]$. Two new values, $u_i$ and
+$d_i$ are selected with a uniform distribution to satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 randomly loops
+through the other inactive time frames from charger $v_i$ that is within the time that the bus is at the station, $[a_i,
+e_i]$. Line 3 verifies the time frame previously selected and returns a new charging time. Line 4 returns the new visit.
 
-#+name: alg:slide-visit
 \begin{algorithm}[H]
-\caption{Slide Visit Algorithm}
+\caption{Slide Visit Algorithm} \label{alg:slide-visit}
     \LinesNumbered
     \TitleOfAlgo{Slide Visit}
     \KwIn{$\Sol$}
@@ -264,13 +262,12 @@ verifies the time frame previously selected and returns a new charging time. Lin
 :CUSTOM_ID: new-charger
 :END:
 The new charger generator takes a visit $\I_i$ and changes the charger it is on while maintianing the same charge time,
-$[u_i, d_i]$. Similar to [[alg:new-visit]], the new candidate, $x_i'$, must be checked before being added to the set $X_i'$.
+$[u_i, d_i]$. Similar to \ref{alg:new-visit}, the new candidate, $x_i'$, must be checked before being added to the set $X_i'$.
 Line 2 randomly loops through any time frame from any charger, $C_q^j$, that is within the time frame that the bus is at
 the station, $[a_i, e_i]$. Line 3 verifies the selection and line 4 returns the new visit.
 
-#+name: alg:new-charger
 \begin{algorithm}[H]
-\caption{New Charger Algorithm}
+\caption{New Charger Algorithm} \label{alg:new-charger}
     \LinesNumbered
     \TitleOfAlgo{New Charger}
     \KwIn{$\Sol$}
@@ -297,9 +294,8 @@ the station, $[a_i, e_i]$. Line 3 verifies the selection and line 4 returns the 
 The remove generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in
 \{Q,...,Q+B\}\).
 
-#+name:alg:remove
 \begin{algorithm}[H]
-\caption{Remove algorithm}
+\caption{Remove algorithm} \label{alg:remove}
     \LinesNumbered
     \TitleOfAlgo{Remove}
     \KwIn{$\Sol$}
@@ -353,13 +349,12 @@ and returns either metadata about the bus routes or a new valid charger schedule
 :END:
 The objective of this generator is to generate a candidate solution to the given schedule. To generate a candidate
 solution, the generator is given $\I$, a bus is picked at random, $b \in \Bset$, then a random visit is picked. The new
-visit generator ([[alg:new-visit]]) is then utilized. This process is repeated for each visit. This algorithm is summarized
-in [[alg:schedule-generation]]. Recall from [[#sec:input-variables]], $\Jset_B \subset \I$ is used to indicate the set of visit
-indices for bus $b$.
+visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm is
+summarized in \ref{alg:schedule-generation}. Recall from [[#sec:input-variables]], $\Jset_B \subset \I$ is used to indicate the
+set of visit indices for bus $b$.
 
-#+name: alg:schedule-generation
 \begin{algorithm}[H]
-\caption{Schedule generation algorithm}
+\caption{Schedule generation algorithm} \label{alg:schedule-generation}
     \LinesNumbered
     \TitleOfAlgo{ScheduleGeneration}
     \KwIn{$\I$, $\C$}

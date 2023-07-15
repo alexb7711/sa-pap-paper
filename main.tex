@@ -1,4 +1,4 @@
-% Created 2023-07-15 Sat 12:36
+% Created 2023-07-15 Sat 13:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -556,8 +556,8 @@ iteration count (temperature change counter) (Andre A. Keller, 2019).
 The initial temperature and cooling schedule are used to regulate the speed at which the solution attempts to converge
 to the best known solution. When the temperature is high, SA encourages exploration. As it cools down (in accordance to
 the cooling schedule), it begins to encourage local exploitation of the solution
-(R.A. Rutenbar, 1989, Darrall Henderson and Sheldon H. Jacobson and Alan W. Johnson, 1989)]. There are three basic types of cooling equations as
-shown in \ref{fig:cool} (Andre A. Keller, 2019). The different types merely dictate the rate at which the algorithm
+(R.A. Rutenbar, 1989, Darrall Henderson and Sheldon H. Jacobson and Alan W. Johnson, 1989)]. There are three basic types of cooling equations
+as shown in \ref{fig:cool} (Andre A. Keller, 2019). The different types merely dictate the rate at which the algorithm
 progressively disallows exploration. A linear cooling schedule is defined by \ref{eq:cool0}.
 
 \begin{equation}
@@ -631,7 +631,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orgbcef336}
+\label{sec:orgebea39d}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\)
 (\ref{sec:problem-description}), that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -655,7 +655,7 @@ Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org128805d}
+\label{sec:org1984f90}
 The output is a modified visit, noted as \(\I_i'\). In actuality only the decision variables are being altered which is a
 subset of \(\I_i\). Let this subset be defined by \(x_i' \equiv (v_i, u_i, d_i) \subset \I_i\) which is the chosen queue, initial
 charge time, and detach time from the generator, \((v_i, u_i, d_i)\). The nature of SA implies that the generators have a
@@ -682,7 +682,7 @@ randomly with a uniform distribution from the set \(\{\cdot\}\). Line 6 verifies
 and returns a random charging time, \([u_i, d_i]\), if it is. Line 7 returns the new visit.
 
 \begin{algorithm}[H]
-\caption{New visit algorithm}
+\caption{New visit algorithm} \label{alg:new-visit}
     \LinesNumbered
     \TitleOfAlgo{New Visit}
     \KwIn{($\Sol$)}
@@ -706,17 +706,16 @@ and returns a random charging time, \([u_i, d_i]\), if it is. Line 7 returns the
             }
         }
     }
-\label{alg:new-visit}
 \end{algorithm}
 
-The algorithm to find free time is defined in \ref{alg:find-free-time}. \(L\) and \(U\) are the lower and upper bound of the time
-between scheduled times. The possible use cases are depicted in \ref{fig:find-free}. In each case depicted by \ref{fig:find-free},
-the red line shows the arrival and departure time for an arbitrary bus visit, \(i\). The blue lines indicate reigons in
-which charger \(q\) is active. \(C \in \C_q \subset \C\) represents one of the regions between the blue lines, \([L, U]\) which stand
-for the lower and upper portions of the regions, respectively. The output of \ref{alg:find-free-time}. That is, the only
-scheduling constraint is that the arrival time is before charger \(q\) is available to charge the bus. Therefore, the bus
-must wait intil \(L\) before changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selected from is
-\([L,e]\).
+The function \texttt{findFreeTime} in \ref{alg:new-visit} is defined in \ref{alg:find-free-time}. \(L\) and \(U\) are the lower
+and upper bound of the time between scheduled times. The possible use cases are depicted in \ref{fig:find-free}. In each case
+depicted by \ref{fig:find-free}, the red line shows the arrival and departure time for an arbitrary bus visit, \(i\). The blue
+lines indicate reigons in which charger \(q\) is active. \(C \in \C_q \subset \C\) represents one of the regions between the blue
+lines, \([L, U]\) which stand for the lower and upper portions of the regions, respectively. The output of
+\ref{alg:find-free-time}. That is, the only scheduling constraint is that the arrival time is before charger \(q\) is
+available to charge the bus. Therefore, the bus must wait intil \(L\) before changer \(q\) may charge it. Furthermore, the
+range that \(u_i\) must be selected from is \([L,e]\).
 
 \begin{figure}
 \centering
@@ -913,14 +912,14 @@ must wait intil \(L\) before changer \(q\) may charge it. Furthermore, the range
 
 \paragraph{Slide visit}
 \label{slide-visit}
-Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
-some room to move \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and \(d_i\) are selected with a
-uniform distribution to satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 randomly loops through the other
-inactive time frames from charger \(v_i\) that is within the time that the bus is at the station, \([a_i, e_i]\). Line 3
-verifies the time frame previously selected and returns a new charging time. Line 4 returns the new visit.
+Slide visit (\ref{alg:slide-visit}) is used for buses that have already been scheduled. Because of the constraint
+\ref{seq:c10} there may be some room to move \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and
+\(d_i\) are selected with a uniform distribution to satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 randomly loops
+through the other inactive time frames from charger \(v_i\) that is within the time that the bus is at the station, \([a_i,
+e_i]\). Line 3 verifies the time frame previously selected and returns a new charging time. Line 4 returns the new visit.
 
 \begin{algorithm}[H]
-\caption{Slide Visit Algorithm}
+\caption{Slide Visit Algorithm} \label{alg:slide-visit}
     \LinesNumbered
     \TitleOfAlgo{Slide Visit}
     \KwIn{$\Sol$}
@@ -937,7 +936,6 @@ verifies the time frame previously selected and returns a new charging time. Lin
             }
         }
     }
-\label{alg:slide-visit}
 \end{algorithm}
 
 \paragraph{New charger}
@@ -948,7 +946,7 @@ Line 2 randomly loops through any time frame from any charger, \(C_q^j\), that i
 the station, \([a_i, e_i]\). Line 3 verifies the selection and line 4 returns the new visit.
 
 \begin{algorithm}[H]
-\caption{New Charger Algorithm}
+\caption{New Charger Algorithm} \label{alg:new-charger}
     \LinesNumbered
     \TitleOfAlgo{New Charger}
     \KwIn{$\Sol$}
@@ -966,7 +964,6 @@ the station, \([a_i, e_i]\). Line 3 verifies the selection and line 4 returns th
         }
 
     }
-\label{alg:new-charger}
 \end{algorithm}
 
 \paragraph{Remove}
@@ -975,7 +972,7 @@ The remove generator simply removes a bus from a charger queue and places it in 
 \{Q,...,Q+B\}\).
 
 \begin{algorithm}[H]
-\caption{Remove algorithm}
+\caption{Remove algorithm} \label{alg:remove}
     \LinesNumbered
     \TitleOfAlgo{Remove}
     \KwIn{$\Sol$}
@@ -985,7 +982,6 @@ The remove generator simply removes a bus from a charger queue and places it in 
     {
        \Return{$\I_i' \leftarrow (Q+b,a_i,e_i)$}
     }
-\label{alg:remove}
 \end{algorithm}
 
 \paragraph{New Window}
@@ -1024,12 +1020,12 @@ and returns either metadata about the bus routes or a new valid charger schedule
 \label{schedule-generation}
 The objective of this generator is to generate a candidate solution to the given schedule. To generate a candidate
 solution, the generator is given \(\I\), a bus is picked at random, \(b \in \Bset\), then a random visit is picked. The new
-visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm is summarized
-in \ref{alg:schedule-generation}. Recall from \ref{sec:input-variables}, \(\Jset_B \subset \I\) is used to indicate the set of visit
-indices for bus \(b\).
+visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm is
+summarized in \ref{alg:schedule-generation}. Recall from \ref{sec:input-variables}, \(\Jset_B \subset \I\) is used to indicate the
+set of visit indices for bus \(b\).
 
 \begin{algorithm}[H]
-\caption{Schedule generation algorithm}
+\caption{Schedule generation algorithm} \label{alg:schedule-generation}
     \LinesNumbered
     \TitleOfAlgo{ScheduleGeneration}
     \KwIn{$\I$, $\C$}
@@ -1051,7 +1047,6 @@ indices for bus \(b\).
         }
             \Return{$\I'$, $\C'$}
     }
-\label{alg:schedule-generation}
 \end{algorithm}
 
 \paragraph{Perturb Schedule}
@@ -1098,27 +1093,27 @@ better. Update \(\omega\) with \(\omega'\) with probability \(e^{\frac{-\Delta_{
 current solution. This is repeated until the stopping criteria is met.
 
 \begin{algorithm}[H]
-\caption{Pseudo-code for SA}
+\caption{Pseudo-code for SA} \label{alg:sa-pseudo}
     \LinesNumbered
     \TitleOfAlgo{SA Pseudo-Code}
 
     \SetKwFunction{f}{f}
     \Begin
     {
-        Select an initial solution $\omega \in W$\;
-        Select the temperature change counter $k=0$\;
-        Select a temperature cooling schedule $t_k$\;
-        Select an initial temperature $T = t_0 \geq 0$\;
-        Set the initial inactive time for each charger to the time horizon $\forall q \in \Qset : \C_q \in \{[0,T]\}$\;
-        Select a repetition schedule $M_k$, that defines the number of iterations executed at each temerature $t_k$\;
+        $\omega \in W$ \tcc*{Select an initial solution}
+        $k=0$ \tcc*{Select the temperature change counter}
+        $t_k$ \tcc*{Select a temperature cooling schedule}
+        $T = t_0 \geq 0$ \tcc*{Select an initial temperature}
+        $\forall q \in \Qset : \C_q \in \{[0,T]\}$ \tcc*{Set the initial inactive time for each charger to the time horizon}
+        \tcc{Select a repetition schedule $M_k$, that defines the number of iterations executed at each temerature $t_k$}
 
         \While{Stopping criterion not met}
         {
-            Set repetition counter $m \rightarrow 0$\;
+            $m \rightarrow 0$ \tcc*{Set repetition counter}
             \While{$m = M_k$}
             {
-                Generate a new solution $\omega' \in N(\omega)$\;
-                Calculate $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$}\;
+                $\omega' \in N(\omega)$ \tcc*{Generate a new solution}
+                $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
                 \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
                 \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
                 $m \rightarrow m+1$\;
@@ -1127,7 +1122,6 @@ current solution. This is repeated until the stopping criteria is met.
         $k \rightarrow k+1$\;
         }
     }
-\label{alg:sa-pseudo}
 \end{algorithm}
 
 The objective now is to outline SA-PAP in \ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the initial
@@ -1139,7 +1133,7 @@ schedule, \(k \in \{1, 2, ..., K\}\). Lines 15-23 perturbs the previously genera
 updates the current solution with the candidate solution depending on the fitness.
 
 \begin{algorithm}[H]
-\caption{Simulated annealing approach to the position allocation problem}
+\caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
     \LinesNumbered
     \TitleOfAlgo{SA PAP}
     \KwIn{$\I$}
@@ -1152,31 +1146,30 @@ updates the current solution with the candidate solution depending on the fitnes
 
     \Begin
     {
-        Initialize temperature $\Tau_0$\;
-        Select cooling equation $\Tau_{M} \leftarrow$ \CoolingEquation{$\Tau_0$}\;
-        Set a repetition schedule $K$\;
+        $\Tau_0$ \tcc*{Initialize temperature}
+        $\Tau_{M} \leftarrow$ \CoolingEquation{$\Tau_0$} \tcc*{Select cooling equation}
+        $K$ \tcc*{Set a repetition schedule}
 
         \For{$\Tau_m \in \{\Tau_0, \Tau_1, ..., \Tau_M\}$}
         {
-            Generate a new solution $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$}\;
-            Calculate $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$}\;
+            $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$} \tcc*{Generate a new solution}
+            $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate}
             \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
             \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
 
             \For{$k \in \{1, 2, ..., K\}$}
             {
-                Perturb the solution and reassess $\upsilon' \in Y \leftarrow$ \PerturbSchedule{$\I$}\;
-                Calculate $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$}\;
+                $\upsilon' \in Y \leftarrow$ \PerturbSchedule{$\I$} \tcc*{Perturb the solution and reassess}
+                $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate}
                 \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
                 \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
             } % For k
         }     % For \Tau
     }         % Begin
-\label{alg:sa-pap}
 \end{algorithm}
 
 \section{References}
-\label{sec:orgf02c97a}
+\label{sec:org22a7cfa}
 \noindent
 Andre A. Keller (2019). \emph{Multi-Objective Optimization In Theory and Practice {II}: Metaheuristic Algorithms}, {BENTHAM} {SCIENCE} {PUBLISHERS}.
 
