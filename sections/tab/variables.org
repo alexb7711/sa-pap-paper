@@ -19,7 +19,7 @@
 | $\alpha_b$              | Initial charge percentage time for bus $b$                                           |
 | $\delta_i$              | Discharge rate for vehicle $i$ per mile                                              |
 | $\nu$                | Minimum charge percentage allowed for each visit $i$                                 |
-| $\epsilon_q$              | Cost of using charger $q$                                                            |
+| $\epsilon_q$               | Cost of using charger $q$                                                            |
 | $\kappa_b$              | Battery capacity for bus $b$                                                         |
 | $\rho_i$              | Route distance after visit $i$                                                       |
 | $\xi_i$              | The next index bus $b$ will arrive                                                   |
@@ -38,10 +38,11 @@
 | $\phi_i$              | Binary term to enable/disable charge penalty for visit $i$                           |
 | $\psi_{ij}$           | Tracks spatial overlap for visit pair $(i,j)$                                        |
 | $\sigma_{ij}$           | Tracks temporal overlap for visit pair $(i,j)$                                       |
-| $\theta$                | Binary variable that is 1 if $d_i \ge dt_h$, 0 otherwise                               |
+| $\theta_h$              | Binary variable that is 1 if $d_i \ge dt_h$, 0 otherwise                               |
 | $d_i$              | Detach time from charger for visit $i$                                               |
 | $p_{dem}(t)$       | Demand cost                                                                          |
 | $s_i$              | Amount of time spent on charger for visit $i$ (service time)                         |
 | $u_i$              | Time to start charging for visit $i$                                                 |
+| $d_i$              | Time to detach bus from charger for visit $i$                                        |
 | $v_i$              | Assigned queue for visit $i$                                                         |
 |--------------------+--------------------------------------------------------------------------------------|

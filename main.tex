@@ -1,10 +1,9 @@
-% Created 2023-07-10 Mon 19:58
+% Created 2023-07-15 Sat 16:07
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
 \usepackage{algorithm2e}
 \usepackage{booktabs}
-\usepackage{hyperref}
 \usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{tikz}
@@ -22,6 +21,7 @@
 \usepackage{lipsum}                         % Dummy filler text
 \usepackage{amsfonts}                       % Cool math fonts
 \usepackage{multicol}                       % Add capability to make columns
+\usepackage{hyperref}                       % Cool clean hyperlinks
 \setlength\parindent{0pt}                   % No indent for paragraphs
 \usetikzlibrary{arrows.meta}                % Arrows for tikz
 \renewcommand*{\sectionautorefname}{Section}
@@ -63,7 +63,7 @@
  pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2 (Org mode 9.6.6)}, 
+ pdfcreator={Emacs 28.2 (Org mode 9.6.7)}, 
  pdflang={English}}
 \begin{document}
 
@@ -76,9 +76,9 @@
 
 \section{Introduction}
 \label{sec:introduction}
-This document outlines a simulated annealing (SA) approach to the bus charging scheduling problem that utilizes Mixed
+This document outlines a Simulated Annealing (SA) approach to the bus charging scheduling problem that utilizes Mixed
 Integer Linear Programming (MILP) constraints to determine feasible charging schedules. The problem involves generating
-an optimal charging schedule for a fleet of Battery Electric Buses (BEB) based on a set of routes and a mix of fast and
+an optimal charging schedule for a fleet of Battery Electric Buses (BEBs) based on a set of routes and a mix of fast and
 slow chargers. The aim is to minimize both the consumption cost (amount of electricity used over a certain time) and the
 demand cost (rate at which electricity is being used) while ensuring that the buses maintain sufficient charge to
 complete their workday without delays.
@@ -89,12 +89,12 @@ cost are used to minimize power consumption and total cost of using the BEBs.
 \section{Problem Description}
 \label{sec:problem-description}
 It is assumed that there are a total of \(I\) visits to the station by \(B\) buses. There are a total of \(Q\) queues for the
-bus at the station. Given a set of bus arrivals to a charging station \(i \in \{1,..., I\} = \Iset \subset \mathcal{Z}\) with a set of
-chargers to be queued \(q \in \{1,..., Q\} = \Qset \subset \mathcal{Z}\) where the bus is indicated by an identification number \(b \in
-\{1,..., B\} = \Bset \subset \mathcal{Z}\). Each bus arrival, \(i\), can be represented by the tuple: \(\visit\), in which the ordered
-elements denote the bus identification number, \(b_i\), arrival time to the station, \(a_i\), departure time from the
-station, \(e_i\), time to start charging, \(u_i\), time to stop charging, \(d_i\), the charger queue for the bus to be placed
-into, \(v_i\), and the initial State Of Charge (SOC), \(\eta_i\).
+bus at the station. Let \(\mathcal{Z}\) be the set of integers, given a set of bus arrivals to a charging station \(i \in \{1,..., I\}
+= \Iset \subset \mathcal{Z}\) with a set of chargers to be queued \(q \in \{1,..., Q\} = \Qset \subset \mathcal{Z}\) where the bus is indicated by an
+identification number \(b \in \{1,..., B\} = \Bset \subset \mathcal{Z}\). Each bus arrival, \(i\), can be represented by the tuple: \(\visit\),
+in which the ordered elements denote the bus identification number, \(b_i\), arrival time to the station, \(a_i\), departure
+time from the station, \(e_i\), time to start charging, \(u_i\), time to stop charging, \(d_i\), the charger queue for the bus
+to be placed into, \(v_i\), and the initial State Of Charge (SOC), \(\eta_i\).
 
 It is assumed that each visit occurs over the time horizon \(T = \{t : t_0 \le t \le t_f \}\). The set of all arrivals is
 represented by the set \(\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}\). The
@@ -112,21 +112,21 @@ charge, or none at all, partial charges, or no charging, is allowed. It is not a
 battery capacity limit. The battery charging rate is modeled as linear, which remains accurate up to about an SOC of 80\%
 charge (Li, Jing-Quan, 2016).
 
-Each bus arrival, with the exception of the last arrival for each bus, has a paired ``route'' that the bus must perform.
-This route, as one would expect, causes the bus to discharge by some certain amount. This paper assumes an average
-discharge over a period of in which an estimated discharge is calculated for each route, \(\Delta_i\). The charge supplied
-while at the station is required to supply enough charge for each route (battery charge does not deplete to zero) with
-an additional battery capacity percentage, \(m\), acting as a safety factor.
+Each bus arrival, except for the last arrival for each bus, has a paired ``route'' that the bus must perform. This route,
+as one would expect, causes the bus to discharge by some certain amount. This paper assumes an average discharge over a
+period of in which an estimated discharge is calculated for each route, \(\Delta_i\). The charge supplied while at the station
+is required to supply enough charge for each route with an additional battery capacity percentage, \(m\), acting as a
+safety factor.
 
 The scheduler's task shall be to schedule the set of arrivals \(\I\) to fulfill the minimum charge requirements over the
-time horizon \(T\) as well as minimize the demand cost as well as minimize over the consumption cost. The objective
-function and constraints are discussed in further detail in section \ref{sec:objective-function}.
+time horizon \(T\) as well as minimize the demand cost and consumption cost. The objective function and constraints are
+discussed in further detail in section \ref{sec:objective-function}.
 \section{Optimization Problem}
 \label{optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
 function is required to allow comparisons between candidate solutions. In the context of this formulation, the objective
 function is broken down into two major components as alluded in the introduction: consumption cost, demand cost,
-assignment cost, as well as a penalty for undercharging a bus. The constraints ensure that candidate solutions are in
+assignment cost, as well as a penalty for under-charging a bus. The constraints ensure that candidate solutions are in
 the feasible region. They are composed of a series of equations defined by decision variables which are unknown
 variables that are manipulated in the attempt to optimize the objective functions and input variables predefined input
 variables that are assumed to be known. Furthermore, the decision variables have components that are directly and
@@ -174,11 +174,12 @@ Decision Variables & \\[0pt]
 \(\phi_i\) & Binary term to enable/disable charge penalty for visit \(i\)\\[0pt]
 \(\psi_{ij}\) & Tracks spatial overlap for visit pair \((i,j)\)\\[0pt]
 \(\sigma_{ij}\) & Tracks temporal overlap for visit pair \((i,j)\)\\[0pt]
-\(\theta\) & Binary variable that is 1 if \(d_i \ge dt_h\), 0 otherwise\\[0pt]
+\(\theta_h\) & Binary variable that is 1 if \(d_i \ge dt_h\), 0 otherwise\\[0pt]
 \(d_i\) & Detach time from charger for visit \(i\)\\[0pt]
 \(p_{dem}(t)\) & Demand cost\\[0pt]
 \(s_i\) & Amount of time spent on charger for visit \(i\) (service time)\\[0pt]
 \(u_i\) & Time to start charging for visit \(i\)\\[0pt]
+\(d_i\) & Time to detach bus from charger for visit \(i\)\\[0pt]
 \(v_i\) & Assigned queue for visit \(i\)\\[0pt]
 \hline
 \end{tabular}
@@ -187,9 +188,10 @@ Decision Variables & \\[0pt]
 \subsection{Parameter Definitions}
 \label{sec:parameter-definitions}
 This section defines the input variables and decision variables used by the system. The input variables are the
-parameters that are assumed to be known prior to optimizing the system. The decision variables are the values that the
-SA algorithm has the freedom to manipulate. The values produced by the SA algorithm will be interpreted as a candidate
-charging solution. This is further described in \ref{sec:simulated-annealing}.
+parameters that are assumed to be known prior to optimizing the system. These are discussed next in
+\ref{sec:input-variables}. The decision variables are the values that the SA algorithm has the freedom to manipulate. The
+values produced by the SA algorithm will be interpreted as a candidate scheduling solution. This is further described in
+\ref{sec:simulated-annealing}.
 
 \subsubsection{Input Variables}
 \label{sec:input-variables}
@@ -217,17 +219,17 @@ visit IDs \(\{ 1,2,3,1\}\), using a starting index of 1, \(\xi_1 = 4\). This is 
 first element in \(\Iset_b\), which is 1. The next step is to find the next occurrenc of bus 1 in the sequence. In this
 exapmple, the next index for bus 1 is \(i= 4\). \(a_i\) and \(e_i\) are the arrival and departure times of bus visit \(i\) to
 the station, respectively. \(k\) represents the local iteration search for the SA algorithm. This is further discussed in
-\ref{sec:simulated-annealing}. Lastly, \(r_q\) represents the rate of charge for the charger in queue \(q\).
+\ref{sec:simulated-annealing}. Lastly, \(r_q\) represents the power supplied from the charger in queue \(q\).
 
 \begin{equation}
 \label{eq:batinit}
-  \eta_{i \in \Isetinit} = \alpha_b \cdot \kappa_b \text{,}
+  \eta_{i \in \Isetinit} = \alpha_b \cdot \kappa_b
 \end{equation}
 
 \subsubsection{Decision Variables}
 \label{sec:decision-variables}
 Decision variables are the defined by the optimizer and are therefore unknown prior to running the optimization
-algorithm. In this case the optimizer is SA. Once SA has been run, each of the decision variables will be specified and
+algorithm. In this case the optimizer is SA. Once the SA has been run, each of the decision variables will be specified and
 the fitness of the solution will be determined by the objection functions The variables will be broken into two
 sections: direct and indirect decision variables. Decision variables that are direct are values that the system has
 direct control over and indirect variables are those that are influenced by the direct.
@@ -235,11 +237,10 @@ direct control over and indirect variables are those that are influenced by the 
 \paragraph{Direct Decision Variables}
 \label{sec:direct-decision-variables}
 Decision variables that are direct are variables that can be immediately chosen by SA. The first two variables are \(u_i\)
-and \(d_i \; \forall i \in \Iset\). They represent the initial and final charging times. These values must remain within
-range of the arrival time and departure time for visit \(i\), \([a_i, e_i]\). \(\mu_h\) and \(theta_h\) are binary decision
-variables, \(\mu_h, \theta_h \in \{0, 1\}\). \(\mu_h = 1\) when \(u_i \le dt_h\), and is 0 otherwise. \(\theta_h = 1\) when \(d_i
-\ge dt_h\) and is 0 otherwise. The last direct decision variable is the queue that bus visit \(i\) can be placed in to
-charge, \(v_i \in \Qset\).
+and \(d_i \; \forall i \in \Iset\). They represent the initial and final charging times. These values must remain within range of
+the arrival time and departure time for visit \(i\), \([a_i, e_i]\). \(\mu_h\) and \(\theta_h\) are binary decision variables, \(\mu_h,
+\theta_h \in \{0, 1\}\). \(\mu_h = 1\) when \(u_i \le dt_h\), and is 0 otherwise. \(\theta_h = 1\) when \(d_i \ge dt_h\) and is 0 otherwise. The
+last direct decision variable is the queue that bus visit \(i\) can be placed in to charge, \(v_i \in \Qset\).
 
 \paragraph{Indirect Decision Variables}
 \label{sec:indirect-decision-variables}
@@ -256,21 +257,20 @@ accumulated over route \(i\).
   \eta_{\xi_i} = \eta_i + r_{v_i}s_i - \Delta_i
 \end{equation}
 
-\(\iota_h = 1\) when \(\mu\) and \(\theta\) are both active. \(\phi_i\) is a boolean decision variable, \(\phi_i \in \{0,1\}\),
-that either enables or disables the charge penalty defined in \ref{sec:objective-function}. \(\sigma_{ij}\) and \(\psi_{ij}\) are
-used to indicate whether a visit pair \((i, j)\) overlap the same space as show in \ref{fig:spacial-and-temporal-constr}. A
-little more formally, \ref{eq:bus-spat-temp} describes the relationship that \(\sigma_{ij}\) and \(\phi_{ij}\) uphold. That is,
-for every visit, if the start charge time of either visit \(i\) or \(j\) is greater than end charge time of the other, then
-\(\sigma_{ij}\) is active. Similarly, if the queue for visit \(i\) and \(j\) are different, then \(\psi_{ij}\) is active. These
-variables will be further elaborated on in \ref{sec:constraints}.
+\(\iota_h \in \{0,1\} = 1\) when \(\mu_h\) and \(\theta_h\) are both active and is covered in \ref{sec:objective-function}. \(\phi_i\) is a boolean
+decision variable, \(\phi_i \in \{0,1\}\), that either enables or disables the charge penalty defined in
+\ref{sec:objective-function}. \(\sigma_{ij}\) and \(\psi_{ij}\) are used to indicate whether a visit pair \((i, j)\) overlap the same space
+as show in \ref{fig:spacial-and-temporal-constr}. A little more formally, \ref{eq:bus-spat-temp} describes the relationship that
+\(\sigma_{ij}\) and \(\phi_{ij}\) uphold. That is, for every visit, if the start charge time of either visit \(i\) or \(j\) is greater
+than end charge time of the other, then \(\sigma_{ij}\) is active. Similarly, if the queue for visit \(i\) and \(j\) are different,
+then \(\psi_{ij}\) is active. These variables will be further elaborated on in \ref{sec:constraints}.
 
 \begin{subequations}
 \label{eq:bus-spat-temp}
-
 \begin{equation}
   \sigma_{ij} =
   \begin{cases}
-    1 & \text{if } u_i \ge d_j \\
+    1 & \text{if } u_i \ge d_j, \; i \ne j\\
     0 & \text{otherwise}
   \end{cases}
 \end{equation}
@@ -278,11 +278,10 @@ variables will be further elaborated on in \ref{sec:constraints}.
 \begin{equation}
   \psi_{ij} =
   \begin{cases}
-    1 & \text{if } v_i \ge v_j \\
+    1 & \text{if } v_i \ge v_j,\; i \ne j\\
     0 & \text{otherwise}
   \end{cases}
 \end{equation}
-
 \end{subequations}
 
 \(p_d\) is the demand cost of the overall charging schedule. It is calculated after all the decision variables have been
@@ -324,15 +323,15 @@ charger will be utilized, \(s_i\).
 
 \begin{equation}
 \label{eq:consumption-cost}
-  \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
+  \sum_{i=1}^I r_{v_i}s_i
 \end{equation}
 
-The demand cost is calculated based on 15 minute increments (900 s). This cost is also referred to as the peak 15. The
+The demand cost is calculated based on 15 minute increments (0.25 hours). This cost is also referred to as the peak 15. The
 average power used over an arbitrary 15 minute interval is represented by \ref{eq:p15}.
 
 \begin{equation}
 \label{eq:p15}
-p_{15}(t) = 1/900 \int_{t-900}^{t} p(\tau) d\tau
+p_{15}(t) = 0.25 \int_{t-0.25}^{t} p(\tau) d\tau
 \end{equation}
 
 Worst case must be assumed to always ensure enough power is supplied; therefore, the maximum value found is retained as
@@ -354,7 +353,7 @@ p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
 
 \ref{eq:pdem}, again, retains the largest \(p_{dem}\) value with a starting fixed value of \(p_{fix}\). To write the total power
 demand at any discrete time, consider \ref{eq:discrete-power}. Let \(\omega_h \in \omega\) be the discrete power demand at time step \(h\)
-where \(h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}\) and \(H = \frac{T}{900}\). For conciseness of notation we will abuse \(t_h\) to denote
+where \(h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}\) and \(H = \frac{T}{0.25}\). For conciseness of notation we will abuse \(t_h\) to denote
 the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h - t_{h-1}\), and \(\Hset = \{ 1, 2, ..., H
 \}\). Let \(\iota_h\) be a binary decision variable that is enabled if charger \(v_i \in \Qset\) is enabled in the time frame
 \(dt_h\). Let the power usage of charger \(v_i\) be denoted as \(r_{v_i}\).
@@ -376,7 +375,7 @@ To write the power cost, \ref{eq:consumption-cost} and \ref{eq:pd-dis} are added
 
 \begin{equation}
 \label{eq:pc}
-\PC = p_d + \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
+\PC = p^h_d + \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
 \end{equation}
 
 \subsection{Constraints}
@@ -435,7 +434,7 @@ be over-charged, and departs on time. The aforementioned constraints are shown i
   \end{equation}
   \begin{equation}
       \label{seq:c11}
-      m_{k_i} - m\kappa_{b_i} < T \phi_{i}
+      m_{k_i} - \eta_{i} > T \phi_{i}
   \end{equation}
   \begin{equation}
       \label{seq:c12}
@@ -465,13 +464,13 @@ be over-charged, and departs on time. The aforementioned constraints are shown i
 \label{eq:constraints}
 \end{multicols}
 
-Constraints \ref{seq:c0}-\ref{seq:c4} are the ``queuing constraints''. They are used to prevent overlapping in both
-spatially and temporally as shown in \ref{fig:spacial-and-temporal-constr}. The y-axis represents the possible queues for a
-bus visit to be placed into, and the x-axis represents the time that can be reserved for each visit. The shaded
-rectangles represent time that has been scheduled and the queue allocated for each bus visit. The set of constraints
-\ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
+Constraints \ref{seq:c0}-\ref{seq:c4} are the ``queuing constraints''. They are preventing overlap in both spatially and
+temporally as shown in \ref{fig:spacial-and-temporal-constr}. The y-axis represents the possible queues for a bus visit to be
+placed into, and the x-axis represents the time that can be reserved for each visit. The shaded rectangles represent
+time that has been scheduled, and the queue allocated for each bus visit. The set of constraints \ref{seq:c0} -
+\ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \centering
   \scalebox{0.5}{
   \centerline{
@@ -515,33 +514,33 @@ rectangles represent time that has been scheduled and the queue allocated for ea
 
     \end{tikzpicture}
   }}
-  \caption{Visualization of the temporal and spatial aspect of the aspect of the schedule.}
+  \caption{Visualization of the temporal and spatial aspect of the aspect of the schedule. The grey rectangle labeled $D$ represents the time that the charger in queue 2 is active. $a_D$ represents the arrival time for bus $D$. The diagram indicates that $D$ arrives prior to the inital charge time, $u_D$. $d_D$ is the detatch time for bus $D$, which is before the departure time $e_D$. Physically, that represents bus $D$ being idle between $a_D$ and $u_D$ while its waiting to be charged, charging between $u_D$ and $d_D$, and idle again between $d_D$ and $e_D$ waiting to depart on the next route.}
   \label{fig:spacial-and-temporal-constr}
 \end{figure}
 
 Constraint \ref{seq:c4} states that the starting service time for bus \(j\), \(u_j\), must be greater than the starting time
 of bus \(i\), \(u_i\), plus its service time, \(s_i\). The last term utilizes big-M notation to activate or deactivate the
-constraint. A value of \(\sigma_{ij} = 1\) will activate the constraint to ensure that \(i\) is complete before \(j\) is
-allowed to begin being serviced. If \(\sigma_{ij} = 0\), then the constraint is of the form \(T + u_j + s_j > u_i\)
-rendering the constraint ``inactive'' because \(u_i\) cannot be larger than \(d_i\). This effectively allows the charging
-windows of the vehicle to overlap.
+constraint. A value of \(\sigma_{ij} = 1\) will activate the constraint to ensure that bus \(i\) is complete before bus \(j\) is
+allowed to begin being serviced. If \(\sigma_{ij} = 0\), then the constraint is of the form \(T + u_j + s_j > u_i\) rendering the
+constraint ``inactive'' because \(u_i\) cannot be larger than \(d_i\). This effectively allows the charging windows of the
+vehicle to overlap.
 
 Similarly, \(\phi_{ij}\) determines whether the vehicles will be charging in the same queue. If \(\phi_{ij} = 1\) then
-\eqref{seq:c1} is rendered active and vehicle \(i\) and \(j\) must be charging in different queues. If \(\phi_{ij} = 0\) then
-the constraint is deactivated and the vehicle queue assignments may be the same.
+\eqref{seq:c1} is rendered active and vehicle \(i\) and \(j\) must be charging in different queues. If \(\phi_{ij} = 0\) then the
+constraint is deactivated and the vehicle queue assignments may be the same.
 
-\ref{seq:c5} calculates the discharge for the route after visit \(i\). \ref{seq:c6} forms describes the service time of
-the bus. \ref{seq:c7} calculates the initial charge for the next visit for bus \(b_i\). \ref{seq:c7} ensures that the bus
-is not being over-charged. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in \ref{eq:ac}.
-This is done by checking if the initial charge for visit \(i\) is greater than or equal to the minimum allowed charge.
+\ref{seq:c5} calculates the discharge for the route after visit \(i\). \ref{seq:c6} describes the service time of the bus.
+\ref{seq:c7} calculates the initial charge for the next visit for bus \(b_i\). \ref{seq:c7} ensures that the bus is not
+being over-charged. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in \ref{eq:ac}. This is
+done by checking if the initial charge for visit \(i\) is greater than or equal to the minimum allowed charge.
 \ref{seq:c10} ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less
 than the detach time which is less than the time the bus exits the station and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c13} - \ref{seq:c17} set the rules for the decision variable \(\iota_h\).
-\ref{seq:c13} and \ref{seq:c14} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete
-time, \(900 \cdot h\), being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, \(d_i\),
-is less than the next discrete time step, \(dt_h\). The final constraint \ref{seq:c17} is the discrete representation of
-whether charger \(v_i \in \Qset\) is active.
+The last set of constraints \ref{seq:c13} - \ref{seq:c17} set the rules for the decision variable \(\iota_h\). \ref{seq:c13}
+and \ref{seq:c14} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete time, \(0.25 \cdot
+h\), being checked. Similarly, \ref{seq:c15} and \ref{seq:c16} ensure that the final charge time, \(d_i\), is less than the
+next discrete time step, \(dt_h\). The final constraint \ref{seq:c17} is the discrete representation of whether charger
+\(v_i \in \Qset\) is active.
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
@@ -557,8 +556,8 @@ iteration count (temperature change counter) (Andre A. Keller, 2019).
 The initial temperature and cooling schedule are used to regulate the speed at which the solution attempts to converge
 to the best known solution. When the temperature is high, SA encourages exploration. As it cools down (in accordance to
 the cooling schedule), it begins to encourage local exploitation of the solution
-(R.A. Rutenbar, 1989, Darrall Henderson and Sheldon H. Jacobson and Alan W. Johnson, 1989)]. There are three basic types of cooling equations as
-shown in \ref{fig:cool} (Andre A. Keller, 2019). The different types merely dictate the rate at which the algorithm
+(R.A. Rutenbar, 1989, Darrall Henderson and Sheldon H. Jacobson and Alan W. Johnson, 1989)]. There are three basic types of cooling equations
+as shown in \ref{fig:cool} (Andre A. Keller, 2019). The different types merely dictate the rate at which the algorithm
 progressively disallows exploration. A linear cooling schedule is defined by \ref{eq:cool0}.
 
 \begin{equation}
@@ -612,7 +611,7 @@ f(x,x',T) =
 \end{equation}
 
 \subsection{Generation Mechanisms}
-\label{sec:generators}
+\label{sec:generation-mechanisms}
 Generation mechanisms in SA are used to generate random solutions to propose to the optimizer, these are known as
 candidate solutions. In the case of the problem statement made in \ref{sec:problem-description}, five generation mechanism
 shall be used: new visit, slide visit, new charger, remove, new window. The purpose of each of these generators is to
@@ -620,12 +619,9 @@ assign new visits to a charger, adjust a bus visits initial and final charge tim
 remove a bus from a charger, and place a bus visit into a new time slot/queue. Each generator will be discussed in more
 detail in \ref{sec:generators}.
 
-These generator mechanisms will in turn be utilized by three wrapper functions. The purpose of the route generation to
-create a set of bus route data to feed to the SA algorithm. Although, strictly speaking, is not a part of the SA
-algorithm. It is vital in specifying the initial conditions and ``setting the stage'' for the SA algorithm to solve. The
-schedule generation is to used create candidate solutions for SA to compare with other solutions, and the perturb
-schedule generator is used to take a candidate solution and alter it slightly in an attempt to fall into a global/local
-minimum.
+These generator mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
+candidate solutions for SA to compare with other solutions, and the perturb schedule generator is used to take a
+candidate solution and alter it slightly in an attempt to fall into a global/local minimum.
 
 \subsubsection{Generator Input/Output}
 \label{sec:generator-input-output}
@@ -635,22 +631,22 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orgaef3920}
-Each generator has the tuple input of (\(i, \I, \C\)) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\)
-(\ref{sec:problem-description}), that describes the set of visits generated by the route generation algorithm
-(\ref{sec:route-gen}), and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\). In other words, \(\C\)
-defines the set of times when the chargers are not being utilized or are ``inactive''.
+\label{sec:org9c088a9}
+Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\)
+(\ref{sec:problem-description}), that describes the set of visits, and \(\C\) is the set that describes the availability for
+all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
+``inactive''.
 
 To derive \(\C\), consider its inverse, \(\C'\), which is the set of ``active'' time periods for each charger, \(\C' = \bigcup
 \{\C_q' : q \in \mathcal{Q}\}\) where \(\C_q' \subset \C'\) describes the active times for chagrer \(q\). Focusing on an individual charger,
 consider \(\C_q'\) before a schedule has been imposed upon it, \(\C_q' \in \varnothing\). In other words, no buses have been
 assigned to be charged over the time period of \([u_i, d_i]\). After the scheduling process is complete, \(\C_q'\) will have
 a set of active periods of the form \(\C_q' \in \{[u_j, d_j]: j \in \Jsetq \}\) where \(\Jsetq \subset \mathcal{I}\). For \(\C_q'\) to be of
-value, its compliment is to be found, \(\C_q\).
+value, its compliment is to be found, \(\C_q\). Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\).
 
 To determine the inverse of \(\C_q'\), begin by noting \(\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing\), is said to be
-disjoint (Halmos, Paul R., 1974). The inverse of a disjoint set can be found by the De Morgan Law as shown in
-\ref{eq:demorgan}. Using \ref{eq:demorgan}, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
+disjoint (Halmos, Paul R., 1974). The inverse of a disjoint set can be found by the De Morgan Law as shown
+in \ref{eq:demorgan}. Using \ref{eq:demorgan}, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 
 \begin{equation}
@@ -659,7 +655,7 @@ Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org62ed136}
+\label{sec:orgcb0e012}
 The output is a modified visit, noted as \(\I_i'\). In actuality only the decision variables are being altered which is a
 subset of \(\I_i\). Let this subset be defined by \(x_i' \equiv (v_i, u_i, d_i) \subset \I_i\) which is the chosen queue, initial
 charge time, and detach time from the generator, \((v_i, u_i, d_i)\). The nature of SA implies that the generators have a
@@ -681,11 +677,12 @@ while others charge.
 The new visit generator describes the process of moving bus \(b\) from the idle queue, \(v_i \in \{Q+1,..., Q+B\}\) to a valid
 charging queue, \(v_i \in \{1,..., Q\}\). Lines 2-4 extracts the visit, \(i\), arrival time, \(a_i\), and departure time, \(e_i\).
 Note that in subsequent algorithms these lines will be omitted for conciseness. Line 5 loops through the inactive time
-periods that contain the time the bus is at the station, \([a_i, e_i]\). Line 6 verifies that the inactive period selected
-is valid and returns a random charging time, \([u_i, d_i]\), if it is. Line 7 returns the new visit.
+periods that contain the time the bus is at the station, \([a_i, e_i]\). \(\U_{\cdot}\) indicates that an element is selected
+randomly with a uniform distribution from the set \(\{\cdot\}\). Line 6 verifies that the inactive period selected is valid
+and returns a random charging time, \([u_i, d_i]\), if it is. Line 7 returns the new visit.
 
 \begin{algorithm}[H]
-\caption{New visit algorithm}
+\caption{New visit algorithm} \label{alg:new-visit}
     \LinesNumbered
     \TitleOfAlgo{New Visit}
     \KwIn{($\Sol$)}
@@ -700,27 +697,25 @@ is valid and returns a random charging time, \([u_i, d_i]\), if it is. Line 7 re
         $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the arrival time for visit $i$}
         $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the departure time for visit $i$}
 
-        %\tcc{Randomly select a free time, $j$, from any charger $q \in \Q$ that is within the time frame $[a_i e_i]$}
+        \tcc{Randomly select a free time, $j$, from any charger $q \in \Qset$ that is within the time frame $[a_i e_i]$}
         \While {$C_q^j \in \{[a_i, e_i]\} \subset \U_{\C}$}
         {
-            % \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow\findFreeTime{C_q^j, ($a_i, e_i)} \not\in \varnothing$}
+            \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j, (a_i, e_i)$} $\not\in \varnothing$}
             {
                 \Return{$\I_i' \leftarrow x_i'$} \tcc*[f]{Return visit}
             }
         }
     }
-\label{alg:new-visit}
 \end{algorithm}
 
-The algorithm to find free time is defined in \ref{alg:find-free-time}. \(L\) and \(U\) are the lower and upper bound of the time
-between scheduled times. The possible use cases are depicted in \ref{fig:find-free}. In each case depicted by \ref{fig:find-free},
-the red line shows the arrival and departure time for an arbitrary bus visit, \(i\). The blue lines indicate reigons in
-which charger \(q\) is active. \(C \in \C_q \subset \C\) represents one of the regions between the blue lines, \([L, U]\) which stand
-for the lower and upper portions of the regions, respectively. The output of \ref{alg:find-free-time} is a range for which the
-bus may be charged and the empty set if it cannot. As an example, consider a bus that is in the process of being
-scheduled and it encounters a situation similar to \autoref{subfig:egu}. That is, the only scheduling constraint is that
-the arrival time is before charger \(q\) is available to charge the bus. Therefore, the bus must wait intil \(L\) before
-changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selected from is \([L,e]\).
+The function \texttt{findFreeTime} in \ref{alg:new-visit} is defined in \ref{alg:find-free-time}. \(L\) and \(U\) are the lower
+and upper bound of the time between scheduled times. The possible use cases are depicted in \ref{fig:find-free}. In each case
+depicted by \ref{fig:find-free}, the red line shows the arrival and departure time for an arbitrary bus visit, \(i\). The blue
+lines indicate reigons in which charger \(q\) is active. \(C \in \C_q \subset \C\) represents one of the regions between the blue
+lines, \([L, U]\) which stand for the lower and upper portions of the regions, respectively. The output of
+\ref{alg:find-free-time}. That is, the only scheduling constraint is that the arrival time is before charger \(q\) is
+available to charge the bus. Therefore, the bus must wait intil \(L\) before changer \(q\) may charge it. Furthermore, the
+range that \(u_i\) must be selected from is \([L,e]\).
 
 \begin{figure}
 \centering
@@ -834,8 +829,8 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
 
 \begin{subfigure}{\textwidth}
     \centering
-    \caption{Invalid position}
-    \label{subfig:invalid}
+    \caption{Invalid position upper bound}
+    \label{subfig:invalid-upper}
     \begin{tikzpicture}[scale=2]
         \coordinate (A) at (0.0,0);
         \coordinate (B) at (5.5,0);
@@ -855,8 +850,8 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
 
 \begin{subfigure}{\textwidth}
     \centering
-    \caption{Invalid position}
-    \label{subfig:invalid}
+    \caption{Invalid position lower bound}
+    \label{subfig:invalid-lower}
     \begin{tikzpicture}[scale=2]
         \coordinate (A) at (0.0,0);
         \coordinate (B) at (5.5,0);
@@ -877,7 +872,7 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
 \end{figure}
 
 \begin{algorithm}[H]
-\caption{Find free time algorithm searches and returns the available time frames}
+\caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(L,U,a,e)$}
@@ -905,7 +900,7 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
                 u $\leftarrow$ $\U_{[a,L], [U,e]}$\;
                 d $\leftarrow$ $\U_{[u,L], [u,e]}$\;
         }
-        \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid})})
+        \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
         {
                 u $\leftarrow$ $\varnothing$\;
                 d $\leftarrow$ $\varnothing$\;
@@ -913,19 +908,18 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
 
         \Return{(u,d)}
     }
-\label{alg:find-free-time}
 \end{algorithm}
 
 \paragraph{Slide visit}
 \label{slide-visit}
-Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
-some room to move \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and \(d_i\) are selected with a
-uniform distribution to satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 randomly loops through the other
-inactive time frames from charger \(v_i\) that is within the time that the bus is at the station, \([a_i, e_i]\). Line 3
-verifies the time frame previously selected and returns a new charging time. Line 4 returns the new visit.
+Slide visit (\ref{alg:slide-visit}) is used for buses that have already been scheduled. Because of the constraint
+\ref{seq:c10} there may be some room to move \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and
+\(d_i\) are selected with a uniform distribution to satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 randomly loops
+through the other inactive time frames from charger \(v_i\) that is within the time that the bus is at the station, \([a_i,
+e_i]\). Line 3 verifies the time frame previously selected and returns a new charging time. Line 4 returns the new visit.
 
 \begin{algorithm}[H]
-\caption{Slide Visit Algorithm}
+\caption{Slide Visit Algorithm} \label{alg:slide-visit}
     \LinesNumbered
     \TitleOfAlgo{Slide Visit}
     \KwIn{$\Sol$}
@@ -936,24 +930,23 @@ verifies the time frame previously selected and returns a new charging time. Lin
         \tcc{Randomly select an inactive time frame, $j$, from charger $v_i$ that is within the time frame $[a_i, e_i]$}
         \While {$C_q^j \in \{[a_i, e_i]\} \subset \U_{\C_{v_i}}$}
         {
-            \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \rightarrow$ \findFreeTime{$C_q^j$, ($a_i, e_i$)} $\not\in \varnothing$}
+            \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j$, ($a_i, e_i$)} $\not\in \varnothing$}
             {
                 \Return{$\I_i \leftarrow x_i'$} \tcc*[f]{Return visit}
             }
         }
     }
-\label{alg:slide-visit}
 \end{algorithm}
 
 \paragraph{New charger}
 \label{new-charger}
 The new charger generator takes a visit \(\I_i\) and changes the charger it is on while maintianing the same charge time,
-\([u_i, d_i]\). Similarly to \ref{alg:new-visit}, the new candidate, \(x_i'\), must be checked before being added to the set
-\(X_i'\). Line 2 randomly loops through any time frame from any charger, \(C_q^j\), that is within the time frame that the
-bus is at the station, \([a_i, e_i]\). Line 3 verifies the selection and line 4 returns the new visit.
+\([u_i, d_i]\). Similar to \ref{alg:new-visit}, the new candidate, \(x_i'\), must be checked before being added to the set \(X_i'\).
+Line 2 randomly loops through any time frame from any charger, \(C_q^j\), that is within the time frame that the bus is at
+the station, \([a_i, e_i]\). Line 3 verifies the selection and line 4 returns the new visit.
 
 \begin{algorithm}[H]
-\caption{New Charger Algorithm}
+\caption{New Charger Algorithm} \label{alg:new-charger}
     \LinesNumbered
     \TitleOfAlgo{New Charger}
     \KwIn{$\Sol$}
@@ -964,14 +957,13 @@ bus is at the station, \([a_i, e_i]\). Line 3 verifies the selection and line 4 
         \tcc{Randomly select an inactive time frame, $j$, from any charger $q \in \Qset$ that is within the time frame $[a_i, e_i]$}
         \While {$C_q^j \in \{[a_i, e_i] \} \subset \U_{\C}$}
         {
-            \If (\tcc*[f]{If the charge time is within the region $[L,U]$}) {$L \leq u$ \And $U \geq e$}
+            \If (\tcc*[f]{If the charge time is within the region $[L,U]$}) {$L \leq u_i$ \And $U \geq d_i$}
             {
                 \Return{$\I_i \leftarrow x_i'$} \tcc*[f]{Return visit}
             }
         }
 
     }
-\label{alg:new-charger}
 \end{algorithm}
 
 \paragraph{Remove}
@@ -980,7 +972,7 @@ The remove generator simply removes a bus from a charger queue and places it in 
 \{Q,...,Q+B\}\).
 
 \begin{algorithm}[H]
-\caption{Remove algorithm}
+\caption{Remove algorithm} \label{alg:remove}
     \LinesNumbered
     \TitleOfAlgo{Remove}
     \KwIn{$\Sol$}
@@ -988,9 +980,8 @@ The remove generator simply removes a bus from a charger queue and places it in 
 
     \Begin
     {
-       \Return{$(Q+b,a_i,e_i)$}
+       \Return{$\I_i' \leftarrow (Q+b,a_i,e_i)$}
     }
-\label{alg:remove}
 \end{algorithm}
 
 \paragraph{New Window}
@@ -1003,15 +994,16 @@ meant that current scheduled tuple \((v_i, u_i, d_i)\) is removed and added back
     \LinesNumbered
     \TitleOfAlgo{New Window}
     \KwIn{$\Sol$}
-    \KwOut{$\I$}
+    \KwOut{$\I_i'$}
 
     \Begin
     {
         \SetKwFunction{NewVisit}{NewVisit}
         \SetKwFunction{Remove}{Remove}
 
-        $x_i' \leftarrow$ \Remove{$v,u,d$} \tcc*{Remove visit $i$ from its charger}
-        $x_i' \leftarrow$ \NewVisit{$x_i'$} \tcc*{Add visit $i$ back in randomly}
+        $\I_i' \leftarrow$ \Remove{$v,u,d$}   \tcc*{Remove visit $i$ from its charger}
+        $\Sol \leftarrow \I_i'$               \tcc*{Update the route information tuple}
+        $\I_i' \leftarrow$ \NewVisit{$\Sol'$} \tcc*{Add visit $i$ back in randomly}
 
         \Return{$(v,u,d)$}
     }
@@ -1024,148 +1016,44 @@ This section covers the algorithms utilized to select and execute different gene
 generator wrappers are the method immediately called by SA. Each wrapper utilizes the generators previously described
 and returns either metadata about the bus routes or a new valid charger schedule.
 
-\paragraph{Route Generation}
-\label{sec:route-gen}
-The objective of route generation is to create a set of metadata about bus routes given the information in
-\ref{fig:routeyaml}. Specifically, the objective is to generate the input variables in \(\I\) for \(I\) visits with \(B\) buses.
-Each visit will have an initial charge (specified for first visit only), arrival time, departure and time. In other
-words, \(y_i \equiv (a_i, e_i) \subset \I \forall i \in \Iset\) and each bus will be initialed with the SOC defined by
-\ref{eq:batinit}.
-
-In essence the logic is as follows: Generate \(B\) random numbers that add up to \(I\) visits (with a minimum amount of
-visits set for each bus). For each bus and for each visit, set a departure time that is between the range [min\textsubscript{rest},
-nmax\textsubscript{rest}] (\ref{fig:routeyaml}), set the next arrival time to be \(j \cdot \frac{T}{\text{J}}\) where \(j\) is the \(j^{th}\) visit
-for bus \(b\) and \(J\) is the total number of visits for bus \(b\). Finally, calculate the amount of discharge from the
-previous arrival to the next departure time as defined by \ref{eq:batinit}.
-
-The metadata in \ref{fig:routeyaml} will be denoted by \(\M\) visually represents the YAML file used. This data contains all the
-parameters required to create a set of bus routes. Each of the cells will now be described from left to right, top to
-bottom. \texttt{time\_horizon} represents the amount of time that the routes will be running for in hours. \texttt{schedule} contains
-the parameters that directly affect the generated set of routes. Some of the parameters in the YAML have already been
-defined in this paper, but go under a different name in the file. These parameters are: \texttt{num\_bus} \(\equiv B\),
-\texttt{num\_visit} \(\equiv I\), and \texttt{bat\_capacity} \(\equiv \kappa\). \texttt{max\_charge} and \texttt{min\_charge} represent the maximum and
-minimum percentages that the buses may be charged to. \texttt{max\_rest} and \texttt{min\_rest} represent the maximum and minimum times
-that buses may remain at the station, and \texttt{max\_route} and \texttt{min\_route} represent the maximum and minimum lengths that bus
-routes may be.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.5\textwidth]{sections/img/route_yaml.png}
-\caption{\label{fig:routeyaml}Route YAML file with example data}
-\end{figure}
-
-\begin{algorithm}[H]
-\caption{Route generation algorithm}
-    \LinesNumbered
-    \TitleOfAlgo{RouteGeneration}
-    \KwIn{$\M$}
-    \KwOut{$\I$}
-
-    \SetKwFunction{Union}{Union}
-    \SetKwFunction{DepartureTime}{DepartureTime}
-    \SetKwFunction{ArrivalTimeNew}{ArrivalTimeNew}
-    \SetKwFunction{Discharge}{Discharge}
-    \SetKwFunction{SortByArrival}{SortByArrival}
-    \SetKwFunction{Feasible}{Feasible}
-
-    \Begin
-    {
-        \While{\Not schedule-created}
-        {
-            arrival-new $\leftarrow$ 0.0\;
-            arrival-old $\leftarrow$ 0.0\;
-            departure-time $\leftarrow$ 0.0\;
-            schedule-created $\leftarrow$ false\;
-
-            \ForEach{b $\in$ B}
-            {
-                \ForEach{n $\in\; J_b$}
-                {
-                    arrival-old $\leftarrow$ arrival-new\;
-
-                    \If{j = $J_b$}{final-visit = true\;}
-                    \Else{final-visit = false\;}
-
-                    departure-time $\leftarrow$ \DepartureTime{arrival-old, final-visit}\;
-                    arrival-new $\leftarrow$ current-visit*$\frac{T}{J_b}$\;
-                    discharge $\leftarrow$ discharge-rate*(next-arrival, depart-time)    \;
-                    \Union{$\I$, (arrival-old, departure-time, discharge)}\;
-                }
-            }
-
-            schedule-created $\leftarrow$ \Feasible{$\I$}\;
-            \SortByArrival{$\I$}\;
-        }
-        \Return{$\I$}
-    }
-\label{alg:route-generation}
-\end{algorithm}
-
-The \texttt{Departure} algorithm is shown in \ref{alg:departure-time}, and the \texttt{Feasible} method is used to determine if
-the generated schedule is valid (conditions covered in \ref{sec:constraints}). This is done to generate a schedule that is in
-the solution space.
-
-\begin{algorithm}[H]
-\caption{Departure time algorithm}
-
-    \LinesNumbered
-    \TitleOfAlgo{DepartureTime}
-    \KwIn{(arrival-old, final-visit)}
-    \KwOut{depart}
-
-    \Begin
-    {
-        \If{final-visit}
-        {
-            depart $\leftarrow$ T\;
-        }
-        \Else
-        {
-            depart $\leftarrow$ arrival-old + $\U_{[\text{min-rest},\text{max-rest}]}$\;
-        }
-
-        \Return{depart}
-    }
-\label{alg:departure-time}
-\end{algorithm}
-
 \paragraph{Schedule Generation}
 \label{schedule-generation}
 The objective of this generator is to generate a candidate solution to the given schedule. To generate a candidate
 solution, the generator is given \(\I\), a bus is picked at random, \(b \in \Bset\), then a random visit is picked. The new
-visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm is summarized
-in \ref{alg:schedule-generation}.
+visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm is
+summarized in \ref{alg:schedule-generation}. Recall from \ref{sec:input-variables}, \(\Jset_B \subset \I\) is used to indicate the
+set of visit indices for bus \(b\).
 
 \begin{algorithm}[H]
-\caption{Schedule generation algorithm}
+\caption{Schedule generation algorithm} \label{alg:schedule-generation}
     \LinesNumbered
     \TitleOfAlgo{ScheduleGeneration}
     \KwIn{$\I$, $\C$}
-    \KwOut{$\I_i'$}
+    \KwOut{$\I'$, $\C'$}
 
     \SetKwFunction{Union}{Union}
     \SetKwFunction{NewVisit}{NewVisit}
+    \SetKwFunction{UpdateQueues}{UpdateQueues}
 
     \Begin
     {
-        $\I \leftarrow \; \varnothing$\;
-        \For {i in I}
+        $\I' \leftarrow \; \varnothing$\;
+        \For {$\I_i' in \I$}
         {
-            $b \leftarrow\; \U_{\Bset}$\;
-            $i\leftarrow\; \U_{\Iset}$\;
-            $\I_i \leftarrow \NewVisit{(visit.a, visit.e)}$\;
-            Update $\C_q$ with information in $I_i'$\;
+            $b \leftarrow\; \U_{\Bset}$ \tcc*{Randomly select a bus with uniform distribution}
+            $i\leftarrow\; \U_{\Jset_b}$ \tcc*{Randomly select a visit from bus $b$ with uniform distribution}
+            $\I_i' \leftarrow \NewVisit{(visit.a, visit.e)}$ \tcc*{Assign the bus to a charger}
+            \UpdateQueues{($\I_i'$, $\C_q$)} \tcc*{Update $\C_q$ with information in $I_i'$}
         }
-            \Return{$\I$}
+            \Return{$\I'$, $\C'$}
     }
-\label{alg:schedule-generation}
 \end{algorithm}
 
 \paragraph{Perturb Schedule}
 \label{tweak-schedule}
 As described in SA, local searches are also employed to try and exploit a given solution
-(Radosavljevic, Jordan, 2018). The method that will be employed to exploit the given solution is as follows: pick
-a bus, pick a visit, pick a generator. The algorithm is outlined in \ref{alg:perturb-schedule}.
+(Radosavljevic, Jordan, 2018). The method that will be employed to exploit the given solution is as follows:
+pick a bus, pick a visit, pick a generator. The algorithm is outlined in \ref{alg:perturb-schedule}.
 
 \begin{algorithm}[H]
 \caption{Perturb schedule algorithm}
@@ -1173,18 +1061,18 @@ a bus, pick a visit, pick a generator. The algorithm is outlined in \ref{alg:per
     \LinesNumbered
     \TitleOfAlgo{PerturbSchedule}
     \KwIn{$\I$, $\C$}
-    \KwOut{$\I_i'$}
+    \KwOut{$\I_i'$, $\C'$}
 
     \SetKwFunction{GeneratorCallback}{GeneratorCallback}
 
     \Begin
     {
-        Select the bus $b \leftarrow\; \U_{\Bset}$\;
-        Select the visit $j \leftarrow\; \U_{\Jset_b}$\;
-        generator $\leftarrow\; \U_{[1,generator-count]}$\;
-        $\I_i \leftarrow$ \GeneratorCallback[generator]{($j, \I, \C$)}\;
-        Update $\C_q$ with information in $I_i'$\;
-        \Return{$\I_i$}
+        $b \leftarrow\; \U_{\Bset}$ \tcc*{Randomly select a bus with uniform distribution}
+        $i\leftarrow\; \U_{\Jset_b}$ \tcc*{Randomly select a visit from bus $b$ with uniform distribution}
+        $G \leftarrow\; \U_{[1,G_size]}$ \tcc*{Select one of the generator functions}
+        $\I_i', \C' \leftarrow$ \GeneratorCallback{($G$, $j, \I, \C$)} \tcc*{Excecute the generator function}
+        \UpdateQueues{($\I_i'$, $\C_q$)} \tcc*{Update $\C_q$ with information in $I_i'$}
+        \Return{$\I'$, $\C$}
     }
 \label{alg:perturb-schedule}
 \end{algorithm}
@@ -1205,27 +1093,27 @@ better. Update \(\omega\) with \(\omega'\) with probability \(e^{\frac{-\Delta_{
 current solution. This is repeated until the stopping criteria is met.
 
 \begin{algorithm}[H]
-\caption{Pseudo-code for SA}
+\caption{Pseudo-code for SA} \label{alg:sa-pseudo}
     \LinesNumbered
     \TitleOfAlgo{SA Pseudo-Code}
 
     \SetKwFunction{f}{f}
     \Begin
     {
-        Select an initial solution $\omega \in W$\;
-        Select the temperature change counter $k=0$\;
-        Select a temperature cooling schedule $t_k$\;
-        Select an initial temperature $T = t_0 \geq 0$\;
-        Set the initial inactive time for each charger to the time horizon $\forall q \in \Qset : \C_q \in \{[0,T]\}$\;
-        Select a repetition schedule $M_k$, that defines the number of iterations executed at each temerature $t_k$\;
+        $\omega \in W$ \tcc*{Select an initial solution}
+        $k=0$ \tcc*{Select the temperature change counter}
+        $t_k$ \tcc*{Select a temperature cooling schedule}
+        $T = t_0 \geq 0$ \tcc*{Select an initial temperature}
+        $\forall q \in \Qset : \C_q \in \{[0,T]\}$ \tcc*{Set the initial inactive time for each charger to the time horizon}
+        \tcc{Select a repetition schedule $M_k$, that defines the number of iterations executed at each temerature $t_k$}
 
         \While{Stopping criterion not met}
         {
-            Set repetition counter $m \rightarrow 0$\;
+            $m \rightarrow 0$ \tcc*{Set repetition counter}
             \While{$m = M_k$}
             {
-                Generate a new solution $\omega' \in N(\omega)$\;
-                Calculate $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$}\;
+                $\omega' \in N(\omega)$ \tcc*{Generate a new solution}
+                $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
                 \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
                 \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
                 $m \rightarrow m+1$\;
@@ -1234,7 +1122,6 @@ current solution. This is repeated until the stopping criteria is met.
         $k \rightarrow k+1$\;
         }
     }
-\label{alg:sa-pseudo}
 \end{algorithm}
 
 The objective now is to outline SA-PAP in \ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the initial
@@ -1246,7 +1133,7 @@ schedule, \(k \in \{1, 2, ..., K\}\). Lines 15-23 perturbs the previously genera
 updates the current solution with the candidate solution depending on the fitness.
 
 \begin{algorithm}[H]
-\caption{Simulated annealing approach to the position allocation problem}
+\caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
     \LinesNumbered
     \TitleOfAlgo{SA PAP}
     \KwIn{$\I$}
@@ -1259,31 +1146,30 @@ updates the current solution with the candidate solution depending on the fitnes
 
     \Begin
     {
-        Initialize temperature $\Tau_0$\;
-        Select cooling equation $\Tau_{M} \leftarrow$ \CoolingEquation{$\Tau_0$}\;
-        Set a repetition schedule $K$\;
+        $\Tau_0$ \tcc*{Initialize temperature}
+        $\Tau_{M} \leftarrow$ \CoolingEquation{$\Tau_0$} \tcc*{Select cooling equation}
+        $K$ \tcc*{Set a repetition schedule}
 
         \For{$\Tau_m \in \{\Tau_0, \Tau_1, ..., \Tau_M\}$}
         {
-            Generate a new solution $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$}\;
-            Calculate $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$}\;
+            $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$} \tcc*{Generate a new solution}
+            $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
             \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
             \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
 
             \For{$k \in \{1, 2, ..., K\}$}
             {
-                Perturb the solution and reassess $\upsilon' \in Y \leftarrow$ \PerturbSchedule{$\I$}\;
-                Calculate $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$}\;
+                $\upsilon' \in Y \leftarrow$ \PerturbSchedule{$\I$} \tcc*{Perturb the solution and reassess}
+                $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate}
                 \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
                 \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
             } % For k
         }     % For \Tau
     }         % Begin
-\label{alg:sa-pap}
 \end{algorithm}
 
 \section{References}
-\label{sec:orgfa5163c}
+\label{sec:org5f768f1}
 \noindent
 Andre A. Keller (2019). \emph{Multi-Objective Optimization In Theory and Practice {II}: Metaheuristic Algorithms}, {BENTHAM} {SCIENCE} {PUBLISHERS}.
 

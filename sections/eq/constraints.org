@@ -47,7 +47,7 @@
   \end{equation}
   \begin{equation}
       \label{seq:c11}
-      m_{k_i} - m\kappa_{b_i} < T \phi_{i}
+      m_{k_i} - \eta_{i} > T \phi_{i}
   \end{equation}
   \begin{equation}
       \label{seq:c12}

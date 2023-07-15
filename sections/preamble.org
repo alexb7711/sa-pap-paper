@@ -9,6 +9,7 @@
 #+latex_header: \usepackage{lipsum}                         % Dummy filler text
 #+latex_header: \usepackage{amsfonts}                       % Cool math fonts
 #+latex_header: \usepackage{multicol}                       % Add capability to make columns
+#+latex_header: \usepackage{hyperref}                       % Cool clean hyperlinks
 #+latex_header: \setlength\parindent{0pt}                   % No indent for paragraphs
 
 #+latex_header: \usetikzlibrary{arrows.meta}                % Arrows for tikz

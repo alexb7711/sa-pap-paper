@@ -112,8 +112,8 @@
 
 \begin{subfigure}{\textwidth}
     \centering
-    \caption{Invalid position}
-    \label{subfig:invalid}
+    \caption{Invalid position upper bound}
+    \label{subfig:invalid-upper}
     \begin{tikzpicture}[scale=2]
         \coordinate (A) at (0.0,0);
         \coordinate (B) at (5.5,0);
@@ -133,8 +133,8 @@
 
 \begin{subfigure}{\textwidth}
     \centering
-    \caption{Invalid position}
-    \label{subfig:invalid}
+    \caption{Invalid position lower bound}
+    \label{subfig:invalid-lower}
     \begin{tikzpicture}[scale=2]
         \coordinate (A) at (0.0,0);
         \coordinate (B) at (5.5,0);
