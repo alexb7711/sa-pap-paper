@@ -77,7 +77,7 @@ updates the current solution with the candidate solution depending on the fitnes
         \For{$\Tau_m \in \{\Tau_0, \Tau_1, ..., \Tau_M\}$}
         {
             $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$} \tcc*{Generate a new solution}
-            $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate}
+            $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
             \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
             \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
 
