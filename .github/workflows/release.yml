@@ -1,10 +1,7 @@
 name: LaTeX Release
 
 permissions:
-  id-token: write
-  contents: read
-  issues: write
-  pull-requests: write
+  contents: write
 
 on:
   push:
