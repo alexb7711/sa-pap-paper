@@ -6,7 +6,8 @@ version: '3'
 env:
   TARGET : sa-pap.pdf
   IMG_DIR: ./sections/img/
-  DOC    : main    																															# Name of main source file
+  DOC    : main
+  SCRIPTS: org-doc-scripts
 
 ################################################################################
 # RECIPES
@@ -34,10 +35,7 @@ tasks:
   precheck:
     desc: "Make sure that all the dependencies are installed."
     cmds:
-      - |
-        echo "Checking the programs required for the build are installed..."
-        latexmk --version >/dev/null 2>&1 && (echo "latexmk installed!") || (echo "ERROR: latexmk is required."; exit 1)
-        pdflatex --version >/dev/null 2>&1 && (echo "pdflatex installed!") || (echo "ERROR: pdflatex is required."; exit 1)
+      - {{.SCRIPTS}}/check-packages
     silent: true
 
 ##==============================================================================
@@ -78,6 +76,13 @@ tasks:
 
 ##==============================================================================
 #
+  relative-path-bibtex:
+    desc: "Update the paths in the 'bibtex' command to be relative."
+    cmds:
+      - sh {{.SCRIPTS}}/relative-path-bibtex {{.DOC}}.tex
+
+##==============================================================================
+#
   pdf:
     desc: "Output {{.TARGET}} PDF."
     sources:
@@ -85,11 +90,8 @@ tasks:
     generates:
       - ./sa-pap.pdf
     cmds:
-      - |
-        latexmk -f -interaction=nonstopmode \
-                   -pdf -pdflatex="pdflatex --shell-escape %O %S" \
-                   -bibtex {{.DOC}}.tex
-        [ -f {{.DOC}}.pdf ] && mv {{.DOC}}.pdf {{.TARGET}}
+      - task: relative-path-bibtex
+      - {{.SCRIPTS}}/build-pdf {{.DOC}} {{.TARGET}}
     silent: false
 
 ##==============================================================================
