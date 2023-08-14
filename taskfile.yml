@@ -35,7 +35,7 @@ tasks:
   precheck:
     desc: "Make sure that all the dependencies are installed."
     cmds:
-      - {{.SCRIPTS}}/check-packages
+      - sh {{.SCRIPTS}}/check-packages
     silent: true
 
 ##==============================================================================
@@ -91,7 +91,7 @@ tasks:
       - ./sa-pap.pdf
     cmds:
       - task: relative-path-bibtex
-      - {{.SCRIPTS}}/build-pdf {{.DOC}} {{.TARGET}}
+      - sh {{.SCRIPTS}}/build-pdf {{.DOC}} {{.TARGET}}
     silent: false
 
 ##==============================================================================
