@@ -144,16 +144,19 @@ arrives for visit $i$.
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^I \Big(\epsilon_{v_i}s_i + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
+\AC = \sum_{i=1}^I \Big(\epsilon_{v_i}r_q + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
 \end{equation}
 
-The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$ (i.e. cost of
-using the charger multiplied by the usage time). The second term is the penalty function that is either enabled or
-disabled by $\phi_i$ [cite:@luenberger-2008-penal-barrier-method]. $\phi_i$ is enabled when the initial charge, $\eta_i$, is less
-than the allowed minimum charge, $m\kappa_{b_i}$. This is further discussed in [[#sec:constraints]]. Note that the variables
-$\phi_i$ and $\eta_i$ are both decision variables that are being multiplied together. This is called a bilinear term. Using a
-traditional MILP solver, this would require linearization [cite:@rodriguez-2013-compar-asses]; however, because SA handles
-nonlinearities easily these bilinear terms will be ignored [cite:@radosavljevic-2018-metah-optim].
+The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$. If $\epsilon_{vi}$ is
+taken to be $\epsilon_{v_i} = 1000v_i$, the objective function encourages the model to minimize the total amount of chargers.
+Taking this a step further, if the model represents the first $n_{Q_s}$ indices to be slow chargers and the next
+$n_{Q_f}$ indices to be fast chargers, where $n_{Q_s} < n_{Q_f} \in \mathcal{Z}$ and $n_{Q_s} + n_{Q_f} = Q$, the model will also encourage the use of slow
+chargers over fast. The second term is the penalty function that is either enabled or disabled by $\phi_i$
+[cite:@luenberger-2008-penal-barrier-method]. $\phi_i$ is enabled when the initial charge, $\eta_i$, is less than the allowed
+minimum charge, $m\kappa_{b_i}$. This is further discussed in [[#sec:constraints]]. Note that the variables $\phi_i$ and $\eta_i$ are
+both decision variables that are being multiplied together. This is called a bilinear term. Using a traditional MILP
+solver, this would require linearization [cite:@rodriguez-2013-compar-asses]; however, because SA handles nonlinearities
+easily these bilinear terms will be ignored [cite:@radosavljevic-2018-metah-optim].
 
 The demand cost quantifies the amount of power being used over a given period and adjusts the cost accordingly. The
 consumption cost calculates the total amount of power being consumed by the chargers. The consumption cost is merely the
@@ -167,7 +170,7 @@ charger will be utilized, $s_i$.
 \end{equation}
 
 The demand cost is calculated based on 15 minute increments (0.25 hours). This cost is also referred to as the peak 15. The
-average power used over an arbitrary 15 minute interval is represented by [[eq:p15]].
+average power used over an arbitrary 15-minute interval is represented by [[eq:p15]].
 
 #+name: eq:p15
 \begin{equation}
