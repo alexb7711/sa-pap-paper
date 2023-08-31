@@ -188,7 +188,7 @@ range that $u_i$ must be selected from is $[L,e]$.
 
 #+include: "img/find-free.org"
 
-\begin{algorithm}[H]
+\begin{algorithm}[h]
 \caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
