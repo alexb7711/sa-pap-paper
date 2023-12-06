@@ -18,21 +18,14 @@ jobs:
         submodules: true
     - name: Update and Intall Dependencies
       run: sudo apt-get update && sudo apt-get install -y texlive-full latexmk
-    - name: Setup go-task
-      uses: arduino/setup-task@v1
-      with:
-        version: 3.x
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Clean Project
-      run: task clean
-    - name: List Project
-      run: ls -R
+      run: make clean
     - name: PlantUML
       uses: holowinski/plantuml-github-action@main
       with:
         args: -v -tpng "sections/img/*.pml"
     - name: Build PDF
-      run: task pipeline
+      run: make pipeline
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "sa-pap.pdf"
