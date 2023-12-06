@@ -33,6 +33,7 @@ all: precheck images ## Build full thesis (LaTeX + figures)
 	@bash -e $(SCRIPTS)/relative-path-bibtex $(DOC_SRC)
 	@bash -e $(SCRIPTS)/build-pdf $(basename $(DOC_SRC)) $(TARGET) | \
 	grep "^!" -A20 --color=always || true
+	@ mv $(basename $(TARGET)).pdf sa-pap.pdf
 
 ##------------------------------------------------------------------------------
 #
@@ -41,6 +42,7 @@ pipeline: precheck images set-version ## Recipe to be ran when executed from a p
 	@bash -e $(SCRIPTS)/relative-path-bibtex $(DOC_SRC)
 	@bash -e $(SCRIPTS)/build-pdf $(basename $(DOC_SRC)) $(TARGET) | \
 	grep "^!" -A20 --color=always || true
+	@ mv $(basename $(TARGET)).pdf sa-pap.pdf
 
 ##------------------------------------------------------------------------------
 #
