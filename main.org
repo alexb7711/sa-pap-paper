@@ -22,8 +22,6 @@
 # Bibliography
 
 #+cite_export: bibtex plain
-#+bibliography:citation-database/lit-ref.bib
-#+bibliography:citation-database/lib-ref.bib
 #+print_bibliography:
 
 # LocalWords: SA

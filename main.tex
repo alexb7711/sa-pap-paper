@@ -1,4 +1,4 @@
-% Created 2023-08-26 Sat 15:05
+% Created 2023-12-05 Tue 18:51
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -55,15 +55,14 @@
 \newcommand{\Jset}{\mathcal{J}}             % Set of visits 1-J
 \newcommand{\Jsetq}{\mathbb{J}}             % Set of visits 1-J for queue active times
 \newcommand{\Hset}{\mathcal{H}}             % Set of visits 1-H
-\author{Alexander Brown}
 \date{\today}
 \title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
 \hypersetup{
- pdfauthor={Alexander Brown},
+ pdfauthor={},
  pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.1 (Org mode 9.6.7)}, 
+ pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
  pdflang={English}}
 \begin{document}
 
@@ -634,7 +633,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org2fa6d79}
+\label{sec:org8aec96f}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\)
 (\ref{sec:problem-description}), that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -658,7 +657,7 @@ Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org28269af}
+\label{sec:org92aaf58}
 The output is a modified visit, noted as \(\I_i'\). In actuality only the decision variables are being altered which is a
 subset of \(\I_i\). Let this subset be defined by \(x_i' \equiv (v_i, u_i, d_i) \subset \I_i\) which is the chosen queue, initial
 charge time, and detach time from the generator, \((v_i, u_i, d_i)\). The nature of SA implies that the generators have a
@@ -874,7 +873,7 @@ range that \(u_i\) must be selected from is \([L,e]\).
 \label{fig:find-free}
 \end{figure}
 
-\begin{algorithm}[H]
+\begin{algorithm}[h]
 \caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
@@ -1172,5 +1171,5 @@ updates the current solution with the candidate solution depending on the fitnes
 \end{algorithm}
 
 \bibliographystyle{plain}
-\bibliography{ citation-database/lib-ref,citation-database/lit-ref,citation-database/lib-ref,citation-database/lit-ref }
+\bibliography{ citation-database/lib-ref,citation-database/lit-ref }
 \end{document}
