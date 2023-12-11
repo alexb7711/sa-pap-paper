@@ -1,4 +1,4 @@
-% Created 2023-12-11 Mon 09:36
+% Created 2023-12-11 Mon 14:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -546,21 +546,23 @@ next discrete time step, \(dt_h\). The final constraint \ref{seq:c17} is the dis
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
-its main advantage is its simplicity both theoretically and in its implementation as well its inherit ability to
+its main advantage is its simplicity both theoretically, in its implementation, as well as its inherit ability to
 overcome nonlinearities \cite{gendreau-2018-handb-metah,radosavljevic-2018-metah-optim}. This model is named after its
-analogized process where a crystalline solid is heated then allowed to cool very slowly until it achieves its most
+analogized process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most
 regular possible crystal lattice configuration \cite{henderson-1989-theor-pract}. There are five key components to SA:
-initial temperature, cooling schedule (temperature function), generation mechanism, acceptance criteria, local search
+initial temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search
 iteration count (temperature change counter) \cite{keller-2019-multi-objec}.
 
-\subsection{Cooling Equation (Experimental)}
+\subsection{Cooling Equation}
 \label{cooling-equation-experimental}
-The initial temperature and cooling schedule are used to regulate the speed at which the solution attempts to converge
-to the best known solution. When the temperature is high, SA encourages exploration. As it cools down (in accordance to
-the cooling schedule), it begins to encourage local exploitation of the solution
-\cite{rutenbar-1989-simul-anneal-algor,henderson-1989-theor-pract}]. There are three basic types of cooling equations
-as shown in \ref{fig:cool} \cite{keller-2019-multi-objec}. The different types merely dictate the rate at which the algorithm
-progressively disallows exploration. A linear cooling schedule is defined by \ref{eq:cool0}.
+The temperature function models a ``rate of cooling'' for the SA process. Initially, when the temperature is high, SA
+encourages exploration. As the process begins to ``cools down'' (in accordance to the cooling schedule), it begins to
+encourage local exploitation of the solution (rather than exploration)
+\cite{rutenbar-1989-simul-anneal-algor,henderson-1989-theor-pract}. There are three basic types of cooling equations:
+linear, geometric, and exponential. These schedules are represented in \ref{fig:cool} \cite{keller-2019-multi-objec}. Each
+plot begin with an initial temperature of \(500^\circ\; C\) and a final temperature of \(1^\circ\; C\). The different
+cooling schedules dictate the rate at which the algorithm progressively disallows exploration. A linear cooling schedule
+is defined by \ref{eq:cool0}.
 
 \begin{equation}
 \label{eq:cool0}
@@ -583,8 +585,7 @@ where \(\alpha = 0.995\) in \ref{fig:cool}. An Exponential cooling schedule is d
 \Tau[n] = e^{\beta}\Tau[n-1]
 \end{equation}
 
-where \(\beta = 0.01\) in \ref{fig:cool}. The initial temperature, \(T_0\), in the case of \ref{fig:cool}, is set to \(500^\circ\; C\) and
-each schedule's final temperature is \(1\; C^\circ\).
+where \(\beta = 0.01\) in \ref{fig:cool}.
 
 \begin{figure}[htbp]
 \centering
@@ -594,14 +595,17 @@ each schedule's final temperature is \(1\; C^\circ\).
 
 \subsection{Acceptance Criteria}
 \label{sec:acceptance}
-Acceptance criteria describes the method to accept or reject a given candidate solution. In SA, if a new candidate
-solution is more fit than the currently stored solution it is always accepted as the new solution. However, within SA,
-worse candidate solutions may be accepted as the new solution. The probability of accepting the candidate solution is
-described by the function \(\exp(-\frac{J(x) - J(x')}{\Tau})\) where \(J(\cdot)\) is the objective functions described in
-\ref{sec:objective-function}. The probability of acceptance is a function of the cooling equation just described and
-difference of the current solution and a new candidate solution. Let \(\Delta E \equiv J(x) - J(x')\) where \(x\) is the current
-solution and \(x'\) is the new candidate solution. The probability of acceptance of \(x'\) is defined by \ref{eq:candaccept}
-\cite{keller-2019-multi-objec}.
+In SA, the algorithm stores a candidate solution. Let the stored solution be denoted as the active solution. Each
+iteration a new candidate solution is generated compared to the active solution to determine if the new solution should
+replace the active solution. In order to determine if the active solution is to be replaced, an acceptance criteria must
+be defined. In SA, a new candidate solution that is more fit than active solution is always accepted as the new active
+solution. In an effort to encourage exploration, inferior candidate solutions have a probability of being accepted as
+the active solution. The probability of accepting an inferior candidate solution is described by the function
+\(\exp(-\frac{J(x) - J(x')}{\Tau})\) where \(J(\cdot)\) is the objective functions described in \ref{sec:objective-function} and
+\(\Tau\) is current temperature. The probability of acceptance is a function of the cooling equation just described and
+difference of the current solution and a new candidate solution. Let \(\Delta E \equiv J(x) - J(x')\) where \(x\) is the
+current solution and \(x'\) is the new candidate solution. The probability of acceptance of \(x'\) is defined by
+\ref{eq:candaccept} \cite{keller-2019-multi-objec}.
 
 \begin{equation}
 \label{eq:candaccept}
@@ -633,7 +637,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orge81d65c}
+\label{sec:org1f637a4}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\)
 (\ref{sec:problem-description}), that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -657,7 +661,7 @@ Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org6bd0704}
+\label{sec:org94e086b}
 The output is a modified visit, noted as \(\I_i'\). In actuality only the decision variables are being altered which is a
 subset of \(\I_i\). Let this subset be defined by \(x_i' \equiv (v_i, u_i, d_i) \subset \I_i\) which is the chosen queue, initial
 charge time, and detach time from the generator, \((v_i, u_i, d_i)\). The nature of SA implies that the generators have a

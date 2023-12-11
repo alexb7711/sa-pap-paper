@@ -1,0 +1,50 @@
+#+begin_src octave :results file
+  1;
+
+  ##############################################################################
+  # FUNCTIONS
+  ##############################################################################
+
+  ##============================================================================
+  #
+  function geometric y = (T0, x)
+    y = [];
+    y = [y; ]
+  endfunction
+
+  ##============================================================================
+  #
+  function linear y = (T0, x)
+  endfunction
+
+  ##============================================================================
+  #
+  function exponential y = (T0, x)
+  endfunction
+
+  ##############################################################################
+  # SCRIPT
+  ##############################################################################
+
+  ## Generate x vector
+  x = 0:1:1000;
+
+  ## Initial temperature
+  T0 = 500;
+
+  ## Plots
+  tf = figure();
+  hold on;
+  plot(x, geometric(T0, x));
+  plot(x, linear(T0, x));
+  plot(x, exponential(T0, x));
+  hold off;
+
+  ## Configure Plot
+  xlabel ("Time");
+  ylabel ("Temperature");
+  ylabel ("Temperature Functions");
+
+  ## Output plot
+  print(tf, "cool-func.pdf", "-dpdflatexstandalone");
+#+end_src
