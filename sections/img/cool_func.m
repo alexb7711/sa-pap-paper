@@ -48,18 +48,17 @@
   T0 = 500;
 
   ## Plots
-  tf = figure();
-  hold on;
+  figure(1);
+  clf();
   plot(x, geometric(T0, x));
-  plot(x, linear(T0, x));
-  plot(x, exponential(T0, x));
+  hold on;
+  ## plot(x, linear(T0, x));
+  ## plot(x, exponential(T0, x));
   hold off;
 
   ## Configure Plot
   xlabel ("Time");
   ylabel ("Temperature");
-  ylabel ("Temperature Functions");
 
   ## Output plot
-  ## print(tf, "cool-func.pdf", "-dpdflatexstandalone");
-  ## system ("pdflatex plot15_7");
+  print(1, "cool_func.pdf");
