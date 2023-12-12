@@ -2,36 +2,60 @@
 :PROPERTIES:
 :CUSTOM_ID: sec:problem-description
 :END:
-It is assumed that there are a total of $I$ visits to the station by $B$ buses. There are a total of $Q$ queues for the
-bus at the station. Let $\mathcal{Z}$ be the set of integers, given a set of bus arrivals to a charging station $i \in \{1,..., I\}
-= \Iset \subset \mathcal{Z}$ with a set of chargers to be queued $q \in \{1,..., Q\} = \Qset \subset \mathcal{Z}$ where the bus is indicated by an
-identification number $b \in \{1,..., B\} = \Bset \subset \mathcal{Z}$. Each bus arrival, $i$, can be represented by the tuple: $\visit$,
-in which the ordered elements denote the bus identification number, $b_i$, arrival time to the station, $a_i$, departure
-time from the station, $e_i$, time to start charging, $u_i$, time to stop charging, $d_i$, the charger queue for the bus
-to be placed into, $v_i$, and the initial State Of Charge (SOC), $\eta_i$.
+This section introduces and defines the problem to be addressed. A general description is provided and then succeeded by
+a mathematical interpretation of the general description. The scope of the problem shall also be outlined as well as
+some of the problems that will be addressed in this paper.
+
+Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. Suppose that an individual
+BEBs, from the said fleet, begins and completes an individual route at the same station from which it also receives its
+charge. During each route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied is enough
+that it sustains the BEB's SOC at an appropriate level such that it may complete it's set of routes. The charge may be
+supplied from any single charger given a set of chargers at the station. Each time the BEB arrives at the station, let
+that be denoted as a "visit" or an "arrival" (they may be used interchangeably). Generalizing this to all BEBs, each BEB
+will have a set of prescribed routes from which their SOC is depleted by a certain amount. Once the route is completed,
+the BEB visits the station to receive a charge, from any single charger, that is sufficient to complete the next route.
+Each BEB may have multiple visits to the station throughout their working day. This paper describes a method to optimize
+the assignment of each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
+
+For a fleet of BEBs, it is assumed that there are a total of $I$ visits to the station by $B$ BEBs. There is a pool of
+$Q$ charging queues from which the BEB may be assigned at the station. Let $\mathcal{Z}$ be the set of integers, given a set of
+BEB arrivals to a charging station $i \in \{1,..., I\} = \Iset \subset \mathcal{Z}$ with a set of chargers to be queued $q \in \{1,..., Q\}
+= \Qset \subset \mathcal{Z}$ where the BEB is indicated by an identification number $b \in \{1,..., B\} = \Bset \subset \mathcal{Z}$. Each BEB arrival,
+$i$, can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, BEB
+identification number, $b_i$, arrival time to the station, $a_i$, departure time from the station, $e_i$, time to start
+charging, $u_i$, time to stop charging, $d_i$, the charger queue for the BEB to be placed into, $v_i$, and the initial
+SOC, $\eta_i$.
 
 It is assumed that each visit occurs over the time horizon $T = \{t : t_0 \le t \le t_f \}$. The set of all arrivals is
 represented by the set $\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}$. The
-concept of "arrivals" is derived from the PAP [cite:@qarebagh-2019-optim-sched]. This idea of arrivals is useful in the
-sense that it is easy to describe the state of any arbitrary arrival; however, although a bus may revisit the station
-multiple times, the model assumes that each arrival is unique (i.e. no two bus arrives twice) therefore a system must be
-put in place to track each bus over each arrival. That is why a bus identifier is placed in the tuple, and in that way
-each bus can be tracked over each arrival.
+concept of "arrivals" is derived from the PAP [cite:@qarebagh-2019-optim-sched]. The concept of arrivals is useful in
+the sense that it provides an easy medium to describe the state of any arbitrary arrival; however, a BEB may visit the
+station multiple times. The issue arises due to model's assumption that each arrival is unique (i.e. no two BEB arrives
+twice). Therefore, a system must be put in place to track each BEB across visits.
 
-For each arrival a bus must be placed in a singular queue, $v_i \in \Qset$. The charger $q$ is assumed to be either a fast
-or slow charger or no charger at all. A bus is only allowed to visit one queue per visit; however, there may be multiple
-buses charging simultaneously. The amount of time the bus is allowed to charge is dictated by the scheduled arrival time
-and required departure time, $[a_i, e_i]$. Although a bus must be placed in a queue, if a bus does not require much
-charge, or none at all, partial charges, or no charging, is allowed. It is not allowed for the bus to charge over its
-battery capacity limit. The battery charging rate is modeled as linear, which remains accurate up to about an SOC of 80%
-charge [cite:@li-2016-batter-elect].
+#+begin_comment
+TODO: Are we going to actually be doing linear battery dynamics, or should this be expanded to non-linear?
+#+end_comment
 
-Each bus arrival, except for the last arrival for each bus, has a paired "route" that the bus must perform. This route,
-as one would expect, causes the bus to discharge by some certain amount. This paper assumes an average discharge over a
+For each arrival a BEB must be placed in a singular queue, $v_i \in \Qset$. The charger $q$ is assumed to be either a fast
+charger, slow charger, or no charger at all. A BEB is only allowed to be assigned to one queue per visit; however, there
+may be multiple BEBs charging simultaneously across different queues. The amount of time the BEB is allowed to charge is
+dictated by the scheduled arrival time and required departure time, $[a_i, e_i]$. Although a BEB must be placed in a
+queue, if a BEB does not require much charge, or none at all, partial charges, or no charging, is allowed. It is not
+allowed for the BEB to charge over its battery capacity limit. The battery charging rate is modeled as _linear_, which
+remains accurate up to about an SOC of 80% charge [cite:@li-2016-batter-elect].
+
+Each BEB arrival, except for the last arrival for each BEB, has a paired "route" that the BEB must perform. This route,
+as one would expect, causes the BEB to discharge by some certain amount. This paper assumes an average discharge over a
 period of in which an estimated discharge is calculated for each route, $\Delta_i$. The charge supplied while at the station
-is required to supply enough charge for each route with an additional battery capacity percentage, $m$, acting as a
-safety factor.
+is required to increase the SOC of each BEB visit to a minimum battery percentage, $\nu_b$. This acts as a safety factor
+to ensure each route is completed.
 
-The scheduler's task shall be to schedule the set of arrivals $\I$ to fulfill the minimum charge requirements over the
-time horizon $T$ as well as minimize the demand cost and consumption cost. The objective function and constraints are
-discussed in further detail in section [[#sec:objective-function]].
+The task of this paper shall be to define a method of scheduling the set of arrivals $\I$ to fulfill the minimum charge
+requirements over the time horizon $T$ as well as minimize the demand cost and consumption cost. An objective function
+shall be utilized to measure the relative fitness of results and constraints shall be employed to ensure validity of the
+prescribed schedule. Both the objective function and constraints are discussed in further detail in
+[[#sec:objective-function]].
+
+#  LocalWords:  BEBs BEB BEB's
+* 

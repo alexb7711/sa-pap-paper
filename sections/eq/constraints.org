@@ -27,50 +27,46 @@
   \end{equation}
   \begin{equation}
       \label{seq:c6}
-      s_i = d_i - u_i
-  \end{equation}
-  \begin{equation}
-      \label{seq:c7}
        \eta_{\xi_i} = \eta_{i} + r_{v_i}s_i - \Delta_i
   \end{equation}
   \begin{equation}
-      \label{seq:c8}
+      \label{seq:c7}
        \eta_{i} + r_{v_i}s_i - \Delta_i \ge \nu \kappa_{\Xi_i}
   \end{equation}
   \begin{equation}
-      \label{seq:c9}
+      \label{seq:c8}
       \kappa_{\Xi_i} \geq \eta_{i} + r_{v_i}s_i
   \end{equation}
   \begin{equation}
-      \label{seq:c10}
+      \label{seq:c9}
       \eta_{i} - m\kappa_{b_i} \le T (1 - \phi_{i})
   \end{equation}
   \begin{equation}
-      \label{seq:c11}
+      \label{seq:c10}
       m_{k_i} - \eta_{i} > T \phi_{i}
   \end{equation}
   \begin{equation}
-      \label{seq:c12}
+      \label{seq:c11}
       a_i \leq u_i \leq d_i \le e_i \le T
   \end{equation}
   \begin{equation}
-      \label{seq:c13}
+      \label{seq:c12}
       u_i - dt_h \le T\theta_h
   \end{equation}
   \begin{equation}
+      \label{seq:c13}
+       dt_h - d_i \le T(1 - \theta_h)
+  \end{equation}
+  \begin{equation}
       \label{seq:c14}
-      dt_h - u_i \le T(1 - \theta_h)
+      dt_h - u_i \le T\mu_h
   \end{equation}
   \begin{equation}
       \label{seq:c15}
-      dt_h - d_i \le T\mu_h
-  \end{equation}
-  \begin{equation}
-      \label{seq:c16}
       d_i - dt_h \le T(1 - \mu_h)
   \end{equation}
   \begin{equation}
-      \label{seq:c17}
+      \label{seq:c16}
       \iota_h = \mu_h \theta_h
   \end{equation}
 \end{subequations}
