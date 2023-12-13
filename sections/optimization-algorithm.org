@@ -38,7 +38,7 @@ as before. The modifications then occurs over $J$ iterations. This is repeated f
 
         \ForEach{$t_k \in t$}
         {
-            $m \rightarrow 0$ \tcc*{Set repetition counter}
+            $j \leftarrow 0$ \tcc*{Set repetition counter}
             $\omega' \leftarrow N(\omega)$ \tcc*{Generate a new solution}
             $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
             \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}

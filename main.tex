@@ -1,4 +1,4 @@
-% Created 2023-12-13 Wed 15:19
+% Created 2023-12-13 Wed 15:22
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -138,7 +138,7 @@ shall be utilized to measure the relative fitness of results and constraints sha
 prescribed schedule. Both the objective function and constraints are discussed in further detail in
 \ref{sec:objective-function}.
 \section{}
-\label{sec:org40e41fb}
+\label{sec:orgdddd52c}
 \section{Optimization Problem}
 \label{optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
@@ -658,7 +658,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orgd4bfc15}
+\label{sec:org1afaeb8}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -682,7 +682,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org741a10e}
+\label{sec:orgbd63930}
 The output of the generating functions is a modified subset of a input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
@@ -1198,7 +1198,7 @@ as before. The modifications then occurs over \(J\) iterations. This is repeated
 
         \ForEach{$t_k \in t$}
         {
-            $m \rightarrow 0$ \tcc*{Set repetition counter}
+            $j \leftarrow 0$ \tcc*{Set repetition counter}
             $\omega' \leftarrow N(\omega)$ \tcc*{Generate a new solution}
             $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
             \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
