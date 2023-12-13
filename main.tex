@@ -1,4 +1,4 @@
-% Created 2023-12-12 Tue 20:39
+% Created 2023-12-13 Wed 14:21
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -138,7 +138,7 @@ shall be utilized to measure the relative fitness of results and constraints sha
 prescribed schedule. Both the objective function and constraints are discussed in further detail in
 \ref{sec:objective-function}.
 \section{}
-\label{sec:org413a379}
+\label{sec:org6318170}
 \section{Optimization Problem}
 \label{optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
@@ -434,7 +434,7 @@ shown in \ref{eq:constraints}.
   \end{equation}
   \begin{equation}
       \label{seq:c5}
-      \Delta_i = \delta_i \rho_i
+      s_i = d_i - u_i
   \end{equation}
   \begin{equation}
       \label{seq:c6}
@@ -586,23 +586,24 @@ is defined by \ref{eq:cool0}.
 \Tau[n] = \Tau[n-1] - \Delta_0
 \end{equation}
 
-with \(\Tau[0] = \Tau_0\) and \(\Delta_0 = 1/2\; C^\circ\) in \ref{fig:cool}. A geometric cooling schedule is mostly used in practice
-\cite{keller-2019-multi-objec}. It is defined by \ref{eq:cool1}.
+with \(\Tau[0] = \Tau_0\) and \(\Delta_0 = 1/2\; C^\circ\) in \ref{fig:cool}. TODO: The value of \(\Delta_0\) can vary between \([0,1)\). A
+geometric cooling schedules is as defined in \ref{eq:cool1}. The cooling schedule type most widely used in practice
+\cite{keller-2019-multi-objec}. As such, it will also be employed by the work in this paper.
 
 \begin{equation}
 \label{eq:cool1}
 \Tau[n] = \alpha \Tau[n-1]
 \end{equation}
 
-where \(\alpha = 0.995\) in \ref{fig:cool}. An Exponential cooling schedule is defined by the difference equation is defined as
-\ref{eq:cool2}.
+where \(\alpha = 0.995\) in \ref{fig:cool}. TODO: \(\alpha\) may vary anywhere between the range \([0,1)\). An Exponential cooling schedule is
+defined by the difference equation is defined as \ref{eq:cool2}.
 
 \begin{equation}
 \label{eq:cool2}
-\Tau[n] = e^{\beta}\Tau[n-1]
+\Tau[n] = e^{-\beta}\Tau[n-1]
 \end{equation}
 
-where \(\beta = 0.01\) in \ref{fig:cool}.
+where \(\beta = 0.01\) in \ref{fig:cool}. TODO: The value of \(\beta\) may vary anywhere between the rang of \([0, 1)\).
 
 \begin{figure}[htbp]
 \centering
@@ -657,7 +658,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org4da9ed4}
+\label{sec:org96e7920}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -674,7 +675,6 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \(\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing\), is said to be disjoint (i.e. the sets share no common elements)
 \cite{halmos-1974-naive-set-theor}. The inverse of a disjoint set can be found by the De Morgan Law as shown in
 \ref{eq:demorgan}. Using \ref{eq:demorgan}, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
-Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 
 \begin{equation}
 \label{eq:demorgan}
@@ -682,16 +682,16 @@ Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org99fadfa}
-The output of the generating functions is a modified subset of a visit. Let a modified visit be denoted as \(\I_i'\) and
-the modified subset of the visit be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \I_i\). To be explicit, \(x_i'\) consists of
-the modified charger inactive times and the direct decision variables: chosen queue, initial charge time, and detach
-time from the charger. The other direct variables and indirect variables may be implied. As previously discussed, early
-on in the SA process, the algorithm attempts to encourage exploration by allowing candidate solutions of lesser quality
-be the active solution. To explore the feasible space, the generators are employed with a sense of randomness to their
-respective outputs. Because of that, the modified subset of the visit, \(x_i'\), may be considered a random variable. Let
-the set of states for the output be defined as \(x_i' \in X_i' \subset \I_i'\) where \(X_i'\) defines the feasible region for the
-subset of decision variables.
+\label{sec:orgb390073}
+The output of the generating functions is a modified subset of a input tuple. Let a modified input tuple be denoted as
+\(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
+consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
+and detach time from the charger. The other direct variables and indirect variables may be implied. As previously
+discussed, early on in the SA process, the algorithm attempts to encourage exploration by allowing candidate solutions
+of lesser quality be the active solution. To explore the feasible space, the generators are employed with a sense of
+randomness to their respective outputs. Because of that, the modified subset of the tuple, \(x_i'\), may be considered a
+random variable. Let the set of states for the output be defined as \(x_i' \in X_i' \subset \Sol'\) where \(X_i'\) defines the
+feasible region for the subset of decision variables.
 
 \subsubsection{Generators}
 \label{sec:generators}
@@ -709,16 +709,17 @@ within its arrival/departure time \([a_i, e_i]\). Let \(\U_{\cdot}\) indicate th
 uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a_i,e_i]}\) indicates that a value will be selected between
 \(a_i\) and \(u_i\) with a uniform distribution. Lines 2-4 extracts the visit index, \(i\), arrival time, \(a_i\), and departure
 time, \(e_i\). Note that in subsequent algorithms these lines will be omitted for conciseness. Line 5 loops through a
-randomly indexed set of inactive time periods. Line 6 quickly verifies that the inactive period selected is a viable
-selection and returns a random charging time, \([u_i, d_i]\), if it is. The function \texttt{findFreeTime} is defined in
-\ref{alg:find-free-time}. Line 7 applies the candidate decisions variables and returns the updated visit.
+randomly indexed set of charger queues and line 6 loops through a randomly indexed set of inactive time periods. Line 7
+quickly verifies that the inactive period selected is a viable selection and returns a random charging time, \([u_i,
+d_i]\), if it is, otherwise null values are returned. The function \texttt{findFreeTime} is defined in \ref{alg:find-free-time}.
+Line 8 applies the candidate decisions variables and returns the updated visit.
 
 \begin{algorithm}[H]
 \caption{New visit algorithm} \label{alg:new-visit}
     \LinesNumbered
     \TitleOfAlgo{New Visit}
     \KwIn{($\Sol$)}
-    \KwOut{$\I_i'$}
+    \KwOut{$\Sol'$}
 
     \SetKwFunction{Union}{Union}
     \SetKwFunction{findFreeTime}{findFreeTime}
@@ -729,13 +730,15 @@ selection and returns a random charging time, \([u_i, d_i]\), if it is. The func
         $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the arrival time for visit $i$}
         $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the departure time for visit $i$}
 
-        \ForEach (\tcc{For each element in the uniformly random set of charger queues $q \in \Qset$}) {$q \in \{ \U_{\Qset} \}$}
+        \tcc{For each element in the uniformly random set of charger queues $q \in \Qset$}
+        \ForEach  {$q \in \{ \U_{\Qset} \}$}
         {
-            \ForEach(\tcc{For each element in the uniformly random set of time slices from charger $v_i$}) {$C_q^j \in \{ \U_{\C_{v_i}} \}$}
+            \tcc{For each element in the uniformly random set of time slices from charger $q$}
+            \ForEach {$C_q^j \in \{ \U_{\C_{q}} \}$}
             {
                 \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j, (a_i, e_i)$} $\not\in \varnothing$}
                 {
-                    \Return{$\I_i' \leftarrow x_i'$} \tcc*[f]{Return visit}
+                    \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
                 }
             }
         }
@@ -745,10 +748,11 @@ selection and returns a random charging time, \([u_i, d_i]\), if it is. The func
 The function \texttt{findFreeTime} in \ref{alg:new-visit} is defined in \ref{alg:find-free-time}. Let \(L\) and \(U\) be the lower
 and upper bound of the time between scheduled times. The set of cases are shown in \ref{fig:find-free}. In each case depicted
 by \ref{fig:find-free}, the red line shows the arrival and departure time for a BEB visit, \(i\). The blue lines indicate
-reigons in which charger \(v_i\) is active. \(C \in \C_q \subset \C\) represents one of the ranges between the blue lines, \([L, U]\),
+regions in which charger \(v_i\) is active. \(C \in \C_q \subset \C\) represents one of the ranges between the blue lines, \([L, U]\),
 which stand for the lower and upper bounds of the region, respectively. That is, the only scheduling constraint is that
 the arrival time is before charger \(q\) is available to charge the bus. Therefore, the bus must wait intil \(L\) before
-changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selected from is \([L,e]\).
+changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selected from is \([L,e]\). Lines 24-26 update the
+times slices for which charger \(q\) is available.
 
 \begin{figure}
 \centering
@@ -909,7 +913,7 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(C,a,e)$}
-    \KwOut{$(u,d)$}
+    \KwOut{$(C',u,d)$}
 
     \tcc{Extract the lower and upper bounds.}
     L \(\leftarrow\) \(\{L \in C\}\)\;
@@ -943,8 +947,35 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
                 d $\leftarrow$ $\varnothing$\;
         }
 
-        \Return{(u,d)}
+        \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
+        {
+            $C' \leftarrow C' \setminus [L,U]$ \tcc*{Remove $[L,U]$ from the set of free time for the current charger}
+            $C' \leftarrow \{[L,u], [d, U]\}$ \tcc*{Update the charger free time slices}
+        }
+
+        \Return{(C',u,d)}
     }
+\end{algorithm}
+
+\paragraph{Purge}
+\label{sec:purge}
+The purge primitive generator simply removes a visit from a charger schedule. This generator exists so that other
+primitive generators may place the visit back into the schedule without creating duplicate entries in \(\C\). Line 2
+returns the updated set of visits which excludes visit \(i\).
+
+\begin{algorithm}[H]
+\caption{Purge algorithm}
+    \LinesNumbered
+    \TitleOfAlgo{Purge}
+    \KwIn{$\Sol$}
+    \KwOut{$\Sol'$}
+
+    \Begin
+    {
+        $\C' \leftarrow \C \setminus \C_{v_i}^i$ \tcc*{Remove assignment of visit $i$ to charger $v_i$}
+        \Return{$\Sol' \leftarrow \C'$} \tcc*{Return updated tuple}
+    }
+\label{alg:new-purge}
 \end{algorithm}
 
 \paragraph{Slide visit}
@@ -952,50 +983,55 @@ changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selecte
 Slide visit, represented in \ref{alg:slide-visit}, is used for buses that have already been scheduled. Because of the
 constraint \ref{seq:c10} there may be some room to move \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values,
 \(u_i\) and \(d_i\) are randomly selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\).
-
-TODO: Add lines talking about algorithm lines
+Line 2 generates a new \([u_i, d_i]\) utilizing the \texttt{findFreeTime} function. Line 3 applies and returns the updated visit.
 
 \begin{algorithm}[H]
 \caption{Slide Visit Algorithm} \label{alg:slide-visit}
     \LinesNumbered
     \TitleOfAlgo{Slide Visit}
     \KwIn{$\Sol$}
-    \KwOut{$\I_i'$}
+    \KwOut{$\Sol'$}
+
+    \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
-        \ForEach(\tcc*{For each element in the uniformly random set of time slices from charger $v_i$}) {$C_q^j \in \{ \U_{\C_{v_i}} \}$}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+
+        \If(\tcc*[f]{If there is time available in $C_{v_i}$}){$x_i' \leftarrow$ \findFreeTime{$C_{v_i}$, ($a_i, e_i$)} $\not\in \varnothing$}
         {
-            \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j$, ($a_i, e_i$)} $\not\in \varnothing$}
-            {
-                \Return{$\I_i \leftarrow x_i'$} \tcc*[f]{Return visit}
-            }
+            \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
         }
     }
 \end{algorithm}
 
 \paragraph{New charger}
 \label{new-charger}
-The new charger generator takes a visit \(\I_i\) and changes the charger it is on while maintianing the same charge time,
-\([u_i, d_i]\). Similar to \ref{alg:new-visit}, the new candidate, \(x_i'\), must be checked before being added to the set \(X_i'\).
-Line 2 randomly loops through any time frame from any charger, \(C_q^j\), that is within the time frame that the bus is at
-the station, \([a_i, e_i]\). Line 3 verifies the selection and line 4 returns the new visit.
+The new charger generator (shown in \ref{alg:new-charger}) moves a visit \(\I_i\) to a new charging queue while
+maintianing the same charge time, \([u_i, d_i]\). Line 2 loops through a randomly indexed set of charger queue indices.
+Line 3 checks if there is an available time slice \([a_i, e_i]\) for charger \(q\). Line 4 sets the charge start/stop times
+to the previous values. Line 5 sets and returns the updated visit.
 
 \begin{algorithm}[H]
 \caption{New Charger Algorithm} \label{alg:new-charger}
     \LinesNumbered
     \TitleOfAlgo{New Charger}
     \KwIn{$\Sol$}
-    \KwOut{$\I_i'$}
+    \KwOut{$\Sol'$}
+
+    \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
-        \tcc{Randomly select an inactive time frame, $j$, from any charger $q \in \Qset$ that is within the time frame $[a_i, e_i]$}
-        \While {$C_q^j \in \{[a_i, e_i] \} \subset \U_{\C}$}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+
+        \tcc{For each element in the uniformly random set of time slices from charger $q$}
+        \ForEach {$C_{q} \in \{ \U_{\Qset} \}$}
         {
-            \If (\tcc*[f]{If the charge time is within the region $[L,U]$}) {$L \leq u_i$ \And $U \geq d_i$}
+            \If(\tcc*[f]{If there is time available in $C_{q}$}){$x_i' \leftarrow$ \findFreeTime{$C_{q}$, ($a_i, e_i$)} $\not\in \varnothing$}
             {
-                \Return{$\I_i \leftarrow x_i'$} \tcc*[f]{Return visit}
+                $x_i' \leftarrow (u_i, d_i)$ \tcc*{Keep previous start/stop times}
+                \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
             }
         }
 
@@ -1004,87 +1040,90 @@ the station, \([a_i, e_i]\). Line 3 verifies the selection and line 4 returns th
 
 \paragraph{Wait}
 \label{sec:wait}
-The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in
-\{Q,...,Q+B\}\).
+The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
 
 \begin{algorithm}[H]
 \caption{Wait algorithm} \label{alg:wait}
     \LinesNumbered
     \TitleOfAlgo{Wait}
     \KwIn{$\Sol$}
-    \KwOut{$\I_i'$}
+    \KwOut{$\Sol'$}
+
+    \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
-       \Return{$\I_i' \leftarrow (Q+b,a_i,e_i)$}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+
+        \tcc{Assign bus to idle queue and set the duration for the arrival/departure times}
+        $x_i' \leftarrow (b, a_i, e_i)$ \;
+
+        \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
     }
 \end{algorithm}
 
 \paragraph{New Window}
 \label{sec:new-visit}
 New window is a combination of the wait and then new visit generators (\ref{sec:purge} and \ref{sec:new-visit}). By this it is
-meant that current scheduled tuple \((v_i, u_i, d_i)\) is purged and added back in as if it were a new visit.
+meant that current scheduled tuple \((v_i, u_i, d_i)\) is purged and added back in as if it were a new visit. Line 2
+purges the BEB visit from the schedule and line 3 places the BEB back into the schedule using the new visit generator.
+Line 4 assigns and returns the updated visit.
 
 \begin{algorithm}[H]
 \caption{New window algorithm}
     \LinesNumbered
     \TitleOfAlgo{New Window}
     \KwIn{$\Sol$}
-    \KwOut{$\I_i'$}
+    \KwOut{$\Sol'$}
+
+    \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
         \SetKwFunction{NewVisit}{NewVisit}
         \SetKwFunction{Purge}{Purge}
 
-        $\I_i' \leftarrow$ \Purge{$v,u,d$}   \tcc*{Purge visit $i$ from its charger}
-        $\Sol \leftarrow \I_i'$               \tcc*{Update the route information tuple}
-        $\I_i' \leftarrow$ \NewVisit{$\Sol'$} \tcc*{Add visit $i$ back in randomly}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$} \tcc*[f]{Purge visit $i$ from its charger}
 
-        \Return{$(v,u,d)$}
+        $\I_i' \leftarrow$ \NewVisit{$\Sol'$} \tcc*[f]{Add visit $i$ back in randomly}
+
+        \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
     }
 \label{alg:new-window}
 \end{algorithm}
 
-\paragraph{Purge}
-\label{sec:purge}
-
 \subsubsection{Generator Wrappers}
 \label{sec:generator-wrappers}
 This section covers the algorithms utilized to select and execute different generation processes for the SA process. The
-generator wrappers are the method immediately called by SA. Each wrapper utilizes the generators previously described
-and returns either metadata about the bus routes or a new valid charger schedule.
+generator wrappers are the methods immediately called by the SA algorithm. Each wrapper utilizes the generators
+previously described and returns either a new charge schedule or a modified charge schedule.
 
-\paragraph{Schedule Generation}
-\label{schedule-generation}
-The objective of this generator is to generate a candidate solution to the given schedule. To generate a candidate
-solution, the generator is given \(\I\), a bus is picked at random, \(b \in \Bset\), then a random visit is picked. The new
-visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm is
-summarized in \ref{alg:schedule-generation}. Recall from \ref{sec:input-variables}, \(\Jset_B \subset \I\) is used to indicate the
-set of visit indices for bus \(b\).
+\paragraph{Charge Schedule Generation}
+\label{sec:charge-schedule-generation}
+The objective of this generator is to generate a candidate solution provided a given route schedule. To generate a
+candidate solution, the generator is given \(\I\), a bus is picked at random, \(b \in \Bset\), then a random visit is picked.
+The new visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm
+is summarized in \ref{alg:charge-schedule-generation}.
 
 \begin{algorithm}[H]
-\caption{Schedule generation algorithm} \label{alg:schedule-generation}
+\caption{Schedule generation algorithm} \label{alg:charge-schedule-generation}
     \LinesNumbered
     \TitleOfAlgo{ScheduleGeneration}
     \KwIn{$\I$, $\C$}
     \KwOut{$\I'$, $\C'$}
 
-    \SetKwFunction{Union}{Union}
     \SetKwFunction{NewVisit}{NewVisit}
-    \SetKwFunction{UpdateQueues}{UpdateQueues}
 
     \Begin
     {
-        $\I' \leftarrow \; \varnothing$\;
-        \For {$\I_i' in \I$}
+        $\I' \leftarrow \; \varnothing$ \tcc*[f]{Begin with empty set of scheduled visits.}
+
+        \ForEach (\tcc*[f]{Select a unscheduled BEB visit from a randomly index set of visits}) {$\I_i \in \{\ \U_{\I} \}$}
         {
-            $b \leftarrow\; \U_{\Bset}$ \tcc*{Randomly select a bus with uniform distribution}
-            $i\leftarrow\; \U_{\Jset_b}$ \tcc*{Randomly select a visit from bus $b$ with uniform distribution}
-            $\I_i' \leftarrow \NewVisit{(visit.a, visit.e)}$ \tcc*{Assign the bus to a charger}
-            \UpdateQueues{($\I_i'$, $\C_q$)} \tcc*{Update $\C_q$ with information in $I_i'$}
+            $i\leftarrow\; \I$ \tcc*{Extract the visit index}
+            ($\I'$, $\C$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
         }
-            \Return{$\I'$, $\C'$}
+            \Return{($\I'$, $\C'$)}
     }
 \end{algorithm}
 
@@ -1110,7 +1149,6 @@ pick a bus, pick a visit, pick a generator. The algorithm is outlined in \ref{al
         $i\leftarrow\; \U_{\Jset_b}$ \tcc*{Randomly select a visit from bus $b$ with uniform distribution}
         $G \leftarrow\; \U_{[1,G_size]}$ \tcc*{Select one of the generator functions}
         $\I_i', \C' \leftarrow$ \GeneratorCallback{($G$, $j, \I, \C$)} \tcc*{Excecute the generator function}
-        \UpdateQueues{($\I_i'$, $\C_q$)} \tcc*{Update $\C_q$ with information in $I_i'$}
         \Return{$\I'$, $\C$}
     }
 \label{alg:perturb-schedule}
@@ -1208,5 +1246,5 @@ updates the current solution with the candidate solution depending on the fitnes
 \end{algorithm}
 
 \bibliographystyle{plain}
-\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
+\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
 \end{document}

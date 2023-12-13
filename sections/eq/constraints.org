@@ -23,7 +23,7 @@
   \end{equation}
   \begin{equation}
       \label{seq:c5}
-      \Delta_i = \delta_i \rho_i
+      s_i = d_i - u_i
   \end{equation}
   \begin{equation}
       \label{seq:c6}
