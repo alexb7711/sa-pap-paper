@@ -1,4 +1,4 @@
-% Created 2023-12-13 Wed 14:50
+% Created 2023-12-13 Wed 15:19
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -138,7 +138,7 @@ shall be utilized to measure the relative fitness of results and constraints sha
 prescribed schedule. Both the objective function and constraints are discussed in further detail in
 \ref{sec:objective-function}.
 \section{}
-\label{sec:org1ab9236}
+\label{sec:org40e41fb}
 \section{Optimization Problem}
 \label{optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
@@ -658,7 +658,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org72cc22d}
+\label{sec:orgd4bfc15}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -682,7 +682,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:orga8c698c}
+\label{sec:org741a10e}
 The output of the generating functions is a modified subset of a input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
@@ -1162,19 +1162,24 @@ function.
 \end{algorithm}
 \section{Optimization Algorithm}
 \label{optimization-algorithm}
-This final section combines the generation algorithms and the optimization problem into a single algorithm. It begins
-with an introduction to a general SA algorithm which will be used to springboard into the construction of the SA PAP
-algorithm. For the case of the pseudo SA algorithm to be presented, the notation pesented will be self-contained and not
-related to any of the variables presented for SA PAP thus far. Consider \ref{alg:sa-pseudo} \cite{henderson-1989-theor-pract}.
-\(\omega\) and \(\omega'\) are the current solution and the candidate solution, respectively. \(t_k\) is the temperature cooling
-schedule, \(T\) is the initial temperature that will iterate until \(k = K\). \(M_k\) is the repetition counter, it defines
-the number of iterations to execute for each temperture \(t_k\).
+This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
+introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
+PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and
+not related to any of the variables presented for SA PAP thus far.
+
+Consider \ref{alg:sa-pseudo} \cite{henderson-1989-theor-pract}. Let \(\omega\) and \(\omega'\) are the current solution and the
+candidate solution, respectively. Let \(T\) denote the temperature function, \(T_0\) the initial temperature, \(T_F\) the
+final temperature. Furthermore, let \(t\) be defined as the vector of temperatures defined by \(t = T(T_0, T_f)\), and let
+\(t_k\) be defined as being an element of \(t\), \(t_k \in t\). Let \(J\) be the repetition counter, it defines the number of
+iterations to execute for each step in temperature, \(t_k\).
 
 The algorithm behaves as follows: initialize the SA algorithm with an initial solution, temperature schedule, and
-repetition schedule. The first loops until \(T = t_K\), the second loop finished whin \(m = M_k\). For each loop, create a
-new solution, calculate the difference in the fitness of \(\omega\) and \(\omega'\). Update \(\omega\) with \(\omega'\) if the candidate solution is
-better. Update \(\omega\) with \(\omega'\) with probability \(e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}\) if the candidate solution is worse than the
-current solution. This is repeated until the stopping criteria is met.
+repetition schedule. The first loops through all the values in \(t_K\), the second loop finished whin \(j = J\). For each
+loop, create a new solution (\(N(\omega)\)), calculate the difference in the fitness of \(\omega\) and \(\omega'\). Update \(\omega\) with \(\omega'\) if
+the candidate solution is better. Update \(\omega\) with \(\omega'\) with probability \(e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}\) if the candidate
+solution is worse than the current solution. Then the new candidate solution is modified slightly (\(M(\omega')\)) to produce
+an altered new candidate solution \(\omega{''}\). The modified candidate solution is then compared to \(\omega\) in a similar manner
+as before. The modifications then occurs over \(J\) iterations. This is repeated for all temperatures in \(t_k\).
 
 \begin{algorithm}[H]
 \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
@@ -1185,25 +1190,28 @@ current solution. This is repeated until the stopping criteria is met.
     \Begin
     {
         $\omega \in W$ \tcc*{Select an initial solution}
-        $k=0$ \tcc*{Select the temperature change counter}
-        $t_k$ \tcc*{Select a temperature cooling schedule}
-        $T = t_0 \geq 0$ \tcc*{Select an initial temperature}
-        $\forall q \in \Qset : \C_q \in \{[0,T]\}$ \tcc*{Set the initial inactive time for each charger to the time horizon}
-        \tcc{Select a repetition schedule $M_k$, that defines the number of iterations executed at each temerature $t_k$}
+        $T$ \tcc*{Select a temperature cooling schedule}
+        $T_0$ \tcc*{Select an initial temperature}
+        $T_F$ \tcc*{Select an final temperature}
+        $t \leftarrow T(T_0, T_F)$ \tcc*{Generate array of temperatures}
+        \tcc{Select a repetition schedule $M$, that defines the number of iterations executed at each temerature $t_k$}
 
-        \While{Stopping criterion not met}
+        \ForEach{$t_k \in t$}
         {
             $m \rightarrow 0$ \tcc*{Set repetition counter}
-            \While{$m = M_k$}
-            {
-                $\omega' \in N(\omega)$ \tcc*{Generate a new solution}
-                $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
-                \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
-                \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
-                $m \rightarrow m+1$\;
-            }
+            $\omega' \leftarrow N(\omega)$ \tcc*{Generate a new solution}
+            $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
+            \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
+            \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
 
-        $k \rightarrow k+1$\;
+            \While{$j \le J$}
+            {
+                $\omega{''} \leftarrow M(\omega')$ \tcc*{Modify the new solution}
+                $\Delta_{\omega,\omega{''}} \rightarrow$ \f{$\omega{''}$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
+                \If{$\Delta_{\omega , \omega{''}} \le 0$}{$\omega \rightarrow \omega{''}$}
+                \If{$\Delta_{\omega , \omega{''}} > 0$}{$\omega \rightarrow \omega{''}$ with probability $e^{\frac{-\Delta_{\omega , \omega{''}}}{t_k}}$}
+                $j \leftarrow j+1$\;
+            }
         }
     }
 \end{algorithm}
