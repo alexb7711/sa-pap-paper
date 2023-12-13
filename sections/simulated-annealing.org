@@ -413,9 +413,9 @@ previously described and returns either a new charge schedule or a modified char
 :CUSTOM_ID: sec:charge-schedule-generation
 :END:
 The objective of this generator is to generate a candidate solution provided a given route schedule. To generate a
-candidate solution, the generator is given $\I$, a bus is picked at random, $b \in \Bset$, then a random visit is picked.
-The new visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm
-is summarized in \ref{alg:charge-schedule-generation}.
+candidate solution, the generator is given $\I$, which represents the set of unscheduled BEBs. Line 3 loops through the
+set of randomly indexed visits. Line 4 extracts the visit index and line 5 generates a new visit and populates the
+updated route information and charger schedule. This process is done for all visits $i \in \Iset$.
 
 \begin{algorithm}[H]
 \caption{Schedule generation algorithm} \label{alg:charge-schedule-generation}
@@ -432,8 +432,8 @@ is summarized in \ref{alg:charge-schedule-generation}.
 
         \ForEach (\tcc*[f]{Select a unscheduled BEB visit from a randomly index set of visits}) {$\I_i \in \{\ \U_{\I} \}$}
         {
-            $i\leftarrow\; \I$ \tcc*{Extract the visit index}
-            ($\I'$, $\C$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
+            $i\leftarrow\; \I_i$ \tcc*{Extract the visit index}
+            ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
         }
             \Return{($\I'$, $\C'$)}
     }
@@ -441,29 +441,36 @@ is summarized in \ref{alg:charge-schedule-generation}.
 
 **** Perturb Schedule
 :PROPERTIES:
-:CUSTOM_ID: tweak-schedule
+:CUSTOM_ID: sec:tweak-schedule
 :END:
 As described in SA, local searches are also employed to try and exploit a given solution
-[cite:@radosavljevic-2018-metah-optim]. The method that will be employed to exploit the given solution is as follows:
-pick a bus, pick a visit, pick a generator. The algorithm is outlined in [[alg:perturb-schedule]].
+[cite:@radosavljevic-2018-metah-optim]. After each step of the cooling function, the new candidate solution will be
+altered by one primitive generation function and compared to the active solution. This process is done over many
+iterations. That is, the local solution space shall be explored in an attempt to find a optima. The method that will be
+employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
+primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
+distribution. Let $G$ denote the number of primitive generators available and let =PGF= be the primitive generation
+function, Line 3 selects a primitive generation function with a uniform distribution. Line 5 executes the generation
+function.
 
-#+name: alg:perturb-schedule
+
+
 \begin{algorithm}[H]
-\caption{Perturb schedule algorithm}
+\caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
 
     \LinesNumbered
     \TitleOfAlgo{PerturbSchedule}
     \KwIn{$\I$, $\C$}
     \KwOut{$\I_i'$, $\C'$}
 
-    \SetKwFunction{GeneratorCallback}{GeneratorCallback}
+    \SetKwFunction{PGF}{PGF}
 
     \Begin
     {
-        $b \leftarrow\; \U_{\Bset}$ \tcc*{Randomly select a bus with uniform distribution}
-        $i\leftarrow\; \U_{\Jset_b}$ \tcc*{Randomly select a visit from bus $b$ with uniform distribution}
-        $G \leftarrow\; \U_{[1,G_size]}$ \tcc*{Select one of the generator functions}
-        $\I_i', \C' \leftarrow$ \GeneratorCallback{($G$, $j, \I, \C$)} \tcc*{Excecute the generator function}
-        \Return{$\I'$, $\C$}
+        $\I_i\leftarrow\; \U_{\I}$ \tcc*{Randomly select a visit}
+        $\i\leftarrow\; \I_i$ \tcc*{Extract visit index}
+        $PGF \leftarrow\; \U_{[1,G]}$ \tcc*{Select one of the generator functions}
+        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}  \tcc*{Excecute the generator function}
+        \Return{($\I'$, $\C'$)}
     }
 \end{algorithm}

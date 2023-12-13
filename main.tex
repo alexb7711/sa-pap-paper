@@ -1,4 +1,4 @@
-% Created 2023-12-13 Wed 14:21
+% Created 2023-12-13 Wed 14:50
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -138,7 +138,7 @@ shall be utilized to measure the relative fitness of results and constraints sha
 prescribed schedule. Both the objective function and constraints are discussed in further detail in
 \ref{sec:objective-function}.
 \section{}
-\label{sec:org6318170}
+\label{sec:org1ab9236}
 \section{Optimization Problem}
 \label{optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
@@ -658,7 +658,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org96e7920}
+\label{sec:org72cc22d}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -682,7 +682,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:orgb390073}
+\label{sec:orga8c698c}
 The output of the generating functions is a modified subset of a input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
@@ -1101,9 +1101,9 @@ previously described and returns either a new charge schedule or a modified char
 \paragraph{Charge Schedule Generation}
 \label{sec:charge-schedule-generation}
 The objective of this generator is to generate a candidate solution provided a given route schedule. To generate a
-candidate solution, the generator is given \(\I\), a bus is picked at random, \(b \in \Bset\), then a random visit is picked.
-The new visit generator (\ref{alg:new-visit}) is then utilized. This process is repeated for each visit. This algorithm
-is summarized in \ref{alg:charge-schedule-generation}.
+candidate solution, the generator is given \(\I\), which represents the set of unscheduled BEBs. Line 3 loops through the
+set of randomly indexed visits. Line 4 extracts the visit index and line 5 generates a new visit and populates the
+updated route information and charger schedule. This process is done for all visits \(i \in \Iset\).
 
 \begin{algorithm}[H]
 \caption{Schedule generation algorithm} \label{alg:charge-schedule-generation}
@@ -1120,38 +1120,45 @@ is summarized in \ref{alg:charge-schedule-generation}.
 
         \ForEach (\tcc*[f]{Select a unscheduled BEB visit from a randomly index set of visits}) {$\I_i \in \{\ \U_{\I} \}$}
         {
-            $i\leftarrow\; \I$ \tcc*{Extract the visit index}
-            ($\I'$, $\C$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
+            $i\leftarrow\; \I_i$ \tcc*{Extract the visit index}
+            ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
         }
             \Return{($\I'$, $\C'$)}
     }
 \end{algorithm}
 
 \paragraph{Perturb Schedule}
-\label{tweak-schedule}
+\label{sec:tweak-schedule}
 As described in SA, local searches are also employed to try and exploit a given solution
-\cite{radosavljevic-2018-metah-optim}. The method that will be employed to exploit the given solution is as follows:
-pick a bus, pick a visit, pick a generator. The algorithm is outlined in \ref{alg:perturb-schedule}.
+\cite{radosavljevic-2018-metah-optim}. After each step of the cooling function, the new candidate solution will be
+altered by one primitive generation function and compared to the active solution. This process is done over many
+iterations. That is, the local solution space shall be explored in an attempt to find a optima. The method that will be
+employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
+primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
+distribution. Let \(G\) denote the number of primitive generators available and let \texttt{PGF} be the primitive generation
+function, Line 3 selects a primitive generation function with a uniform distribution. Line 5 executes the generation
+function.
+
+
 
 \begin{algorithm}[H]
-\caption{Perturb schedule algorithm}
+\caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
 
     \LinesNumbered
     \TitleOfAlgo{PerturbSchedule}
     \KwIn{$\I$, $\C$}
     \KwOut{$\I_i'$, $\C'$}
 
-    \SetKwFunction{GeneratorCallback}{GeneratorCallback}
+    \SetKwFunction{PGF}{PGF}
 
     \Begin
     {
-        $b \leftarrow\; \U_{\Bset}$ \tcc*{Randomly select a bus with uniform distribution}
-        $i\leftarrow\; \U_{\Jset_b}$ \tcc*{Randomly select a visit from bus $b$ with uniform distribution}
-        $G \leftarrow\; \U_{[1,G_size]}$ \tcc*{Select one of the generator functions}
-        $\I_i', \C' \leftarrow$ \GeneratorCallback{($G$, $j, \I, \C$)} \tcc*{Excecute the generator function}
-        \Return{$\I'$, $\C$}
+        $\I_i\leftarrow\; \U_{\I}$ \tcc*{Randomly select a visit}
+        $\i\leftarrow\; \I_i$ \tcc*{Extract visit index}
+        $PGF \leftarrow\; \U_{[1,G]}$ \tcc*{Select one of the generator functions}
+        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}  \tcc*{Excecute the generator function}
+        \Return{($\I'$, $\C'$)}
     }
-\label{alg:perturb-schedule}
 \end{algorithm}
 \section{Optimization Algorithm}
 \label{optimization-algorithm}
