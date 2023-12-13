@@ -29,7 +29,7 @@
   ##============================================================================
   #
   function y = exponential(T0, x)
-    b = 0.01;
+    b = -0.01;
     y = [T0];
 
     for i = 2:length(x)
@@ -47,18 +47,29 @@
   ## Initial temperature
   T0 = 500;
 
+  ## Configure Plot
+  set(0, "defaultlinelinewidth", 4);
+  set(0, "defaultaxesfontsize", 16); % axes labels
+
   ## Plots
   figure(1);
   clf();
   plot(x, geometric(T0, x));
   hold on;
-  ## plot(x, linear(T0, x));
-  ## plot(x, exponential(T0, x));
+  plot(x, linear(T0, x));
+  plot(x, exponential(T0, x));
   hold off;
 
+  ## Legend
+  l = legend({"Geometric", "Linear", "Exponential"});
+  set(l, "fontsize", 20);
+
   ## Configure Plot
+  ## set(0, "defaultlinelinewidth", 10);
+  ## set(0, "defaultaxesfontsize", 32); % axes labels
+
   xlabel ("Time");
   ylabel ("Temperature");
 
   ## Output plot
-  print(1, "cool_func.pdf");
+  print(1, "cool_func.png");

@@ -4,7 +4,7 @@
 :END:
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
 its main advantage is its simplicity both theoretically, in its implementation, as well as its inherit ability to
-overcome nonlinearities [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. This model is named after its
+overcome non-linearities [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. This model is named after its
 analogized process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most
 regular possible crystal lattice configuration [cite:@henderson-1989-theor-pract]. There are five key components to SA:
 initial temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search
@@ -52,7 +52,7 @@ where $\beta = 0.01$ in [[fig:cool]].
 #+ATTR_ORG: :width 200
 #+ATTR_LATEX: :width 0.5\textwidth
 #+caption: Cooling equations
-[[file:img/cool-func.jpg]]
+[[file:img/cool_func.png]]
 
 ** Acceptance Criteria
 :PROPERTIES:

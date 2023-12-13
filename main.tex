@@ -1,4 +1,4 @@
-% Created 2023-12-12 Tue 15:02
+% Created 2023-12-12 Tue 20:39
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -138,7 +138,7 @@ shall be utilized to measure the relative fitness of results and constraints sha
 prescribed schedule. Both the objective function and constraints are discussed in further detail in
 \ref{sec:objective-function}.
 \section{}
-\label{sec:org9c78e17}
+\label{sec:org413a379}
 \section{Optimization Problem}
 \label{optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
@@ -564,7 +564,7 @@ next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the dis
 \label{sec:simulated-annealing}
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
 its main advantage is its simplicity both theoretically, in its implementation, as well as its inherit ability to
-overcome nonlinearities \cite{gendreau-2018-handb-metah,radosavljevic-2018-metah-optim}. This model is named after its
+overcome non-linearities \cite{gendreau-2018-handb-metah,radosavljevic-2018-metah-optim}. This model is named after its
 analogized process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most
 regular possible crystal lattice configuration \cite{henderson-1989-theor-pract}. There are five key components to SA:
 initial temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search
@@ -606,7 +606,7 @@ where \(\beta = 0.01\) in \ref{fig:cool}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\textwidth]{sections/img/cool-func.jpg}
+\includegraphics[width=0.5\textwidth]{sections/img/cool_func.png}
 \caption{\label{fig:cool}Cooling equations}
 \end{figure}
 
@@ -657,7 +657,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orgfd4ecf3}
+\label{sec:org4da9ed4}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -682,7 +682,7 @@ Let \(\Sol\) denote the tuple \(\Sol \equiv (i, \I, \C)\).
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:orga7548fa}
+\label{sec:org99fadfa}
 The output of the generating functions is a modified subset of a visit. Let a modified visit be denoted as \(\I_i'\) and
 the modified subset of the visit be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \I_i\). To be explicit, \(x_i'\) consists of
 the modified charger inactive times and the direct decision variables: chosen queue, initial charge time, and detach
@@ -1208,5 +1208,5 @@ updates the current solution with the candidate solution depending on the fitnes
 \end{algorithm}
 
 \bibliographystyle{plain}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
 \end{document}
