@@ -3,8 +3,8 @@
 :CUSTOM_ID: sec:simulated-annealing
 :END:
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
-its main advantage is its simplicity both theoretically, in its implementation, as well as its inherit ability to
-overcome non-linearities [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. This model is named after its
+its main advantage is its simplicity both theoretically, in its implementation, and its inherit ability to overcome
+non-linearities [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. This model is named after its
 analogized process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most
 regular possible crystal lattice configuration [cite:@henderson-1989-theor-pract]. There are five key components to SA:
 initial temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search
@@ -74,7 +74,7 @@ the new candidate solution. The probability of acceptance of $x'$ is defined by 
 \begin{equation}
 f(x,x',T) =
 \begin{cases}
-  1                 & \Delta E > 0 \\
+  1                   & \Delta E > 0 \\
   e^{- \frac{\Delta E}{T}} & \text{otherwise}
 \end{cases}
 \end{equation}
@@ -112,7 +112,7 @@ for all chargers $q \in \Qset$. In other words, $\C$ defines the set of times wh
 are "inactive".
 
 To derive $\C$, consider its inverse, $\C'$, which is the set of "active" time periods for each charger, $\C' = \bigcup
-\{\C_q' : q \in \mathcal{Q}\}$ where $\C_q' \subset \C'$ describes the active times for chagrer $q$. Focusing on an individual charger,
+\{\C_q' : q \in \mathcal{Q}\}$ where $\C_q' \subset \C'$ describes the active times for charger $q$. Focusing on an individual charger,
 consider $\C_q'$ before a schedule has been imposed upon it, $\C_q' = \{ \varnothing \}$. In other words, no buses have
 been assigned to be charged over the time period of $[u_i, d_i]$. After the scheduling process is complete, $\C_q'$ will
 have a set of active periods of the form $\C_q' = \{[u_j, d_j]: j \in \Jsetq \}$ where $\Jsetq \subset \mathcal{I}$. With a fully defined
@@ -129,7 +129,7 @@ $\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing$, is said to be disjo
 \end{equation}
 
 **** Generator Output
-The output of the generating functions is a modified subset of a input tuple. Let a modified input tuple be denoted as
+The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 $\Sol'$ and the modified subset of the tuple be defined by $x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol$. To be explicit, $x_i'$
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
 and detach time from the charger. The other direct variables and indirect variables may be implied. As previously
@@ -159,7 +159,7 @@ within its arrival/departure time $[a_i, e_i]$. Let $\U_{\cdot}$ indicate that a
 uniform distribution from the set $\{\cdot\}$. For example, $\U_{[a_i,e_i]}$ indicates that a value will be selected between
 $a_i$ and $u_i$ with a uniform distribution. Lines 2-4 extracts the visit index, $i$, arrival time, $a_i$, and departure
 time, $e_i$. Note that in subsequent algorithms these lines will be omitted for conciseness. Line 5 loops through a
-randomly indexed set of charger queues and line 6 loops through a randomly indexed set of inactive time periods. Line 7
+randomly indexed set of charger queues and Line 6 loops through a randomly indexed set of inactive time periods. Line 7
 quickly verifies that the inactive period selected is a viable selection and returns a random charging time, $[u_i,
 d_i]$, if it is, otherwise null values are returned. The function =findFreeTime= is defined in \ref{alg:find-free-time}.
 Line 8 applies the candidate decisions variables and returns the updated visit.
@@ -196,11 +196,11 @@ Line 8 applies the candidate decisions variables and returns the updated visit.
 \end{algorithm}
 
 The function =findFreeTime= in \ref{alg:new-visit} is defined in \ref{alg:find-free-time}. Let $L$ and $U$ be the lower
-and upper bound of the time between scheduled times. The set of cases are shown in [[fig:find-free]]. In each case depicted
+and upper bound of the time between scheduled times. The set of cases is shown in [[fig:find-free]]. In each case depicted
 by [[fig:find-free]], the red line shows the arrival and departure time for a BEB visit, $i$. The blue lines indicate
 regions in which charger $v_i$ is active. $C \in \C_q \subset \C$ represents one of the ranges between the blue lines, $[L, U]$,
 which stand for the lower and upper bounds of the region, respectively. That is, the only scheduling constraint is that
-the arrival time is before charger $q$ is available to charge the bus. Therefore, the bus must wait intil $L$ before
+the arrival time is before charger $q$ is available to charge the bus. Therefore, the bus must wait until $L$ before
 changer $q$ may charge it. Furthermore, the range that $u_i$ must be selected from is $[L,e]$. Lines 24-26 update the
 times slices for which charger $q$ is available.
 
@@ -312,7 +312,7 @@ Line 2 generates a new $[u_i, d_i]$ utilizing the =findFreeTime= function. Line 
 :CUSTOM_ID: new-charger
 :END:
 The new charger generator (shown in \ref{alg:new-charger}) moves a visit $\I_i$ to a new charging queue while
-maintianing the same charge time, $[u_i, d_i]$. Line 2 loops through a randomly indexed set of charger queue indices.
+maintaining the same charge time, $[u_i, d_i]$. Line 2 loops through a randomly indexed set of charger queue indices.
 Line 3 checks if there is an available time slice $[a_i, e_i]$ for charger $q$. Line 4 sets the charge start/stop times
 to the previous values. Line 5 sets and returns the updated visit.
 
@@ -374,7 +374,7 @@ The wait generator simply removes a bus from a charger queue and places it in it
 :END:
 New window is a combination of the wait and then new visit generators ([[#sec:purge]] and [[#sec:new-visit]]). By this it is
 meant that current scheduled tuple $(v_i, u_i, d_i)$ is purged and added back in as if it were a new visit. Line 2
-purges the BEB visit from the schedule and line 3 places the BEB back into the schedule using the new visit generator.
+purges the BEB visit from the schedule and Line 3 places the BEB back into the schedule using the new visit generator.
 Line 4 assigns and returns the updated visit.
 
 #+name: alg:new-window
@@ -414,7 +414,7 @@ previously described and returns either a new charge schedule or a modified char
 :END:
 The objective of this generator is to generate a candidate solution provided a given route schedule. To generate a
 candidate solution, the generator is given $\I$, which represents the set of unscheduled BEBs. Line 3 loops through the
-set of randomly indexed visits. Line 4 extracts the visit index and line 5 generates a new visit and populates the
+set of randomly indexed visits. Line 4 extracts the visit index and Line 5 generates a new visit and populates the
 updated route information and charger schedule. This process is done for all visits $i \in \Iset$.
 
 \begin{algorithm}[H]
@@ -430,7 +430,7 @@ updated route information and charger schedule. This process is done for all vis
     {
         $\I' \leftarrow \; \varnothing$ \tcc*[f]{Begin with empty set of scheduled visits.}
 
-        \ForEach (\tcc*[f]{Select a unscheduled BEB visit from a randomly index set of visits}) {$\I_i \in \{\ \U_{\I} \}$}
+        \ForEach (\tcc*[f]{Select an unscheduled BEB visit from a randomly indexed set of visits}) {$\I_i \in \{\ \U_{\I} \}$}
         {
             $i\leftarrow\; \I_i$ \tcc*{Extract the visit index}
             ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
@@ -474,3 +474,5 @@ function.
         \Return{($\I'$, $\C'$)}
     }
 \end{algorithm}
+
+#  LocalWords:  metaheuristic linearities BEBs
