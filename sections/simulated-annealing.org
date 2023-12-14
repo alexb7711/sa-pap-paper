@@ -385,16 +385,13 @@ Line 4 assigns and returns the updated visit.
     \KwIn{$\Sol$}
     \KwOut{$\Sol'$}
 
+    \SetKwFunction{NewVisit}{NewVisit}
     \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
-        \SetKwFunction{NewVisit}{NewVisit}
-        \SetKwFunction{Purge}{Purge}
-
-        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$} \tcc*[f]{Purge visit $i$ from its charger}
-
-        $\I_i' \leftarrow$ \NewVisit{$\Sol'$} \tcc*[f]{Add visit $i$ back in randomly}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$} \tcc[f]{Purge visit $i$ from its charger}
+        $\I_i' \leftarrow$ \NewVisit{$\Sol'$} \tcc[f]{Add visit $i$ back in randomly}
 
         \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
     }
@@ -418,9 +415,9 @@ set of randomly indexed visits. Line 4 extracts the visit index and Line 5 gener
 updated route information and charger schedule. This process is done for all visits $i \in \Iset$.
 
 \begin{algorithm}[H]
-\caption{Schedule generation algorithm} \label{alg:charge-schedule-generation}
+\caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
     \LinesNumbered
-    \TitleOfAlgo{ScheduleGeneration}
+    \TitleOfAlgo{CSG}
     \KwIn{$\I$, $\C$}
     \KwOut{$\I'$, $\C'$}
 
@@ -453,13 +450,11 @@ distribution. Let $G$ denote the number of primitive generators available and le
 function, Line 3 selects a primitive generation function with a uniform distribution. Line 5 executes the generation
 function.
 
-
-
 \begin{algorithm}[H]
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
 
     \LinesNumbered
-    \TitleOfAlgo{PerturbSchedule}
+    \TitleOfAlgo{PS}
     \KwIn{$\I$, $\C$}
     \KwOut{$\I_i'$, $\C'$}
 
@@ -468,7 +463,7 @@ function.
     \Begin
     {
         $\I_i\leftarrow\; \U_{\I}$ \tcc*{Randomly select a visit}
-        $\i\leftarrow\; \I_i$ \tcc*{Extract visit index}
+        $i \leftarrow\; \I_i$ \tcc*{Extract visit index}
         $PGF \leftarrow\; \U_{[1,G]}$ \tcc*{Select one of the generator functions}
         $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}  \tcc*{Excecute the generator function}
         \Return{($\I'$, $\C'$)}

@@ -18,6 +18,7 @@
 #+include: sections/simulated-annealing.org
 #+include: sections/optimization-algorithm.org
 
+
 # ======================================================================================================================
 # Bibliography
 
@@ -27,7 +28,8 @@
 # ======================================================================================================================
 # Appendix
 
-#+include: sections/appendix.org
-
+ #+begin_comment
+ #+include: sections/appendix.org
+ #+end_comment
 
 # LocalWords: SA

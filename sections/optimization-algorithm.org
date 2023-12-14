@@ -4,19 +4,19 @@
 :END:
 This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
 introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
-PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and
-not related to any of the variables presented for SA PAP thus far.
+PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and not
+related to any of the variables presented for SA PAP thus far.
+
 
 ** Simulated Annealing Pseudo Code
 :PROPERTIES:
 :CUSTOM_ID: sec:simulated-annealing-pseudo-code
 :END:
-
-Consider \ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\omega'$ are the current solution and the
-candidate solution, respectively. Let $T$ denote the temperature function, $T_0$ the initial temperature, $T_F$ the
-final temperature. Furthermore, let $t$ be defined as the vector of temperatures defined by $t = T(T_0, T_f)$, and let
-$t_k$ be defined as being an element of $t$, $t_k \in t$. Let $J$ be the repetition counter, it defines the number of
-iterations to execute for each step in temperature, $t_k$.
+Consider ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\omega'$ are the current solution and the
+candidate solution, respectively. Let $\Tau$ denote the temperature function and $\Tau_0$ the initial temperature.
+Furthermore, let $t$ be defined as the vector of temperatures defined by $t = \Tau(\Tau_0, \Tau_f)$, and let $t_k$ be
+defined as being an element of $t$, $t_k \in t$. Let $J$ be the repetition counter, it defines the number of iterations to
+execute for each step in temperature, $t_k$.
 
 The algorithm behaves as follows: initialize the SA algorithm with an initial solution, temperature schedule, and
 repetition schedule. The first loops through all the values in $t_k$, the second loop finished when $j = J$. For each
@@ -32,26 +32,28 @@ The modifications then occurs over $J$ iterations. This is repeated for all temp
     \TitleOfAlgo{SA Pseudo-Code}
 
     \SetKwFunction{f}{f}
+    \SetKwFunction{New}{N}
+    \SetKwFunction{Mod}{M}
+    \SetKwFunction{Temp}{$\Tau$}
+
     \Begin
     {
-        $\omega \in W$ \tcc*{Select an initial solution}
-        $T$ \tcc*{Select a temperature cooling schedule}
-        $T_0$ \tcc*{Select an initial temperature}
-        $T_F$ \tcc*{Select a final temperature}
-        $t \leftarrow T(T_0, T_F)$ \tcc*{Generate array of temperatures}
-        \tcc{Select a repetition schedule $M$, that defines the number of iterations executed at each temerature $t_k$}
+        $\omega \leftarrow$ New{($\I$, $\C$)}\tcc*{Generate an initial solution}
+
+        \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
+        $t \leftarrow$ \Temp{$\Tau_0$}
 
         \ForEach{$t_k \in t$}
         {
             $j \leftarrow 0$ \tcc*{Set repetition counter}
-            $\omega' \leftarrow N(\omega)$ \tcc*{Generate a new solution}
+            $\omega' \leftarrow $ \New{($\I$, $\C$)} \tcc*{Generate a new solution}
             $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
             \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
             \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
 
             \While{$j \le J$}
             {
-                $\omega{''} \leftarrow M(\omega')$ \tcc*{Modify the new solution}
+                $\omega{''} \leftarrow$ \Mod{($\I'$, $\C'$)} \tcc*{Modify the new solution}
                 $\Delta_{\omega,\omega{''}} \rightarrow$ \f{$\omega{''}$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
                 \If{$\Delta_{\omega , \omega{''}} \le 0$}{$\omega \rightarrow \omega{''}$}
                 \If{$\Delta_{\omega , \omega{''}} > 0$}{$\omega \rightarrow \omega{''}$ with probability $e^{\frac{-\Delta_{\omega , \omega{''}}}{t_k}}$}
@@ -61,50 +63,54 @@ The modifications then occurs over $J$ iterations. This is repeated for all temp
     }
 \end{algorithm}
 
-** SA PAP Pseudo Code
-:PROPERTIES:
-:CUSTOM_ID: sec:sa-pap-pseudo-code
-:END:
-The objective is now to outline SA-PAP in \ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the
-initial temperature, selecting the cooling schedule, and setting the repetition schedule. Line 5 loops through each of
-the step in the temperature schedule $t_k \in t$. Lines 6 and 7 generate a new solution and calculates its fitness. $\nu$ in
-this context is defined as $\nu = (u, d, v, \eta)$ Lines 8 through 13 update the solution depending on if the new solution is
-better or worse than the previous solution. Line 14 iterates through the repetition schedule, $k \in \{1, 2, ..., K\}$.
-Lines 15-23 perturbs the previously generated solution, calculates its fitness, and updates the current solution with
-the candidate solution depending on the fitness.
+** SA PAP Pseudo Code :PROPERTIES: :CUSTOM_ID: sec:sa-pap-pseudo-code :END: The objective is now to outline SA-PAP in
+\ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the initial temperature, selecting the cooling
+schedule, and setting the repetition schedule. Line 5 loops through each of the step in the temperature schedule $t_k \in
+t$. Lines 6 and 7 generate a new solution and calculates its fitness. $\nu$ in this context is defined as $\nu = (u, d, v,
+\eta)$ Lines 8 through 13 update the solution depending on if the new solution is better or worse than the previous
+solution. Line 14 iterates through the repetition schedule, $k \in \{1, 2, ..., K\}$. Lines 15-23 perturbs the previously
+generated solution, calculates its fitness, and updates the current solution with the candidate solution depending on
+the fitness.
 
 \begin{algorithm}[H]
 \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
     \LinesNumbered
     \TitleOfAlgo{SA PAP}
-    \KwIn{$\I$}
-    \KwOut{$\I'$}
+    \KwIn{($\I$ , $\C$)}
+    \KwOut{($\I'$, $\C'$)}
 
-    \SetKwFunction{CoolingEquation}{CoolingEquation}
-    \SetKwFunction{ScheduleGeneration}{ScheduleGeneration}
-    \SetKwFunction{PerturbSchedule}{PerturbSchedule}
-    \SetKwFunction{J}{J}
+    \SetKwFunction{Temp}{$\Tau$}
+    \SetKwFunction{CSG}{CSG}
+    \SetKwFunction{PS}{PS}
+    \SetKwFunction{Obj}{J}
 
     \Begin
     {
-        $\Tau_0$ \tcc*{Initialize temperature}
-        $\Tau_{M} \leftarrow$ \CoolingEquation{$\Tau_0$} \tcc*{Select cooling equation}
-        $K$ \tcc*{Set a repetition schedule}
+        $\nu \leftarrow$ \tcc*{Generate an initial solution}
 
-        \For{$\Tau_m \in \{\Tau_0, \Tau_1, ..., \Tau_M\}$}
+        \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
+        $t \leftarrow$ \Temp{$\Tau_0$}
+
+        \tcc{For each item in the temperature vector}
+        \ForEach{$t_k \in t$}
         {
-            $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$} \tcc*{Generate a new solution}
-            $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
+            $\upsilon' \subset (\I', \C') \leftarrow$ \CSG{($\I$, $\C$)} \tcc*{Generate a new solution}
+            $\Nu_{\upsilon, \upsilon'} = $ \Obj{$\upsilon'$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
 
-            \For{$k \in \{1, 2, ..., K\}$}
+            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
+            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{t_k}}$}
+
+            \tcc{For each step in the repitition schedule}
+            \ForEach{$k \in \{1, 2, ..., K\}$}
             {
-                $\upsilon' \in Y \leftarrow$ \PerturbSchedule{$\I$} \tcc*{Perturb the solution and reassess}
-                $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate}
-                \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
-                \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
+                $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution and reassess}
+                $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate}
+
+                \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
+                \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}
             } % For k
-        }     % For \Tau
+        }     % For t_k \in t
+
+        \Return{($\I'$ , $\C'$)}
     }         % Begin
 \end{algorithm}
