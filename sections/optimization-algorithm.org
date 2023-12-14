@@ -1,11 +1,16 @@
 * Optimization Algorithm
 :PROPERTIES:
-:CUSTOM_ID: optimization-algorithm
+:CUSTOM_ID: sec:optimization-algorithm
 :END:
 This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
 introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
 PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and
 not related to any of the variables presented for SA PAP thus far.
+
+** Simulated Annealing Pseudo Code
+:PROPERTIES:
+:CUSTOM_ID: sec:simulated-annealing-pseudo-code
+:END:
 
 Consider \ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\omega'$ are the current solution and the
 candidate solution, respectively. Let $T$ denote the temperature function, $T_0$ the initial temperature, $T_F$ the
@@ -14,12 +19,12 @@ $t_k$ be defined as being an element of $t$, $t_k \in t$. Let $J$ be the repetit
 iterations to execute for each step in temperature, $t_k$.
 
 The algorithm behaves as follows: initialize the SA algorithm with an initial solution, temperature schedule, and
-repetition schedule. The first loops through all the values in $t_K$, the second loop finished whin $j = J$. For each
+repetition schedule. The first loops through all the values in $t_k$, the second loop finished when $j = J$. For each
 loop, create a new solution ($N(\omega)$), calculate the difference in the fitness of $\omega$ and $\omega'$. Update $\omega$ with $\omega'$ if
-the candidate solution is better. Update $\omega$ with $\omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$ if the candidate
+the candidate solution is better or update $\omega$ with $\omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$ if the candidate
 solution is worse than the current solution. Then the new candidate solution is modified slightly ($M(\omega')$) to produce
-an altered new candidate solution $\omega{''}$. The modified candidate solution is then compared to $\omega$ in a similar manner
-as before. The modifications then occurs over $J$ iterations. This is repeated for all temperatures in $t_k$.
+an altered new candidate solution $\omega{''}$. The modified candidate solution is then compared to $\omega$ similarly as before.
+The modifications then occurs over $J$ iterations. This is repeated for all temperatures in $t_k$.
 
 \begin{algorithm}[H]
 \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
@@ -32,7 +37,7 @@ as before. The modifications then occurs over $J$ iterations. This is repeated f
         $\omega \in W$ \tcc*{Select an initial solution}
         $T$ \tcc*{Select a temperature cooling schedule}
         $T_0$ \tcc*{Select an initial temperature}
-        $T_F$ \tcc*{Select an final temperature}
+        $T_F$ \tcc*{Select a final temperature}
         $t \leftarrow T(T_0, T_F)$ \tcc*{Generate array of temperatures}
         \tcc{Select a repetition schedule $M$, that defines the number of iterations executed at each temerature $t_k$}
 
@@ -56,13 +61,17 @@ as before. The modifications then occurs over $J$ iterations. This is repeated f
     }
 \end{algorithm}
 
-The objective now is to outline SA-PAP in \ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the initial
-temperature, selecting the cooling schedule, and setting the repetition schedule. Line 5 loops through each of the step
-in the temperature schedule $\Tau \in \{ \Tau_0, \Tau_1, ..., \Tau_m \}$. Lines 6 and 7 generate a new solution and
-calculates its fitness. $\nu$ in this context is defined as $\nu = (u, d, v, \eta)$ Lines 8 through 13 updates the solution
-depending on if the new solution is better or worse than the previous solution. Line 14 iterates through the repetition
-schedule, $k \in \{1, 2, ..., K\}$. Lines 15-23 perturbs the previously generated solution, calculates its fitness, and
-updates the current solution with the candidate solution depending on the fitness.
+** SA PAP Pseudo Code
+:PROPERTIES:
+:CUSTOM_ID: sec:sa-pap-pseudo-code
+:END:
+The objective is now to outline SA-PAP in \ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the
+initial temperature, selecting the cooling schedule, and setting the repetition schedule. Line 5 loops through each of
+the step in the temperature schedule $t_k \in t$. Lines 6 and 7 generate a new solution and calculates its fitness. $\nu$ in
+this context is defined as $\nu = (u, d, v, \eta)$ Lines 8 through 13 update the solution depending on if the new solution is
+better or worse than the previous solution. Line 14 iterates through the repetition schedule, $k \in \{1, 2, ..., K\}$.
+Lines 15-23 perturbs the previously generated solution, calculates its fitness, and updates the current solution with
+the candidate solution depending on the fitness.
 
 \begin{algorithm}[H]
 \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}

@@ -1,0 +1,35 @@
+\newpage \appendix
+
+* Generator Wrappers
+** Generate New Visits
+\lstinputlisting{./sa-pap/src/sa/generators/gen_new_visits.rs}
+\newpage
+
+** Perturb Schedule
+\lstinputlisting{./sa-pap/src/sa/generators/tweak_schedule.rs}
+\newpage
+
+* Primitive Generators
+** New Charger
+\lstinputlisting{./sa-pap/src/sa/generators/primitives/new_charger.rs}
+\newpage
+
+** New Visit
+\lstinputlisting{./sa-pap/src/sa/generators/primitives/new_visit.rs}
+\newpage
+
+** Purge
+\lstinputlisting{./sa-pap/src/sa/generators/primitives/purge.rs}
+\newpage
+
+** Slide Visit
+\lstinputlisting{./sa-pap/src/sa/generators/primitives/slide_visit.rs}
+\newpage
+
+** Wait
+\lstinputlisting{./sa-pap/src/sa/generators/primitives/wait.rs}
+\newpage
+
+
+* Simulated Annealing
+\lstinputlisting{./sa-pap/src/sa.rs}

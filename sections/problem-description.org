@@ -57,5 +57,4 @@ shall be utilized to measure the relative fitness of results and constraints sha
 prescribed schedule. Both the objective function and constraints are discussed in further detail in
 [[#sec:objective-function]].
 
-#  LocalWords:  BEBs BEB BEB's
-* 
+#  LocalWords: BEBs BEB BEB's

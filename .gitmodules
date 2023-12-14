@@ -4,3 +4,6 @@
 [submodule "org-doc-scripts"]
 	path = org-doc-scripts
 	url = https://github.com/alexb7711/org-doc-scripts.git
+[submodule "sa-pap"]
+	path = sa-pap
+	url = https://github.com/alexb7711/sa-pap.git
