@@ -2,6 +2,7 @@
 :PROPERTIES:
 :CUSTOM_ID: sec:optimization-algorithm
 :END:
+
 This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
 introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
 PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and not
@@ -12,6 +13,7 @@ related to any of the variables presented for SA PAP thus far.
 :PROPERTIES:
 :CUSTOM_ID: sec:simulated-annealing-pseudo-code
 :END:
+
 Consider ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\omega'$ are the current solution and the
 candidate solution, respectively. Let $\Tau$ denote the temperature function and $\Tau_0$ the initial temperature.
 Furthermore, let $t$ be defined as the vector of temperatures defined by $t = \Tau(\Tau_0, \Tau_f)$, and let $t_k$ be
@@ -63,14 +65,18 @@ The modifications then occurs over $J$ iterations. This is repeated for all temp
     }
 \end{algorithm}
 
-** SA PAP Pseudo Code :PROPERTIES: :CUSTOM_ID: sec:sa-pap-pseudo-code :END: The objective is now to outline SA-PAP in
-\ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the initial temperature, selecting the cooling
-schedule, and setting the repetition schedule. Line 5 loops through each of the step in the temperature schedule $t_k \in
-t$. Lines 6 and 7 generate a new solution and calculates its fitness. $\nu$ in this context is defined as $\nu = (u, d, v,
-\eta)$ Lines 8 through 13 update the solution depending on if the new solution is better or worse than the previous
-solution. Line 14 iterates through the repetition schedule, $k \in \{1, 2, ..., K\}$. Lines 15-23 perturbs the previously
-generated solution, calculates its fitness, and updates the current solution with the candidate solution depending on
-the fitness.
+** SA PAP Pseudo Code
+:PROPERTIES:
+:CUSTOM_ID: sec:sa-pap-pseudo-code
+:END:
+
+Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP in \ref{alg:sa-pap}. Lines
+2-4 initialize the SA algorithm by defining the initial temperature, selecting the cooling schedule, and setting the
+repetition schedule. Line 5 loops through each of the step in the temperature schedule $t_k \in t$. Lines 6 and 7 generate
+a new solution and calculates its fitness. $\nu$ in this context is defined as $\nu = (u, d, v, \eta)$ Lines 8 through 13
+update the solution depending on if the new solution is better or worse than the previous solution. Line 14 iterates
+through the repetition schedule, $k \in \{1, 2, ..., K\}$. Lines 15-23 perturbs the previously generated solution,
+calculates its fitness, and updates the current solution with the candidate solution depending on the fitness.
 
 \begin{algorithm}[H]
 \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
@@ -86,7 +92,7 @@ the fitness.
 
     \Begin
     {
-        $\nu \leftarrow$ \tcc*{Generate an initial solution}
+        $\nu \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
 
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}
@@ -103,8 +109,8 @@ the fitness.
             \tcc{For each step in the repitition schedule}
             \ForEach{$k \in \{1, 2, ..., K\}$}
             {
-                $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution and reassess}
-                $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate}
+                $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution}
+                $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
 
                 \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
                 \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}

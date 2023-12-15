@@ -1,4 +1,4 @@
-% Created 2023-12-14 Thu 14:24
+% Created 2023-12-15 Fri 07:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -659,7 +659,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org35094ba}
+\label{sec:org5d45ed1}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -683,7 +683,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org86a4bfc}
+\label{sec:orga70e80d}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
@@ -1217,15 +1217,15 @@ The modifications then occurs over \(J\) iterations. This is repeated for all te
     }
 \end{algorithm}
 
-\subsection{SA PAP Pseudo Code :PROPERTIES: :CUSTOM\textsubscript{ID}: sec:sa-pap-pseudo-code :END: The objective is now to outline SA-PAP in}
-\label{sec:org94389a2}
-\ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the initial temperature, selecting the cooling
-schedule, and setting the repetition schedule. Line 5 loops through each of the step in the temperature schedule \(t_k \in
-t\). Lines 6 and 7 generate a new solution and calculates its fitness. \(\nu\) in this context is defined as \(\nu = (u, d, v,
-\eta)\) Lines 8 through 13 update the solution depending on if the new solution is better or worse than the previous
-solution. Line 14 iterates through the repetition schedule, \(k \in \{1, 2, ..., K\}\). Lines 15-23 perturbs the previously
-generated solution, calculates its fitness, and updates the current solution with the candidate solution depending on
-the fitness.
+\subsection{SA PAP Pseudo Code}
+\label{sec:sa-pap-pseudo-code}
+Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP in \ref{alg:sa-pap}. Lines
+2-4 initialize the SA algorithm by defining the initial temperature, selecting the cooling schedule, and setting the
+repetition schedule. Line 5 loops through each of the step in the temperature schedule \(t_k \in t\). Lines 6 and 7 generate
+a new solution and calculates its fitness. \(\nu\) in this context is defined as \(\nu = (u, d, v, \eta)\) Lines 8 through 13
+update the solution depending on if the new solution is better or worse than the previous solution. Line 14 iterates
+through the repetition schedule, \(k \in \{1, 2, ..., K\}\). Lines 15-23 perturbs the previously generated solution,
+calculates its fitness, and updates the current solution with the candidate solution depending on the fitness.
 
 \begin{algorithm}[H]
 \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
@@ -1241,7 +1241,7 @@ the fitness.
 
     \Begin
     {
-        $\nu \leftarrow$ \tcc*{Generate an initial solution}
+        $\nu \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
 
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}
@@ -1269,6 +1269,7 @@ the fitness.
         \Return{($\I'$ , $\C'$)}
     }         % Begin
 \end{algorithm}
+
 
 \bibliographystyle{plain}
 \bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
