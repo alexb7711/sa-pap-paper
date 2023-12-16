@@ -1,4 +1,4 @@
-% Created 2023-12-15 Fri 07:10
+% Created 2023-12-16 Sat 16:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -22,6 +22,7 @@
 \usepackage{listings}                       % Code in LaTeX
 \usepackage{listings-rust}                  % Code in LaTeX
 \usepackage{amsfonts}                       % Cool math fonts
+\usepackage{tabularx}
 \usepackage{multicol}                       % Add capability to make columns
 \usepackage{hyperref}                       % Cool clean hyperlinks
 \setlength\parindent{0pt}                   % No indent for paragraphs
@@ -34,6 +35,7 @@
 \renewcommand*{\algorithmautorefname}{Algorithm}
 \newcommand{\Or}{\textbf{ or }}
 \renewcommand*{\And}{\textbf{ and }}
+\newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}%
 \newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{gray}{#1}}
 \newcommand{\T}{\mathcal{T}}                % To make it clear the difference
 \newcommand{\Tau}{T}                        % between Tau and T
@@ -191,54 +193,36 @@ from the charger in queue \(q\).
 \begin{table}[htbp]
 \caption{\label{tab:variables}Table of variables used in the paper.}
 \centering
-\begin{tabular}{ll}
-\textbf{Variable} & \textbf{Description}\\[0pt]
+\begin{tabularx}{\textwidth}{L{0.3} L{1.2} L{0.3} L{1.2}}
+\textbf{Variable} & \textbf{Description} & \textbf{Variable} & \textbf{Description}\\[0pt]
 \hline
-Input constants & \\[0pt]
-\(C\) & Penalty method gain factor\\[0pt]
-\(B\) & Number of buses in use\\[0pt]
-\(H\) & Numer of discrete steps, \(h\), in time horizon\\[0pt]
-\(I\) & Number of total visits\\[0pt]
-\(J(u,d,v,\eta)\) & Objective function\\[0pt]
-\(K\) & Local search iteration amount\\[0pt]
-\(M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule\\[0pt]
-\(Q\) & Number of chargers\\[0pt]
-\(\T\) & Time horizon\\[0pt]
-\(\Tau\) & Temperature\\[0pt]
+Constants &  & Constants & \\[0pt]
+\(C\) & Penalty method gain factor & \(B\) & Number of buses in use\\[0pt]
+\(H\) & Numer of discrete steps, \(h\), in time horizon & \(I\) & Number of total visits\\[0pt]
+\(J(u,d,v,\eta)\) & Objective function & \(K\) & Local search iteration amount\\[0pt]
+\(M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(Q\) & Number of chargers\\[0pt]
+\(\T\) & Time horizon &  & \\[0pt]
 \hline
-Input variables & \\[0pt]
-\(\Delta_i\) & Discharge of visit over after visit \(i\)\\[0pt]
-\(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
-\(\delta_i\) & Discharge rate for vehicle \(i\) per mile\\[0pt]
-\(\nu\) & Minimum charge percentage allowed for each visit \(i\)\\[0pt]
-\(\epsilon_q\) & Cost of using charger \(q\)\\[0pt]
-\(\kappa_b\) & Battery capacity for bus \(b\)\\[0pt]
-\(\rho_i\) & Route distance after visit \(i\)\\[0pt]
-\(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
-\(a_i\) & Arrival time of visit \(i\)\\[0pt]
-\(b_i\) & ID for bus visit \(i\)\\[0pt]
-\(dt_h\) & Discrete time step \(dt_h = t_h - t_{h-1}\)\\[0pt]
-\(e_i\) & Time bus visit \(i\) must exit the station\\[0pt]
-\(k\) & Local search iteration \(k\)\\[0pt]
-\(m\) & Minimum charge percentage allowed for each visit\\[0pt]
-\(r_q\) & Charge rate of charger \(q\)\\[0pt]
+Input variables &  & Input Variables & \\[0pt]
+\(\Delta_i\) & Discharge of visit over after visit \(i\) & \(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
+\(\delta_i\) & Discharge rate for vehicle \(i\) per mile & \(\nu\) & Minimum charge percentage allowed for each visit \(i\)\\[0pt]
+\(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for bus \(b\)\\[0pt]
+\(\rho_i\) & Route distance after visit \(i\) & \(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
+\(a_i\) & Arrival time of visit \(i\) & \(b_i\) & ID for bus visit \(i\)\\[0pt]
+\(dt_h\) & Discrete time step \(dt_h = t_h - t_{h-1}\) & \(e_i\) & Time bus visit \(i\) must exit the station\\[0pt]
+\(k\) & Local search iteration \(k\) & \(m\) & Minimum charge percentage allowed for each visit\\[0pt]
+\(r_q\) & Charge rate of charger \(q\) &  & \\[0pt]
 \hline
-Decision Variables & \\[0pt]
-\(\eta_i\) & Charge for the bus at the beginning of visit \(i\)\\[0pt]
-\(\iota_h\) & Binary variable that is 1 if \(u_i \le dt_h \le d_i\), 0 othewise\\[0pt]
-\(\mu_h\) & Binary variable that is 1 if \(u_i \le dt_h\), 0 otherwise\\[0pt]
-\(\phi_i\) & Binary term to enable/disable charge penalty for visit \(i\)\\[0pt]
-\(\psi_{ij}\) & Tracks spatial overlap for visit pair \((i,j)\)\\[0pt]
-\(\sigma_{ij}\) & Tracks temporal overlap for visit pair \((i,j)\)\\[0pt]
-\(\theta_h\) & Binary variable that is 1 if \(d_i \ge dt_h\), 0 otherwise\\[0pt]
-\(d_i\) & Detach time from charger for visit \(i\)\\[0pt]
-\(p_{dem}(t)\) & Demand cost\\[0pt]
-\(s_i\) & Amount of time spent on charger for visit \(i\) (service time)\\[0pt]
-\(u_i\) & Time to start charging for visit \(i\)\\[0pt]
-\(d_i\) & Time to detach bus from charger for visit \(i\)\\[0pt]
-\(v_i\) & Assigned queue for visit \(i\)\\[0pt]
+Decision Variables &  & Decision Variables & \\[0pt]
+\(\eta_i\) & Charge for the bus at the beginning of visit \(i\) & \(\iota\) & \(Q \times N\) matrix of binary values such that \(\iota_h^{v_i} = 1\) if \(u_i \le dt_h \le d_i\), 0 otherwise\\[0pt]
+\(\mu\) & \(Q \times N\) matrix of binary variables such that \(\mu_h^{v_i} = 1\) if \(u_i \le dt_h\), 0 otherwise & \(\phi_i\) & Binary term to enable/disable charge penalty for visit \(i\)\\[0pt]
+\(\psi_{ij}\) & Tracks spatial overlap for visit pair \((i,j)\) & \(\sigma_{ij}\) & Tracks temporal overlap for visit pair \((i,j)\)\\[0pt]
+\(\theta\) & \(Q \times N\) matrix of binary variables such that \(\theta_h^{v_i} = 1\) if \(d_i \ge dt_h\), 0 otherwise & \(d_i\) & Detach time from charger for visit \(i\)\\[0pt]
+\(p_{dem}(t)\) & Demand cost & \(s_i\) & Amount of time spent on charger for visit \(i\) (service time)\\[0pt]
+\(u_i\) & Time to start charging for visit \(i\) & \(d_i\) & Time to detach bus from charger for visit \(i\)\\[0pt]
+\(v_i\) & Assigned queue for visit \(i\) &  & \\[0pt]
 \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsubsection{Decision Variables}
@@ -253,9 +237,10 @@ direct control over and indirect variables are those that are influenced by the 
 \label{sec:direct-decision-variables}
 Decision variables that are direct are variables that can be immediately chosen by SA. The first two variables are \(u_i\)
 and \(d_i \; \forall i \in \Iset\). They represent the initial and final charging times. These values must remain within range of
-the arrival time and departure time for visit \(i\), \([a_i, e_i]\). \(\mu_h\) and \(\theta_h\) are binary decision variables, \(\mu_h,
-\theta_h \in \{0, 1\}\). \(\mu_h = 1\) when \(u_i \le dt_h\), and is 0 otherwise. \(\theta_h = 1\) when \(d_i \ge dt_h\) and is 0 otherwise. The
-last direct decision variable is the queue that bus visit \(i\) can be placed in to charge, \(v_i \in \Qset\).
+the arrival time and departure time for visit \(i\), \([a_i, e_i]\). \(\mu\) and \(\theta\) are \(Q \times H\) matrices of binary decision
+variables, \(\mu_h^{v_i}, \theta_h^{v_i} \in \{0, 1\}\). \(\theta_h^{v_i} = 1\) when \(u_i \le dt_h\), and \(\theta_h^{v_i} = 0\) otherwise.
+\(\mu_h^{v_i} = 1\) when \(d_i \ge dt_h\) and \(\mu_h^{v_i} = 0\) otherwise. The last direct decision variable is the queue that bus
+visit \(i\) can be placed in to charge, \(v_i \in \Qset\).
 
 \paragraph{Indirect Decision Variables}
 \label{sec:indirect-decision-variables}
@@ -272,8 +257,8 @@ discharge accumulated over route \(i\).
   \eta_{\xi_i} = \eta_i + r_{v_i}s_i - \Delta_i
 \end{equation}
 
-\(\iota_h \in \{0,1\} = 1\) when \(\mu_h\) and \(\theta_h\) are both active and is covered in \ref{sec:objective-function}. \(\psi_i\) is a boolean
-decision variable, \(\psi_i \in \{0,1\}\), that either enables or disables the charge penalty defined in
+\(\iota_h^{v_i} \in \{0,1\} = 1\) when \(\mu_h^{v_i}\) and \(\theta_h^{v_i}\) are both active and is covered in \ref{sec:objective-function}.
+\(\psi_i\) is a boolean decision variable, \(\psi_i \in \{0,1\}\), that either enables or disables the charge penalty defined in
 \ref{sec:objective-function}. \(\sigma_{ij}\) and \(\psi_{ij}\) are used to indicate whether a visit pair \((i, j)\) overlap the same space
 as show in \ref{fig:spacial-and-temporal-constr}. More formally, \ref{eq:bus-spat-temp} describes the relationship that \(\sigma_{ij}\) and
 \(\psi_{ij}\) uphold. That is, for every visit, if the start charge time visit \(j\) is greater than the end charge time of
@@ -331,12 +316,13 @@ Q_f \in \mathcal{Z}\) and \(B + Q_s + Q_f = Q\). Furthermore, let \(\epsilon_b =
 use of slow chargers over fast.
 
 The second term is the penalty function that is either enabled or disabled by \(\phi_i\)
-\cite{luenberger-2008-penal-barrier-method}. \(\phi_i\) is enabled when the initial charge, \(\eta_i\), is less than the allowed
-minimum charge, \(m\kappa_{b_i}\). This is further discussed in \ref{sec:constraints}. Note the variables \(\phi_i\) and \(\eta_i\) being
-multiplied together in \ref{eq:ac}. These are decision variables and when multiplied together become non-linear. Terms of this
-nature are denoted as bilinear. Using a traditional MILP solver, this would require a some mathematical manipulation to
-linearize the terms \cite{rodriguez-2013-compar-asses}; however, because SA handles non-linearity easily these bilinear
-terms will be ignored \cite{radosavljevic-2018-metah-optim}.
+\cite{luenberger-2008-penal-barrier-method}. \(C\) is a large constant value used to scale the penalty function. \(\phi_i\) is
+enabled when the initial charge, \(\eta_i\), is less than the allowed minimum charge, \(m\kappa_{b_i}\). This is further discussed
+in \ref{sec:constraints}. Thus, when \(\phi_i\) is active, the value of second term is \(C(\eta_i - m \kappa_i)^2\) and \(0\) when inactive.
+Note the variables \(\phi_i\) and \(\eta_i\) being multiplied together in \ref{eq:ac}. These are decision variables and when multiplied
+together become non-linear. Terms of this nature are denoted as bilinear. Using a traditional MILP solver, this would
+require a some mathematical manipulation to linearize the terms \cite{rodriguez-2013-compar-asses}; however, because SA
+handles non-linearity easily these bilinear terms will be ignored \cite{radosavljevic-2018-metah-optim}.
 
 The demand cost quantifies the amount of power being used over a given period and adjusts the cost accordingly. The
 consumption cost calculates the total amount of power being consumed by the chargers. The consumption cost is merely the
@@ -366,8 +352,8 @@ p_{max}(t) = \text{max}_{\tau \in [0,t]}p_{15}(\tau)
 \end{equation}
 
 A fixed minimum threshold, \(p_{fix}\), is introduced as a base power rate to be charged at. Let this fixed threshold be
-defined as \(p_{fix}\). In a similar manner as \(p_{max}\), the maximum value is retained. Furthermore, let \(s_r\) define the
-demand rate which has the units of \(\frac{\$}{kW}\).
+defined as \(p_{fix}\). Similarly to \(p_{max}\), the maximum value is retained. Furthermore, let \(s_r\) define the demand
+rate which has the units of \(\frac{\$}{kW}\).
 
 \begin{equation}
 \label{eq:pdem}
@@ -376,18 +362,18 @@ p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
 
 \ref{eq:pdem}, again, retains the largest \(p_{d}\) value with a starting fixed value of \(p_{fix}\). To write the total power
 demand at any discrete time, consider \ref{eq:discrete-power}. Let \(\omega_h \in \omega\) be the discrete power demand at time step \(h\)
-where \(h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}\) and \(H = \frac{T}{0.25}\). For conciseness of notation we will abuse \(t_h\) to denote
-the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h - t_{h-1}\), and \(\Hset = \{ 1, 2, ..., H
-\}\). Let \(\iota_h\) be a binary decision variable that is enabled if charger \(v_i \in \Qset\) is enabled in the time frame
-\(dt_h\). Let the power usage of charger \(v_i\) be denoted as \(r_{v_i}\).
+where \(h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}\), \(H = \frac{T}{0.25}\), and \(\omega\) is an \(H \times 1\) vector. For conciseness of notation we
+will abuse \(t_h\) to denote the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h - t_{h-1}\),
+and \(\Hset = \{ 1, 2, ..., H \}\). Let \(\iota\) be a \(Q \times M\) matrix of binary decision variables that is enabled if charger
+\(v_i \in \Qset\) is active in the time frame \(dt_h\).
 
 \begin{equation}
 \label{eq:discrete-power}
-  \omega_h = \sum_i^I \iota_h \cdot r_{v_i}
+  \omega = \iota r
 \end{equation}
 
 The average power can be rewritten as \(p_{15}^h = \omega_h\), \(p_d\) can be rewritten as \(p_d^h = \text{max}_{h \in \Hset}
-(p_{15}^{h})\), there the \(h\) repesents the \(h^{\text{th}}\) step. Finally, \(p_d^f\) can be written as \ref{eq:pd-dis}.
+(p_{15}^{h})\), there the \(h\) represents the \(h^{\text{th}}\) step. Finally, \(p_d^f\) can be written as \ref{eq:pd-dis}.
 
 \begin{equation}
 \label{eq:pd-dis}
@@ -463,23 +449,23 @@ shown in \ref{eq:constraints}.
   \end{equation}
   \begin{equation}
       \label{seq:c12}
-      u_i - dt_h \le T\theta_h
+      dt_h - u_i \le T\theta_h^{v_i}
   \end{equation}
   \begin{equation}
       \label{seq:c13}
-       dt_h - d_i \le T(1 - \theta_h)
+       u_i - dt_h \le T(1 - \theta_h^{v_i})
   \end{equation}
   \begin{equation}
       \label{seq:c14}
-      dt_h - u_i \le T\mu_h
+      d_i - dt_h \le T\mu_h^{v_i}
   \end{equation}
   \begin{equation}
       \label{seq:c15}
-      d_i - dt_h \le T(1 - \mu_h)
+      dt_h - d_i \le T(1 - \mu_h^{v_i})
   \end{equation}
   \begin{equation}
       \label{seq:c16}
-      \iota_h = \mu_h \theta_h
+      \iota = \mu \circ \theta
   \end{equation}
 \end{subequations}
 \label{eq:constraints}
@@ -556,11 +542,13 @@ than or equal to the minimum allowed charge. \ref{seq:c10} ensures the continuit
 less than the initial charge which is less than the detach time which is less than the time the bus exits the station
 and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable \(\iota_h\). \ref{seq:c12}
-and \ref{seq:c13} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete time, \(0.25 \cdot
-h\), being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, \(d_i\), is less than the
-next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the discrete representation of whether charger
-\(v_i \in \Qset\) is active.
+The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable \(\iota\). \ref{seq:c12} and
+\ref{seq:c13} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete time, \(0.25 \cdot h\),
+being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, \(d_i\), is less than the
+next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the \(Q \times H\) matrix representation of whether
+charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product \cite{horn-1985-matrix-analy}. Let \(A\)
+and \(B\) be two \(M \times N\) matrices. The Hadamard Product is defined as the element-wise product of the two matrices, \(A \circ B
+= [a_{ij}b_{ij}]\).
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
@@ -587,8 +575,8 @@ is defined by \ref{eq:cool0}.
 \Tau[n] = \Tau[n-1] - \Delta_0
 \end{equation}
 
-with \(\Tau[0] = \Tau_0\) and \(\Delta_0 = 1/2\; C^\circ\) in \ref{fig:cool}. TODO: The value of \(\Delta_0\) can vary between \([0,1)\). A
-geometric cooling schedules is as defined in \ref{eq:cool1}. The cooling schedule type most widely used in practice
+with \(\Tau[0] = \Tau_0\) and \(\Delta_0 = 1/2\; C^\circ\) in \ref{fig:cool}. The value of \(\Delta_0\) can vary between \([0,1)\). A geometric
+cooling schedules is as defined in \ref{eq:cool1}. The cooling schedule type most widely used in practice
 \cite{keller-2019-multi-objec}. As such, it will also be employed by the work in this paper.
 
 \begin{equation}
@@ -596,7 +584,7 @@ geometric cooling schedules is as defined in \ref{eq:cool1}. The cooling schedul
 \Tau[n] = \alpha \Tau[n-1]
 \end{equation}
 
-where \(\alpha = 0.995\) in \ref{fig:cool}. TODO: \(\alpha\) may vary anywhere between the range \([0,1)\). An Exponential cooling schedule is
+where \(\alpha = 0.995\) in \ref{fig:cool}. \(\alpha\) may vary anywhere between the range \([0,1)\). An Exponential cooling schedule is
 defined by the difference equation is defined as \ref{eq:cool2}.
 
 \begin{equation}
@@ -604,7 +592,7 @@ defined by the difference equation is defined as \ref{eq:cool2}.
 \Tau[n] = e^{-\beta}\Tau[n-1]
 \end{equation}
 
-where \(\beta = 0.01\) in \ref{fig:cool}. TODO: The value of \(\beta\) may vary anywhere between the rang of \([0, 1)\).
+where \(\beta = 0.01\) in \ref{fig:cool}. The value of \(\beta\) may vary anywhere between the rang of \([0, 1)\).
 
 \begin{figure}[htbp]
 \centering
@@ -659,7 +647,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org5d45ed1}
+\label{sec:org9122f30}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -683,7 +671,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:orga70e80d}
+\label{sec:org75fd737}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
@@ -727,9 +715,9 @@ Line 8 applies the candidate decisions variables and returns the updated visit.
 
     \Begin
     {
-        $i    \leftarrow \{ i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{The index of the visit $i$}
-        $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the arrival time for visit $i$}
-        $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the departure time for visit $i$}
+        $i    \leftarrow \{ i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{The index of the visit $i$}
+        $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{Get the arrival time for visit $i$}
+        $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{Get the departure time for visit $i$}
 
         \tcc{For each element in the uniformly random set of charger queues $q \in \Qset$}
         \ForEach  {$q \in \{ \U_{\Qset} \}$}
@@ -739,7 +727,7 @@ Line 8 applies the candidate decisions variables and returns the updated visit.
             {
                 \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j, (a_i, e_i)$} $\not\in \varnothing$}
                 {
-                    \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+                    \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
                 }
             }
         }
@@ -914,7 +902,7 @@ times slices for which charger \(q\) is available.
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(C,a,e)$}
-    \KwOut{$(C',u,d)$}
+    \KwOut{($C',u,d)$}
 
     \tcc{Extract the lower and upper bounds.}
     L \(\leftarrow\) \(\{L \in C\}\)\;
@@ -950,11 +938,11 @@ times slices for which charger \(q\) is available.
 
         \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
         {
-            $C' \leftarrow C' \setminus [L,U]$ \tcc*{Remove $[L,U]$ from the set of free time for the current charger}
-            $C' \leftarrow \{[L,u], [d, U]\}$ \tcc*{Update the charger free time slices}
+            $C' \leftarrow C' \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
+            $C' \leftarrow \{[L,u], [d, U]\}$\tcc*{Update the charger free time slices}
         }
 
-        \Return{(C',u,d)}
+        \Return{($C',u,d$)}
     }
 \end{algorithm}
 
@@ -973,8 +961,8 @@ returns the updated set of visits which excludes visit \(i\).
 
     \Begin
     {
-        $\C' \leftarrow \C \setminus \C_{v_i}^i$ \tcc*{Remove assignment of visit $i$ to charger $v_i$}
-        \Return{$\Sol' \leftarrow \C'$} \tcc*{Return updated tuple}
+        $\C' \leftarrow \C \setminus \C_{v_i}^i$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
+        \Return{$\Sol' \leftarrow \C'$}\tcc*{Return updated tuple}
     }
 \label{alg:new-purge}
 \end{algorithm}
@@ -1024,15 +1012,15 @@ to the previous values. Line 5 sets and returns the updated visit.
 
     \Begin
     {
-        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*[f]{Purge visit $i$ from its charger}
 
         \tcc{For each element in the uniformly random set of time slices from charger $q$}
         \ForEach {$C_{q} \in \{ \U_{\Qset} \}$}
         {
             \If(\tcc*[f]{If there is time available in $C_{q}$}){$x_i' \leftarrow$ \findFreeTime{$C_{q}$, ($a_i, e_i$)} $\not\in \varnothing$}
             {
-                $x_i' \leftarrow (u_i, d_i)$ \tcc*{Keep previous start/stop times}
-                \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+                $x_i' \leftarrow (u_i, d_i)$\tcc*{Keep previous start/stop times}
+                \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
             }
         }
 
@@ -1054,12 +1042,12 @@ The wait generator simply removes a bus from a charger queue and places it in it
 
     \Begin
     {
-        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*[f]{Purge visit $i$ from its charger}
 
         \tcc{Assign bus to idle queue and set the duration for the arrival/departure times}
-        $x_i' \leftarrow (b, a_i, e_i)$ \;
+        $x_i' \leftarrow (b, a_i, e_i)$\;
 
-        \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+        \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
     }
 \end{algorithm}
 
@@ -1082,8 +1070,8 @@ Line 4 assigns and returns the updated visit.
 
     \Begin
     {
-        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$} \tcc[f]{Purge visit $i$ from its charger}
-        $\I_i' \leftarrow$ \NewVisit{$\Sol'$} \tcc[f]{Add visit $i$ back in randomly}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*{Purge visit $i$ from its charger}
+        $\I_i' \leftarrow$ \NewVisit{$\Sol'$}\tcc*{Add visit $i$ back in randomly}
 
         \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
     }
@@ -1114,12 +1102,12 @@ updated route information and charger schedule. This process is done for all vis
 
     \Begin
     {
-        $\I' \leftarrow \; \varnothing$ \tcc*[f]{Begin with empty set of scheduled visits.}
+        $\I' \leftarrow \; \varnothing$\tcc*[f]{Begin with empty set of scheduled visits.}
 
         \ForEach (\tcc*[f]{Select an unscheduled BEB visit from a randomly indexed set of visits}) {$\I_i \in \{\ \U_{\I} \}$}
         {
-            $i\leftarrow\; \I_i$ \tcc*{Extract the visit index}
-            ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
+            $i\leftarrow\; \I_i$\tcc*{Extract the visit index}
+            ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
         }
             \Return{($\I'$, $\C'$)}
     }
@@ -1130,7 +1118,7 @@ updated route information and charger schedule. This process is done for all vis
 As described in SA, local searches are also employed to try and exploit a given solution
 \cite{radosavljevic-2018-metah-optim}. After each step of the cooling function, the new candidate solution will be
 altered by one primitive generation function and compared to the active solution. This process is done over many
-iterations. That is, the local solution space shall be explored in an attempt to find a optima. The method that will be
+iterations. That is, the local solution space shall be explored in an attempt to find an optima. The method that will be
 employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
 primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
 distribution. Let \(G\) denote the number of primitive generators available and let \texttt{PGF} be the primitive generation
@@ -1149,10 +1137,10 @@ function.
 
     \Begin
     {
-        $\I_i\leftarrow\; \U_{\I}$ \tcc*{Randomly select a visit}
-        $i \leftarrow\; \I_i$ \tcc*{Extract visit index}
-        $PGF \leftarrow\; \U_{[1,G]}$ \tcc*{Select one of the generator functions}
-        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}  \tcc*{Excecute the generator function}
+        $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
+        $i \leftarrow\; \I_i$\tcc*{Extract visit index}
+        $PGF \leftarrow\; \U_{[1,G]}$\tcc*{Select one of the generator functions}
+        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
         \Return{($\I'$, $\C'$)}
     }
 \end{algorithm}
@@ -1162,7 +1150,6 @@ This section combines the generation algorithms and the optimization problem int
 introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
 PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and not
 related to any of the variables presented for SA PAP thus far.
-
 
 \subsection{Simulated Annealing Pseudo Code}
 \label{sec:simulated-annealing-pseudo-code}
@@ -1258,8 +1245,8 @@ calculates its fitness, and updates the current solution with the candidate solu
             \tcc{For each step in the repitition schedule}
             \ForEach{$k \in \{1, 2, ..., K\}$}
             {
-                $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution and reassess}
-                $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate}
+                $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution}
+                $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
 
                 \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
                 \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}
@@ -1272,5 +1259,5 @@ calculates its fitness, and updates the current solution with the candidate solu
 
 
 \bibliographystyle{plain}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
 \end{document}

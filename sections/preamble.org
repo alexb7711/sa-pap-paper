@@ -10,6 +10,7 @@
 #+latex_header: \usepackage{listings}                       % Code in LaTeX
 #+latex_header: \usepackage{listings-rust}                  % Code in LaTeX
 #+latex_header: \usepackage{amsfonts}                       % Cool math fonts
+#+latex_header: \usepackage{tabularx}
 #+latex_header: \usepackage{multicol}                       % Add capability to make columns
 #+latex_header: \usepackage{hyperref}                       % Cool clean hyperlinks
 #+latex_header: \setlength\parindent{0pt}                   % No indent for paragraphs
@@ -30,6 +31,10 @@
 # Custom `Algoritm2e' commands
 #+latex_header: \newcommand{\Or}{\textbf{ or }}
 #+latex_header: \renewcommand*{\And}{\textbf{ and }}
+
+# =========================================================================================================================
+# Custom `tabularx' commands
+#+latex_header: \newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}%
 
 # =========================================================================================================================
 # Custom commands

@@ -8,7 +8,6 @@ introduction and discussion of a general SA algorithm which will be used to spri
 PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and not
 related to any of the variables presented for SA PAP thus far.
 
-
 ** Simulated Annealing Pseudo Code
 :PROPERTIES:
 :CUSTOM_ID: sec:simulated-annealing-pseudo-code

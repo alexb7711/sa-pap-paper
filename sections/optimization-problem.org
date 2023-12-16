@@ -70,9 +70,10 @@ direct control over and indirect variables are those that are influenced by the 
 :END:
 Decision variables that are direct are variables that can be immediately chosen by SA. The first two variables are $u_i$
 and $d_i \; \forall i \in \Iset$. They represent the initial and final charging times. These values must remain within range of
-the arrival time and departure time for visit $i$, $[a_i, e_i]$. $\mu_h$ and $\theta_h$ are binary decision variables, $\mu_h,
-\theta_h \in \{0, 1\}$. $\mu_h = 1$ when $u_i \le dt_h$, and is 0 otherwise. $\theta_h = 1$ when $d_i \ge dt_h$ and is 0 otherwise. The
-last direct decision variable is the queue that bus visit $i$ can be placed in to charge, $v_i \in \Qset$.
+the arrival time and departure time for visit $i$, $[a_i, e_i]$. $\mu$ and $\theta$ are $Q \times H$ matrices of binary decision
+variables, $\mu_h^{v_i}, \theta_h^{v_i} \in \{0, 1\}$. $\theta_h^{v_i} = 1$ when $u_i \le dt_h$, and $\theta_h^{v_i} = 0$ otherwise.
+$\mu_h^{v_i} = 1$ when $d_i \ge dt_h$ and $\mu_h^{v_i} = 0$ otherwise. The last direct decision variable is the queue that bus
+visit $i$ can be placed in to charge, $v_i \in \Qset$.
 
 **** Indirect Decision Variables
 :PROPERTIES:
@@ -91,8 +92,8 @@ discharge accumulated over route $i$.
   \eta_{\xi_i} = \eta_i + r_{v_i}s_i - \Delta_i
 \end{equation}
 
-$\iota_h \in \{0,1\} = 1$ when $\mu_h$ and $\theta_h$ are both active and is covered in [[#sec:objective-function]]. $\psi_i$ is a boolean
-decision variable, $\psi_i \in \{0,1\}$, that either enables or disables the charge penalty defined in
+$\iota_h^{v_i} \in \{0,1\} = 1$ when $\mu_h^{v_i}$ and $\theta_h^{v_i}$ are both active and is covered in [[#sec:objective-function]].
+$\psi_i$ is a boolean decision variable, $\psi_i \in \{0,1\}$, that either enables or disables the charge penalty defined in
 [[#sec:objective-function]]. $\sigma_{ij}$ and $\psi_{ij}$ are used to indicate whether a visit pair $(i, j)$ overlap the same space
 as show in [[fig:spacial-and-temporal-constr]]. More formally, [[eq:bus-spat-temp]] describes the relationship that $\sigma_{ij}$ and
 $\psi_{ij}$ uphold. That is, for every visit, if the start charge time visit $j$ is greater than the end charge time of
@@ -152,12 +153,13 @@ $\epsilon_{vi} = \epsilon_b \cup \epsilon_j$, the model will assign no cost to a
 use of slow chargers over fast.
 
 The second term is the penalty function that is either enabled or disabled by $\phi_i$
-[cite:@luenberger-2008-penal-barrier-method]. $\phi_i$ is enabled when the initial charge, $\eta_i$, is less than the allowed
-minimum charge, $m\kappa_{b_i}$. This is further discussed in [[#sec:constraints]]. Note the variables $\phi_i$ and $\eta_i$ being
-multiplied together in [[eq:ac]]. These are decision variables and when multiplied together become non-linear. Terms of this
-nature are denoted as bilinear. Using a traditional MILP solver, this would require a some mathematical manipulation to
-linearize the terms [cite:@rodriguez-2013-compar-asses]; however, because SA handles non-linearity easily these bilinear
-terms will be ignored [cite:@radosavljevic-2018-metah-optim].
+[cite:@luenberger-2008-penal-barrier-method]. $C$ is a large constant value used to scale the penalty function. $\phi_i$ is
+enabled when the initial charge, $\eta_i$, is less than the allowed minimum charge, $m\kappa_{b_i}$. This is further discussed
+in [[#sec:constraints]]. Thus, when $\phi_i$ is active, the value of second term is $C(\eta_i - m \kappa_i)^2$ and $0$ when inactive.
+Note the variables $\phi_i$ and $\eta_i$ being multiplied together in [[eq:ac]]. These are decision variables and when multiplied
+together become non-linear. Terms of this nature are denoted as bilinear. Using a traditional MILP solver, this would
+require a some mathematical manipulation to linearize the terms [cite:@rodriguez-2013-compar-asses]; however, because SA
+handles non-linearity easily these bilinear terms will be ignored [cite:@radosavljevic-2018-metah-optim].
 
 The demand cost quantifies the amount of power being used over a given period and adjusts the cost accordingly. The
 consumption cost calculates the total amount of power being consumed by the chargers. The consumption cost is merely the
@@ -187,8 +189,8 @@ p_{max}(t) = \text{max}_{\tau \in [0,t]}p_{15}(\tau)
 \end{equation}
 
 A fixed minimum threshold, $p_{fix}$, is introduced as a base power rate to be charged at. Let this fixed threshold be
-defined as $p_{fix}$. In a similar manner as $p_{max}$, the maximum value is retained. Furthermore, let $s_r$ define the
-demand rate which has the units of \(\frac{\$}{kW}\).
+defined as $p_{fix}$. Similarly to $p_{max}$, the maximum value is retained. Furthermore, let $s_r$ define the demand
+rate which has the units of \(\frac{\$}{kW}\).
 
 #+name: eq:pdem
 \begin{equation}
@@ -197,18 +199,18 @@ p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
 
 [[eq:pdem]], again, retains the largest $p_{d}$ value with a starting fixed value of $p_{fix}$. To write the total power
 demand at any discrete time, consider [[eq:discrete-power]]. Let $\omega_h \in \omega$ be the discrete power demand at time step $h$
-where $h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}$ and $H = \frac{T}{0.25}$. For conciseness of notation we will abuse $t_h$ to denote
-the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2, ..., H
-\}$. Let $\iota_h$ be a binary decision variable that is enabled if charger $v_i \in \Qset$ is enabled in the time frame
-$dt_h$. Let the power usage of charger $v_i$ be denoted as $r_{v_i}$.
+where $h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}$, $H = \frac{T}{0.25}$, and $\omega$ is an $H \times 1$ vector. For conciseness of notation we
+will abuse $t_h$ to denote the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$,
+and $\Hset = \{ 1, 2, ..., H \}$. Let $\iota$ be a $Q \times M$ matrix of binary decision variables that is enabled if charger
+$v_i \in \Qset$ is active in the time frame $dt_h$.
 
 #+name: eq:discrete-power
 \begin{equation}
-  \omega_h = \sum_i^I \iota_h \cdot r_{v_i}
+  \omega = \iota r
 \end{equation}
 
 The average power can be rewritten as $p_{15}^h = \omega_h$, $p_d$ can be rewritten as $p_d^h = \text{max}_{h \in \Hset}
-(p_{15}^{h})$, there the $h$ repesents the $h^{\text{th}}$ step. Finally, $p_d^f$ can be written as [[eq:pd-dis]].
+(p_{15}^{h})$, there the $h$ represents the $h^{\text{th}}$ step. Finally, $p_d^f$ can be written as [[eq:pd-dis]].
 
 #+name: eq:pd-dis
 \begin{equation}
@@ -263,10 +265,12 @@ than or equal to the minimum allowed charge. \ref{seq:c10} ensures the continuit
 less than the initial charge which is less than the detach time which is less than the time the bus exits the station
 and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable $\iota_h$. \ref{seq:c12}
-and \ref{seq:c13} ensure that the initial charge time for visit $i$, $u_i$, is greater than the discrete time, $0.25 \cdot
-h$, being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, $d_i$, is less than the
-next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is the discrete representation of whether charger
-$v_i \in \Qset$ is active.
+The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable $\iota$. \ref{seq:c12} and
+\ref{seq:c13} ensure that the initial charge time for visit $i$, $u_i$, is greater than the discrete time, $0.25 \cdot h$,
+being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, $d_i$, is less than the
+next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is the $Q \times H$ matrix representation of whether
+charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product [cite:@horn-1985-matrix-analy]. Let $A$
+and $B$ be two $M \times N$ matrices. The Hadamard Product is defined as the element-wise product of the two matrices, $A \circ B
+= [a_{ij}b_{ij}]$.
 
-#  LocalWords:  BEB MILP BEBs
+#  LocalWords: BEB MILP BEBs Hadamard

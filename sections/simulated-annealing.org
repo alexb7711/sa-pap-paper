@@ -28,8 +28,8 @@ is defined by [[eq:cool0]].
 \Tau[n] = \Tau[n-1] - \Delta_0
 \end{equation}
 
-with $\Tau[0] = \Tau_0$ and $\Delta_0 = 1/2\; C^\circ$ in [[fig:cool]]. TODO: The value of $\Delta_0$ can vary between $[0,1)$. A
-geometric cooling schedules is as defined in [[eq:cool1]]. The cooling schedule type most widely used in practice
+with $\Tau[0] = \Tau_0$ and $\Delta_0 = 1/2\; C^\circ$ in [[fig:cool]]. The value of $\Delta_0$ can vary between $[0,1)$. A geometric
+cooling schedules is as defined in [[eq:cool1]]. The cooling schedule type most widely used in practice
 [cite:@keller-2019-multi-objec]. As such, it will also be employed by the work in this paper.
 
 #+name: eq:cool1
@@ -37,7 +37,7 @@ geometric cooling schedules is as defined in [[eq:cool1]]. The cooling schedule 
   \Tau[n] = \alpha \Tau[n-1]
   \end{equation}
 
-where $\alpha = 0.995$ in [[fig:cool]]. TODO: $\alpha$ may vary anywhere between the range $[0,1)$. An Exponential cooling schedule is
+where $\alpha = 0.995$ in [[fig:cool]]. $\alpha$ may vary anywhere between the range $[0,1)$. An Exponential cooling schedule is
 defined by the difference equation is defined as [[eq:cool2]].
 
 #+name: eq:cool2
@@ -45,7 +45,7 @@ defined by the difference equation is defined as [[eq:cool2]].
 \Tau[n] = e^{-\beta}\Tau[n-1]
 \end{equation}
 
-where $\beta = 0.01$ in [[fig:cool]]. TODO: The value of $\beta$ may vary anywhere between the rang of $[0, 1)$.
+where $\beta = 0.01$ in [[fig:cool]]. The value of $\beta$ may vary anywhere between the rang of $[0, 1)$.
 
 #+name: fig:cool
 #+ATTR_ORG: :width 200
@@ -176,9 +176,9 @@ Line 8 applies the candidate decisions variables and returns the updated visit.
 
     \Begin
     {
-        $i    \leftarrow \{ i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{The index of the visit $i$}
-        $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the arrival time for visit $i$}
-        $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$ \tcc*{Get the departure time for visit $i$}
+        $i    \leftarrow \{ i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{The index of the visit $i$}
+        $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{Get the arrival time for visit $i$}
+        $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{Get the departure time for visit $i$}
 
         \tcc{For each element in the uniformly random set of charger queues $q \in \Qset$}
         \ForEach  {$q \in \{ \U_{\Qset} \}$}
@@ -188,7 +188,7 @@ Line 8 applies the candidate decisions variables and returns the updated visit.
             {
                 \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j, (a_i, e_i)$} $\not\in \varnothing$}
                 {
-                    \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+                    \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
                 }
             }
         }
@@ -211,7 +211,7 @@ times slices for which charger $q$ is available.
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(C,a,e)$}
-    \KwOut{$(C',u,d)$}
+    \KwOut{($C',u,d)$}
 
     \tcc{Extract the lower and upper bounds.}
     L \(\leftarrow\) \(\{L \in C\}\)\;
@@ -247,11 +247,11 @@ times slices for which charger $q$ is available.
 
         \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
         {
-            $C' \leftarrow C' \setminus [L,U]$ \tcc*{Remove $[L,U]$ from the set of free time for the current charger}
-            $C' \leftarrow \{[L,u], [d, U]\}$ \tcc*{Update the charger free time slices}
+            $C' \leftarrow C' \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
+            $C' \leftarrow \{[L,u], [d, U]\}$\tcc*{Update the charger free time slices}
         }
 
-        \Return{(C',u,d)}
+        \Return{($C',u,d$)}
     }
 \end{algorithm}
 
@@ -273,8 +273,8 @@ returns the updated set of visits which excludes visit $i$.
 
     \Begin
     {
-        $\C' \leftarrow \C \setminus \C_{v_i}^i$ \tcc*{Remove assignment of visit $i$ to charger $v_i$}
-        \Return{$\Sol' \leftarrow \C'$} \tcc*{Return updated tuple}
+        $\C' \leftarrow \C \setminus \C_{v_i}^i$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
+        \Return{$\Sol' \leftarrow \C'$}\tcc*{Return updated tuple}
     }
 \end{algorithm}
 
@@ -327,15 +327,15 @@ to the previous values. Line 5 sets and returns the updated visit.
 
     \Begin
     {
-        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*[f]{Purge visit $i$ from its charger}
 
         \tcc{For each element in the uniformly random set of time slices from charger $q$}
         \ForEach {$C_{q} \in \{ \U_{\Qset} \}$}
         {
             \If(\tcc*[f]{If there is time available in $C_{q}$}){$x_i' \leftarrow$ \findFreeTime{$C_{q}$, ($a_i, e_i$)} $\not\in \varnothing$}
             {
-                $x_i' \leftarrow (u_i, d_i)$ \tcc*{Keep previous start/stop times}
-                \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+                $x_i' \leftarrow (u_i, d_i)$\tcc*{Keep previous start/stop times}
+                \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
             }
         }
 
@@ -359,12 +359,12 @@ The wait generator simply removes a bus from a charger queue and places it in it
 
     \Begin
     {
-        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*[f]{Purge visit $i$ from its charger}
 
         \tcc{Assign bus to idle queue and set the duration for the arrival/departure times}
-        $x_i' \leftarrow (b, a_i, e_i)$ \;
+        $x_i' \leftarrow (b, a_i, e_i)$\;
 
-        \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+        \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
     }
 \end{algorithm}
 
@@ -390,8 +390,8 @@ Line 4 assigns and returns the updated visit.
 
     \Begin
     {
-        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$} \tcc[f]{Purge visit $i$ from its charger}
-        $\I_i' \leftarrow$ \NewVisit{$\Sol'$} \tcc[f]{Add visit $i$ back in randomly}
+        $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*{Purge visit $i$ from its charger}
+        $\I_i' \leftarrow$ \NewVisit{$\Sol'$}\tcc*{Add visit $i$ back in randomly}
 
         \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
     }
@@ -425,12 +425,12 @@ updated route information and charger schedule. This process is done for all vis
 
     \Begin
     {
-        $\I' \leftarrow \; \varnothing$ \tcc*[f]{Begin with empty set of scheduled visits.}
+        $\I' \leftarrow \; \varnothing$\tcc*[f]{Begin with empty set of scheduled visits.}
 
         \ForEach (\tcc*[f]{Select an unscheduled BEB visit from a randomly indexed set of visits}) {$\I_i \in \{\ \U_{\I} \}$}
         {
-            $i\leftarrow\; \I_i$ \tcc*{Extract the visit index}
-            ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)} \tcc*{Assign the bus to a charger}
+            $i\leftarrow\; \I_i$\tcc*{Extract the visit index}
+            ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
         }
             \Return{($\I'$, $\C'$)}
     }
@@ -443,7 +443,7 @@ updated route information and charger schedule. This process is done for all vis
 As described in SA, local searches are also employed to try and exploit a given solution
 [cite:@radosavljevic-2018-metah-optim]. After each step of the cooling function, the new candidate solution will be
 altered by one primitive generation function and compared to the active solution. This process is done over many
-iterations. That is, the local solution space shall be explored in an attempt to find a optima. The method that will be
+iterations. That is, the local solution space shall be explored in an attempt to find an optima. The method that will be
 employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
 primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
 distribution. Let $G$ denote the number of primitive generators available and let =PGF= be the primitive generation
@@ -462,10 +462,10 @@ function.
 
     \Begin
     {
-        $\I_i\leftarrow\; \U_{\I}$ \tcc*{Randomly select a visit}
-        $i \leftarrow\; \I_i$ \tcc*{Extract visit index}
-        $PGF \leftarrow\; \U_{[1,G]}$ \tcc*{Select one of the generator functions}
-        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}  \tcc*{Excecute the generator function}
+        $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
+        $i \leftarrow\; \I_i$\tcc*{Extract visit index}
+        $PGF \leftarrow\; \U_{[1,G]}$\tcc*{Select one of the generator functions}
+        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
         \Return{($\I'$, $\C'$)}
     }
 \end{algorithm}
