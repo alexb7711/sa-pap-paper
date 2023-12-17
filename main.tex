@@ -1,4 +1,4 @@
-% Created 2023-12-17 Sun 14:54
+% Created 2023-12-17 Sun 15:05
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -646,18 +646,18 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:org71e7037}
+\label{sec:org74650eb}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
 are ``inactive''.
 
-To derive \(\C\), consider its inverse, \(\C'\), which is the set of ``active'' time periods for each charger, \(\C' = \bigcup
-\{\C_q' : q \in \mathcal{Q}\}\) where \(\C_q' \subset \C'\) describes the active times for charger \(q\). Focusing on an individual charger,
-consider \(\C_q'\) before a schedule has been imposed upon it, \(\C_q' = \{ \varnothing \}\). In other words, no buses have
-been assigned to be charged over the time period of \([u_i, d_i]\). After the scheduling process is complete, \(\C_q'\) will
-have a set of active periods of the form \(\C_q' = \{[u_j, d_j]: j \in \Jsetq \}\) where \(\Jsetq \subset \mathcal{I}\). With a fully defined
-set \(\C_q'\), its compliment can be found, \(\C_q\).
+To derive \(\C\), consider its inverse, \(\C'\), which is the set of ``active'' time periods for each charger. Let \(\C_q' \subset
+\C'\) describes the active times for charger \(q\). Focusing on an individual charger, consider \(\C_q'\) before a schedule
+has been imposed upon it, \(\C_q' = \{ \varnothing \}\). In other words, no buses have been assigned to be charged over
+the time period of \([u_i, d_i]\). After the scheduling process is complete, \(\C_q'\) will have a set of active periods of
+the form \(\C_q' = \{[u_j, d_j]: j \in \Jsetq \}\) where \(\Jsetq \subset \mathcal{I}\). With a fully defined set \(\C_q'\), its compliment can
+be found, \(\C_q\).
 
 Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine the inverse of \(\C_q'\), begin by noting
 \(\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing\), is said to be disjoint (i.e. the sets share no common elements)
@@ -670,16 +670,16 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org005b3f4}
+\label{sec:orgc7e2eb3}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
-\(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
-consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
-and detach time from the charger. The other direct variables and indirect variables may be implied. As previously
-discussed, early on in the SA process, the algorithm attempts to encourage exploration by allowing candidate solutions
-of lesser quality be the active solution. To explore the feasible space, the generators are employed with a sense of
-randomness to their respective outputs. Because of that, the modified subset of the tuple, \(x_i'\), may be considered a
-random variable. Let the set of states for the output be defined as \(x_i' \in X_i' \subset \Sol'\) where \(X_i'\) defines the
-feasible region for the subset of decision variables.
+\(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed to \(x_i\)
+being unmodified). To be explicit, \(x_i'\) consists of the modified charger inactive times and the direct decision
+variables: chosen queue, initial charge time, and detach time from the charger. The other direct variables and indirect
+variables may be implied. As previously discussed, early on in the SA process, the algorithm attempts to encourage
+exploration by allowing candidate solutions of lesser quality be the active solution. To explore the feasible space, the
+generators are employed with a sense of randomness to their respective outputs. Because of that, the modified subset of
+the tuple, \(x_i'\), may be considered a random variable. Let the set of states for the output be defined as \(x_i' \in X_i'
+\subset \Sol'\) where \(X_i'\) defines the feasible region for the subset of decision variables.
 
 \subsubsection{Generators}
 \label{sec:generators}
