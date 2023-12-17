@@ -13,7 +13,7 @@ related to any of the variables presented for SA PAP thus far.
 :CUSTOM_ID: sec:simulated-annealing-pseudo-code
 :END:
 
-Consider ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\omega'$ are the current solution and the
+Consider \ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\omega'$ are the current solution and the
 candidate solution, respectively. Let $\Tau$ denote the temperature function and $\Tau_0$ the initial temperature.
 Furthermore, let $t$ be defined as the vector of temperatures defined by $t = \Tau(\Tau_0, \Tau_f)$, and let $t_k$ be
 defined as being an element of $t$, $t_k \in t$. Let $J$ be the repetition counter, it defines the number of iterations to
