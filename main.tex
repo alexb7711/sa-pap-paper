@@ -1,4 +1,4 @@
-% Created 2023-12-17 Sun 09:53
+% Created 2023-12-17 Sun 13:55
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -647,7 +647,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orgafb84db}
+\label{sec:orgbf87966}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -671,7 +671,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:orgb57e6d0}
+\label{sec:orgee6acff}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
@@ -1224,14 +1224,17 @@ battery dynamic constraints are also fully defined and can be calculated. \ref{s
 enable/disable the penalty function, \ref{seq:c9}-\ref{seq:c10}, can be executed to determine the value of \(\phi_i\) for
 each visit. \ref{seq:c12}-\ref{seq:c15} may also be evaluated to find the values of \(\theta_h^{v_i}\) and \(\mu_h^{v_i}\) which
 then directly leads to \ref{seq:c16} being able to be determined. Once all these constraints have been calculated and
-evaluated to be true will a generated solution be considered in the feasible space.
+evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as
+\(S\).
 
-Lines 2-4 initialize the SA algorithm by defining the initial temperature, selecting the cooling schedule, and setting
-the repetition schedule. Line 5 loops through each of the step in the temperature schedule \(t_k \in t\). Lines 6 and 7
-generate a new solution and calculates its fitness. \(\nu\) in this context is defined as \(\nu = (u, d, v, \eta)\) Lines 8 through
-13 update the solution depending on if the new solution is better or worse than the previous solution. Line 14 iterates
-through the repetition schedule, \(k \in \{1, 2, ..., K\}\). Lines 15-23 perturbs the previously generated solution,
-calculates its fitness, and updates the current solution with the candidate solution depending on the fitness.
+Lines 2-3 initialize the SA algorithm by creating a vector of temperature values based on a temperature schedule \(\Tau\),
+and an initial temperature \(\Tau_0\) and then generating an initial solution. Line 4 loops through each of the step in
+the temperature schedule \(t_k \in t\). Lines 4 and 5 generates a new solution then calculates its fitness. \(\nu\) in this
+context is defined as \(\nu = (u, d, v, \eta)\). Lines 6 through 11 update the solution depending on if the new solution is in
+the solution space a whether the new solution is more or less fit than the active solution. Line 12 iterates through the
+repetition schedule, \(k \in \{1, 2, ..., K\}\). Lines 13 perturbs the previously generated solution. Lines 15-20 calculates
+its fitness, and updates the current solution with the candidate solution depends upon whether the newly generated
+solution is in the solution space and also the fitness in the same was that was done before.
 
 \begin{algorithm}[H]
 \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
@@ -1247,10 +1250,10 @@ calculates its fitness, and updates the current solution with the candidate solu
 
     \Begin
     {
-        $\nu \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
-
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}
+
+        $\nu \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
 
         \tcc{For each item in the temperature vector}
         \ForEach{$t_k \in t$}
@@ -1258,8 +1261,8 @@ calculates its fitness, and updates the current solution with the candidate solu
             $\upsilon' \subset (\I', \C') \leftarrow$ \CSG{($\I$, $\C$)} \tcc*{Generate a new solution}
             $\Nu_{\upsilon, \upsilon'} = $ \Obj{$\upsilon'$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
 
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{t_k}}$}
+            \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
+            \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon'} \ge 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{t_k}}$}
 
             \tcc{For each step in the repitition schedule}
             \ForEach{$k \in \{1, 2, ..., K\}$}
@@ -1267,13 +1270,12 @@ calculates its fitness, and updates the current solution with the candidate solu
                 $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution}
                 $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
 
-                \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
-                \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}
+                \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
+                \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon{''}} \ge 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}
             } % For k
         }     % For t_k \in t
 
-        \Return{($\I'$ , $\C'$)}
-    }         % Begin
+        \Return{($\I'$ , $\C'$)} } % Begin
 \end{algorithm}
 
 
