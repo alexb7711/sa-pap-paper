@@ -27,42 +27,7 @@ solution is worse than the current solution. Then the new candidate solution is 
 an altered new candidate solution $\omega{''}$. The modified candidate solution is then compared to $\omega$ similarly as before.
 The modifications then occurs over $J$ iterations. This is repeated for all temperatures in $t_k$.
 
-\begin{algorithm}[H]
-\caption{Pseudo-code for SA} \label{alg:sa-pseudo}
-    \LinesNumbered
-    \TitleOfAlgo{SA Pseudo-Code}
-
-    \SetKwFunction{f}{f}
-    \SetKwFunction{New}{N}
-    \SetKwFunction{Mod}{M}
-    \SetKwFunction{Temp}{$\Tau$}
-
-    \Begin
-    {
-        $\omega \leftarrow$ New{($\I$, $\C$)}\tcc*{Generate an initial solution}
-
-        \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
-        $t \leftarrow$ \Temp{$\Tau_0$}
-
-        \ForEach{$t_k \in t$}
-        {
-            $j \leftarrow 0$ \tcc*{Set repetition counter}
-            $\omega' \leftarrow $ \New{($\I$, $\C$)} \tcc*{Generate a new solution}
-            $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
-            \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
-            \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
-
-            \While{$j \le J$}
-            {
-                $\omega{''} \leftarrow$ \Mod{($\I'$, $\C'$)} \tcc*{Modify the new solution}
-                $\Delta_{\omega,\omega{''}} \rightarrow$ \f{$\omega{''}$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
-                \If{$\Delta_{\omega , \omega{''}} \le 0$}{$\omega \rightarrow \omega{''}$}
-                \If{$\Delta_{\omega , \omega{''}} > 0$}{$\omega \rightarrow \omega{''}$ with probability $e^{\frac{-\Delta_{\omega , \omega{''}}}{t_k}}$}
-                $j \leftarrow j+1$\;
-            }
-        }
-    }
-\end{algorithm}
+#+include: eq/sa-pseudo.org
 
 ** SA PAP Pseudo Code
 :PROPERTIES:
@@ -98,45 +63,4 @@ generate a new solution and calculates its fitness. $\nu$ in this context is def
 through the repetition schedule, $k \in \{1, 2, ..., K\}$. Lines 15-23 perturbs the previously generated solution,
 calculates its fitness, and updates the current solution with the candidate solution depending on the fitness.
 
-\begin{algorithm}[H]
-\caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
-    \LinesNumbered
-    \TitleOfAlgo{SA PAP}
-    \KwIn{($\I$ , $\C$)}
-    \KwOut{($\I'$, $\C'$)}
-
-    \SetKwFunction{Temp}{$\Tau$}
-    \SetKwFunction{CSG}{CSG}
-    \SetKwFunction{PS}{PS}
-    \SetKwFunction{Obj}{J}
-
-    \Begin
-    {
-        $\nu \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
-
-        \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
-        $t \leftarrow$ \Temp{$\Tau_0$}
-
-        \tcc{For each item in the temperature vector}
-        \ForEach{$t_k \in t$}
-        {
-            $\upsilon' \subset (\I', \C') \leftarrow$ \CSG{($\I$, $\C$)} \tcc*{Generate a new solution}
-            $\Nu_{\upsilon, \upsilon'} = $ \Obj{$\upsilon'$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
-
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{t_k}}$}
-
-            \tcc{For each step in the repitition schedule}
-            \ForEach{$k \in \{1, 2, ..., K\}$}
-            {
-                $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution}
-                $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
-
-                \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
-                \If{$\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}
-            } % For k
-        }     % For t_k \in t
-
-        \Return{($\I'$ , $\C'$)}
-    }         % Begin
-\end{algorithm}
+#+include: eq/sa-pap-pseudo.org
