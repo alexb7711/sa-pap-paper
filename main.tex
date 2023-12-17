@@ -1,4 +1,4 @@
-% Created 2023-12-17 Sun 13:57
+% Created 2023-12-17 Sun 14:12
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -113,8 +113,8 @@ BEB arrivals to a charging station \(i \in \{1,..., I\} = \Iset \subset \mathcal
 = \Qset \subset \mathcal{Z}\) where the BEB is indicated by an identification number \(b \in \{1,..., B\} = \Bset \subset \mathcal{Z}\). Each BEB arrival,
 \(i\), can be represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index, BEB
 identification number, \(b_i\), arrival time to the station, \(a_i\), departure time from the station, \(e_i\), time to start
-charging, \(u_i\), time to stop charging, \(d_i\), the charger queue for the BEB to be placed into, \(v_i\), and the initial
-SOC, \(\eta_i\).
+charging, \(u_i\), time to stop charging, \(d_i\), the charger queue for the BEB to be placed into, \(v_i\), the initial SOC,
+\(\eta_i\), and the index of the next visit for the currently visiting BEB, \(\xi_i\).
 
 It is assumed that each visit occurs over the time horizon \(T = \{t : t_0 \le t \le t_f \}\). The set of all arrivals is
 represented by the set \(\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}\). The
@@ -131,17 +131,17 @@ queue, if a BEB does not require much charge, or none at all, partial charges, o
 allowed for the BEB to charge over its battery capacity limit. The battery charging rate is modeled as \uline{linear}, which
 remains accurate up to about an SOC of 80\% charge \cite{li-2016-batter-elect}.
 
-Each BEB arrival, except for the last arrival for each BEB, has a paired ``route'' that the BEB must perform. This route,
-as one would expect, causes the BEB to discharge by some certain amount. This paper assumes an average discharge over a
-period of in which an estimated discharge is calculated for each route, \(\Delta_i\). The charge supplied while at the station
-is required to increase the SOC of each BEB visit to a minimum battery percentage, \(\nu_b\). This acts as a safety factor
-to ensure each route is completed.
+Each BEB arrival, except for the last arrival for each BEB, has a paired ``route'' that the BEB must perform after the
+visit. This route, as one would expect, causes the BEB to discharge by some certain amount. This paper assumes an
+average discharge over a period of in which an estimated discharge is calculated for each route, \(\Delta_i\). The charge
+supplied while at the station is required to increase the SOC of each BEB visit to a minimum battery percentage, \(\nu_b\).
+This acts as a safety factor to ensure each route is completed.
 
 The task of this paper shall be to define a method of scheduling the set of arrivals \(\I\) to fulfill the minimum charge
-requirements over the time horizon \(T\) as well as minimize the demand cost and consumption cost. An objective function
-shall be utilized to measure the relative fitness of results and constraints shall be employed to ensure validity of the
-prescribed schedule. Both the objective function and constraints are discussed in further detail in
-\ref{sec:objective-function}.
+requirements over the time horizon \(T\) while minimizing the cost which can be decomposed into the demand and consumption
+cost. An objective function shall be utilized to measure the relative fitness of results and constraints shall be
+employed to ensure validity of the prescribed schedule. Both the objective function and constraints are discussed in
+further detail in the proceeding section.
 \section{Optimization Problem}
 \label{sec:optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
@@ -198,7 +198,7 @@ from the charger in queue \(q\).
 \hline
 Constants &  & Constants & \\[0pt]
 \(C\) & Penalty method gain factor & \(B\) & Number of buses in use\\[0pt]
-\(H\) & Numer of discrete steps, \(h\), in time horizon & \(I\) & Number of total visits\\[0pt]
+\(H\) & Number of discrete steps, \(h\), in time horizon & \(I\) & Number of total visits\\[0pt]
 \(J(u,d,v,\eta)\) & Objective function & \(K\) & Local search iteration amount\\[0pt]
 \(M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(Q\) & Number of chargers\\[0pt]
 \(\T\) & Time horizon &  & \\[0pt]
@@ -213,14 +213,15 @@ Input variables &  & Input Variables & \\[0pt]
 \(k\) & Local search iteration \(k\) & \(m\) & Minimum charge percentage allowed for each visit\\[0pt]
 \(r_q\) & Charge rate of charger \(q\) &  & \\[0pt]
 \hline
-Decision Variables &  & Decision Variables & \\[0pt]
-\(\eta_i\) & Charge for the bus at the beginning of visit \(i\) & \(\iota\) & \(Q \times N\) matrix of binary values such that \(\iota_h^{v_i} = 1\) if \(u_i \le dt_h \le d_i\), 0 otherwise\\[0pt]
-\(\mu\) & \(Q \times N\) matrix of binary variables such that \(\mu_h^{v_i} = 1\) if \(u_i \le dt_h\), 0 otherwise & \(\phi_i\) & Binary term to enable/disable charge penalty for visit \(i\)\\[0pt]
-\(\psi_{ij}\) & Tracks spatial overlap for visit pair \((i,j)\) & \(\sigma_{ij}\) & Tracks temporal overlap for visit pair \((i,j)\)\\[0pt]
-\(\theta\) & \(Q \times N\) matrix of binary variables such that \(\theta_h^{v_i} = 1\) if \(d_i \ge dt_h\), 0 otherwise & \(d_i\) & Detach time from charger for visit \(i\)\\[0pt]
-\(p_{dem}(t)\) & Demand cost & \(s_i\) & Amount of time spent on charger for visit \(i\) (service time)\\[0pt]
+Direct Decision Variables &  & Direct Decision Variables & \\[0pt]
 \(u_i\) & Time to start charging for visit \(i\) & \(d_i\) & Time to detach bus from charger for visit \(i\)\\[0pt]
+\(\mu\) & \(Q \times N\) matrix of binary variables such that \(\mu_h^{v_i} = 1\) if \(u_i \le dt_h\), 0 otherwise & \(\theta\) & \(Q \times N\) matrix of binary variables such that \(\theta_h^{v_i} = 1\) if \(d_i \ge dt_h\), 0 otherwise\\[0pt]
 \(v_i\) & Assigned queue for visit \(i\) &  & \\[0pt]
+Indirect Decision Variables &  & Indirect Decision Variables & \\[0pt]
+\(\eta_i\) & Charge for the bus at the beginning of visit \(i\) & \(\iota\) & \(Q \times N\) matrix of binary values such that \(\iota_h^{v_i} = 1\) if \(u_i \le dt_h \le d_i\), 0 otherwise\\[0pt]
+\(\phi_i\) & Binary term to enable/disable charge penalty for visit \(i\) & \(\psi_{ij}\) & Tracks spatial overlap for visit pair \((i,j)\)\\[0pt]
+\(\sigma_{ij}\) & Tracks temporal overlap for visit pair \((i,j)\) & \(d_i\) & Detach time from charger for visit \(i\)\\[0pt]
+\(p_{dem}(t)\) & Demand cost & \(s_i\) & Amount of time spent on charger for visit \(i\) (service time)\\[0pt]
 \hline
 \end{tabularx}
 \end{table}
@@ -647,7 +648,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orga9664af}
+\label{sec:org14ca42b}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -671,7 +672,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org62aadb1}
+\label{sec:org99a8209}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
