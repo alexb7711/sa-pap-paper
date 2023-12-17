@@ -1,6 +1,6 @@
 * Optimization Problem
 :PROPERTIES:
-:CUSTOM_ID: optimization-problem
+:CUSTOM_ID: sec:optimization-problem
 :END:
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
 function is required to allow comparisons between candidate solutions. In the context of this formulation, the objective
