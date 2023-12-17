@@ -1,4 +1,4 @@
-% Created 2023-12-17 Sun 13:55
+% Created 2023-12-17 Sun 13:57
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -647,7 +647,7 @@ index of interest, information about the current state of arrivals, \(\I\), and 
 availability, \(\C\). The output of each generator affects the tuple of decision variables \((v_i, u_i, d_i) \subset \I_i\).
 
 \paragraph{Generator Input}
-\label{sec:orgbf87966}
+\label{sec:orga9664af}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -671,7 +671,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:orgee6acff}
+\label{sec:org62aadb1}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\). To be explicit, \(x_i'\)
 consists of the modified charger inactive times and the direct decision variables: chosen queue, initial charge time,
@@ -896,7 +896,7 @@ times slices for which charger \(q\) is available.
 \caption{Outlines the different cases that requested time and charger allocated time can overlap}
 \label{fig:find-free}
 \end{figure}
-\begin{algorithm}[h]
+\begin{algorithm}[H]
 \caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}

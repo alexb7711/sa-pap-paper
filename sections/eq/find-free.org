@@ -1,5 +1,5 @@
 #+begin_src latex
-  \begin{algorithm}[h]
+  \begin{algorithm}[H]
   \caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
       \LinesNumbered
       \TitleOfAlgo{Find Free Time}
