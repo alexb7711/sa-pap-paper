@@ -28,9 +28,9 @@ is defined by [[eq:cool0]].
 \Tau[n] = \Tau[n-1] - \Delta_0
 \end{equation}
 
-with $\Tau[0] = \Tau_0$ and $\Delta_0 = 1/2\; C^\circ$ in [[fig:cool]]. The value of $\Delta_0$ can vary between $[0,1)$. A geometric
-cooling schedules is as defined in [[eq:cool1]]. The cooling schedule type most widely used in practice
-[cite:@keller-2019-multi-objec]. As such, it will also be employed by the work in this paper.
+with $\Tau[0] = \Tau_0$ and $\Delta_0 = 1/2\; C^\circ$ in [[fig:cool]]. The value of $\Delta_0 \in \mathbb{R}^+$. A geometric cooling schedules is as
+defined in [[eq:cool1]]. The cooling schedule type most widely used in practice [cite:@keller-2019-multi-objec]. As such, it
+will also be employed by the work in this paper.
 
 #+name: eq:cool1
   \begin{equation}
@@ -45,7 +45,7 @@ defined by the difference equation is defined as [[eq:cool2]].
 \Tau[n] = e^{-\beta}\Tau[n-1]
 \end{equation}
 
-where $\beta = 0.01$ in [[fig:cool]]. The value of $\beta$ may vary anywhere between the rang of $[0, 1)$.
+where $\beta = 0.01$ in [[fig:cool]]. The value of $\beta \in \mathbb{R}^+$.
 
 #+name: fig:cool
 #+ATTR_ORG: :width 200
@@ -103,7 +103,8 @@ their respective inputs and outputs must be defined.
 This section discusses in detail the expected inputs and output of each generator. It is important to discuss these
 parameters in order to have an understanding of the generating algorithms derived. The input consists of the bus visit
 index of interest, information about the current state of arrivals, $\I$, and the current state of the chargers'
-availability, $\C$. The output of each generator affects the tuple of decision variables $(v_i, u_i, d_i) \subset \I_i$.
+availability, $\C$. The output of each generator affects the tuple of decision variables $(v_i, u_i, d_i) \subset \I_i$ and
+charger availability $\C$.
 
 **** Generator Input
 Each generator has the tuple input of $\Sol \equiv (i, \I, \C)$ where $i$ is the visit index, $\I_i$ is the tuple $\visit$ as

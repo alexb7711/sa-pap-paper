@@ -4,16 +4,15 @@
 :END:
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
 function is required to allow comparisons between candidate solutions. In the context of this formulation, the objective
-function is broken down into four major components as alluded in the introduction: consumption cost, _demand cost_,
-assignment cost, as well as a penalty for under-charging a bus. The constraints ensure that candidate solutions are in
-the feasible region. They are composed of a series of equations defined by decision and input variables. Decision
-variables are those which may be manipulated, and are chosen in an attempt to optimize the objective function. Input
-variables are predefined input variables are assumed to be known.
+function is broken down into four major components: consumption cost, _demand cost_, assignment cost, as well as a
+penalty for under-charging a bus. The constraints ensure that candidate solutions are in the feasible region. They are
+composed of a series of equations defined by decision and input variables. Decision variables are those which may be
+manipulated, and are chosen in an attempt to optimize the objective function. Input variables are predefined input
+variables are assumed to be known.
 
 In the subsequent sections, the input parameters and decision variables shall be introduced in [[#sec:input-variables]] and
 [[#sec:decision-variables]]. Once the variables have been defined, the objective function is to be introduced in
-[[#sec:objective-function]] which shall indicate the scope over which the objective function will attempt to optimize over.
-The constraints will then be introduced in [[#sec:constraints]] which limit the solution space to the set of feasible schedules.
+[[#sec:objective-function]]. The constraints will then be introduced in [[#sec:constraints]].
 
 ** Parameter Definitions
 :PROPERTIES:
@@ -21,7 +20,7 @@ The constraints will then be introduced in [[#sec:constraints]] which limit the 
 :END:
 This section defines the input variables and decision variables used by the system. The input variables are the
 parameters that are assumed to be known prior to optimizing the system. These are discussed next. The decision variables
-are the values that the SA algorithm has the freedom to manipulate.
+are the values that the SA algorithm has the freedom to manipulate and are discussed in [[#sec:decision-variables]].
 
 *** Input Variables
 :PROPERTIES:
@@ -70,22 +69,25 @@ direct.
 :END:
 Decision variables that are direct are variables that can be immediately chosen by SA. The first two variables are $u_i$
 and $d_i \; \forall i \in \Iset$. They represent the initial and final charging times. These values must remain within range of
-the arrival time and departure time for visit $i$, $[a_i, e_i]$. $\mu$ and $\theta$ are $Q \times H$ matrices of binary decision
-variables, $\mu_h^{v_i}, \theta_h^{v_i} \in \{0, 1\}$. $\theta_h^{v_i} = 1$ when $u_i \le dt_h$, and $\theta_h^{v_i} = 0$ otherwise.
-$\mu_h^{v_i} = 1$ when $d_i \ge dt_h$ and $\mu_h^{v_i} = 0$ otherwise. The last direct decision variable is the queue that bus
-visit $i$ can be placed in to charge, $v_i \in \Qset$.
+the arrival time and departure time for visit $i$, $[a_i, e_i]$. Let $H$ be defined as the total number of discrete
+steps taken over the time horizon, $\mu$ and $\theta$ are $H \times Q$ matrices of binary decision variables, $\mu_h^{v_i}, \theta_h^{v_i}
+\in \{0, 1\}$. $\theta_h^{v_i} = 1$ when $u_i \le dt_h$, and $\theta_h^{v_i} = 0$ otherwise. $\mu_h^{v_i} = 1$ when $d_i \ge dt_h$ and
+$\mu_h^{v_i} = 0$ otherwise. The last direct decision variable is the queue that bus visit $i$ can be placed in to charge,
+$v_i \in \Qset$.
 
 **** Indirect Decision Variables
 :PROPERTIES:
 :CUSTOM_ID: sec:indirect-decision-variables
 :END:
 Indirect decision variables are variables that are dependent on direct decision variables. For example $\eta_i$ is the
-initial charge for visit $i \in \Iset \setminus \Isetfinal$. The initial charge for each BEB are chained together by using the bus
-identifier, $b_i$, and next arrival index, $\xi_i$. The initial charges must be chained so that the battery charge can be
-calculated per bus as it is charged and discharged over each visit, $[u_i, d_i]$. The concept of chaining the battery
-charges together is shown in [[eq:bat-chain]]. The equation states that the charge for bus $i$'s next visit is equal to the
-initial charge for visit $i$ plus the charge added to it by charger $v_i$ over duration $s_i = d_i - u_i$ minus the
-discharge accumulated over route $i$.
+initial charge for visit $i \in \Iset \setminus \Iset_0$, where $\Iset_0$ denotes the set of initial visits for each BEB. Note
+that $\Iset_0$ is excluded from the set of decision variables because each BEB is assumed to have a known SOC at the
+beginning of the working day. The initial charge for each BEB are chained together by using the bus identifier, $b_i$,
+and next arrival index, $\xi_i$. The initial charges must be chained so that the SOC can be calculated per bus as it is
+charged and discharged over each visit, $[u_i, d_i]$. The concept of chaining the battery charges together is shown in
+[[eq:bat-chain]]. The equation states that the charge for bus $i$'s next visit is equal to the initial charge for visit $i$
+plus the charge added to it by charger $v_i$ over duration $s_i = d_i - u_i$ minus the discharge accumulated over route
+$i$.
 
 #+name: eq:bat-chain
 \begin{equation}
@@ -132,22 +134,23 @@ allowed, $\kappa_i$ is the battery capacity for visit $i$, and $\eta_i$ is the i
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$. Let $\epsilon_{vi}$ to
 be taken as $\epsilon_{v_i} = 1000v_i$, this form causes the objective function encourages the model to minimize the total
-amount of chargers. Iterating on this concept, if the model represents the first $B$ indices to be waiting queues (no
-charge is supplied), the next $Q_s$ indices to be slow, and the next $Q_f$ indices to be fast chargers, where $B, Q_s,
-Q_f \in \mathcal{Z}$ and $B + Q_s + Q_f = Q$. Furthermore, let $\epsilon_b = \{ 0 : b \in \Bset \}$, $\epsilon_{j} = \{ 1000 j: j \in \Iset \}$ and let
-$\epsilon_{vi} = \epsilon_b \cup \epsilon_j$, the model will assign no cost to assigning a BEB to a waiting queue and will also encourage the
-use of slow chargers over fast.
+amount of chargers. Iterating on this concept, let the model represents the first $B$ indices to be waiting queues (no
+charge is supplied), the next $Q_s$ indices to be slow chargers, and the next $Q_f$ indices to be fast chargers, where
+$B, Q_s, Q_f \in \mathcal{Z}$ and $B + Q_s + Q_f = Q$. Furthermore, let $\epsilon_b = \{ 0 : b \in \Bset \}$, $\epsilon_{j} = \{ 1000 j: j \in \Iset
+\}$ and let $\epsilon_{vi} = \epsilon_b \cup \epsilon_j$. The model will then assign no cost to assigning a BEB to a waiting queue and will also
+encourage the use of slow chargers over fast.
 
 The second term is the penalty function that is either enabled or disabled by $\phi_i$
 [cite:@luenberger-2008-penal-barrier-method]. This term is considered an assignment cost because the penalty method is
 enabled due to poor allocations of BEBs. That is, the cost is not impacted by how much the system consumes energy, but
 by how the BEBs have been assigned. $C$ is a large constant value used to scale the penalty function. $\phi_i$ is enabled
-when the initial charge, $\eta_i$, is less than the allowed minimum charge, $m\kappa_{b_i}$. This is further discussed in
-[[#sec:constraints]]. Thus, when $\phi_i$ is active, the value of second term is $C(\eta_i - m \kappa_i)^2$ and $0$ when inactive. Note
-the variables $\phi_i$ and $\eta_i$ being multiplied together in [[eq:ac]]. These are decision variables and when multiplied
-together become non-linear. Terms of this nature are denoted as bilinear. Using a traditional MILP solver, this would
-require a some mathematical manipulation to linearize the terms [cite:@rodriguez-2013-compar-asses]; however, because SA
-handles non-linearity easily these bilinear terms will be ignored [cite:@radosavljevic-2018-metah-optim].
+when the initial charge, $\eta_i$, is less than the allowed minimum charge, $m\kappa_{b_i}$. The mechanisms that
+enables/disables $\phi_i$ is further discussed in [[#sec:constraints]]. Thus, when $\phi_i$ is active, the value of second term is
+$C(\eta_i - m \kappa_i)^2$ and $0$ when inactive. Note the variables $\phi_i$ and $\eta_i$ being multiplied together in [[eq:ac]]. These
+are decision variables and when multiplied together become non-linear. Terms of this nature are denoted as bilinear.
+Using a traditional MILP solver, this would require a some mathematical manipulation to linearize the terms
+[cite:@rodriguez-2013-compar-asses]; however, because SA handles non-linearity easily these bilinear terms will be
+ignored [cite:@radosavljevic-2018-metah-optim].
 
 The demand cost quantifies the amount of power being used over a given period and adjusts the cost by increasing the
 cost if too power is utilized over a given period of time. The consumption cost calculates the total amount of power
@@ -189,8 +192,8 @@ p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
 demand at any discrete time, consider [[eq:discrete-power]]. Let $\omega_h \in \omega$ be the discrete power demand at time step $h$
 where $h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}$, $H = \frac{T}{0.25}$, and $\omega$ is an $H \times 1$ vector. For conciseness of notation we
 will abuse $t_h$ to denote the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$,
-and $\Hset = \{ 1, 2, ..., H \}$. Let $\iota$ be a $Q \times M$ matrix of binary decision variables that is enabled if charger
-$v_i \in \Qset$ is active in the time frame $dt_h$.
+and $\Hset = \{ 1, 2, ..., H \}$. Let $\iota$ be a $H \times Q$ matrix of binary decision variables that is enabled if charger
+$v_i \in \Qset$ is active in the time frame $dt_h$ and $r$ is a $Q \times 1$ vector of charger rates.
 
 #+name: eq:discrete-power
 \begin{equation}
@@ -256,7 +259,7 @@ and all must be less than the time horizon).
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable $\iota$. \ref{seq:c12} and
 \ref{seq:c13} ensure that the initial charge time for visit $i$, $u_i$, is greater than the discrete time, $0.25 \cdot h$,
 being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, $d_i$, is less than the
-next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is the $Q \times H$ matrix representation of whether
+next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is the $H \times Q$ matrix representation of whether
 charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product [cite:@horn-1985-matrix-analy]. Let $A$
 and $B$ be two $M \times N$ matrices. The Hadamard Product is defined as the element-wise product of the two matrices, $A \circ B
 = [a_{ij}b_{ij}]$.

@@ -21,9 +21,9 @@ execute for each step in temperature, $t_k$.
 
 The algorithm behaves as follows: initialize the SA algorithm with an initial solution, temperature schedule, and
 repetition schedule. The first loops through all the values in $t_k$, the second loop finished when $j = J$. For each
-loop, create a new solution ($N(\omega)$), calculate the difference in the fitness of $\omega$ and $\omega'$. Update $\omega$ with $\omega'$ if
+loop, create a new solution, $N(\omega)$, calculate the difference in the fitness of $\omega$ and $\omega'$. Update $\omega$ with $\omega'$ if
 the candidate solution is better or update $\omega$ with $\omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$ if the candidate
-solution is worse than the current solution. Then the new candidate solution is modified slightly ($M(\omega')$) to produce
+solution is worse than the current solution. Then the new candidate solution is modified slightly, $M(\omega')$, to produce
 an altered new candidate solution $\omega{''}$. The modified candidate solution is then compared to $\omega$ similarly as before.
 The modifications then occurs over $J$ iterations. This is repeated for all temperatures in $t_k$.
 
@@ -46,7 +46,7 @@ As previously stated, the generating functions directly influence the values of 
 initialization time, and charge completion time: $v_i$, $u_i$, and $d_i$, respectively. Having generated those values,
 the rest of the decision variables may be derived. Let's begin by reviewing over the packing constraints.
 \ref{seq:c0}-\ref{seq:c1} are employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\ref{seq:c4} ensure
-the validity of the set values. \ref{seq:c5} can be directly calculated. \ref{seq:c11} is fully defined.
+the validity of the set values. \ref{seq:c5} can be directly calculated and \ref{seq:c11} is fully defined.
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
 battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated while
