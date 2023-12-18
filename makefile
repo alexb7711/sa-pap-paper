@@ -36,7 +36,9 @@ all: precheck images ## Build full thesis (LaTeX + figures)
 
 ##------------------------------------------------------------------------------
 #
-pipeline: precheck images set-version ## Recipe to be ran when executed from a pipeline
+pipeline: precheck images ## Recipe to be ran when executed from a pipeline
+	@printf "Stamping the document...\n"
+	@make set-version
 	@printf "Generating $(TARGET)...\n"
 	@bash -e $(SCRIPTS)/relative-path-bibtex $(DOC_SRC)
 	@bash -e $(SCRIPTS)/build-pdf $(basename $(DOC_SRC)) $(TARGET) | \
@@ -58,7 +60,7 @@ images: $(FIGURES_PDF) ## Generate all the images for the project
 set-version: ## Stamp the document with date and git commit hash
 	@$(eval VERSION=$(shell git describe --tags))
 	@grep "$(VERSION)" $(DOC_SRC) > /dev/null || \
-	sed -i 's/\\begin{abstract}/\\begin{abstract}\nVERSION: \\today-$(VERSION)\n/' $(DOC_SRC)
+	sed -i 's/\\today/\\today : $(VERSION)/' $(DOC_SRC)
 
 ##------------------------------------------------------------------------------
 #
