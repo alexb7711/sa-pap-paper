@@ -1,0 +1,15 @@
+#+begin_src latex
+  \begin{algorithm}[H]
+    \caption{Purge algorithm} \label{alg:purge}
+      \LinesNumbered
+      \TitleOfAlgo{Purge}
+      \KwIn{$\Sol$}
+      \KwOut{$\Sol'$}
+
+      \Begin
+      {
+          $\C' \leftarrow \C \setminus \C_{v_i}^i$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
+          \Return{$\Sol' \leftarrow \C'$}\tcc*{Return updated tuple}
+      }
+  \end{algorithm}
+#+end_src

@@ -1,0 +1,38 @@
+#+begin_src latex
+  \begin{algorithm}[H]
+  \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
+      \LinesNumbered
+      \TitleOfAlgo{SA Pseudo-Code}
+
+      \SetKwFunction{f}{f}
+      \SetKwFunction{New}{N}
+      \SetKwFunction{Mod}{M}
+      \SetKwFunction{Temp}{$\Tau$}
+
+      \Begin
+      {
+          $\omega \leftarrow$ New{($\I$, $\C$)}\tcc*{Generate an initial solution}
+
+          \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
+          $t \leftarrow$ \Temp{$\Tau_0$}
+
+          \ForEach{$t_k \in t$}
+          {
+              $j \leftarrow 0$ \tcc*{Set repetition counter}
+              $\omega' \leftarrow $ \New{($\I$, $\C$)} \tcc*{Generate a new solution}
+              $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
+              \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
+              \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
+
+              \While{$j \le J$}
+              {
+                  $\omega{''} \leftarrow$ \Mod{($\I'$, $\C'$)} \tcc*{Modify the new solution}
+                  $\Delta_{\omega,\omega{''}} \rightarrow$ \f{$\omega{''}$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
+                  \If{$\Delta_{\omega , \omega{''}} \le 0$}{$\omega \rightarrow \omega{''}$}
+                  \If{$\Delta_{\omega , \omega{''}} > 0$}{$\omega \rightarrow \omega{''}$ with probability $e^{\frac{-\Delta_{\omega , \omega{''}}}{t_k}}$}
+                  $j \leftarrow j+1$\;
+              }
+          }
+      }
+  \end{algorithm}
+#+end_src

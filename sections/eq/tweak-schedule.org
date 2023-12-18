@@ -1,0 +1,21 @@
+#+begin_export latex
+\begin{algorithm}[H]
+\caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
+
+    \LinesNumbered
+    \TitleOfAlgo{PS}
+    \KwIn{$\I$, $\C$}
+    \KwOut{$\I_i'$, $\C'$}
+
+    \SetKwFunction{PGF}{PGF}
+
+    \Begin
+    {
+        $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
+        $i \leftarrow\; \I_i$\tcc*{Extract visit index}
+        $PGF \leftarrow\; \U_{[1,G]}$\tcc*{Select one of the generator functions}
+        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
+        \Return{($\I'$, $\C'$)}
+    }
+\end{algorithm}
+#+end_export

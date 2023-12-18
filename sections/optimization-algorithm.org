@@ -1,93 +1,69 @@
 * Optimization Algorithm
 :PROPERTIES:
-:CUSTOM_ID: optimization-algorithm
+:CUSTOM_ID: sec:optimization-algorithm
 :END:
-This final section combines the generation algorithms and the optimization problem into a single algorithm. It begins
-with an introduction to a general SA algorithm which will be used to springboard into the construction of the SA PAP
-algorithm. For the case of the pseudo SA algorithm to be presented, the notation pesented will be self-contained and not
-related to any of the variables presented for SA PAP thus far. Consider \ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract].
-$\omega$ and $\omega'$ are the current solution and the candidate solution, respectively. $t_k$ is the temperature cooling
-schedule, $T$ is the initial temperature that will iterate until $k = K$. $M_k$ is the repetition counter, it defines
-the number of iterations to execute for each temperture $t_k$.
+
+This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
+introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
+PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and not
+related to any of the variables presented for SA PAP thus far.
+
+** Simulated Annealing Pseudo Code
+:PROPERTIES:
+:CUSTOM_ID: sec:simulated-annealing-pseudo-code
+:END:
+
+Consider \ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\omega'$ are the current solution and the
+candidate solution, respectively. Let $\Tau$ denote the temperature function and $\Tau_0$ the initial temperature.
+Furthermore, let $t$ be defined as the vector of temperatures defined by $t = \Tau(\Tau_0, \Tau_f)$, and let $t_k$ be
+defined as being an element of $t$, $t_k \in t$. Let $J$ be the repetition counter, it defines the number of iterations to
+execute for each step in temperature, $t_k$.
 
 The algorithm behaves as follows: initialize the SA algorithm with an initial solution, temperature schedule, and
-repetition schedule. The first loops until $T = t_K$, the second loop finished whin $m = M_k$. For each loop, create a
-new solution, calculate the difference in the fitness of $\omega$ and $\omega'$. Update $\omega$ with $\omega'$ if the candidate solution is
-better. Update $\omega$ with $\omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$ if the candidate solution is worse than the
-current solution. This is repeated until the stopping criteria is met.
+repetition schedule. The first loops through all the values in $t_k$, the second loop finished when $j = J$. For each
+loop, create a new solution, $N(\omega)$, calculate the difference in the fitness of $\omega$ and $\omega'$. Update $\omega$ with $\omega'$ if
+the candidate solution is better or update $\omega$ with $\omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$ if the candidate
+solution is worse than the current solution. Then the new candidate solution is modified slightly, $M(\omega')$, to produce
+an altered new candidate solution $\omega{''}$. The modified candidate solution is then compared to $\omega$ similarly as before.
+The modifications then occurs over $J$ iterations. This is repeated for all temperatures in $t_k$.
 
-\begin{algorithm}[H]
-\caption{Pseudo-code for SA} \label{alg:sa-pseudo}
-    \LinesNumbered
-    \TitleOfAlgo{SA Pseudo-Code}
+#+include: eq/sa-pseudo.org
 
-    \SetKwFunction{f}{f}
-    \Begin
-    {
-        $\omega \in W$ \tcc*{Select an initial solution}
-        $k=0$ \tcc*{Select the temperature change counter}
-        $t_k$ \tcc*{Select a temperature cooling schedule}
-        $T = t_0 \geq 0$ \tcc*{Select an initial temperature}
-        $\forall q \in \Qset : \C_q \in \{[0,T]\}$ \tcc*{Set the initial inactive time for each charger to the time horizon}
-        \tcc{Select a repetition schedule $M_k$, that defines the number of iterations executed at each temerature $t_k$}
+** SA PAP Pseudo Code
+:PROPERTIES:
+:CUSTOM_ID: sec:sa-pap-pseudo-code
+:END:
 
-        \While{Stopping criterion not met}
-        {
-            $m \rightarrow 0$ \tcc*{Set repetition counter}
-            \While{$m = M_k$}
-            {
-                $\omega' \in N(\omega)$ \tcc*{Generate a new solution}
-                $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
-                \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
-                \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
-                $m \rightarrow m+1$\;
-            }
+Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP in \ref{alg:sa-pap}. While
+the SA PAP generally is outlined almost identically to that of the general SA algorithm, SA assumes that the new
+solution generated, $\omega'$ in the case of \ref{alg:sa-pseudo}, is in the solution space of the problem, $\omega \in S$ where $S$
+is the solution space. Referring to \ref{alg:charge-schedule-generation}, the generating function for SA PAP, note that
+assignments are made at random. One is to expect that the output generated by this function may not be in the solution
+space. Therefore, the constraints introduced in [[#sec:constraints]] must be employed to verify that the output of
+\ref{alg:charge-schedule-generation} is in the feasible space.
 
-        $k \rightarrow k+1$\;
-        }
-    }
-\end{algorithm}
+As previously stated, the generating functions directly influence the values of the assigned charge queue, charge
+initialization time, and charge completion time: $v_i$, $u_i$, and $d_i$, respectively. Having generated those values,
+the rest of the decision variables may be derived. Let's begin by reviewing over the packing constraints.
+\ref{seq:c0}-\ref{seq:c1} are employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\ref{seq:c4} ensure
+the validity of the set values. \ref{seq:c5} can be directly calculated and \ref{seq:c11} is fully defined.
 
-The objective now is to outline SA-PAP in \ref{alg:sa-pap}. Lines 2-4 initialize the SA algorithm by defining the initial
-temperature, selecting the cooling schedule, and setting the repetition schedule. Line 5 loops through each of the step
-in the temperature schedule $\Tau \in \{ \Tau_0, \Tau_1, ..., \Tau_m \}$. Lines 6 and 7 generate a new solution and
-calculates its fitness. $\nu$ in this context is defined as $\nu = (u, d, v, \eta)$ Lines 8 through 13 updates the solution
-depending on if the new solution is better or worse than the previous solution. Line 14 iterates through the repetition
-schedule, $k \in \{1, 2, ..., K\}$. Lines 15-23 perturbs the previously generated solution, calculates its fitness, and
-updates the current solution with the candidate solution depending on the fitness.
+Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
+battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated while
+\ref{seq:c7}-\ref{seq:c9} can be evaluated to ensure the charge propagation is feasible. Thus, the constraints to
+enable/disable the penalty function, \ref{seq:c9}-\ref{seq:c10}, can be executed to determine the value of $\phi_i$ for
+each visit. \ref{seq:c12}-\ref{seq:c15} may also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which
+then directly leads to \ref{seq:c16} being able to be determined. Once all these constraints have been calculated and
+evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as
+$S$.
 
-\begin{algorithm}[H]
-\caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
-    \LinesNumbered
-    \TitleOfAlgo{SA PAP}
-    \KwIn{$\I$}
-    \KwOut{$\I'$}
+Lines 2-3 initialize the SA algorithm by creating a vector of temperature values based on a temperature schedule $\Tau$,
+and an initial temperature $\Tau_0$ and then generating an initial solution. Line 4 loops through each of the step in
+the temperature schedule $t_k \in t$. Lines 4 and 5 generates a new solution then calculates its fitness. $\nu$ in this
+context is defined as $\nu = (u, d, v, \eta)$. Lines 6 through 11 update the solution depending on if the new solution is in
+the solution space a whether the new solution is more or less fit than the active solution. Line 12 iterates through the
+repetition schedule, $k \in \{1, 2, ..., K\}$. Lines 13 perturbs the previously generated solution. Lines 15-20 calculates
+its fitness, and updates the current solution with the candidate solution depends upon whether the newly generated
+solution is in the solution space and also the fitness in the same was that was done before.
 
-    \SetKwFunction{CoolingEquation}{CoolingEquation}
-    \SetKwFunction{ScheduleGeneration}{ScheduleGeneration}
-    \SetKwFunction{PerturbSchedule}{PerturbSchedule}
-    \SetKwFunction{J}{J}
-
-    \Begin
-    {
-        $\Tau_0$ \tcc*{Initialize temperature}
-        $\Tau_{M} \leftarrow$ \CoolingEquation{$\Tau_0$} \tcc*{Select cooling equation}
-        $K$ \tcc*{Set a repetition schedule}
-
-        \For{$\Tau_m \in \{\Tau_0, \Tau_1, ..., \Tau_M\}$}
-        {
-            $\upsilon' \in Y \leftarrow$ \ScheduleGeneration{$\I$} \tcc*{Generate a new solution}
-            $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
-            \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
-
-            \For{$k \in \{1, 2, ..., K\}$}
-            {
-                $\upsilon' \in Y \leftarrow$ \PerturbSchedule{$\I$} \tcc*{Perturb the solution and reassess}
-                $\Nu_{\upsilon, \upsilon'} = $ \J{$\upsilon'$}  - \J{$\upsilon$} \tcc*{Calculate}
-                \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
-                \If{$\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{\Tau_m}}$}
-            } % For k
-        }     % For \Tau
-    }         % Begin
-\end{algorithm}
+#+include: eq/sa-pap-pseudo.org

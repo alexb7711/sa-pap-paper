@@ -1,0 +1,24 @@
+#+begin_src latex
+  \begin{algorithm}[H]
+  \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
+      \LinesNumbered
+      \TitleOfAlgo{CSG}
+      \KwIn{$\I$, $\C$}
+      \KwOut{$\I'$, $\C'$}
+
+      \SetKwFunction{NewVisit}{NewVisit}
+
+      \Begin
+      {
+          $\I' \leftarrow \; \varnothing$\tcc*[f]{Begin with empty set of scheduled visits.}
+
+          \tcc{Select an unscheduled BEB visit from a randomly indexed set of visits}
+          \ForEach {$\I_i \in \{\ \U_{\I} \}$}
+          {
+              $i\leftarrow\; \I_i$\tcc*{Extract the visit index}
+              ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
+          }
+              \Return{($\I'$, $\C'$)}
+      }
+  \end{algorithm}
+#+end_src

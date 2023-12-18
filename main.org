@@ -18,10 +18,18 @@
 #+include: sections/simulated-annealing.org
 #+include: sections/optimization-algorithm.org
 
+
 # ======================================================================================================================
 # Bibliography
 
 #+cite_export: bibtex plain
 #+print_bibliography:
+
+# ======================================================================================================================
+# Appendix
+
+#+begin_comment
+#+include: sections/appendix.org
+#+end_comment
 
 # LocalWords: SA

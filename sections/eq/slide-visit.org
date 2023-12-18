@@ -1,0 +1,21 @@
+#+begin_src latex
+  \begin{algorithm}[H]
+  \caption{Slide Visit Algorithm} \label{alg:slide-visit}
+      \LinesNumbered
+      \TitleOfAlgo{Slide Visit}
+      \KwIn{$\Sol$}
+      \KwOut{$\Sol'$}
+
+      \SetKwFunction{Purge}{Purge}
+
+      \Begin
+      {
+          $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+
+          \If(\tcc*[f]{If there is time available in $C_{v_i}$}){$x_i' \leftarrow$ \findFreeTime{$C_{v_i}$, ($a_i, e_i$)} $\not\in \varnothing$}
+          {
+              \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+          }
+      }
+  \end{algorithm}
+#+end_src

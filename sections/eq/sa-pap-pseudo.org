@@ -1,0 +1,43 @@
+#+begin_src latex
+    \begin{algorithm}[H]
+    \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
+        \LinesNumbered
+        \TitleOfAlgo{SA PAP}
+        \KwIn{($\I$ , $\C$)}
+        \KwOut{($\I'$, $\C'$)}
+
+        \SetKwFunction{Temp}{$\Tau$}
+        \SetKwFunction{CSG}{CSG}
+        \SetKwFunction{PS}{PS}
+        \SetKwFunction{Obj}{J}
+
+        \Begin
+        {
+            \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
+            $t \leftarrow$ \Temp{$\Tau_0$}
+
+            $\nu \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
+
+            \tcc{For each item in the temperature vector}
+            \ForEach{$t_k \in t$}
+            {
+                $\upsilon' \subset (\I', \C') \leftarrow$ \CSG{($\I$, $\C$)} \tcc*{Generate a new solution}
+                $\Nu_{\upsilon, \upsilon'} = $ \Obj{$\upsilon'$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
+
+                \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
+                \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon'} \ge 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{t_k}}$}
+
+                \tcc{For each step in the repitition schedule}
+                \ForEach{$k \in \{1, 2, ..., K\}$}
+                {
+                    $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution}
+                    $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
+
+                    \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
+                    \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon{''}} \ge 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}
+                } % For k
+            }     % For t_k \in t
+
+            \Return{($\I'$ , $\C'$)} } % Begin
+    \end{algorithm}
+#+end_src
