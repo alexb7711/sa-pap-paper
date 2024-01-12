@@ -1,4 +1,4 @@
-% Created 2023-12-18 Mon 08:18
+% Created 2024-01-12 Fri 12:56
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -61,10 +61,10 @@
 \newcommand{\Jsetq}{\mathbb{J}}             % Set of visits 1-J for queue active times
 \newcommand{\Hset}{\mathcal{H}}             % Set of visits 1-H
 \date{\today}
-\title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
+\title{Bus Charge Scheduling Utilizing Simulated Annealing And MILP Constraints}
 \hypersetup{
  pdfauthor={},
- pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
+ pdftitle={Bus Charge Scheduling Utilizing Simulated Annealing And MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
@@ -650,7 +650,7 @@ availability, \(\C\). The output of each generator affects the tuple of decision
 charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orge000191}
+\label{sec:orgc573813}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -674,7 +674,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org726fdf3}
+\label{sec:org16a8520}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed to \(x_i\)
 being unmodified). To be explicit, \(x_i'\) consists of the modified charger inactive times and the direct decision
