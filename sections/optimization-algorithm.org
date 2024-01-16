@@ -62,8 +62,8 @@ and an initial temperature $\Tau_0$ and then generating an initial solution. Lin
 the temperature schedule $t_k \in t$. Lines 4 and 5 generates a new solution then calculates its fitness. $\nu$ in this
 context is defined as $\nu = (u, d, v, \eta)$. Lines 6 through 11 update the solution depending on if the new solution is in
 the solution space a whether the new solution is more or less fit than the active solution. Line 12 iterates through the
-repetition schedule, $k \in \{1, 2, ..., K\}$. Lines 13 perturbs the previously generated solution. Lines 15-20 calculates
-its fitness, and updates the current solution with the candidate solution depends upon whether the newly generated
-solution is in the solution space and also the fitness in the same was that was done before.
+repetition schedule, $k \in \{1, 2, ..., n_K\}$. Lines 13 perturbs the previously generated solution. Lines 15-20
+calculates its fitness, and updates the current solution with the candidate solution depends upon whether the newly
+generated solution is in the solution space and also the fitness in the same was that was done before.
 
 #+include: eq/sa-pap-pseudo.org

@@ -13,7 +13,7 @@
     {
         $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
-        $PGF \leftarrow\; \U_{[1,G]}$\tcc*{Select one of the generator functions}
+        $PGF \leftarrow\; \U_{[1,n_G]}$\tcc*{Select one of the generator functions}
         $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
         \Return{($\I'$, $\C'$)}
     }

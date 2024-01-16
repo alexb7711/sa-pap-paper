@@ -145,17 +145,17 @@ the tuple, $x_i'$, may be considered a random variable. Let the set of states fo
 :CUSTOM_ID: sec:generators
 :END:
 This section describes and outlines the algorithm pool for the different generator types that are utilized in the
-wrapper functions. Note that to satisfy constraints, $B$ extra idle queues that provide no power to the bus. Because of
-this, the set of queues is fully defined as $q \in \{1,..., B, B+1,..., Q+B\}$ where $Q$ is the total amount of chargers
-and $B$ number of BEBs. The use case for the idle queues are for when a bus is not to be placed on a charger. Rather, it
-will be placed in the queue, $v_i \in \{1,..., B\}$, which satisfies the previously defined spatial constraints while
-allowing the bus to be "set aside".
+wrapper functions. Note that to satisfy constraints, $n_B$ extra idle queues that provide no power to the bus. Because
+of this, the set of queues is fully defined as $q \in \{1,..., n_B, n_B+1,..., n_Q+n_B\}$ where $n_Q$ is the total amount
+of chargers and $n_B$ number of BEBs. The use case for the idle queues are for when a bus is not to be placed on a
+charger. Rather, it will be placed in the queue, $v_i \in \{1,..., n_B\}$, which satisfies the previously defined spatial
+constraints while allowing the bus to be "set aside".
 
 **** New visit
 :PROPERTIES:
 :CUSTOM_ID: sec:new-visit
 :END:
-The new visit generator describes the process of moving an unsigned BEB $b$ to a charging queue, $v_i \in \{1,..., Q\}$
+The new visit generator describes the process of moving an unsigned BEB $b$ to a charging queue, $v_i \in \{1,..., n_Q\}$
 within its arrival/departure time $[a_i, e_i]$. Let $\U_{\cdot}$ indicate that an element is selected randomly with a
 uniform distribution from the set $\{\cdot\}$. For example, $\U_{[a_i,e_i]}$ indicates that a value will be selected between
 $a_i$ and $u_i$ with a uniform distribution. Lines 2-4 extracts the visit index, $i$, arrival time, $a_i$, and departure
@@ -259,7 +259,7 @@ altered by one primitive generation function and compared to the active solution
 iterations. That is, the local solution space shall be explored in an attempt to find an optima. The method that will be
 employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
 primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
-distribution. Let $G$ denote the number of primitive generators available and let =PGF= be the primitive generation
+distribution. Let $n_G$ denote the number of primitive generators available and let =PGF= be the primitive generation
 function, Line 3 selects a primitive generation function with a uniform distribution. Line 5 executes the generation
 function.
 

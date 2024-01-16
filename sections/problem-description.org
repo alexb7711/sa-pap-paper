@@ -17,14 +17,14 @@ is completed, the BEB visits the station to receive a charge that is sufficient 
 have multiple visits to the station throughout their working day. This paper describes a method to optimize the
 assignment of each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
 
-For a fleet of BEBs, it is assumed that there are a total of $I$ visits to the station by $B$ BEBs. There is a pool of
-$Q$ charging queues from which the BEB may be assigned at the station. Let $\mathcal{Z}$ be the set of integers, given a set of
-BEB arrivals to a charging station $i \in \{1,..., I\} = \Iset \subset \mathcal{Z}$ with a set of chargers to be queued $q \in \{1,..., Q\}
-= \Qset \subset \mathcal{Z}$ where the BEB is indicated by an identification number $b \in \{1,..., B\} = \Bset \subset \mathcal{Z}$. Each BEB arrival,
-$i$, can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, BEB
-identification number, $b_i$, arrival time to the station, $a_i$, departure time from the station, $e_i$, time to start
-charging, $u_i$, time to stop charging, $d_i$, the charger queue for the BEB to be placed into, $v_i$, the initial SOC,
-$\eta_i$, and the index of the next visit for the currently visiting BEB, $\xi_i$.
+For a fleet of BEBs, it is assumed that there are a total of $n_I$ visits to the station by $n_B$ BEBs. There is a pool
+of $Q$ charging queues from which the BEB may be assigned at the station. Let $\mathcal{Z}$ be the set of integers, given a set of
+BEB arrivals to a charging station $i \in \{1,..., n_I\} = \Iset \subset \mathcal{Z}$ with a set of chargers to be queued $q \in \{1,...,
+n_Q\} = \Qset \subset \mathcal{Z}$ where the BEB is indicated by an identification number $b \in \{1,..., n_B\} = \Bset \subset \mathcal{Z}$. Each BEB
+arrival, $i$, can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index,
+BEB identification number, $b_i$, arrival time to the station, $a_i$, departure time from the station, $e_i$, time to
+start charging, $u_i$, time to stop charging, $d_i$, the charger queue for the BEB to be placed into, $v_i$, the initial
+SOC, $\eta_i$, and the index of the next visit for the currently visiting BEB, $\xi_i$.
 
 It is assumed that each visit occurs over the time horizon $T = \{t : t_0 \le t \le t_f \}$. The set of all arrivals is
 represented by the set $\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}$. The

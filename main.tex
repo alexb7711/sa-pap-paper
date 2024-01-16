@@ -1,4 +1,4 @@
-% Created 2023-12-18 Mon 08:18
+% Created 2024-01-16 Tue 13:15
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -52,14 +52,14 @@
 \newcommand{\M}{\mathbb{M}}                 % A shorthand for the metadata
 \newcommand{\Hd}{\mathbb{H}}                % Set of discrete times
 \newcommand{\Nu}{\mathcal{V}}               % Draw a nice Nu
-\newcommand{\Iset}{\mathcal{I}}             % Set of visits 1-I
-\newcommand{\Isetinit}{\mathcal{I}_0}       % Set of visits inital visits
-\newcommand{\Isetfinal}{\mathcal{I}_f}      % Set of visits final visits
-\newcommand{\Bset}{\mathcal{B}}             % Set of visits 1-B
-\newcommand{\Qset}{\mathcal{Q}}             % Set of visits 1-Q
-\newcommand{\Jset}{\mathcal{J}}             % Set of visits 1-J
+\newcommand{\Iset}{I}                       % Set of visits 1-I
+\newcommand{\Isetinit}{I_0}                 % Set of visits inital visits
+\newcommand{\Isetfinal}{I_f}                % Set of visits final visits
+\newcommand{\Bset}{B}                       % Set of visits 1-B
+\newcommand{\Qset}{Q}                       % Set of visits 1-Q
+\newcommand{\Jset}{J}                       % Set of visits 1-J
 \newcommand{\Jsetq}{\mathbb{J}}             % Set of visits 1-J for queue active times
-\newcommand{\Hset}{\mathcal{H}}             % Set of visits 1-H
+\newcommand{\Hset}{H}                       % Set of visits 1-H
 \date{\today}
 \title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
 \hypersetup{
@@ -107,14 +107,14 @@ is completed, the BEB visits the station to receive a charge that is sufficient 
 have multiple visits to the station throughout their working day. This paper describes a method to optimize the
 assignment of each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
 
-For a fleet of BEBs, it is assumed that there are a total of \(I\) visits to the station by \(B\) BEBs. There is a pool of
-\(Q\) charging queues from which the BEB may be assigned at the station. Let \(\mathcal{Z}\) be the set of integers, given a set of
-BEB arrivals to a charging station \(i \in \{1,..., I\} = \Iset \subset \mathcal{Z}\) with a set of chargers to be queued \(q \in \{1,..., Q\}
-= \Qset \subset \mathcal{Z}\) where the BEB is indicated by an identification number \(b \in \{1,..., B\} = \Bset \subset \mathcal{Z}\). Each BEB arrival,
-\(i\), can be represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index, BEB
-identification number, \(b_i\), arrival time to the station, \(a_i\), departure time from the station, \(e_i\), time to start
-charging, \(u_i\), time to stop charging, \(d_i\), the charger queue for the BEB to be placed into, \(v_i\), the initial SOC,
-\(\eta_i\), and the index of the next visit for the currently visiting BEB, \(\xi_i\).
+For a fleet of BEBs, it is assumed that there are a total of \(n_I\) visits to the station by \(n_B\) BEBs. There is a pool
+of \(Q\) charging queues from which the BEB may be assigned at the station. Let \(\mathcal{Z}\) be the set of integers, given a set of
+BEB arrivals to a charging station \(i \in \{1,..., n_I\} = \Iset \subset \mathcal{Z}\) with a set of chargers to be queued \(q \in \{1,...,
+n_Q\} = \Qset \subset \mathcal{Z}\) where the BEB is indicated by an identification number \(b \in \{1,..., n_B\} = \Bset \subset \mathcal{Z}\). Each BEB
+arrival, \(i\), can be represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index,
+BEB identification number, \(b_i\), arrival time to the station, \(a_i\), departure time from the station, \(e_i\), time to
+start charging, \(u_i\), time to stop charging, \(d_i\), the charger queue for the BEB to be placed into, \(v_i\), the initial
+SOC, \(\eta_i\), and the index of the next visit for the currently visiting BEB, \(\xi_i\).
 
 It is assumed that each visit occurs over the time horizon \(T = \{t : t_0 \le t \le t_f \}\). The set of all arrivals is
 represented by the set \(\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}\). The
@@ -189,10 +189,10 @@ further discussed in \ref{sec:simulated-annealing}. Lastly, \(r_q\) represents t
 \textbf{Variable} & \textbf{Description} & \textbf{Variable} & \textbf{Description}\\[0pt]
 \hline
 Constants &  & Constants & \\[0pt]
-\(C\) & Penalty method gain factor & \(B\) & Number of buses in use\\[0pt]
-\(H\) & Number of discrete steps, \(h\), in time horizon & \(I\) & Number of total visits\\[0pt]
-\(J(u,d,v,\eta)\) & Objective function & \(K\) & Local search iteration amount\\[0pt]
-\(M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(Q\) & Number of chargers\\[0pt]
+\(C\) & Penalty method gain factor & \(n_B\) & Number of buses in use\\[0pt]
+\(H\) & Number of discrete steps, \(h\), in time horizon & \(n_I\) & Number of total visits\\[0pt]
+\(J(u,d,v,\eta)\) & Objective function & \(n_K\) & Number of discrete steps in time horizon\\[0pt]
+\(M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(n_Q\) & Number of chargers\\[0pt]
 \(\T\) & Time horizon &  & \\[0pt]
 \hline
 Input variables &  & Input Variables & \\[0pt]
@@ -230,11 +230,11 @@ direct.
 \label{sec:direct-decision-variables}
 Decision variables that are direct are variables that can be immediately chosen by SA. The first two variables are \(u_i\)
 and \(d_i \; \forall i \in \Iset\). They represent the initial and final charging times. These values must remain within range of
-the arrival time and departure time for visit \(i\), \([a_i, e_i]\). Let \(H\) be defined as the total number of discrete
-steps taken over the time horizon, \(\mu\) and \(\theta\) are \(H \times Q\) matrices of binary decision variables, \(\mu_h^{v_i}, \theta_h^{v_i}
-\in \{0, 1\}\). \(\theta_h^{v_i} = 1\) when \(u_i \le dt_h\), and \(\theta_h^{v_i} = 0\) otherwise. \(\mu_h^{v_i} = 1\) when \(d_i \ge dt_h\) and
-\(\mu_h^{v_i} = 0\) otherwise. The last direct decision variable is the queue that bus visit \(i\) can be placed in to charge,
-\(v_i \in \Qset\).
+the arrival time and departure time for visit \(i\), \([a_i, e_i]\). Let \(n_H\) be defined as the total number of discrete
+steps taken over the time horizon, \(\mu\) and \(\theta\) are \(n_H \times n_Q\) matrices of binary decision variables, \(\mu_h^{v_i},
+\theta_h^{v_i} \in \{0, 1\}\). \(\theta_h^{v_i} = 1\) when \(u_i \le dt_h\), and \(\theta_h^{v_i} = 0\) otherwise. \(\mu_h^{v_i} = 1\) when \(d_i \ge
+dt_h\) and \(\mu_h^{v_i} = 0\) otherwise. The last direct decision variable is the queue that bus visit \(i\) can be placed in
+to charge, \(v_i \in \Qset\).
 
 \paragraph{Indirect Decision Variables}
 \label{sec:indirect-decision-variables}
@@ -308,11 +308,11 @@ allowed, \(\kappa_i\) is the battery capacity for visit \(i\), and \(\eta_i\) is
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue \(q\). Let \(\epsilon_{vi}\) to
 be taken as \(\epsilon_{v_i} = 1000v_i\), this form causes the objective function encourages the model to minimize the total
-amount of chargers. Iterating on this concept, let the model represents the first \(B\) indices to be waiting queues (no
-charge is supplied), the next \(Q_s\) indices to be slow chargers, and the next \(Q_f\) indices to be fast chargers, where
-\(B, Q_s, Q_f \in \mathcal{Z}\) and \(B + Q_s + Q_f = Q\). Furthermore, let \(\epsilon_b = \{ 0 : b \in \Bset \}\), \(\epsilon_{j} = \{ 1000 j: j \in \Iset
-\}\) and let \(\epsilon_{vi} = \epsilon_b \cup \epsilon_j\). The model will then assign no cost to assigning a BEB to a waiting queue and will also
-encourage the use of slow chargers over fast.
+amount of chargers. Iterating on this concept, let the model represents the first \(n_B\) indices to be waiting queues (no
+charge is supplied), the next \(n_{Q_s}\) indices to be slow chargers, and the next \(n_{Q_f}\) indices to be fast chargers,
+where \(n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}\) and \(B + n_{Q_s} + n_{Q_f} = n_Q\). Furthermore, let \(\epsilon_b = \{ 0 : b \in \Bset \}\),
+\(\epsilon_{j} = \{ 1000 j: j \in \Iset \}\) and let \(\epsilon_{vi} = \epsilon_b \cup \epsilon_j\). The model will then assign no cost to assigning a BEB to
+a waiting queue and will also encourage the use of slow chargers over fast.
 
 The second term is the penalty function that is either enabled or disabled by \(\phi_i\)
 \cite{luenberger-2008-penal-barrier-method}. This term is considered an assignment cost because the penalty method is
@@ -364,10 +364,10 @@ p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
 
 \ref{eq:pdem}, again, retains the largest \(p_{d}\) value with a starting fixed value of \(p_{fix}\). To write the total power
 demand at any discrete time, consider \ref{eq:discrete-power}. Let \(\omega_h \in \omega\) be the discrete power demand at time step \(h\)
-where \(h \in \{ 1, 2, ..., H \} \subset \mathcal{Z}\), \(H = \frac{T}{0.25}\), and \(\omega\) is an \(H \times 1\) vector. For conciseness of notation we
-will abuse \(t_h\) to denote the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h - t_{h-1}\),
-and \(\Hset = \{ 1, 2, ..., H \}\). Let \(\iota\) be a \(H \times Q\) matrix of binary decision variables that is enabled if charger
-\(v_i \in \Qset\) is active in the time frame \(dt_h\) and \(r\) is a \(Q \times 1\) vector of charger rates.
+where \(h \in \{ 1, 2, ..., n_H \} \subset \mathcal{Z}\), \(n_H = \frac{T}{0.25}\), and \(\omega\) is an \(n_H \times 1\) vector. For conciseness of
+notation we will abuse \(t_h\) to denote the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h -
+t_{h-1}\), and \(\Hset = \{ 1, 2, ..., n_H \}\). Let \(\iota\) be a \(n_H \times n_Q\) matrix of binary decision variables that is
+enabled if charger \(v_i \in \Qset\) is active in the time frame \(dt_h\) and \(r\) is a \(n_Q \times 1\) vector of charger rates.
 
 \begin{equation}
 \label{eq:discrete-power}
@@ -547,10 +547,10 @@ and all must be less than the time horizon).
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable \(\iota\). \ref{seq:c12} and
 \ref{seq:c13} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete time, \(0.25 \cdot h\),
 being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, \(d_i\), is less than the
-next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the \(H \times Q\) matrix representation of whether
+next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the \(n_H \times n_Q\) matrix representation of whether
 charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product \cite{horn-1985-matrix-analy}. Let \(A\)
-and \(B\) be two \(M \times N\) matrices. The Hadamard Product is defined as the element-wise product of the two matrices, \(A \circ B
-= [a_{ij}b_{ij}]\).
+and \(B\) be two \(n_M \times n_N\) matrices. The Hadamard Product is defined as the element-wise product of the two matrices, \(A
+\circ B = [a_{ij}b_{ij}]\).
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
@@ -650,7 +650,7 @@ availability, \(\C\). The output of each generator affects the tuple of decision
 charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orge000191}
+\label{sec:org307a848}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -674,7 +674,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org726fdf3}
+\label{sec:org35ac173}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed to \(x_i\)
 being unmodified). To be explicit, \(x_i'\) consists of the modified charger inactive times and the direct decision
@@ -688,15 +688,15 @@ the tuple, \(x_i'\), may be considered a random variable. Let the set of states 
 \subsubsection{Generators}
 \label{sec:generators}
 This section describes and outlines the algorithm pool for the different generator types that are utilized in the
-wrapper functions. Note that to satisfy constraints, \(B\) extra idle queues that provide no power to the bus. Because of
-this, the set of queues is fully defined as \(q \in \{1,..., B, B+1,..., Q+B\}\) where \(Q\) is the total amount of chargers
-and \(B\) number of BEBs. The use case for the idle queues are for when a bus is not to be placed on a charger. Rather, it
-will be placed in the queue, \(v_i \in \{1,..., B\}\), which satisfies the previously defined spatial constraints while
-allowing the bus to be ``set aside''.
+wrapper functions. Note that to satisfy constraints, \(n_B\) extra idle queues that provide no power to the bus. Because
+of this, the set of queues is fully defined as \(q \in \{1,..., n_B, n_B+1,..., n_Q+n_B\}\) where \(n_Q\) is the total amount
+of chargers and \(n_B\) number of BEBs. The use case for the idle queues are for when a bus is not to be placed on a
+charger. Rather, it will be placed in the queue, \(v_i \in \{1,..., n_B\}\), which satisfies the previously defined spatial
+constraints while allowing the bus to be ``set aside''.
 
 \paragraph{New visit}
 \label{sec:new-visit}
-The new visit generator describes the process of moving an unsigned BEB \(b\) to a charging queue, \(v_i \in \{1,..., Q\}\)
+The new visit generator describes the process of moving an unsigned BEB \(b\) to a charging queue, \(v_i \in \{1,..., n_Q\}\)
 within its arrival/departure time \([a_i, e_i]\). Let \(\U_{\cdot}\) indicate that an element is selected randomly with a
 uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a_i,e_i]}\) indicates that a value will be selected between
 \(a_i\) and \(u_i\) with a uniform distribution. Lines 2-4 extracts the visit index, \(i\), arrival time, \(a_i\), and departure
@@ -1122,7 +1122,7 @@ altered by one primitive generation function and compared to the active solution
 iterations. That is, the local solution space shall be explored in an attempt to find an optima. The method that will be
 employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
 primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
-distribution. Let \(G\) denote the number of primitive generators available and let \texttt{PGF} be the primitive generation
+distribution. Let \(n_G\) denote the number of primitive generators available and let \texttt{PGF} be the primitive generation
 function, Line 3 selects a primitive generation function with a uniform distribution. Line 5 executes the generation
 function.
 
@@ -1140,7 +1140,7 @@ function.
     {
         $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
-        $PGF \leftarrow\; \U_{[1,G]}$\tcc*{Select one of the generator functions}
+        $PGF \leftarrow\; \U_{[1,n_G]}$\tcc*{Select one of the generator functions}
         $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
         \Return{($\I'$, $\C'$)}
     }
@@ -1235,9 +1235,9 @@ and an initial temperature \(\Tau_0\) and then generating an initial solution. L
 the temperature schedule \(t_k \in t\). Lines 4 and 5 generates a new solution then calculates its fitness. \(\nu\) in this
 context is defined as \(\nu = (u, d, v, \eta)\). Lines 6 through 11 update the solution depending on if the new solution is in
 the solution space a whether the new solution is more or less fit than the active solution. Line 12 iterates through the
-repetition schedule, \(k \in \{1, 2, ..., K\}\). Lines 13 perturbs the previously generated solution. Lines 15-20 calculates
-its fitness, and updates the current solution with the candidate solution depends upon whether the newly generated
-solution is in the solution space and also the fitness in the same was that was done before.
+repetition schedule, \(k \in \{1, 2, ..., n_K\}\). Lines 13 perturbs the previously generated solution. Lines 15-20
+calculates its fitness, and updates the current solution with the candidate solution depends upon whether the newly
+generated solution is in the solution space and also the fitness in the same was that was done before.
 
 \begin{algorithm}[H]
 \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
@@ -1267,11 +1267,9 @@ solution is in the solution space and also the fitness in the same was that was 
             \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon'} \le 0$}{$\upsilon \leftarrow \upsilon'$}
             \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon'} \ge 0$}{$\upsilon \leftarrow \upsilon'$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon'}}{t_k}}$}
 
-            \tcc{For each step in the repitition schedule}
-            \ForEach{$k \in \{1, 2, ..., K\}$}
-            {
-                $\upsilon{''} \subset (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution}
-                $\Nu_{\upsilon, \upsilon{''}} = $ \Obj{$\upsilon{''}$}  - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
+            \tcc{For each step in the repitition schedule} \ForEach{$k \in \{1, 2, ..., n_K\}$} { $\upsilon{''} \subset
+              (\I', \C') \leftarrow$ \PS{($\I'$, $\C'$)} \tcc*{Perturb the solution} $\Nu_{\upsilon, \upsilon{''}} = $
+              \Obj{$\upsilon{''}$} - \Obj{$\upsilon$} \tcc*{Calculate the difference of fitness scores}
 
                 \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon{''}} \le 0$}{$\upsilon \leftarrow \upsilon{''}$}
                 \If{$\I' \in S$ and $\Nu_{\upsilon, \upsilon{''}} \ge 0$}{$\upsilon \leftarrow \upsilon{''}$ with probability $e^{\frac{\Nu_{\upsilon, \upsilon{''}}}{t_k}}$}

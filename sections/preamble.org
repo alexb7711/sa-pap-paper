@@ -57,14 +57,14 @@
 #+latex_header: \newcommand{\Hd}{\mathbb{H}}                % Set of discrete times
 #+latex_header: \newcommand{\Nu}{\mathcal{V}}               % Draw a nice Nu
 
-#+latex_header: \newcommand{\Iset}{\mathcal{I}}             % Set of visits 1-I
-#+latex_header: \newcommand{\Isetinit}{\mathcal{I}_0}       % Set of visits inital visits
-#+latex_header: \newcommand{\Isetfinal}{\mathcal{I}_f}      % Set of visits final visits
-#+latex_header: \newcommand{\Bset}{\mathcal{B}}             % Set of visits 1-B
-#+latex_header: \newcommand{\Qset}{\mathcal{Q}}             % Set of visits 1-Q
-#+latex_header: \newcommand{\Jset}{\mathcal{J}}             % Set of visits 1-J
+#+latex_header: \newcommand{\Iset}{I}                       % Set of visits 1-I
+#+latex_header: \newcommand{\Isetinit}{I_0}                 % Set of visits inital visits
+#+latex_header: \newcommand{\Isetfinal}{I_f}                % Set of visits final visits
+#+latex_header: \newcommand{\Bset}{B}                       % Set of visits 1-B
+#+latex_header: \newcommand{\Qset}{Q}                       % Set of visits 1-Q
+#+latex_header: \newcommand{\Jset}{J}                       % Set of visits 1-J
 #+latex_header: \newcommand{\Jsetq}{\mathbb{J}}             % Set of visits 1-J for queue active times
-#+latex_header: \newcommand{\Hset}{\mathcal{H}}             % Set of visits 1-H
+#+latex_header: \newcommand{\Hset}{H}                       % Set of visits 1-H
 
 # =========================================================================================================================
 # More document configuration
