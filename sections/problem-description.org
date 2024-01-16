@@ -2,29 +2,29 @@
 :PROPERTIES:
 :CUSTOM_ID: sec:problem-description
 :END:
-This section introduces and defines the problem to be addressed by this work. A general description is provided and then
-succeeded by a mathematical interpretation of the general description. The scope of the problem shall also be outlined
-as well as some of the problems that will be addressed in this paper.
+This section introduces and defines the problem to be addressed by this work. A general description is given and
+followed by a mathematical interpretation. The scope of the this work will also be provided as well as a high level
+introduction to the granular problems that will be addressed in order to achieve the proposed goal.
 
 Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. Suppose that an individual BEB
 from said fleet begins and completes an individual route at the same station from which it also receives its charge.
 During each route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied during its visit
-must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete next route. The charge
+must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete its route. The charge
 may be supplied from any single charger given a set of chargers at the station. Each time the BEB arrives at the
-station, let that be denoted as a "visit" or an "arrival" (they may be used interchangeably). Generalizing this to all
-BEBs, each BEB will have a set of prescribed routes from which their SOC is depleted by a certain amount. Once the route
-is completed, the BEB visits the station to receive a charge that is sufficient to complete the next route. Each BEB may
-have multiple visits to the station throughout their working day. This paper describes a method to optimize the
-assignment of each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
+station, let that be denoted as an "arrival". Once the BEB has awaited its predetermined time (whether it has received a
+charge or not), and departs from the station, let that be denoted as a "visit". Generalizing this to all BEBs, each BEB
+will have a set of prescribed routes from which their SOC is depleted by a certain amount. Once the route is completed,
+the BEB arrives at the station to receive a charge that is sufficient to complete the next route. Each BEB may have
+multiple visits to the station throughout their working day. This paper describes a method to optimize the assignment of
+each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
 
-For a fleet of BEBs, it is assumed that there are a total of $n_I$ visits to the station by $n_B$ BEBs. There is a pool
-of $Q$ charging queues from which the BEB may be assigned at the station. Let $\mathcal{Z}$ be the set of integers, given a set of
-BEB arrivals to a charging station $i \in \{1,..., n_I\} = \Iset \subset \mathcal{Z}$ with a set of chargers to be queued $q \in \{1,...,
-n_Q\} = \Qset \subset \mathcal{Z}$ where the BEB is indicated by an identification number $b \in \{1,..., n_B\} = \Bset \subset \mathcal{Z}$. Each BEB
-arrival, $i$, can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index,
-BEB identification number, $b_i$, arrival time to the station, $a_i$, departure time from the station, $e_i$, time to
-start charging, $u_i$, time to stop charging, $d_i$, the charger queue for the BEB to be placed into, $v_i$, the initial
-SOC, $\eta_i$, and the index of the next visit for the currently visiting BEB, $\xi_i$.
+# TODO: FINISH
+Consider a fleet of $n_B$ BEBs that collectively visit a station $n_I$ times. At said station, let there exist a pool of
+$n_Q$ charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as $\Iset = \{ 1, ...
+\}$. Each BEB arrival, $i$, can be represented by the tuple: $\visit$, in which the elements within the tuple denote the
+visit index, BEB identification number, $b_i$, arrival time to the station, $a_i$, departure time from the station,
+$e_i$, time to start charging, $u_i$, time to stop charging, $d_i$, the charger queue for the BEB to be placed into,
+$v_i$, the initial SOC, $\eta_i$, and the index of the next visit for the currently visiting BEB, $\xi_i$.
 
 It is assumed that each visit occurs over the time horizon $T = \{t : t_0 \le t \le t_f \}$. The set of all arrivals is
 represented by the set $\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}$. The
