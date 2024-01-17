@@ -1,4 +1,4 @@
-% Created 2024-01-16 Tue 13:15
+% Created 2024-01-17 Wed 12:46
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -18,20 +18,20 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\usepackage{xcolor}                          % Code in LaTeX
+\usepackage{xcolor}                         % Color time
 \usepackage{listings}                       % Code in LaTeX
 \usepackage{listings-rust}                  % Code in LaTeX
 \usepackage{amsfonts}                       % Cool math fonts
-\usepackage{tabularx}
+\usepackage{tabularx}                       % Cool tables
 \usepackage{multicol}                       % Add capability to make columns
 \usepackage{hyperref}                       % Cool clean hyperlinks
 \setlength\parindent{0pt}                   % No indent for paragraphs
 \lstset{language=Rust, style=boxed}
 \usetikzlibrary{arrows.meta}                % Arrows for tikz
 \renewcommand*{\sectionautorefname}{Section}
-\renewcommand*{\subsectionautorefname}{Subsection}
-\renewcommand*{\subsubsectionautorefname}{Subsubsection}
-\renewcommand*{\paragraphautorefname}{Paragraph}
+\renewcommand*{\subsectionautorefname}{Section}
+\renewcommand*{\subsubsectionautorefname}{Section}
+\renewcommand*{\paragraphautorefname}{Section}
 \renewcommand*{\algorithmautorefname}{Algorithm}
 \newcommand{\Or}{\textbf{ or }}
 \renewcommand*{\And}{\textbf{ and }}
@@ -92,95 +92,85 @@ The SA algorithm is introduced and constrained by a set of MILP constraints deri
 cost are used to minimize power consumption and total cost of using the BEBs.
 \section{Problem Description}
 \label{sec:problem-description}
-This section introduces and defines the problem to be addressed by this work. A general description is provided and then
-succeeded by a mathematical interpretation of the general description. The scope of the problem shall also be outlined
-as well as some of the problems that will be addressed in this paper.
+This section introduces and defines the problem to be addressed by this work. A general description is given and
+followed by a mathematical interpretation. The scope of this work will also be provided as well as a high level
+introduction to the granular problems that will be addressed in order to achieve the proposed goal.
 
 Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. Suppose that an individual BEB
 from said fleet begins and completes an individual route at the same station from which it also receives its charge.
 During each route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied during its visit
-must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete next route. The charge
+must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete its route. The charge
 may be supplied from any single charger given a set of chargers at the station. Each time the BEB arrives at the
-station, let that be denoted as a ``visit'' or an ``arrival'' (they may be used interchangeably). Generalizing this to all
-BEBs, each BEB will have a set of prescribed routes from which their SOC is depleted by a certain amount. Once the route
-is completed, the BEB visits the station to receive a charge that is sufficient to complete the next route. Each BEB may
-have multiple visits to the station throughout their working day. This paper describes a method to optimize the
-assignment of each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
+station, let that be denoted as an ``arrival''. Once the BEB has awaited its predetermined time (whether it has received a
+charge or not), and departs from the station, let that be denoted as a ``visit''. Generalizing this to all BEBs, each BEB
+will have a set of prescribed routes from which their SOC is depleted by a certain amount. Once the route is completed,
+the BEB arrives at the station to receive a charge that is sufficient to complete the next route. Each BEB may have
+multiple visits to the station throughout their working day. This paper describes a method to optimize the assignment of
+each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
 
-For a fleet of BEBs, it is assumed that there are a total of \(n_I\) visits to the station by \(n_B\) BEBs. There is a pool
-of \(Q\) charging queues from which the BEB may be assigned at the station. Let \(\mathcal{Z}\) be the set of integers, given a set of
-BEB arrivals to a charging station \(i \in \{1,..., n_I\} = \Iset \subset \mathcal{Z}\) with a set of chargers to be queued \(q \in \{1,...,
-n_Q\} = \Qset \subset \mathcal{Z}\) where the BEB is indicated by an identification number \(b \in \{1,..., n_B\} = \Bset \subset \mathcal{Z}\). Each BEB
-arrival, \(i\), can be represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index,
-BEB identification number, \(b_i\), arrival time to the station, \(a_i\), departure time from the station, \(e_i\), time to
-start charging, \(u_i\), time to stop charging, \(d_i\), the charger queue for the BEB to be placed into, \(v_i\), the initial
-SOC, \(\eta_i\), and the index of the next visit for the currently visiting BEB, \(\xi_i\).
+Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_I\) times. At said station, let there exist a pool of
+\(n_Q\) charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as \(\Iset = \{ 1, ...
+n_I \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \}\). Each visit can be represented by the
+tuple: \(\visit\), in which the elements within the tuple denote the visit index, \(i \in I\), BEB identification number, \(b_i
+\in B\), arrival time to the station, \(a_i \in \mathbb{R}\), departure time from the station, \(e_i \in \mathbb{R}\), time to start charging, \(u_i \in
+\mathbb{R}\), time to stop charging, \(d_i\), the charger queue for the BEB to be placed into, \(v_i \in Q\), the SOC, \(\eta_i \in \mathbb{R}\), and
+the index of the next visit for the currently visiting BEB, \(\xi_i \in I\). Let the set of all visits be denoted as \(\I\).
 
-It is assumed that each visit occurs over the time horizon \(T = \{t : t_0 \le t \le t_f \}\). The set of all arrivals is
-represented by the set \(\I = \{\forall i \in \Iset \; \visit: b_i, \xi_i \in \Bset, a_i, e_i, u_i, d_i \in T, v_i \in \Qset \}\). The
-concept of ``arrivals'' is derived from the PAP \cite{qarebagh-2019-optim-sched}. The notion of a visit is useful in the
-sense that it provides simple mechanism to describe the state of any arbitrary BEB at the time of arrival; however, a
-BEB may visit the station multiple times. The issue arises due to model's assumption that each arrival is unique (i.e.
-no single BEB arrives more than once). Therefore, a system must be put in place to track each BEB across visits.
-
-For each arrival a BEB must be placed in a single queue, \(q \in \Qset\). The charger \(q\) is assumed to be either a fast
-charger, slow charger, or no charger at all. A BEB is only allowed to be assigned to one queue per visit; however, there
-may be multiple BEBs charging simultaneously across different queues. The amount of time the BEB is allowed to charge is
-dictated by the scheduled arrival time and required departure time, \([a_i, e_i]\). Although a BEB must be placed in a
-queue, if a BEB does not require much charge, or none at all, partial charges, or no charging, is allowed. It is not
-allowed for the BEB to charge over its battery capacity limit. The battery dynamics in this work is modeled as \uline{linear},
-which remains accurate up to about an SOC of 80\% charge \cite{li-2016-batter-elect}.
+For each visit, a BEB must be placed in a single queue, \(q \in \Qset\). The charger \(q\) is assumed to be either a fast
+charger, slow charger, or no charger at all (denoted as a waiting queue). A BEB is only allowed to be assigned to one
+queue per visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time
+the BEB is allowed to charge is dictated by the scheduled arrival time and required departure time, \([a_i, e_i]\).
+Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity. The battery dynamics in this work
+is modeled as \uline{linear}, which remains accurate up to about an SOC of 80\% charge \cite{li-2016-batter-elect}.
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired ``route'' that the BEB must perform after the
-visit. This route, as one would expect, causes the BEB to discharge by some certain amount. This paper assumes an
-average discharge over a period of in which an estimated discharge is calculated for each route, \(\Delta_i\). The charge
-supplied while at the station is required to increase the SOC of each BEB visit to a minimum battery percentage, \(\nu_b\).
-This acts as a safety factor to ensure each route is completed.
+visit. This route, as one would expect, causes the BEB to discharge by some certain amount. The estimation of the SOC
+post route in it of itself poses a focus of research, not of which is of this work. Thus, a simplified model of
+calculating an average discharge based on the time a BEB is on route is employed. For visit \(i\), the route is assumed to
+occur after its departure. Let the discharge of the route for visit \(i\) be denoted as \(\Delta_i \in \mathbb{R}\). The charge supplied
+while at the station is required to increase the SOC of each BEB visit to a minimum battery percentage, \(\nu_b \in B\). This
+acts as a safety factor to ensure each route is completed.
 
-The task of this paper shall be to define a method of scheduling the set of arrivals \(\I\) to fulfill the minimum charge
-requirements over the time horizon \(T\) while minimizing the cost which can be decomposed into the demand and consumption
-cost. An objective function shall be utilized to measure the relative fitness of results and constraints shall be
+The task of this paper shall be to define a method of scheduling the set of visits \(\I\) to fulfill the minimum charge
+requirements over the time horizon \(T\) while minimizing the cost, which can be decomposed into the demand and
+consumption cost. An objective function is utilized to measure the relative fitness of results and constraints are
 employed to ensure validity of the prescribed schedule. Both the objective function and constraints are discussed in
 further detail in the proceeding section.
 \section{Optimization Problem}
 \label{sec:optimization-problem}
 This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
 function is required to allow comparisons between candidate solutions. In the context of this formulation, the objective
-function is broken down into four major components: consumption cost, \uline{demand cost}, assignment cost, as well as a
-penalty for under-charging a bus. The constraints ensure that candidate solutions are in the feasible region. They are
-composed of a series of equations defined by decision and input variables. Decision variables are those which may be
-manipulated, and are chosen in an attempt to optimize the objective function. Input variables are predefined input
-variables are assumed to be known.
+function is broken down into four major components: consumption cost, demand cost, assignment cost, as well as a penalty
+for under-charging a bus. The constraints ensure that candidate solutions are in the feasible region. They are composed
+of a series of equations defined by decision and input variables. Decision variables are those which may be manipulated,
+and are chosen in an attempt to optimize the objective function. Input variables are predefined.
 
-In the subsequent sections, the input parameters and decision variables shall be introduced in \ref{sec:input-variables} and
-\ref{sec:decision-variables}. Once the variables have been defined, the objective function is to be introduced in
-\ref{sec:objective-function}. The constraints will then be introduced in \ref{sec:constraints}.
+The input and decision variables are introduced in \ref{sec:input-variables} and \ref{sec:decision-variables}. The
+objective function is introduced in \ref{sec:objective-function}. The constraints will then be introduced in
+\ref{sec:constraints}.
 
-\subsection{Parameter Definitions}
+\subsection{Variable Definitions}
 \label{sec:parameter-definitions}
-This section defines the input variables and decision variables used by the system. The input variables are the
-parameters that are assumed to be known prior to optimizing the system. These are discussed next. The decision variables
-are the values that the SA algorithm has the freedom to manipulate and are discussed in \ref{sec:decision-variables}.
+This section defines the input and decision variables used by the system. The input parameters are assumed to be fixed
+prior to optimizing the system. The decision variables are the values that the SA algorithm has the freedom to
+manipulate.
 
-\subsubsection{Input Variables}
+\subsubsection{Parameters}
 \label{sec:input-variables}
-The input values of any MILP system are defined prior to the solving of the system. They specify initial conditions,
-known state properties, etc. Roughly following the order in \ref{tab:variables}, each variable will be introduced.
-
-\(\Delta_i\) is the amount energy required to complete the bus route after visit \(i\). Because there is no route after the last
-visit, the power consumed after the final visit is zero. Formally, let the set of final visits for each BEB, \(b\), be
+This section introduces the parameters used in the SA algorithm. The variables to be introduced are summarized in
+\ref{tab:variables}. \(\Delta_i\) is the amount energy required to complete the bus route after visit \(i\). Because there is no route
+after the last visit, the power consumed after the final visit is zero. Let the set of final visits for all BEBs be
 denoted as \(\Isetfinal\). \(\alpha_b\) is the initial SOC percentage of bus \(b\) at the beginning of the working day. Let
-\(\Isetinit\) denote the set of initial visit indices for each BEB. The initial SOC for bus \(b\) can be represented as
-\(\eta_{i \in \Isetinit} = \alpha_{\Xi_i} \cdot \kappa_{\Xi_i}\) where \(\kappa_b\) is the battery capacity for bus \(b\), \(\eta_{i \in \Isetinit}\) indicates
-the initial charge for bus \(b\). The rest of the \(\eta_i\) terms are considered decision variables and will be further
-discussed in \ref{sec:decision-variables}. \(dt_h\) is the discrete time step used for calculating the demand cost. \(\epsilon_q\) is
-the cost for assigning a charger to queue \(q\). \(\xi_i\) represents the next arrival index for bus \(b_i\). In other words,
-given a set of bus visit IDs \(\{ 1,2,3,1\}\), using a starting index of 1, \(\xi_1 = 4\). This is found by first identifying
-the ID of the first element in \(\Iset_b\), which is 1. The next step is to find the next occurrence of bus 1 in the
-sequence. In this example, the next index for bus 1 is \(i= 4\). \(a_i\) and \(e_i\) are the arrival and departure times of
-bus visit \(i\) to the station, respectively. \(k\) represents the local iteration search for the SA algorithm. This is
-further discussed in \ref{sec:simulated-annealing}. Lastly, \(r_q\) represents the power supplied from the charger in queue
-\(q\).
+\(\Isetinit\) denote the set of initial visit indices for each BEB. Let \(\Xi_i \in B\) denote the identification number of the
+BEB for visit \(i\). The initial SOC for bus \(\Xi_i\) can be represented as \(\eta_{i \in \Isetinit} = \alpha_{\Xi_i} \cdot \kappa_{\Xi_i}\) where
+\(\kappa_{\Xi_i}\) is the battery capacity for bus \(\Xi_i\), \(\eta_{i \in \Isetinit}\) indicates the initial charge for bus \(b\). The rest
+value for \(\eta_i\), \(i \not\in I\) are considered decision variables and will be further discussed in \ref{sec:decision-variables}.
+The notation \(dt_h\) is used to denote the discrete time employed in calculating the demand cost. \(\epsilon_q\) is the cost for
+assigning a charger to queue \(q\). \(\xi_i\) represents the next arrival index for bus \(b_i\). In other words, suppose the ID
+of each BEB is recorded in order of arrival. Further suppose that recorded list is \(\xi = \{ 2,1,3,2 \}\), using a starting
+index of 1, \(\xi_1 = 4\) as that is the next visit by bus 2, the same as the first visit index. The arrival and departure
+times of bus visit \(i\) to the station are denoted as \(a_i\) and \(e_i\), respectively. Lastly, \(r_q\) represents the power
+supplied from the charger in queue \(q\).
 
 \begin{table}[htbp]
 \caption{\label{tab:variables}Table of variables used in the paper.}
@@ -200,7 +190,7 @@ Input variables &  & Input Variables & \\[0pt]
 \(\delta_i\) & Discharge rate for vehicle \(i\) per mile & \(\nu\) & Minimum charge percentage allowed for each visit \(i\)\\[0pt]
 \(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for bus \(b\)\\[0pt]
 \(\rho_i\) & Route distance after visit \(i\) & \(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
-\(a_i\) & Arrival time of visit \(i\) & \(b_i\) & ID for bus visit \(i\)\\[0pt]
+\(a_i\) & Arrival time of visit \(i\) & \(\Xi_i\) & ID for bus visit \(i\)\\[0pt]
 \(dt_h\) & Discrete time step \(dt_h = t_h - t_{h-1}\) & \(e_i\) & Time bus visit \(i\) must exit the station\\[0pt]
 \(k\) & Local search iteration \(k\) & \(m\) & Minimum charge percentage allowed for each visit\\[0pt]
 \(r_q\) & Charge rate of charger \(q\) &  & \\[0pt]
@@ -220,30 +210,26 @@ Indirect Decision Variables &  & Indirect Decision Variables & \\[0pt]
 
 \subsubsection{Decision Variables}
 \label{sec:decision-variables}
-Decision variables are the chosen by the optimizer. In this case the optimizer is SA. Once the SA has been run, each of
-the decision variables will be specified and the fitness of the solution will be determined by the objective function.
-The variables will be broken into two sections: direct and indirect decision variables. Decision variables that are
-direct are values that the system has direct control over and indirect variables are those that are influenced by the
-direct.
+Decision variables are the chosen by the optimizer. The variables will be broken into two sections: direct and indirect
+decision variables. Direct decision variables that are direct are values that the system has direct control over and
+indirect variables are those that are influenced by the direct.
 
 \paragraph{Direct Decision Variables}
 \label{sec:direct-decision-variables}
-Decision variables that are direct are variables that can be immediately chosen by SA. The first two variables are \(u_i\)
-and \(d_i \; \forall i \in \Iset\). They represent the initial and final charging times. These values must remain within range of
-the arrival time and departure time for visit \(i\), \([a_i, e_i]\). Let \(n_H\) be defined as the total number of discrete
-steps taken over the time horizon, \(\mu\) and \(\theta\) are \(n_H \times n_Q\) matrices of binary decision variables, \(\mu_h^{v_i},
-\theta_h^{v_i} \in \{0, 1\}\). \(\theta_h^{v_i} = 1\) when \(u_i \le dt_h\), and \(\theta_h^{v_i} = 0\) otherwise. \(\mu_h^{v_i} = 1\) when \(d_i \ge
-dt_h\) and \(\mu_h^{v_i} = 0\) otherwise. The last direct decision variable is the queue that bus visit \(i\) can be placed in
-to charge, \(v_i \in \Qset\).
+The first two variables are \(u_i\) and \(d_i \; \forall i \in \Iset\). They represent the initial and final charging times. These
+values must remain within range of the arrival time and departure time for visit \(i\), \([a_i, e_i]\). A method of
+determining if a discrete time step \(dt_h\) is within the charging time for visit \(i\). Let \(n_T\) be defined as the total
+number of discrete steps taken over the time horizon, \(\mu\) and \(\theta\) are \(n_T \times n_Q\) matrices of binary decision variables,
+\(\mu_h^{v_i}, \theta_h^{v_i} \in \{0, 1\}\). \(\theta_h^{v_i} = 1\) when \(u_i \le dt_h\), and \(\theta_h^{v_i} = 0\) otherwise. \(\mu_h^{v_i} = 1\)
+when \(d_i \ge dt_h\) and \(\mu_h^{v_i} = 0\) otherwise. The last direct decision variable is the queue that bus visit \(i\) can
+be placed in to charge, \(v_i \in \Qset\).
 
 \paragraph{Indirect Decision Variables}
 \label{sec:indirect-decision-variables}
-Indirect decision variables are variables that are dependent on direct decision variables. For example \(\eta_i\) is the
-initial charge for visit \(i \in \Iset \setminus \Iset_0\), where \(\Iset_0\) denotes the set of initial visits for each BEB. Note
-that \(\Iset_0\) is excluded from the set of decision variables because each BEB is assumed to have a known SOC at the
-beginning of the working day. The initial charge for each BEB are chained together by using the bus identifier, \(b_i\),
-and next arrival index, \(\xi_i\). The initial charges must be chained so that the SOC can be calculated per bus as it is
-charged and discharged over each visit, \([u_i, d_i]\). The concept of chaining the battery charges together is shown in
+Let the initial SOC for a visit be written as \(\eta_i\), where \(i \in \Iset \setminus \Iset_0\) and \(\Iset_0\) denotes the set of
+initial visits for each BEB. Note that \(\Iset_0\) is excluded from the set of decision variables because each BEB is
+assumed to have a known SOC at the beginning of the working day. The initial charge for visit \(i\) forms the foundation
+from which the SOC is calculated for the BEB's next visit, \(\xi_i\). This propagation of the SOC is evaluated as shown in
 \ref{eq:bat-chain}. The equation states that the charge for bus \(i\)'s next visit is equal to the initial charge for visit \(i\)
 plus the charge added to it by charger \(v_i\) over duration \(s_i = d_i - u_i\) minus the discharge accumulated over route
 \(i\).
@@ -253,16 +239,19 @@ plus the charge added to it by charger \(v_i\) over duration \(s_i = d_i - u_i\)
   \eta_{\xi_i} = \eta_i + r_{v_i}s_i - \Delta_i
 \end{equation}
 
-\(\iota_h^{v_i} \in \{0,1\} = 1\) when \(\mu_h^{v_i}\) and \(\theta_h^{v_i}\) are both active. This variable will be used to indicate if a
-discrete time slice is within the charging period of charger \(v_i\). This topic will be covered in more depth in
-\ref{sec:objective-function}. \(\phi_i\) is a boolean decision variable, \(\phi_i \in \{0,1\}\), that either enables or disables the
-charge penalty defined the objective function. The charge penalty method is discussed in \ref{sec:objective-function}.
-\(\sigma_{ij}\) and \(\psi_{ij}\) are used to indicate whether a visit pair \((i, j)\) overlap the same space as show in
-\ref{fig:spacial-and-temporal-constr}. More formally, \ref{eq:bus-spat-temp} describes the relationship that \(\sigma_{ij}\) and \(\psi_{ij}\)
-uphold. That is, for every visit, if the start charge time visit \(j\) is greater than the end charge time of visit \(i\),
-then \(\sigma_{ij}\) is active (\(\sigma_{ij} = 1\)). Similarly, if the queue for visit \(j\) is in a queue that is in a queue of lesser
-index than visit \(i\), then \(\psi_{ij}\) is active (\(\psi_{ij} = 1\)). These variables will be further elaborated on in
-\ref{sec:constraints}.
+As described in the previous section, a method of determining whether a discrete time \(dt_h\) is within the range \([u_i,
+d_i]\) is desired. A third variable \(\iota_h^{v_i}\) is introduced to indicate if the inequality \(u_i \le dt_h \le d_i\) is true or
+not. Specifically it indicates if \(dt_h\) is within an active charging period for the charger \(v_i\) which will assist in
+calculating the demand cost. That is, \(\iota_h^{v_i} \in \{0,1\} = 1\) when \(\mu_h^{v_i} = 1\) and \(\theta_h^{v_i} = 1\). This topic
+will be covered in more depth in \ref{sec:objective-function}.
+
+A penalty method is to be implemented in the objective function that is enabled when the \(\eta_i\) falls below a defined
+threshold. Let the activating boolean decision variable be denoted as \(\phi_i \in \{0,1\}\). \(\sigma_{ij}\) and \(\psi_{ij}\) are used to
+indicate whether a visit pair \((i, j)\) overlap the same space as show in \ref{fig:spacial-and-temporal-constr}. Formally,
+\ref{eq:bus-spat-temp} describes the relationship that \(\sigma_{ij}\) and \(\psi_{ij}\) uphold. That is, for every visit, if the start
+charge time of visit \(j\) is greater than the end charge time of visit \(i\), then \(\sigma_{ij}\) is active (\(\sigma_{ij} = 1\)).
+Similarly, if the queue for visit \(j\) is in a queue that is in a queue of lesser index than visit \(i\), then \(\psi_{ij}\) is
+active (\(\psi_{ij} = 1\)). These variables will be further elaborated on in \ref{sec:constraints}.
 
 \begin{subequations}
 \label{eq:bus-spat-temp}
@@ -364,9 +353,9 @@ p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
 
 \ref{eq:pdem}, again, retains the largest \(p_{d}\) value with a starting fixed value of \(p_{fix}\). To write the total power
 demand at any discrete time, consider \ref{eq:discrete-power}. Let \(\omega_h \in \omega\) be the discrete power demand at time step \(h\)
-where \(h \in \{ 1, 2, ..., n_H \} \subset \mathcal{Z}\), \(n_H = \frac{T}{0.25}\), and \(\omega\) is an \(n_H \times 1\) vector. For conciseness of
+where \(h \in \{ 1, 2, ..., n_T \} \subset \mathcal{Z}\), \(n_T = \frac{T}{0.25}\), and \(\omega\) is an \(n_T \times 1\) vector. For conciseness of
 notation we will abuse \(t_h\) to denote the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h -
-t_{h-1}\), and \(\Hset = \{ 1, 2, ..., n_H \}\). Let \(\iota\) be a \(n_H \times n_Q\) matrix of binary decision variables that is
+t_{h-1}\), and \(\Hset = \{ 1, 2, ..., n_T \}\). Let \(\iota\) be a \(n_T \times n_Q\) matrix of binary decision variables that is
 enabled if charger \(v_i \in \Qset\) is active in the time frame \(dt_h\) and \(r\) is a \(n_Q \times 1\) vector of charger rates.
 
 \begin{equation}
@@ -547,7 +536,7 @@ and all must be less than the time horizon).
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable \(\iota\). \ref{seq:c12} and
 \ref{seq:c13} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete time, \(0.25 \cdot h\),
 being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, \(d_i\), is less than the
-next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the \(n_H \times n_Q\) matrix representation of whether
+next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the \(n_T \times n_Q\) matrix representation of whether
 charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product \cite{horn-1985-matrix-analy}. Let \(A\)
 and \(B\) be two \(n_M \times n_N\) matrices. The Hadamard Product is defined as the element-wise product of the two matrices, \(A
 \circ B = [a_{ij}b_{ij}]\).
@@ -650,7 +639,7 @@ availability, \(\C\). The output of each generator affects the tuple of decision
 charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org307a848}
+\label{sec:org7b3993f}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -674,7 +663,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org35ac173}
+\label{sec:org2f57c49}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed to \(x_i\)
 being unmodified). To be explicit, \(x_i'\) consists of the modified charger inactive times and the direct decision
@@ -1281,5 +1270,5 @@ generated solution is in the solution space and also the fitness in the same was
 
 
 \bibliographystyle{plain}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
 \end{document}
