@@ -43,9 +43,9 @@
 #+latex_header: \newcommand{\T}{\mathcal{T}}                % To make it clear the difference
 #+latex_header: \newcommand{\Tau}{T}                        % between Tau and T
 #+latex_header: \newcommand{\AC}{AC(u, d, v, \eta)}         % Set the parameters for AC once
-#+latex_header: \newcommand{\PC}{PC(u, d, v)}               % Set the parameters for PC once
+#+latex_header: \newcommand{\UC}{UC(u, d, v)}               % Set the parameters for UC once
 #+latex_header: \newcommand{\ACi}{AC(u_i, d_i, v_i, \eta_i)}% Set the parameters for AC once
-#+latex_header: \newcommand{\PCi}{PC(u_i, d_i, v_i)}        % Set the parameters for PC once
+#+latex_header: \newcommand{\UCi}{UC(u_i, d_i, v_i)}        % Set the parameters for UC once
 #+latex_header: \newcommand{\Not}{\textbf{not }}            % Custom `not' operator
 #+latex_header: \newcommand{\visit}{(i, b_i, a_i, e_i, u_i, d_i, v_i, \eta_i, \xi_i)}
 #+latex_haeder:                                             % Single visit tuple

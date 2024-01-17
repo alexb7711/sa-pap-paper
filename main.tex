@@ -1,4 +1,4 @@
-% Created 2024-01-17 Wed 12:46
+% Created 2024-01-17 Wed 15:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -40,9 +40,9 @@
 \newcommand{\T}{\mathcal{T}}                % To make it clear the difference
 \newcommand{\Tau}{T}                        % between Tau and T
 \newcommand{\AC}{AC(u, d, v, \eta)}         % Set the parameters for AC once
-\newcommand{\PC}{PC(u, d, v)}               % Set the parameters for PC once
+\newcommand{\UC}{UC(u, d, v)}               % Set the parameters for UC once
 \newcommand{\ACi}{AC(u_i, d_i, v_i, \eta_i)}% Set the parameters for AC once
-\newcommand{\PCi}{PC(u_i, d_i, v_i)}        % Set the parameters for PC once
+\newcommand{\UCi}{UC(u_i, d_i, v_i)}        % Set the parameters for UC once
 \newcommand{\Not}{\textbf{not }}            % Custom `not' operator
 \newcommand{\visit}{(i, b_i, a_i, e_i, u_i, d_i, v_i, \eta_i, \xi_i)}
 \newcommand{\I}{\mathbb{I}}                 % Set of visit tuples
@@ -281,101 +281,105 @@ The objective function is used to compare the fitness of different candidate sol
 objective function takes in input and decision variables to calculate some value of measure. The calculated objective
 function value can either be maximized or minimized. The desired option is dependent on the problem to be solved as well
 as the formulation of said objective function. Let \(J\) represent the objective function. The objective function for this
-problem has four main considerations: charger assignment, consumption cost, demand cost, and sufficient charge. These
-considerations are divided into two components: The power usage cost and the assignment cost.
+problem has four main considerations: charger assignment, consumption cost, demand cost, and penalty on insufficient
+charge. These considerations are divided into two components: The usage cost and the assignment cost.
 
-Suppose the objective function is of the form \(\text{min } J = \AC + \PC\). \(\AC\) is the assignment cost, and \(\PC\) is
-the power usage cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the
-chosen charging period, \([u_i, d_i]\), as shown in \ref{eq:ac}. \(v_i \in \Qset\) is the charger index, \(u_i\) is the initial charge
-time, \(d_i\) is the detach time for visit \(i\), \(\phi_i\) is a binary decision variable, \(m\) is the minimum charge percentage
-allowed, \(\kappa_i\) is the battery capacity for visit \(i\), and \(\eta_i\) is the initial charge for visit \(i\).
+Suppose the objective function is of the form \(\text{min } J = \AC + \UC\). \(\AC\) is the assignment cost, and \(\UC\) is
+the usage cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the chosen
+charging period, \([u_i, d_i]\). \(v_i \in \Qset\) is the charger index, \(u_i\) is the initial charge time, \(d_i\) is the detach
+time for visit \(i\), \(\phi_i\) is a binary decision variable, \(m\) is the minimum charge percentage allowed, \(\kappa_i\) is the
+battery capacity for visit \(i\), and \(\eta_i\) is the initial charge for visit \(i\).
 
 \begin{equation}
 \label{eq:ac}
-\AC = \sum_{i=1}^I \Big(\epsilon_{v_i}r_q + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
+\AC = \sum_{i=1}^I \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue \(q\). Let \(\epsilon_{vi}\) to
-be taken as \(\epsilon_{v_i} = 1000v_i\), this form causes the objective function encourages the model to minimize the total
-amount of chargers. Iterating on this concept, let the model represents the first \(n_B\) indices to be waiting queues (no
-charge is supplied), the next \(n_{Q_s}\) indices to be slow chargers, and the next \(n_{Q_f}\) indices to be fast chargers,
-where \(n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}\) and \(B + n_{Q_s} + n_{Q_f} = n_Q\). Furthermore, let \(\epsilon_b = \{ 0 : b \in \Bset \}\),
-\(\epsilon_{j} = \{ 1000 j: j \in \Iset \}\) and let \(\epsilon_{vi} = \epsilon_b \cup \epsilon_j\). The model will then assign no cost to assigning a BEB to
-a waiting queue and will also encourage the use of slow chargers over fast.
+be taken as \(\epsilon_{v_i} = 1000v_i\), this form encourages the objective function the minimize the total amount of chargers.
+Iterating on this concept, let the model represents the first \(n_B\) indices to be waiting queues (no charge is
+supplied), the next \(n_{Q_s}\) indices to be slow chargers, and the next \(n_{Q_f}\) indices to be fast chargers, where
+\(n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}\) and \(n_B + n_{Q_s} + n_{Q_f} = n_Q\). Furthermore, let \(\epsilon_b = \{ 0 : b \in \Bset \}\), \(\epsilon_{j} =
+\{ 1000 j: j \in \Iset \}\) and let \(\epsilon = \epsilon_b \cup \epsilon_j\). That is, \(\epsilon_{v_i}\) has no cost if \(v_i \in \epsilon_b\) or is incrementally
+penalized as the selected queue index increases if \(v_i \in \epsilon_j\). This form accrues no cost when assigning a BEB to a
+waiting queue while still encouraging the use of slow chargers over fast.
 
 The second term is the penalty function that is either enabled or disabled by \(\phi_i\)
-\cite{luenberger-2008-penal-barrier-method}. This term is considered an assignment cost because the penalty method is
-enabled due to poor allocations of BEBs. That is, the cost is not impacted by how much the system consumes energy, but
-by how the BEBs have been assigned. \(C\) is a large constant value used to scale the penalty function. \(\phi_i\) is enabled
-when the initial charge, \(\eta_i\), is less than the allowed minimum charge, \(m\kappa_{b_i}\). The mechanisms that
-enables/disables \(\phi_i\) is further discussed in \ref{sec:constraints}. Thus, when \(\phi_i\) is active, the value of second term is
-\(C(\eta_i - m \kappa_i)^2\) and \(0\) when inactive. Note the variables \(\phi_i\) and \(\eta_i\) being multiplied together in \ref{eq:ac}. These
-are decision variables and when multiplied together become non-linear. Terms of this nature are denoted as bilinear.
-Using a traditional MILP solver, this would require a some mathematical manipulation to linearize the terms
-\cite{rodriguez-2013-compar-asses}; however, because SA handles non-linearity easily these bilinear terms will be
-ignored \cite{radosavljevic-2018-metah-optim}.
+\cite{luenberger-2008-penal-barrier-method}. The penalty function is enabled, \(\phi_i = 1\), if the SOC falls below a
+specified SOC threshold, \(\eta_i \le \nu \kappa_{\Xi_i}\), and is disabled, \(\phi_i = 0\), otherwise. This term is considered an assignment
+cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not impacted by how
+much the system consumes energy, but by how the BEBs have been assigned. \(C\) is a large constant value used to scale the
+penalty function. The mechanisms that enables or disables \(\phi_i\) is derived in \ref{sec:constraints}.
 
-The demand cost quantifies the amount of power being used over a given period and adjusts the cost by increasing the
-cost if too power is utilized over a given period of time. The consumption cost calculates the total amount of power
-being consumed by the chargers. The consumption cost is merely the summation of all the energy being used over all the
-active periods for each charger in the time horizon as written in \ref{eq:consumption-cost}. \(r_{v_i}\) is the charge rate for
-the active charger \(v_i\) and is multiplied by the time that the charger will be utilized, \(s_i\).
+The usage cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation of
+all the energy being used over all the active periods for each charger in the time horizon as written in
+\ref{eq:consumption-cost}. \(r_{v_i}\) is the charge rate for the active charger \(v_i\) and is multiplied by the time that the
+charger will be utilized, \(s_i\).
 
 \begin{equation}
 \label{eq:consumption-cost}
   \sum_{i=1}^I r_{v_i}s_i
 \end{equation}
 
-The demand cost is calculated based on 15 minute increments (0.25 hours). This cost is also referred to as the peak 15. The
-average power used over an arbitrary 15-minute interval is represented by \ref{eq:p15}.
+The demand cost quantifies the amount of power being used over a given period of time and increases the cost if too much
+power is utilized within said period. A typical period in which to calculate the demand cost is over 15 minute
+increments (0.25 hours). Let the average power used over an arbitrary 15-minute interval be represented by \ref{eq:p15}.
 
 \begin{equation}
 \label{eq:p15}
 p_{15}(t) = 0.25 \int_{t-0.25}^{t} p(\tau) d\tau
 \end{equation}
 
-Worst case must be assumed to ensure enough power is supplied at all times; therefore, the maximum value found is
-retained as represented in \ref{eq:pmax}.
+Worst case must be assumed to ensure enough power is available during peak hours; therefore, the maximum value found is
+retained.
 
 \begin{equation}
 \label{eq:pmax}
-p_{max}(t) = \text{max}_{\tau \in [0,t]}p_{15}(\tau)
+p_{max}(t) = \max\limits_{\tau \in [0,t]}p_{15}(\tau)
 \end{equation}
 
-A fixed minimum threshold, \(p_{fix}\), is introduced as a base power rate to be charged at. Let this fixed threshold be
-defined as \(p_{fix}\). Similarly to \(p_{max}\), the maximum value is retained. Furthermore, let \(s_r\) define the demand
-rate which has the units of \(\frac{\$}{kW}\).
+\ref{eq:pmax} is thus a function that describes the largest demand cost found up to time \(t\). A fixed minimum average power is
+introduced that is intended to act as a base threshold before the cost begins to increase. Let this fixed threshold be
+defined as \(p_{fix}\). Furthermore, let \(z\) define the demand rate which has the units of \(\frac{\$}{kW}\).
 
 \begin{equation}
 \label{eq:pdem}
-p_d(t) = \text{max}(p_{fix},p_{max}(t))s_r
+p_d(t) = \max(p_{fix},p_{max}(t))z
 \end{equation}
 
-\ref{eq:pdem}, again, retains the largest \(p_{d}\) value with a starting fixed value of \(p_{fix}\). To write the total power
+\ref{eq:pdem} then begins with a value of \(p_{fix}\) from which only increases if \(p_{15}(t) > p_{fix}\). To write the total
 demand at any discrete time, consider \ref{eq:discrete-power}. Let \(\omega_h \in \omega\) be the discrete power demand at time step \(h\)
 where \(h \in \{ 1, 2, ..., n_T \} \subset \mathcal{Z}\), \(n_T = \frac{T}{0.25}\), and \(\omega\) is an \(n_T \times 1\) vector. For conciseness of
 notation we will abuse \(t_h\) to denote the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h -
-t_{h-1}\), and \(\Hset = \{ 1, 2, ..., n_T \}\). Let \(\iota\) be a \(n_T \times n_Q\) matrix of binary decision variables that is
-enabled if charger \(v_i \in \Qset\) is active in the time frame \(dt_h\) and \(r\) is a \(n_Q \times 1\) vector of charger rates.
+t_{h-1}\), and \(\Hset = \{ 1, 2, ..., n_T \}\). Let \(\iota\) be a \(n_T \times n_Q\) matrix of binary variables that is enabled if
+charger \(v_i \in \Qset\) is active during the time frame \(dt_h\) and \(r\) is a \(n_Q \times 1\) vector of charger rates. Thus, the
+discrete power utilized over the time horizon is calculated as follows.
 
 \begin{equation}
 \label{eq:discrete-power}
   \omega = \iota r
 \end{equation}
 
-The average power can be rewritten as \(p_{15}^h = \omega_h\), \(p_d\) can be rewritten as \(p_d^h = \text{max}_{h \in \Hset}
-(p_{15}^{h})\), there the \(h\) represents the \(h^{\text{th}}\) step. Finally, \(p_d^f\) can be written as \ref{eq:pd-dis}.
+Let \(M = 0.25/dt_h\) express the number discrete steps that spans a 15-minute interval. The average power over an
+arbitrary 15-minute interval in the time horizon can be written as
+
+\begin{equation}
+p_{15}[h] = \sum_{h-M+1}^h \omega_h,
+\end{equation}
+
+where \(h \ge M\). Similarly to before, the maximum \(p_{15}[h]\) value is to be retained via \(p_{max} = \max\limits_{h \in
+H}p_{15}[h]\). Thus, the discrete demand cost is expressed as shown in \ref{eq:pd-dis}.
 
 \begin{equation}
 \label{eq:pd-dis}
-  p_d^h = \text{max}_{h \in \Hset}(p_{fix}, p_{max}^h)s_d
+  p_d = \max(p_{fix}, p_{max})z
 \end{equation}
 
-To write the power cost, \ref{eq:consumption-cost} and \ref{eq:pd-dis} are added together to create \ref{eq:pc}.
+To write the usage cost, \ref{eq:consumption-cost} and \ref{eq:pd-dis} are added together to create \ref{eq:pc}.
 
 \begin{equation}
 \label{eq:pc}
-\PC = p^h_d + \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
+\UC = p_d + \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
 \end{equation}
 
 \subsection{Constraints}
@@ -639,7 +643,7 @@ availability, \(\C\). The output of each generator affects the tuple of decision
 charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org7b3993f}
+\label{sec:org8322f4a}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -663,7 +667,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org2f57c49}
+\label{sec:org1287927}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed to \(x_i\)
 being unmodified). To be explicit, \(x_i'\) consists of the modified charger inactive times and the direct decision
