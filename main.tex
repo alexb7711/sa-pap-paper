@@ -1,4 +1,4 @@
-% Created 2024-01-17 Wed 15:09
+% Created 2024-01-18 Thu 09:15
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -394,6 +394,8 @@ shown in \ref{eq:constraints}.
 
 \begin{multicols}{2}
 \begin{subequations}
+\label{eq:constraints}
+
   \begin{equation}
       \label{seq:c0}
       u_i - d_j - (\sigma_{ij} - 1)T \ge 0
@@ -424,11 +426,11 @@ shown in \ref{eq:constraints}.
   \end{equation}
   \begin{equation}
       \label{seq:c7}
-       \eta_{i} + r_{v_i}s_i - \Delta_i \ge \nu \kappa_{\Xi_i}
+      \kappa_{\Xi_i} \geq \eta_{i} + r_{v_i}s_i
   \end{equation}
   \begin{equation}
       \label{seq:c8}
-      \kappa_{\Xi_i} \geq \eta_{i} + r_{v_i}s_i
+      \eta_{i} + r_{v_i}s_i - \Delta_i \ge \nu \kappa_{\Xi_i}
   \end{equation}
   \begin{equation}
       \label{seq:c9}
@@ -463,7 +465,6 @@ shown in \ref{eq:constraints}.
       \iota = \mu \circ \theta
   \end{equation}
 \end{subequations}
-\label{eq:constraints}
 \end{multicols}
 
 Constraints \ref{seq:c0}-\ref{seq:c4} are the ``queuing constraints''. They are preventing overlap both spatially and
@@ -531,19 +532,21 @@ Similarly, \(\psi_{ij}\) determines whether the vehicles will be charging in the
 constraint is deactivated and BEB \(j\) is in a queue index greater than that of BEB \(i\).
 
 \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
-bus \(b_i\). \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} and \ref{seq:c9} are used to
-enable and disable the penalty method in \ref{eq:ac}. This is done by checking if the initial charge for visit \(i\) is greater
-than or equal to the minimum allowed charge. \ref{seq:c10} ensures the continuity of the times (i.e. the arrival time is
-less than the initial charge which is less than the detach time which is less than the time the bus exits the station
-and all must be less than the time horizon).
+bus \(b_i\). \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:8} ensures that the BEB's SOC does not
+go below 0. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in \ref{eq:ac}. This is done by
+checking if the initial charge for visit \(i\) is greater than or equal to the minimum allowed charge. \ref{seq:c11}
+ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less than the detach
+time which is less than the time the bus exits the station and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable \(\iota\). \ref{seq:c12} and
-\ref{seq:c13} ensure that the initial charge time for visit \(i\), \(u_i\), is greater than the discrete time, \(0.25 \cdot h\),
-being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, \(d_i\), is less than the
-next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is the \(n_T \times n_Q\) matrix representation of whether
-charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product \cite{horn-1985-matrix-analy}. Let \(A\)
-and \(B\) be two \(n_M \times n_N\) matrices. The Hadamard Product is defined as the element-wise product of the two matrices, \(A
-\circ B = [a_{ij}b_{ij}]\).
+The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable \(\iota\). These
+constraints define three \(n_T \tims n_Q\) matrices that enforce \(\iota_h^q = 1\) if \(q = v_i\) and \(u_i \le dt_h \le d_i\), \(\iota_h^q =
+0\) otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit
+\(i\), \(u_i\), is greater than or equal to the discrete time, \(0.25 \cdot h\). That is, \(\mu_h^{v_i} = 1\) if \(u_i dt_h\),
+\(u_h^{v_i} = 0\) otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, \(d_i\), is less
+than or equal to the next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is a \(n_T \times n_Q\) matrix that
+represents whether charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product
+\cite{horn-1985-matrix-analy}. Let \(A\) and \(B\) be two \(n_M \times n_N\) matrices. The Hadamard Product is defined as the
+element-wise product of the two matrices, \(A \circ B = [a_{ij}b_{ij}]\).
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
@@ -643,7 +646,7 @@ availability, \(\C\). The output of each generator affects the tuple of decision
 charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org8322f4a}
+\label{sec:orga9cef19}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -667,7 +670,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org1287927}
+\label{sec:org440fdab}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed to \(x_i\)
 being unmodified). To be explicit, \(x_i'\) consists of the modified charger inactive times and the direct decision
@@ -1274,5 +1277,5 @@ generated solution is in the solution space and also the fitness in the same was
 
 
 \bibliographystyle{plain}
-\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
+\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
 \end{document}

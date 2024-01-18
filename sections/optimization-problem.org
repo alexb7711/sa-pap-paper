@@ -224,7 +224,7 @@ input and decision variables describe a schedule that would keep the BEBs adequa
 To ensure the selected decision variables fall within the feasible space, a set of constraints are applied to a given
 candidate solution. The constraints must ensure no overlap temporally or spatially, receives enough charge to complete
 its next route, the BEB cannot be over-charged, and the BEB must depart on time. The aforementioned constraints are
-shown in [[eq:constraints]].
+shown in \ref{eq:constraints}.
 
 #+include: "eq/constraints.org"
 
@@ -249,18 +249,20 @@ Similarly, $\psi_{ij}$ determines whether the vehicles will be charging in the s
 constraint is deactivated and BEB $j$ is in a queue index greater than that of BEB $i$.
 
 \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
-bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} and \ref{seq:c9} are used to
-enable and disable the penalty method in [[eq:ac]]. This is done by checking if the initial charge for visit $i$ is greater
-than or equal to the minimum allowed charge. \ref{seq:c10} ensures the continuity of the times (i.e. the arrival time is
-less than the initial charge which is less than the detach time which is less than the time the bus exits the station
-and all must be less than the time horizon).
+bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:8} ensures that the BEB's SOC does not
+go below 0. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in [[eq:ac]]. This is done by
+checking if the initial charge for visit $i$ is greater than or equal to the minimum allowed charge. \ref{seq:c11}
+ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less than the detach
+time which is less than the time the bus exits the station and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c12} - \ref{seq:c16} set the rules for the decision variable $\iota$. \ref{seq:c12} and
-\ref{seq:c13} ensure that the initial charge time for visit $i$, $u_i$, is greater than the discrete time, $0.25 \cdot h$,
-being checked. Similarly, \ref{seq:c14} and \ref{seq:c15} ensure that the final charge time, $d_i$, is less than the
-next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is the $n_T \times n_Q$ matrix representation of whether
-charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product [cite:@horn-1985-matrix-analy]. Let $A$
-and $B$ be two $n_M \times n_N$ matrices. The Hadamard Product is defined as the element-wise product of the two matrices, $A
-\circ B = [a_{ij}b_{ij}]$.
+The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable $\iota$. These
+constraints define three $n_T \tims n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i \le dt_h \le d_i$, $\iota_h^q =
+0$ otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit
+$i$, $u_i$, is greater than or equal to the discrete time, $0.25 \cdot h$. That is, $\mu_h^{v_i} = 1$ if $u_i dt_h$,
+$u_h^{v_i} = 0$ otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, $d_i$, is less
+than or equal to the next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is a $n_T \times n_Q$ matrix that
+represents whether charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product
+[cite:@horn-1985-matrix-analy]. Let $A$ and $B$ be two $n_M \times n_N$ matrices. The Hadamard Product is defined as the
+element-wise product of the two matrices, $A \circ B = [a_{ij}b_{ij}]$.
 
 #  LocalWords: BEB MILP BEBs Hadamard
