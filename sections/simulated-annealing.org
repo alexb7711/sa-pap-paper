@@ -2,13 +2,23 @@
 :PROPERTIES:
 :CUSTOM_ID: sec:simulated-annealing
 :END:
-SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
-its main advantage is its simplicity both theoretically, in its implementation, and its inherit ability to overcome
-non-linearities [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. This model is named after its
-analogized process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most
-regular possible crystal lattice configuration [cite:@henderson-1989-theor-pract]. There are five key components to SA:
-initial temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search
-iteration count (temperature change counter) [cite:@keller-2019-multi-objec].
+SA is a well-studied local search metaheuristic used to solve discrete and (to a lesser degree) continuous problem
+[cite:@gendreau-2018-handb-metah]. A metaheuristic is a high-level problem-independent algorithm framework that provides
+a set of guidelines or strategies to develop heuristic optimization algorithms. [cite:@radosavljevic-2018-metah-optim].
+Metaheuristic problems primarily fit in two categories: population-based and single-solution-based. Population based
+algorithms emphasize exploration of the solution space as apposed to single-solutions-based algorithms being more
+exploitation oriented [cite:@radosavljevic-2018-metah-optim]. Generally, metaheuristic algorithms share the basic
+advantage in the speed of finding a satisfactory solutions for large-scale practical optimization problems
+[cite:@radosavljevic-2018-metah-optim]. SA, however, is sometimes criticized for the speed at which it converges
+[cite:@gendreau-2018-handb-metah; @henderson-1989-theor-pract].
+
+SA is an exploitation oriented, single-solution based metaheuristic approach in which its main advantage is its
+simplicity both theoretically, in its implementation, and its inherit ability to overcome non-linearities
+[cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. This model is named after its analogized process
+where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most regular possible
+crystal lattice configuration [cite:@henderson-1989-theor-pract]. There are five key components to SA: initial
+temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search iteration
+count (temperature change counter) [cite:@keller-2019-multi-objec].
 
 ** Cooling Equation
 :PROPERTIES:
