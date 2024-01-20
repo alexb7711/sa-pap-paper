@@ -1,4 +1,4 @@
-% Created 2024-01-18 Thu 09:15
+% Created 2024-01-20 Sat 10:34
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -532,30 +532,40 @@ Similarly, \(\psi_{ij}\) determines whether the vehicles will be charging in the
 constraint is deactivated and BEB \(j\) is in a queue index greater than that of BEB \(i\).
 
 \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
-bus \(b_i\). \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:8} ensures that the BEB's SOC does not
+bus \(b_i\). \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} ensures that the BEB's SOC does not
 go below 0. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in \ref{eq:ac}. This is done by
 checking if the initial charge for visit \(i\) is greater than or equal to the minimum allowed charge. \ref{seq:c11}
 ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less than the detach
 time which is less than the time the bus exits the station and all must be less than the time horizon).
 
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable \(\iota\). These
-constraints define three \(n_T \tims n_Q\) matrices that enforce \(\iota_h^q = 1\) if \(q = v_i\) and \(u_i \le dt_h \le d_i\), \(\iota_h^q =
-0\) otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit
-\(i\), \(u_i\), is greater than or equal to the discrete time, \(0.25 \cdot h\). That is, \(\mu_h^{v_i} = 1\) if \(u_i dt_h\),
-\(u_h^{v_i} = 0\) otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, \(d_i\), is less
-than or equal to the next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is a \(n_T \times n_Q\) matrix that
-represents whether charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product
-\cite{horn-1985-matrix-analy}. Let \(A\) and \(B\) be two \(n_M \times n_N\) matrices. The Hadamard Product is defined as the
-element-wise product of the two matrices, \(A \circ B = [a_{ij}b_{ij}]\).
+constraints define three \(n_T \times n_Q\) matrices that enforce \(\iota_h^q = 1\) if \(q = v_i\) and \(u_i \le dt_h \le d_i\), \(\iota_h^q = 0\)
+otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit \(i\),
+\(u_i\), is greater than or equal to the discrete time, \(0.25 \cdot h\). That is, \(\mu_h^{v_i} = 1\) if \(u_i dt_h\), \(u_h^{v_i} =
+0\) otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, \(d_i\), is less than or
+equal to the next discrete time step, \(dt_h\). The final constraint \ref{seq:c16} is a \(n_T \times n_Q\) matrix that represents
+whether charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product \cite{horn-1985-matrix-analy}.
+Let \(A\) and \(B\) be two \(n_M \times n_N\) matrices. The Hadamard Product is defined as the element-wise product of the two
+matrices, \(A \circ B = [a_{ij}b_{ij}]\).
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
-SA is an exploitation oriented, single-solution based (as compared to population based) metaheuristic approach in which
-its main advantage is its simplicity both theoretically, in its implementation, and its inherit ability to overcome
-non-linearities \cite{gendreau-2018-handb-metah,radosavljevic-2018-metah-optim}. This model is named after its
-analogized process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most
-regular possible crystal lattice configuration \cite{henderson-1989-theor-pract}. There are five key components to SA:
-initial temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search
-iteration count (temperature change counter) \cite{keller-2019-multi-objec}.
+SA is a well-studied local search metaheuristic used to solve discrete and (to a lesser degree) continuous problem
+\cite{gendreau-2018-handb-metah}. A metaheuristic is a high-level problem-independent algorithm framework that provides
+a set of guidelines or strategies to develop heuristic optimization algorithms. \cite{radosavljevic-2018-metah-optim}.
+Metaheuristic problems primarily fit in two categories: population-based and single-solution-based. Population based
+algorithms emphasize exploration of the solution space as apposed to single-solutions-based algorithms being more
+exploitation oriented \cite{radosavljevic-2018-metah-optim}. Generally, metaheuristic algorithms share the basic
+advantage in the speed of finding a satisfactory solution for large-scale practical optimization problems
+\cite{radosavljevic-2018-metah-optim}. SA, however, is sometimes criticized for the speed at which it converges
+\cite{gendreau-2018-handb-metah,henderson-1989-theor-pract}.
+
+SA is an exploitation oriented, single-solution based metaheuristic approach in which its main advantage is its
+simplicity both theoretically, in its implementation, and its inherit ability to overcome non-linearities
+\cite{gendreau-2018-handb-metah,radosavljevic-2018-metah-optim}. This model is named after its analogized process
+where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most regular possible
+crystal lattice configuration \cite{henderson-1989-theor-pract}. There are five key components to SA: initial
+temperature, cooling schedule (temperature function), generation mechanisms, acceptance criteria, local search iteration
+count (temperature change counter) \cite{keller-2019-multi-objec}.
 
 \subsection{Cooling Equation}
 \label{cooling-equation-experimental}
@@ -646,7 +656,7 @@ availability, \(\C\). The output of each generator affects the tuple of decision
 charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orga9cef19}
+\label{sec:org24def93}
 Each generator has the tuple input of \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index, \(\I_i\) is the tuple \(\visit\) as
 shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that describes the availability
 for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or
@@ -670,7 +680,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 \end{equation}
 
 \paragraph{Generator Output}
-\label{sec:org440fdab}
+\label{sec:orgebe8ed0}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\Sol'\) and the modified subset of the tuple be defined by \(x_i' \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed to \(x_i\)
 being unmodified). To be explicit, \(x_i'\) consists of the modified charger inactive times and the direct decision
@@ -1277,5 +1287,5 @@ generated solution is in the solution space and also the fitness in the same was
 
 
 \bibliographystyle{plain}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
 \end{document}

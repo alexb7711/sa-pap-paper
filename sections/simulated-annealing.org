@@ -8,7 +8,7 @@ a set of guidelines or strategies to develop heuristic optimization algorithms. 
 Metaheuristic problems primarily fit in two categories: population-based and single-solution-based. Population based
 algorithms emphasize exploration of the solution space as apposed to single-solutions-based algorithms being more
 exploitation oriented [cite:@radosavljevic-2018-metah-optim]. Generally, metaheuristic algorithms share the basic
-advantage in the speed of finding a satisfactory solutions for large-scale practical optimization problems
+advantage in the speed of finding a satisfactory solution for large-scale practical optimization problems
 [cite:@radosavljevic-2018-metah-optim]. SA, however, is sometimes criticized for the speed at which it converges
 [cite:@gendreau-2018-handb-metah; @henderson-1989-theor-pract].
 
