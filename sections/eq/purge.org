@@ -9,7 +9,7 @@
       \Begin
       {
           $\bar{\C} \leftarrow \C \setminus \C_{v_i}^i$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
-          \Return{$\bar{\Sol} \leftarrow \bar{\C}$}\tcc*{Return updated tuple}
+          \Return{$\bar{\C}$}\tcc*{Return updated tuple}
       }
     \end{algorithm}
 #+end_src

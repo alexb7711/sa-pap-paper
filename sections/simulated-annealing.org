@@ -169,7 +169,7 @@ spatial constraints while allowing the bus to be "set aside".
 
 In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
 suppose the arrival time is desired to be extracted from visit $i$. Given $\S$, the notation that describes extracting
-$u_i \equiv \I_{i . u}$.
+$u_i \equiv \I_{i.u}$.
 
 **** New visit
 :PROPERTIES:
@@ -203,9 +203,9 @@ until $L$ before changer $q$ may charge it. Furthermore, the range that $u_i$ mu
 :PROPERTIES:
 :CUSTOM_ID: sec:purge
 :END:
-The purge primitive generator simply removes a visit from a charger schedule. This generator exists so that other
+The purge primitive generator simply removes a visit from a charger schedule, $\C$. This generator exists so that other
 primitive generators may place the visit back into the schedule without creating duplicate entries in $\C$. Line 2
-returns the updated set of visits which excludes visit $i$.
+updates $\C$ with the set of visits excluding visit $i$. Line 3 returns the updated set of charger availability.
 
 #+include: eq/purge.org
 
