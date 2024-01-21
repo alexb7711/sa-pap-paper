@@ -120,17 +120,17 @@ their respective inputs and outputs must be defined.
 :PROPERTIES:
 :CUSTOM_ID: sec:generator-input-output
 :END:
-This section discusses in detail the expected inputs and output of each generator. It is important to discuss these
+This section discusses in detail the expected inputs and outputs of each generator. It is important to discuss these
 parameters to have an understanding of the generator algorithms to be derived. The input consists of the bus visit index
 of interest, information about the current state of visits, $\I$, and the current state of the charger availability,
 $\C$. The availability of each charger, $\C$, is iteratively constructed during the SA process. The output of each
 generator affects the tuple of decision variables $(v_i, u_i, d_i)$ and charger availability $\C$.
 
 **** Generator Input
-Each generator an input of the tuple $\Sol \equiv (i, \I, \C)$ where $i$ is the visit index being manipulated, $\I$ is the
-tuple $\visit$ as shown in [[#sec:problem-description]], that describes the set of visits, and $\C$ is the set that
-describes the availability for all chargers $q \in \Qset$. In other words, $\C$ defines the set of times when the chargers
-are not being utilized or are "inactive".
+Each generator accepts an input of the tuple of the form $\Sol \equiv (i, \I, \C)$ where $i$ is the visit index being
+manipulated, $\I$ is the tuple that describes the set of visits, and $\C$ is the set that describes the availability for
+all chargers $q \in \Qset$. In other words, $\C$ defines the set of times when the chargers are not being utilized or are
+"inactive".
 
 To derive $\C$, consider its complement, $\C'$, which is the set of "active" time periods for each charger. Let $\C_q' \subset
 \C'$ describes the active times for charger $q$. Focusing on an individual charger, consider $\C_q'$ before a schedule
@@ -150,18 +150,23 @@ $\bar{\Sol}$ and the modified subset of the tuple be defined by $\bar{x}_i \equi
 to $x_i$ being unmodified). To be explicit, $\bar{x}_i$ consists of the modified charger inactive times and the direct
 decision variables: the chosen queue, initial charge time, and detach time from the charger. The other direct variables
 and indirect variables may be implied. As previously discussed, early on in the SA process, the algorithm attempts to
-encourage exploration by allowing candidate solutions of lesser quality be the active solution. To explore the feasible
-space, the generators are employed with a sense of randomness to their respective outputs. Because of that, the modified
-subset of the tuple, $\bar{x}_i$, may be considered a random variable. Let the set of states for the output be defined
-as $\bar{x}_i \in \bar{x}_i \subset \bar{\Sol}$ where $\bar{x}_i$ defines the feasible region for the subset of decision
-variables.
+encourage exploration by allowing candidate solutions of lesser quality be the active solution.
+
+#+begin_comment
+*This may be useful in an introduction or SA description*
+
+To explore the feasible space, the generators are employed with a sense of randomness to their respective outputs.
+Because of that, the modified subset of the tuple, $\bar{x}_i$, may be considered a random variable. Let the set of
+states for the output be defined as $\bar{x}_i \in \bar{x}_i \subset \bar{\Sol}$ where $\bar{x}_i$ defines the feasible region
+for the subset of decision variables.
+#+end_comment
 
 *** Generators
 :PROPERTIES:
 :CUSTOM_ID: sec:generators
 :END:
 This section describes and outlines the algorithm pool for the different generator types that are utilized in the
-wrapper functions. Note that to satisfy constraints, $n_B$ extra idle queues are added that provide no power to the bus.
+wrapper functions. Note that to satisfy constraints, $n_B$ extra idle queues are added that provide no power to the BEB.
 Because of this, the set of queues is fully defined as $q \in \{1,..., n_B, n_B+1,..., n_Q+n_B\}$ where $n_Q$ is the total
 amount of chargers and $n_B$ number of BEBs. The use case for the idle queues are for when a bus is not to be placed on
 a charger. Rather, it will be placed in the queue, $v_i \in \{1,..., n_B\}$, which satisfies the previously defined
@@ -249,10 +254,10 @@ set of the wait queue for bus $b$. Note that $C_L \le u_i \le d_i \le C_U$. Line
 :PROPERTIES:
 :CUSTOM_ID: sec:new-window
 :END:
-New window is a combination of the wait and then new visit generators. By this it is meant that current scheduled tuple
-$(v_i, u_i, d_i)$ is purged and added back in as if it were a new visit. Line 2 purges the BEB visit from the schedule
-and Line 3 places the BEB back into the schedule using the new visit generator. Line 4 assigns and returns the updated
-visit.
+New window is a combination of the purge and then new visit generators. By this it is meant that current scheduled tuple
+$(v_i, u_i, d_i)$ is purged and added back in as if it were a new visit. This implies that the BEB may be assigned to a
+different queue and a new charge time slice. Line 2 purges the BEB visit from the schedule and Line 3 places the BEB
+back into the schedule using the new visit generator. Line 4 assigns and returns the updated visit.
 
 #+include: eq/new-window.org
 
@@ -260,18 +265,17 @@ visit.
 :PROPERTIES:
 :CUSTOM_ID: sec:generator-wrappers
 :END:
-This section covers the algorithms utilized to select and execute different generation processes for the SA process. The
-generator wrappers are the methods immediately called by the SA algorithm. Each wrapper utilizes the generators
+This section covers the algorithms utilized to select and execute different generation processes for the SA algorithm.
+The generator wrappers are the methods immediately called by the SA algorithm. Each wrapper utilizes the generators
 previously described and returns either a new charge schedule or a modified charge schedule.
 
 **** Charge Schedule Generation
 :PROPERTIES:
 :CUSTOM_ID: sec:charge-schedule-generation
 :END:
-The objective of this generator is to generate a candidate solution provided a given route schedule. To generate a
-candidate solution, the generator is given $\I$, which represents the set of unscheduled BEBs. Line 3 loops through the
-set of randomly indexed visits. Line 4 extracts the visit index and Line 5 generates a new visit and populates the
-updated route information and charger schedule. This process is done for all visits $i \in \Iset$.
+The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. To generate
+this starting point, the generator is given $\I$, which represents the set of unscheduled BEBs. Line 3 of
+\ref{alg:charge-schedule-generation} loops through each visit.
 
 #+include: eq/charge-schedule-generation.org
 

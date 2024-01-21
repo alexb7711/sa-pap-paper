@@ -124,17 +124,19 @@ battery capacity for visit $i$, and $\eta_i$ is the initial charge for visit $i$
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^I \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
+\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
 \end{equation}
 
-The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$. Let $\epsilon_{vi}$ to
-be taken as $\epsilon_{v_i} = 1000v_i$, this form encourages the objective function the minimize the total amount of chargers.
-Iterating on this concept, let the model represents the first $n_B$ indices to be waiting queues (no charge is
-supplied), the next $n_{Q_s}$ indices to be slow chargers, and the next $n_{Q_f}$ indices to be fast chargers, where
-$n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}$ and $n_B + n_{Q_s} + n_{Q_f} = n_Q$. Furthermore, let $\epsilon_b = \{ 0 : b \in \Bset \}$, $\epsilon_{j} =
-\{ 1000 j: j \in \Iset \}$ and let $\epsilon = \epsilon_b \cup \epsilon_j$. That is, $\epsilon_{v_i}$ has no cost if $v_i \in \epsilon_b$ or is incrementally
-penalized as the selected queue index increases if $v_i \in \epsilon_j$. This form accrues no cost when assigning a BEB to a
-waiting queue while still encouraging the use of slow chargers over fast.
+The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$. Let $\epsilon$
+describe the vector $\epsilon = [1000, 2000, ..., 1000*n_Q]$, this form encourages the objective function to minimize the total
+amount of chargers. Iterating on this concept, let the model represents the first $n_B$ indices to be waiting queues (no
+charge is supplied), the next $n_{Q_s}$ indices to be slow chargers, and the next $n_{Q_f}$ indices to be fast chargers,
+where $n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}$ and $n_B + n_{Q_s} + n_{Q_f} = n_Q$. The $\epsilon$ vector thus be concatenated as follows:
+$\epsilon = [\mathbf{0}_{n_B}, [1000, 2000, ..., 1000*n_Q]]$, where $\mathbf{0}_{n_B}$ indicates a zero vector of length $n_B$.
+That is, $\epsilon_{v_i}$ has no cost if $v_i \le n_B$ or is incrementally penalized as the selected queue index increases if
+$n_B < v_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost when assigning a BEB to a waiting queue while
+still encouraging the use of slow chargers over fast. While the $\epsilon$ vector can be constructed in many other ways, the
+construction shown above is the method applied to this work.
 
 The second term is the penalty function that is either enabled or disabled by $\phi_i$
 [cite:@luenberger-2008-penal-barrier-method]. The penalty function is enabled, $\phi_i = 1$, if the SOC falls below a
@@ -150,7 +152,7 @@ charger will be utilized, $s_i$.
 
 #+name: eq:consumption-cost
 \begin{equation}
-  \sum_{i=1}^I r_{v_i}s_i
+  \sum_{i=1}^{n_I} r_{v_i}s_i
 \end{equation}
 
 The demand cost quantifies the amount of power being used over a given period of time and increases the cost if too much
