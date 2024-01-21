@@ -213,10 +213,10 @@ updates $\C$ with the set of visits excluding visit $i$. Line 3 returns the upda
 :PROPERTIES:
 :CUSTOM_ID: slide-visit
 :END:
-Slide visit, represented in \ref{alg:slide-visit}, is used for buses that have already been scheduled. Because of the
-constraint \ref{seq:c10} there may be some room to move $u_i$ and $d_i$ within the window $[a_i, e_i]$. Two new values,
-$u_i$ and $d_i$ are randomly selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$.
-Line 2 generates a new $[u_i, d_i]$ utilizing the =findFreeTime= function. Line 3 applies and returns the updated visit.
+Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
+some room to manipulate $u_i$ and $d_i$ within the window $[a_i, e_i]$. Two new values, $u_i$ and $d_i$ are randomly
+selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 generates a new $[u_i,
+d_i]$ utilizing the =findFreeTime= function. Line 3 applies and returns the updated visit.
 
 #+include: eq/slide-visit.org
 
