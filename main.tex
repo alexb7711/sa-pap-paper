@@ -1,4 +1,4 @@
-% Created 2024-01-20 Sat 17:20
+% Created 2024-01-20 Sat 18:04
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -666,7 +666,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orgc082e90}
+\label{sec:org943c7fc}
 Each generator an input of the tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the
 tuple \(\visit\) as shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that
 describes the availability for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers
@@ -685,7 +685,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org1be8194}
+\label{sec:org2767c80}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed
 to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger inactive times and the direct
@@ -1043,6 +1043,8 @@ of null values.
 \paragraph{Wait}
 \label{sec:wait}
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
+Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the charger availability
+set of the wait queue for bus \(b\). Note that \(C_L \le u_i \le d_i \le C_U\). Line 4 returns the updated visit.
 
 \begin{algorithm}[H]
 \caption{Wait algorithm} \label{alg:wait}
@@ -1056,16 +1058,17 @@ The wait generator simply removes a bus from a charger queue and places it in it
     \Begin
     {
       $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $\bar{\C}_{\I_{i.b}} \leftarrow \{[C_L, a_i], [e_i, C_U]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.b}$}
       \Return{$(\I_{i.b}, \I_{i.a}, \I_{i.e}, \bar{\C})$}\tcc*[f]{Return visit}
     }
   \end{algorithm}
 
 \paragraph{New Window}
 \label{sec:new-window}
-New window is a combination of the wait and then new visit generators (\ref{sec:purge} and \ref{sec:new-visit}). By this it is
-meant that current scheduled tuple \((v_i, u_i, d_i)\) is purged and added back in as if it were a new visit. Line 2
-purges the BEB visit from the schedule and Line 3 places the BEB back into the schedule using the new visit generator.
-Line 4 assigns and returns the updated visit.
+New window is a combination of the wait and then new visit generators. By this it is meant that current scheduled tuple
+\((v_i, u_i, d_i)\) is purged and added back in as if it were a new visit. Line 2 purges the BEB visit from the schedule
+and Line 3 places the BEB back into the schedule using the new visit generator. Line 4 assigns and returns the updated
+visit.
 
 \begin{algorithm}[H]
   \caption{New window algorithm} \label{alg:new-window}
@@ -1080,7 +1083,7 @@ Line 4 assigns and returns the updated visit.
   \Begin
   {
     $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-    \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \Sol$}
+    \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \varnothing$}
     {
       \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
     }

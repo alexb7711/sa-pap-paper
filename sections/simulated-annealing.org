@@ -240,6 +240,8 @@ of null values.
 :CUSTOM_ID: sec:wait
 :END:
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
+Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the charger availability
+set of the wait queue for bus $b$. Note that $C_L \le u_i \le d_i \le C_U$. Line 4 returns the updated visit.
 
 #+include: eq/wait.org
 
@@ -247,10 +249,10 @@ The wait generator simply removes a bus from a charger queue and places it in it
 :PROPERTIES:
 :CUSTOM_ID: sec:new-window
 :END:
-New window is a combination of the wait and then new visit generators ([[#sec:purge]] and [[#sec:new-visit]]). By this it is
-meant that current scheduled tuple $(v_i, u_i, d_i)$ is purged and added back in as if it were a new visit. Line 2
-purges the BEB visit from the schedule and Line 3 places the BEB back into the schedule using the new visit generator.
-Line 4 assigns and returns the updated visit.
+New window is a combination of the wait and then new visit generators. By this it is meant that current scheduled tuple
+$(v_i, u_i, d_i)$ is purged and added back in as if it were a new visit. Line 2 purges the BEB visit from the schedule
+and Line 3 places the BEB back into the schedule using the new visit generator. Line 4 assigns and returns the updated
+visit.
 
 #+include: eq/new-window.org
 

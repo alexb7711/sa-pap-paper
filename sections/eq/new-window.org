@@ -12,7 +12,7 @@
     \Begin
     {
       $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \Sol$}
+      \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \varnothing$}
       {
         \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
       }
