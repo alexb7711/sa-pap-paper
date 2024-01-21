@@ -4,18 +4,20 @@
       \LinesNumbered
       \TitleOfAlgo{Slide Visit}
       \KwIn{$\Sol$}
-      \KwOut{$\Sol'$}
+      \KwOut{$\bar{\Sol}$}
 
       \SetKwFunction{Purge}{Purge}
 
       \Begin
       {
-          $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}   \tcc*[f]{Purge visit $i$ from its charger}
+        $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+        $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the visit just purged}
 
-          \If(\tcc*[f]{If there is time available in $C_{v_i}$}){$x_i' \leftarrow$ \findFreeTime{$C_{v_i}$, ($a_i, e_i$)} $\not\in \varnothing$}
+          \If(\tcc*[f]{If there is time available in $C$}){\findFreeTime{$C$, ($a_i, e_i$)} $\not\in \varnothing$}
           {
-              \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+            \Return{($\I_{i.q},u,d,\bar{C}$)}\tcc*[f]{Return visit, note that $q$ is unchanged}
           }
+          \Return{($\varnothing$)}\tcc*{Return nothing}
       }
-  \end{algorithm}
+    \end{algorithm}
 #+end_src

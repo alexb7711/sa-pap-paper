@@ -4,18 +4,14 @@
       \LinesNumbered
       \TitleOfAlgo{Wait}
       \KwIn{$\Sol$}
-      \KwOut{$\Sol'$}
+      \KwOut{$\bar{\Sol}$}
 
       \SetKwFunction{Purge}{Purge}
 
       \Begin
       {
-          $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*[f]{Purge visit $i$ from its charger}
-
-          \tcc{Assign bus to idle queue and set the duration for the arrival/departure times}
-          $x_i' \leftarrow (b, a_i, e_i)$\;
-
-          \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
+        $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+        \Return{$(\I_{i.b}, \I_{i.a}, \I_{i.e}, \bar{\C})$}\tcc*[f]{Return visit}
       }
-  \end{algorithm}
+    \end{algorithm}
 #+end_src
