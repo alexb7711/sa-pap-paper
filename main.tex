@@ -1,4 +1,4 @@
-% Created 2024-01-20 Sat 17:09
+% Created 2024-01-20 Sat 17:20
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -666,7 +666,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org90812c5}
+\label{sec:orgc082e90}
 Each generator an input of the tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the
 tuple \(\visit\) as shown in \ref{sec:problem-description}, that describes the set of visits, and \(\C\) is the set that
 describes the availability for all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers
@@ -685,7 +685,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgba804e8}
+\label{sec:org1be8194}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed
 to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger inactive times and the direct
@@ -962,8 +962,9 @@ until \(L\) before changer \(q\) may charge it. Furthermore, the range that \(u_
 \paragraph{Purge}
 \label{sec:purge}
 The purge primitive generator simply removes a visit from a charger schedule, \(\C\). This generator exists so that other
-primitive generators may place the visit back into the schedule without creating duplicate entries in \(\C\). Line 2
-updates \(\C\) with the set of visits excluding visit \(i\). Line 3 returns the updated set of charger availability.
+primitive generators may place the visit back into the schedule without creating duplicate entries in \(\C\). Line 2 from
+\ref{alg:purge} updates \(\C\) with the set of visits excluding visit \(i\). Line 3 returns the updated set of charger
+availability.
 
 \begin{algorithm}[H]
   \caption{Purge algorithm} \label{alg:purge}
@@ -983,8 +984,10 @@ updates \(\C\) with the set of visits excluding visit \(i\). Line 3 returns the 
 \label{slide-visit}
 Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
 some room to manipulate \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and \(d_i\) are randomly
-selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 generates a new \([u_i,
-d_i]\) utilizing the \texttt{findFreeTime} function. Line 3 applies and returns the updated visit.
+selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 from
+\ref{alg:slide-visit} purges the visit from the charger availability set. Line 4 retrieves the window that was opened up
+by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). Line 5 the updated visit. If \texttt{findFreeTime}
+was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
 \caption{Slide Visit Algorithm} \label{alg:slide-visit}
@@ -1011,9 +1014,10 @@ d_i]\) utilizing the \texttt{findFreeTime} function. Line 3 applies and returns 
 \paragraph{New charger}
 \label{new-charger}
 The new charger generator (shown in \ref{alg:new-charger}) moves a visit \(\I_i\) to a new charging queue while
-maintaining the same charge time, \([u_i, d_i]\). Line 2 loops through a randomly indexed set of charger queue indices.
-Line 3 checks if there is an available time slice \([a_i, e_i]\) for charger \(q\). Line 4 sets the charge start/stop times
-to the previous values. Line 5 sets and returns the updated visit.
+maintaining the same charge time, \([u_i, d_i]\). Line 2 purges the visit from the charger availability set. Line 3
+randomly selects a charger queue index, \(q\). Line 4 checks if there is an available time slice \([a_i, e_i]\) for charger
+\(q\). Line 5 sets and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple
+of null values.
 
 \begin{algorithm}[H]
   \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}

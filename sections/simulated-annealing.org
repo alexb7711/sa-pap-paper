@@ -204,8 +204,9 @@ until $L$ before changer $q$ may charge it. Furthermore, the range that $u_i$ mu
 :CUSTOM_ID: sec:purge
 :END:
 The purge primitive generator simply removes a visit from a charger schedule, $\C$. This generator exists so that other
-primitive generators may place the visit back into the schedule without creating duplicate entries in $\C$. Line 2
-updates $\C$ with the set of visits excluding visit $i$. Line 3 returns the updated set of charger availability.
+primitive generators may place the visit back into the schedule without creating duplicate entries in $\C$. Line 2 from
+\ref{alg:purge} updates $\C$ with the set of visits excluding visit $i$. Line 3 returns the updated set of charger
+availability.
 
 #+include: eq/purge.org
 
@@ -215,8 +216,10 @@ updates $\C$ with the set of visits excluding visit $i$. Line 3 returns the upda
 :END:
 Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
 some room to manipulate $u_i$ and $d_i$ within the window $[a_i, e_i]$. Two new values, $u_i$ and $d_i$ are randomly
-selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 generates a new $[u_i,
-d_i]$ utilizing the =findFreeTime= function. Line 3 applies and returns the updated visit.
+selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 from
+\ref{alg:slide-visit} purges the visit from the charger availability set. Line 4 retrieves the window that was opened up
+by purging visit $i$. Line 4 sets the new charge time frame, $[u_i, d_i]$. Line 5 the updated visit. If =findFreeTime=
+was unsuccessful, then the generator returns a tuple of null values.
 
 #+include: eq/slide-visit.org
 
@@ -225,9 +228,10 @@ d_i]$ utilizing the =findFreeTime= function. Line 3 applies and returns the upda
 :CUSTOM_ID: new-charger
 :END:
 The new charger generator (shown in \ref{alg:new-charger}) moves a visit $\I_i$ to a new charging queue while
-maintaining the same charge time, $[u_i, d_i]$. Line 2 loops through a randomly indexed set of charger queue indices.
-Line 3 checks if there is an available time slice $[a_i, e_i]$ for charger $q$. Line 4 sets the charge start/stop times
-to the previous values. Line 5 sets and returns the updated visit.
+maintaining the same charge time, $[u_i, d_i]$. Line 2 purges the visit from the charger availability set. Line 3
+randomly selects a charger queue index, $q$. Line 4 checks if there is an available time slice $[a_i, e_i]$ for charger
+$q$. Line 5 sets and returns the updated visit. If =findFreetime= was unsuccessful, then the generator returns a tuple
+of null values.
 
 #+include: eq/new-charger.org
 
