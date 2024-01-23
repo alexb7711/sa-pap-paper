@@ -4,32 +4,34 @@
       \LinesNumbered
       \TitleOfAlgo{SA Pseudo-Code}
 
-      \SetKwFunction{f}{f}
+      \SetKwFunction{Obj}{J}
       \SetKwFunction{New}{N}
-      \SetKwFunction{Mod}{M}
+      \SetKwFunction{Pert}{P}
       \SetKwFunction{Temp}{$\Tau$}
 
       \Begin
       {
-          $\omega \leftarrow$ New{($\I$, $\C$)}\tcc*{Generate an initial solution}
+          $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
 
           \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
           $t \leftarrow$ \Temp{$\Tau_0$}
 
-          \ForEach{$t_m \in t$} { $j \leftarrow 0$ \tcc*{Set repetition counter} $\bar{\omega} \leftarrow $ \New{($\I$,
-              $\C$)} \tcc*{Generate a new solution} $\Delta_{\omega,\bar{\omega}} \rightarrow$ \f{$\bar{\omega}$} -
-            \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
-            \If{$\Delta_{\omega , \bar{\omega}} \le 0$}{$\omega \rightarrow \bar{\omega}$}
-            \If{$\Delta_{\omega , \bar{\omega}} > 0$}{$\omega \rightarrow \bar{\omega}$ with probability
-              $e^{\frac{-\Delta_{\omega , \bar{\omega}}}{t_m}}$}
+          $n_K$\tcc*{Set the local search iteration count}
 
-              \While{$j \le J$}
+          \ForEach{$t_m \in t$}
+          {
+            $k \leftarrow 0$ \tcc*{Initialize repetition counter}
+
+              \While{$k \le n_K$}
               {
-                  $\omega{''} \leftarrow$ \Mod{($\I'$, $\C'$)} \tcc*{Modify the new solution}
-                  $\Delta_{\omega,\omega{''}} \rightarrow$ \f{$\omega{''}$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
-                  \If{$\Delta_{\omega , \omega{''}} \le 0$}{$\omega \rightarrow \omega{''}$}
-                  \If{$\Delta_{\omega , \omega{''}} > 0$}{$\omega \rightarrow \omega{''}$ with probability $e^{\frac{-\Delta_{\omega , \omega{''}}}{t_m}}$}
-                  $j \leftarrow j+1$\;
+                $\bar{\omega} \leftarrow $ \Pert{($\I$, $\C$)}\tcc*{Perturb the solution}
+                $\Omega_{\bar{\omega},\omega} \rightarrow$ \Obj{$\bar{\omega}$} - \Obj{$\omega$}\tcc*{Calculate the difference of fitness scores}
+
+                \tcc{Compare and update current solution}
+                \If{$\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
+                \If{$\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{-\Omega_{\bar{\omega},\omega}}{t_m}}$}
+
+                $k \leftarrow k+1$\tcc*{Increment the reptition counter}
               }
           }
       }

@@ -182,8 +182,8 @@ p_d(t) = \max(p_{fix},p_{max}(t))z
 \end{equation}
 
 [[eq:pdem]] then begins with a value of $p_{fix}$ from which only increases if $p_{15}(t) > p_{fix}$. To write the total
-demand at any discrete time, consider [[eq:discrete-power]]. Let $\omega_h \in \omega$ be the discrete power demand at time step $h$
-where $h \in \{ 1, 2, ..., n_T \} \subset \mathcal{Z}$, $n_T = \frac{T}{0.25}$, and $\omega$ is an $n_T \times 1$ vector. For conciseness of
+demand at any discrete time, consider [[eq:discrete-power]]. Let $p_h \in p$ be the discrete power demand at time step $h$
+where $h \in \{ 1, 2, ..., n_T \} \subset \mathcal{Z}$, $n_T = \frac{T}{0.25}$, and $p$ is an $n_T \times 1$ vector. For conciseness of
 notation we will abuse $t_h$ to denote the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h -
 t_{h-1}$, and $\Hset = \{ 1, 2, ..., n_T \}$. Let $\iota$ be a $n_T \times n_Q$ matrix of binary variables that is enabled if
 charger $v_i \in \Qset$ is active during the time frame $dt_h$ and $r$ is a $n_Q \times 1$ vector of charger rates. Thus, the
@@ -191,14 +191,14 @@ discrete power utilized over the time horizon is calculated as follows.
 
 #+name: eq:discrete-power
 \begin{equation}
-  \omega = \iota r
+  p = \iota r
 \end{equation}
 
 Let $M = 0.25/dt_h$ express the number discrete steps that spans a 15-minute interval. The average power over an
 arbitrary 15-minute interval in the time horizon can be written as
 
 \begin{equation}
-p_{15}[h] = \sum_{h-M+1}^h \omega_h,
+p_{15}[h] = \sum_{h-M+1}^h p_h,
 \end{equation}
 
 where $h \ge M$. Similarly to before, the maximum $p_{15}[h]$ value is to be retained via $p_{max} = \max\limits_{h \in
