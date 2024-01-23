@@ -5,8 +5,8 @@
 
 This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
 introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
-PAP algorithm. For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and not
-related to any of the variables presented for SA PAP thus far.
+PAP algorithm. _For the case of the pseudo SA algorithm to be presented, the notation will be self-contained and not
+related to any of the variables presented for SA PAP thus far_.
 
 ** Simulated Annealing Pseudo Code
 :PROPERTIES:
