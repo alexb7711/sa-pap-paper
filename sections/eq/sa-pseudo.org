@@ -11,28 +11,26 @@
 
       \Begin
       {
-          $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
-
           \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
           $t \leftarrow$ \Temp{$\Tau_0$}
 
-          $n_K$\tcc*{Set the local search iteration count}
+          $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
 
           \ForEach{$t_m \in t$}
           {
             $k \leftarrow 0$ \tcc*{Initialize repetition counter}
 
-              \While{$k \le n_K$}
-              {
-                $\bar{\omega} \leftarrow $ \Pert{($\I$, $\C$)}\tcc*{Perturb the solution}
-                $\Omega_{\bar{\omega},\omega} \rightarrow$ \Obj{$\bar{\omega}$} - \Obj{$\omega$}\tcc*{Calculate the difference of fitness scores}
+            \While{$k \le n_K$}
+            {
+              $\bar{\omega} \leftarrow $ \Pert{($\I$, $\C$)}\tcc*{Perturb the solution}
+              $\Omega_{\bar{\omega},\omega} \rightarrow$ \Obj{$\bar{\omega}$} - \Obj{$\omega$}\tcc*{Calculate the difference of fitness scores}
 
-                \tcc{Compare and update current solution}
-                \If{$\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
-                \If{$\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{-\Omega_{\bar{\omega},\omega}}{t_m}}$}
+              \tcc{Compare and update current solution}
+              \If{$\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
+              \If{$\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{-\Omega_{\bar{\omega},\omega}}{t_m}}$}
 
-                $k \leftarrow k+1$\tcc*{Increment the reptition counter}
-              }
+              $k \leftarrow k+1$\tcc*{Increment the reptition counter}
+            }
           }
       }
   \end{algorithm}
