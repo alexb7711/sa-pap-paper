@@ -124,17 +124,19 @@ battery capacity for visit $i$, and $\eta_i$ is the initial charge for visit $i$
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^I \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
+\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
 \end{equation}
 
-The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$. Let $\epsilon_{vi}$ to
-be taken as $\epsilon_{v_i} = 1000v_i$, this form encourages the objective function the minimize the total amount of chargers.
-Iterating on this concept, let the model represents the first $n_B$ indices to be waiting queues (no charge is
-supplied), the next $n_{Q_s}$ indices to be slow chargers, and the next $n_{Q_f}$ indices to be fast chargers, where
-$n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}$ and $n_B + n_{Q_s} + n_{Q_f} = n_Q$. Furthermore, let $\epsilon_b = \{ 0 : b \in \Bset \}$, $\epsilon_{j} =
-\{ 1000 j: j \in \Iset \}$ and let $\epsilon = \epsilon_b \cup \epsilon_j$. That is, $\epsilon_{v_i}$ has no cost if $v_i \in \epsilon_b$ or is incrementally
-penalized as the selected queue index increases if $v_i \in \epsilon_j$. This form accrues no cost when assigning a BEB to a
-waiting queue while still encouraging the use of slow chargers over fast.
+The first term in the summation represents the calculation of the cost for assigning a bus to queue $q$. Let $\epsilon$
+describe the vector $\epsilon = [1000, 2000, ..., 1000*n_Q]$, this form encourages the objective function to minimize the total
+amount of chargers. Iterating on this concept, let the model represents the first $n_B$ indices to be waiting queues (no
+charge is supplied), the next $n_{Q_s}$ indices to be slow chargers, and the next $n_{Q_f}$ indices to be fast chargers,
+where $n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}$ and $n_B + n_{Q_s} + n_{Q_f} = n_Q$. The $\epsilon$ vector thus be concatenated as follows:
+$\epsilon = [\mathbf{0}_{n_B}, [1000, 2000, ..., 1000*n_Q]]$, where $\mathbf{0}_{n_B}$ indicates a zero vector of length $n_B$.
+That is, $\epsilon_{v_i}$ has no cost if $v_i \le n_B$ or is incrementally penalized as the selected queue index increases if
+$n_B < v_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost when assigning a BEB to a waiting queue while
+still encouraging the use of slow chargers over fast. While the $\epsilon$ vector can be constructed in many other ways, the
+construction shown above is the method applied to this work.
 
 The second term is the penalty function that is either enabled or disabled by $\phi_i$
 [cite:@luenberger-2008-penal-barrier-method]. The penalty function is enabled, $\phi_i = 1$, if the SOC falls below a
@@ -150,7 +152,7 @@ charger will be utilized, $s_i$.
 
 #+name: eq:consumption-cost
 \begin{equation}
-  \sum_{i=1}^I r_{v_i}s_i
+  \sum_{i=1}^{n_I} r_{v_i}s_i
 \end{equation}
 
 The demand cost quantifies the amount of power being used over a given period of time and increases the cost if too much
@@ -249,20 +251,20 @@ Similarly, $\psi_{ij}$ determines whether the vehicles will be charging in the s
 constraint is deactivated and BEB $j$ is in a queue index greater than that of BEB $i$.
 
 \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
-bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:8} ensures that the BEB's SOC does not
+bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} ensures that the BEB's SOC does not
 go below 0. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in [[eq:ac]]. This is done by
 checking if the initial charge for visit $i$ is greater than or equal to the minimum allowed charge. \ref{seq:c11}
 ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less than the detach
 time which is less than the time the bus exits the station and all must be less than the time horizon).
 
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable $\iota$. These
-constraints define three $n_T \tims n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i \le dt_h \le d_i$, $\iota_h^q =
-0$ otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit
-$i$, $u_i$, is greater than or equal to the discrete time, $0.25 \cdot h$. That is, $\mu_h^{v_i} = 1$ if $u_i dt_h$,
-$u_h^{v_i} = 0$ otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, $d_i$, is less
-than or equal to the next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is a $n_T \times n_Q$ matrix that
-represents whether charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product
-[cite:@horn-1985-matrix-analy]. Let $A$ and $B$ be two $n_M \times n_N$ matrices. The Hadamard Product is defined as the
-element-wise product of the two matrices, $A \circ B = [a_{ij}b_{ij}]$.
+constraints define three $n_T \times n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i \le dt_h \le d_i$, $\iota_h^q = 0$
+otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit $i$,
+$u_i$, is greater than or equal to the discrete time, $0.25 \cdot h$. That is, $\mu_h^{v_i} = 1$ if $u_i dt_h$, $u_h^{v_i} =
+0$ otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, $d_i$, is less than or
+equal to the next discrete time step, $dt_h$. The final constraint \ref{seq:c16} is a $n_T \times n_Q$ matrix that represents
+whether charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product [cite:@horn-1985-matrix-analy].
+Let $A$ and $B$ be two $n_M \times n_N$ matrices. The Hadamard Product is defined as the element-wise product of the two
+matrices, $A \circ B = [a_{ij}b_{ij}]$.
 
 #  LocalWords: BEB MILP BEBs Hadamard

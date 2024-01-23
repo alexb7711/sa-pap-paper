@@ -16,20 +16,19 @@
           \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
           $t \leftarrow$ \Temp{$\Tau_0$}
 
-          \ForEach{$t_k \in t$}
-          {
-              $j \leftarrow 0$ \tcc*{Set repetition counter}
-              $\omega' \leftarrow $ \New{($\I$, $\C$)} \tcc*{Generate a new solution}
-              $\Delta_{\omega,\omega'} \rightarrow$ \f{$\omega'$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
-              \If{$\Delta_{\omega , \omega'} \le 0$}{$\omega \rightarrow \omega'$}
-              \If{$\Delta_{\omega , \omega'} > 0$}{$\omega \rightarrow \omega'$ with probability $e^{\frac{-\Delta_{\omega , \omega'}}{t_k}}$}
+          \ForEach{$t_m \in t$} { $j \leftarrow 0$ \tcc*{Set repetition counter} $\bar{\omega} \leftarrow $ \New{($\I$,
+              $\C$)} \tcc*{Generate a new solution} $\Delta_{\omega,\bar{\omega}} \rightarrow$ \f{$\bar{\omega}$} -
+            \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
+            \If{$\Delta_{\omega , \bar{\omega}} \le 0$}{$\omega \rightarrow \bar{\omega}$}
+            \If{$\Delta_{\omega , \bar{\omega}} > 0$}{$\omega \rightarrow \bar{\omega}$ with probability
+              $e^{\frac{-\Delta_{\omega , \bar{\omega}}}{t_m}}$}
 
               \While{$j \le J$}
               {
                   $\omega{''} \leftarrow$ \Mod{($\I'$, $\C'$)} \tcc*{Modify the new solution}
                   $\Delta_{\omega,\omega{''}} \rightarrow$ \f{$\omega{''}$} - \f{$\omega$} \tcc*{Calculate the difference of fitness scores}
                   \If{$\Delta_{\omega , \omega{''}} \le 0$}{$\omega \rightarrow \omega{''}$}
-                  \If{$\Delta_{\omega , \omega{''}} > 0$}{$\omega \rightarrow \omega{''}$ with probability $e^{\frac{-\Delta_{\omega , \omega{''}}}{t_k}}$}
+                  \If{$\Delta_{\omega , \omega{''}} > 0$}{$\omega \rightarrow \omega{''}$ with probability $e^{\frac{-\Delta_{\omega , \omega{''}}}{t_m}}$}
                   $j \leftarrow j+1$\;
               }
           }

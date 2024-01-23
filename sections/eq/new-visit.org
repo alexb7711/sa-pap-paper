@@ -1,32 +1,26 @@
 #+begin_src latex
   \begin{algorithm}[H]
-  \caption{New visit algorithm} \label{alg:new-visit}
-      \LinesNumbered
-      \TitleOfAlgo{New Visit}
-      \KwIn{($\Sol$)}
-      \KwOut{$\Sol'$}
+    \caption{New visit algorithm} \label{alg:new-visit}
+    \LinesNumbered
+    \TitleOfAlgo{New Visit}
+    \KwIn{($\Sol$)}
+    \KwOut{$\bar{\Sol}$}
 
-      \SetKwFunction{Union}{Union}
-      \SetKwFunction{findFreeTime}{findFreeTime}
+    \SetKwFunction{Union}{Union}
+    \SetKwFunction{findFreeTime}{findFreeTime}
 
-      \Begin
+    \Begin {
+      $a_i \leftarrow \I_{i.e}$\tcc*{Extract the arrivial time for visit $i$}
+      $e_i \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
+      $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
+      $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
+
+      \If(\tcc*[f]{If there is time available in $C_q^j$}){\findFreeTime{$C, (a_i, e_i)$} $\not\in \varnothing$}
       {
-          $i    \leftarrow \{ i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{The index of the visit $i$}
-          $a_i  \leftarrow \{ a_i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{Get the arrival time for visit $i$}
-          $e_i  \leftarrow \{ e_i \in \I_i : \I_i \in \I \subset \Sol \}$\tcc*{Get the departure time for visit $i$}
-
-          \tcc{For each element in the uniformly random set of charger queues $q \in \Qset$}
-          \ForEach  {$q \in \{ \U_{\Qset} \}$}
-          {
-              \tcc{For each element in the uniformly random set of time slices from charger $q$}
-              \ForEach {$C_q^j \in \{ \U_{\C_{q}} \}$}
-              {
-                  \If(\tcc*[f]{If there is time available in $C_q^j$}){$x_i' \leftarrow$ \findFreeTime{$C_q^j, (a_i, e_i)$} $\not\in \varnothing$}
-                  {
-                      \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
-                  }
-              }
-          }
+        \Return{($q,u,d,\C$)}\tcc*[f]{Return visit}
       }
+
+      \Return{($\varnothing$)}\tcc*{Return nothing}
+    }
   \end{algorithm}
 #+end_src

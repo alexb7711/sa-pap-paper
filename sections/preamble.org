@@ -47,7 +47,7 @@
 #+latex_header: \newcommand{\ACi}{AC(u_i, d_i, v_i, \eta_i)}% Set the parameters for AC once
 #+latex_header: \newcommand{\UCi}{UC(u_i, d_i, v_i)}        % Set the parameters for UC once
 #+latex_header: \newcommand{\Not}{\textbf{not }}            % Custom `not' operator
-#+latex_header: \newcommand{\visit}{(i, b_i, a_i, e_i, u_i, d_i, v_i, \eta_i, \xi_i)}
+#+latex_header: \newcommand{\visit}{(i, b, a, e, u, d, v, \eta, \xi)}
 #+latex_haeder:                                             % Single visit tuple
 #+latex_header: \newcommand{\I}{\mathbb{I}}                 % Set of visit tuples
 #+latex_header: \newcommand{\C}{\mathbb{C}}                 % Charger availability information
