@@ -1,4 +1,4 @@
-% Created 2024-01-23 Tue 12:09
+% Created 2024-01-25 Thu 07:55
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -669,7 +669,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orgb7d0c57}
+\label{sec:org8db1c03}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -688,7 +688,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orga3a4388}
+\label{sec:orgff938cf}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed
 to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger inactive times and the direct
@@ -752,8 +752,7 @@ until \(L\) before changer \(q\) may charge it. Furthermore, the range that \(u_
       \Return{($q,u,d,\C$)}\tcc*[f]{Return visit}
     }
 
-    \Return{($\varnothing$)}\tcc*{Return nothing}
-  }
+    \Return{($\varnothing$)}\tcc*{Return nothing} }
 \end{algorithm}
 
 \begin{figure}
@@ -1004,8 +1003,10 @@ was unsuccessful, then the generator returns a tuple of null values.
 
         \If(\tcc*[f]{If there is time available in $C$}){\findFreeTime{$C$, ($a_i, e_i$)} $\not\in \varnothing$}
         {
-          \Return{($\I_{i.q},u,d,\bar{C}$)}\tcc*[f]{Return visit, note that $q$ is unchanged}
+          \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
         }
+
+        $\I_i \leftarrow$ ($\I_{i.q},u,d,\C$)\tcc*{Reassign the original visit if the generator fails}
         \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1035,6 +1036,7 @@ of null values.
         \Return{($q,\I_{i.u}, \I_{i.d},\C$)}
       }
 
+      $\I_i \leftarrow$ ($\I_{i.q},u,d,C$)\tcc*{Reassign the original visit if the generator fails}
       \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1087,6 +1089,7 @@ back into the schedule using the new visit generator. Line 4 assigns and returns
       \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
     }
 
+    $\I_i \leftarrow$ ($\I_{i.q},u,d,C$)\tcc*{Reassign the original visit if the generator fails}
     \Return{($\varnothing$)}\tcc*{Return nothing}
   }
 \end{algorithm}

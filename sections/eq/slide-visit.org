@@ -15,8 +15,10 @@
 
           \If(\tcc*[f]{If there is time available in $C$}){\findFreeTime{$C$, ($a_i, e_i$)} $\not\in \varnothing$}
           {
-            \Return{($\I_{i.q},u,d,\bar{C}$)}\tcc*[f]{Return visit, note that $q$ is unchanged}
+            \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
           }
+
+          $\I_i \leftarrow$ ($\I_{i.q},u,d,\C$)\tcc*{Reassign the original visit if the generator fails}
           \Return{($\varnothing$)}\tcc*{Return nothing}
       }
     \end{algorithm}

@@ -16,6 +16,7 @@
           \Return{($q,\I_{i.u}, \I_{i.d},\C$)}
         }
 
+        $\I_i \leftarrow$ ($\I_{i.q},u,d,C$)\tcc*{Reassign the original visit if the generator fails}
         \Return{($\varnothing$)}\tcc*{Return nothing}
       }
     \end{algorithm}
