@@ -1,4 +1,4 @@
-% Created 2024-01-25 Thu 07:55
+% Created 2024-01-25 Thu 08:58
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -122,7 +122,8 @@ charger, slow charger, or no charger at all (denoted as a waiting queue). A BEB 
 queue per visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time
 the BEB is allowed to charge is dictated by the scheduled arrival time and required departure time, \([a_i, e_i]\).
 Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity. The battery dynamics in this work
-is modeled as \uline{linear}, which remains accurate up to about an SOC of 80\% charge \cite{li-2016-batter-elect}.
+is modeled as linear\footnote{This is most likely going to be relabeled as non-linear. Once this version of the SA is flushed out then a
+section will be added to describe the non-linear battery dynamics.}, which remains accurate up to about an SOC of 80\% charge \cite{li-2016-batter-elect}.
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired ``route'' that the BEB must perform after the
 visit. This route, as one would expect, causes the BEB to discharge by some certain amount. The estimation of the SOC
@@ -669,7 +670,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org8db1c03}
+\label{sec:org6a4d012}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -688,7 +689,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgff938cf}
+\label{sec:org8fecc43}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed
 to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger inactive times and the direct
