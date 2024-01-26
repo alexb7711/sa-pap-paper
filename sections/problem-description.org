@@ -4,13 +4,13 @@
 :END:
 This section introduces and defines the problem to be addressed by this work. A general description is given and
 followed by a mathematical interpretation. The scope of this work will also be provided as well as a high level
-introduction to the granular problems that will be addressed in order to achieve the proposed goal.
+introduction to the individual problems that will be addressed in order to achieve the proposed goal.
 
 Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. Suppose that an individual BEB
 from said fleet begins and completes an individual route at the same station from which it also receives its charge.
 During each route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied during its visit
-must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete its route. The charge
-may be supplied from any single charger given a set of chargers at the station. Each time the BEB arrives at the
+must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete its next route. The
+charge may be supplied from any single charger given a set of chargers at the station. Each time the BEB arrives at the
 station, let that be denoted as an "arrival". Once the BEB has awaited its predetermined time (whether it has received a
 charge or not), and departs from the station, let that be denoted as a "visit". Generalizing this to all BEBs, each BEB
 will have a set of prescribed routes from which their SOC is depleted by a certain amount. Once the route is completed,
@@ -20,40 +20,32 @@ each visit to a charger given a schedule for a fleet of BEBs that follow the beh
 
 Consider a fleet of $n_B$ BEBs that collectively visit a station $n_I$ times. At said station, let there exist a pool of
 $n_Q$ charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as $\Iset = \{ 1, ...
-n_I \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \}$. Each visit can be represented by the
-tuple: $\visit$, in which the elements within the tuple denote the visit index, $i \in I$, BEB identification number, $b_i
-\in B$, arrival time to the station, $a_i \in \mathbb{R}$, departure time from the station, $e_i \in \mathbb{R}$, time to start charging, $u_i \in
-\mathbb{R}$, time to stop charging, $d_i$, the charger queue for the BEB to be placed into, $v_i \in Q$, the SOC, $\eta_i \in \mathbb{R}$, and
-the index of the next visit for the currently visiting BEB, $\xi_i \in I$. Let the set of all visits be denoted as $\I$.
-
-#+begin_comment
-*:DELETEME: This stuff is more relevant in a literature review :DELETEME:*
-
-It is assumed that each visit occurs within the planning time horizon $T = \{t : t_0 \le t \le t_f \}$. The concept of
-"arrivals" is derived from the PAP [cite:@qarebagh-2019-optim-sched]. The notion of a visit is useful in the sense that
-it provides simple mechanism to describe the state of any arbitrary BEB at the time of arrival; however, a BEB may visit
-the station multiple times. The issue arises due to model's assumption that each arrival is unique (i.e. no single BEB
-arrives more than once). Therefore, a system must be put in place to track each BEB across visits.
-#+end_comment
+n_I \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \} \subset \mathbb{B}$. Each visit can be
+represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i \in I$, BEB
+identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in \mathbb{R}$, initial
+charge time, $u \in \mathbb{R}$, final charge time, $d$, the charger queue for the BEB to be placed into, $v \in Q$, the SOC upon
+arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the currently visiting BEB, $\xi \in I$. Let the set of all visits be
+denoted as $\I$.
 
 For each visit, a BEB must be placed in a single queue, $q \in \Qset$. The charger $q$ is assumed to be either a fast
 charger, slow charger, or no charger at all (denoted as a waiting queue). A BEB is only allowed to be assigned to one
 queue per visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time
 the BEB is allowed to charge is dictated by the scheduled arrival time and required departure time, $[a_i, e_i]$.
-Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity. The battery dynamics in this work
-is modeled as linear[fn:1], which remains accurate up to about an SOC of 80% charge [cite:@li-2016-batter-elect].
+Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC may not be zero or
+negative. The battery dynamics in this work is modeled as linear[fn:1], which remains accurate up to about an SOC of 80%
+charge [cite:@li-2016-batter-elect].
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired "route" that the BEB must perform after the
 visit. This route, as one would expect, causes the BEB to discharge by some certain amount. The estimation of the SOC
 post route in it of itself poses a focus of research, not of which is of this work. Thus, a simplified model of
 calculating an average discharge based on the time a BEB is on route is employed. For visit $i$, the route is assumed to
-occur after its departure. Let the discharge of the route for visit $i$ be denoted as $\Delta_i \in \mathbb{R}$. The charge supplied
-while at the station is required to increase the SOC of each BEB visit to a minimum battery percentage, $\nu_b \in B$. This
-acts as a safety factor to ensure each route is completed.
+occur after its departure. Let the discharge of the route for visit $i$ be denoted as $\Delta_i \in \mathbb{R}$. The charge supplied is
+encouraged to maintain the SOC of each BEB visit above a minimum battery percentage, $\nu_b \in B$. This acts as a safety
+factor to ensure each route is completed.
 
 The task of this paper shall be to define a method of scheduling the set of visits $\I$ to fulfill the minimum charge
-requirements over the time horizon $T$ while minimizing the cost, which can be decomposed into the demand and
-consumption cost. An objective function is utilized to measure the relative fitness of results and constraints are
+requirements over the time horizon, $\T$, while minimizing the cost, which can be decomposed into a utility cost and an
+assignment cost. An objective function is utilized to measure the relative fitness of results and constraints are
 employed to ensure validity of the prescribed schedule. Both the objective function and constraints are discussed in
 further detail in the proceeding section.
 
