@@ -1,4 +1,4 @@
-% Created 2024-01-26 Fri 13:41
+% Created 2024-01-26 Fri 15:07
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -571,11 +571,11 @@ There are five key components to SA: initial temperature, cooling schedule (temp
 mechanisms, acceptance criteria, local search iteration count (temperature change counter)
 \cite{keller-2019-multi-objec}. The temperature solution describes the speed at which the system is ``cooled'' over each
 iteration. The temperature of the system describes the likelihood that a system is willing to explore the solution
-space. The generation mechanisms provide a means of modifying the system by some singular discrete change. The
-acceptance criteria is a function of the system temperature that makes the decision whether the system will accept an
-inferior solution in favor of exploring the solution space. Finally, the local search iteration count is the number of
-steps taken to try to exploit a solution at a constant temperature. Each of these mechanisms are elaborated in the
-subsequent sections.
+space. The generation mechanisms provide a means of modifying the system by some singular discrete change that is within
+the neighborhood \cite{gendreau-2018-handb-metah}. The acceptance criteria is a function of the system temperature that
+makes the decision whether the system will accept an inferior solution in favor of exploring the solution space.
+Finally, the local search iteration count is the number of steps taken to try to exploit a solution at a constant
+temperature. Each of these mechanisms are elaborated in the subsequent sections.
 
 \subsection{Cooling Equation}
 \label{cooling-equation-experimental}
@@ -627,15 +627,15 @@ determine if the active solution is to be replaced, an acceptance criteria is de
 more fit than active solution (fitness being dictated by the objective function) is always accepted as the new active
 solution. In an effort to encourage exploration, inferior candidate solutions have a probability of being accepted as
 the active solution. The probability of accepting an inferior candidate solution is described by the function
-\(\exp(-\frac{J(x) - J(x')}{\Tau})\) where \(J(\cdot)\) is the objective functions described in \ref{sec:objective-function} and
+\(\exp(-\frac{J(x) - J(\bar{x})}{\Tau})\) where \(J(\cdot)\) is the objective functions described in \ref{sec:objective-function} and
 \(\Tau\) is current temperature. The probability of acceptance is a function of the current temperature and the difference
-of the active solution and a new candidate solution. Formally, let \(\Delta E \equiv J(x) - J(x')\) where \(x\) is the current
-solution and \(x'\) is the new candidate solution. Let \(f(\cdot)\) be the function that describes the probability of accepting
-a candidate solution \(x'\), and is defined by \ref{eq:candaccept} \cite{keller-2019-multi-objec}.
+of the active solution and a new candidate solution. Formally, let \(\Delta E \equiv J(x) - J(\bar{x})\) where \(x\) is the current
+solution and \(\bar{x}\) is the new candidate solution. Let \(f(\cdot)\) be the function that describes the probability of
+accepting a candidate solution \(\bar{x}\), and is defined by \ref{eq:candaccept} \cite{keller-2019-multi-objec}.
 
 \begin{equation}
 \label{eq:candaccept}
-f(x,x',T) =
+f(x,\bar{x},T) =
 \begin{cases}
   1                   & \Delta E > 0 \\
   e^{- \frac{\Delta E}{T}} & \text{otherwise}
@@ -644,30 +644,30 @@ f(x,x',T) =
 
 \subsection{Generation Mechanisms}
 \label{sec:generation-mechanisms}
-Generation mechanisms are used to create a neighboring candidate solution. That is, the generating function creates a
-solution that can be reached in a single iteration from the active solution. In the case of the problem statement made
-in \ref{sec:problem-description}, six primitive generation mechanism shall be used: new visit, slide visit, new charger,
-wait, new window, and purge. The purpose of each of these generators is to assign new visits to a charger, adjust a bus
-visits initial and final charge time within the same time frame/queue, move a BEB from one charger to another with the
-same charge schedule, move a bus to its waiting queue, and remove a charger from the set of charger availability's. Each
-generator will be discussed in more detail in \ref{sec:generators}.
+Generation mechanisms are used to create a neighboring candidate solution \cite{gendreau-2018-handb-metah}. That is,
+the generating function creates a solution that can be reached in a single iteration from the active solution. In the
+case of the problem statement made in \ref{sec:problem-description}, six primitive generation mechanism shall be used: new
+visit, slide visit, new charger, wait, new window, and purge. The purpose of each of these generators is to assign new
+visits to a charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from
+one charger to another with the same charge schedule, move a bus to its waiting queue, and remove a charger from the set
+of charger availability's. Each generator will be discussed in more detail in \ref{sec:generators}.
 
 These generator mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
-candidate solutions for SA to compare with other solutions, and the perturb schedule generator is used to take a
-candidate solution and alter it slightly in an attempt to fall into a global/local minimum. The wrapper functions will
-be discussed in \ref{sec:generator-wrappers}. However, prior to discussing the primitives and wrapper generating functions,
-their respective inputs and outputs must be defined.
+an initial candidate solutions for SA to compare with other solutions, and the perturb schedule generator is used to
+take a candidate solution and alter it slightly in an attempt to fall into a global/local minimum. The wrapper functions
+will be discussed in \ref{sec:generator-wrappers}. However, prior to discussing the primitives and wrapper generating
+functions, their respective inputs and outputs must be defined.
 
 \subsubsection{Generator Input/Output}
 \label{sec:generator-input-output}
 This section discusses in detail the expected inputs and outputs of each generator. It is important to discuss these
 parameters to have an understanding of the generator algorithms to be derived. The input consists of the bus visit index
 of interest, information about the current state of visits, \(\I\), and the current state of the charger availability,
-\(\C\). The availability of each charger, \(\C\), is iteratively constructed during the SA process. The output of each
+\(\C\). The availability of each charger, \(\C\), is iteratively constructed throughout the SA process. The output of each
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orgdb07fce}
+\label{sec:org5a2a6c0}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -686,48 +686,56 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgf329d3c}
+\label{sec:org9255e41}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
-\(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (v_i, u_i, d_i, \C') \subset \Sol\), (as opposed
-to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger inactive times and the direct
-decision variables: the chosen queue, initial charge time, and detach time from the charger. The other direct variables
-and indirect variables may be implied. As previously discussed, early on in the SA process, the algorithm attempts to
-encourage exploration by allowing candidate solutions of lesser quality be the active solution.
+\(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
+\bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
+inactive times and the direct decision variables: the chosen queue, initial charge time, and detach time from the
+charger. The other direct variables and indirect variables may be implied.
 
 \subsubsection{Generators}
 \label{sec:generators}
 This section describes and outlines the algorithm pool for the different generator types that are utilized in the
-wrapper functions. Note that to satisfy constraints, \(n_B\) extra idle queues are added that provide no power to the BEB.
-Because of this, the set of queues is fully defined as \(q \in \{1,..., n_B, n_B+1,..., n_Q+n_B\}\) where \(n_Q\) is the total
-amount of chargers and \(n_B\) number of BEBs. The use case for the idle queues are for when a bus is not to be placed on
-a charger. Rather, it will be placed in the queue, \(v_i \in \{1,..., n_B\}\), which satisfies the previously defined
-spatial constraints while allowing the bus to be ``set aside''.
+wrapper functions. Recall that to satisfy constraints, \(n_B\) extra idle queues are added that provide no power to the
+BEB. Because of this, the set of queues is fully defined as \(q \in \{1,..., n_B, n_B+1,..., n_Q+n_B\}\) where \(n_Q\) is the
+total amount of chargers and \(n_B\) number of BEBs. The use case for the idle queues are for when a bus is not to be
+placed on a charger. Rather, it will be placed in the queue, \(v_i \in \{1,..., n_B\}\), which satisfies the previously
+defined spatial constraints while allowing the bus to be ``set aside''.
 
 In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
-suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S\), the notation that describes extracting
-\(u_i \equiv \I_{i.u}\).
+suppose the arrival time is desired to be extracted from visit \(i\). Given \(\Sol\), the notation that describes extracting
+the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{New visit}
 \label{sec:new-visit}
-The new visit generator describes the process of moving an unsigned BEB \(b\) to a charging queue, \(v_i \in \{n_B+1,...,
+The new visit generator describes the process of moving an unsigned BEB \(b \in B\) to a charging queue, \(v_i \in \{n_B+1,...,
 n_B + n_Q\}\) within its arrival/departure time \([a_i, e_i]\). Let \(\U_{\cdot}\) indicate that an element is selected randomly
 with a uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a_i, e_i]}\) indicates that a value will be selected
 between \(a_i\) and \(u_i\) with a uniform distribution. Lines 2 and 3 of \ref{alg:new-visit} extract the arrival and
 departure times of visit \(i\). Note that in subsequent algorithms these lines will be omitted for conciseness. Lines 4
 and 5 select a charging queue, \(q\), and time slice for which \(q\) is available at random with uniform distributions,
-respectively. Line 6 quickly verifies that the inactive period selected is a viable selection and returns a random
-charging time, \([u_i, d_i]\). If the time frames of the visit and the charger availability do not align, a tuple of null
-values is returned.
+respectively. Line 6 quickly verifies that the inactive period selected is viable and returns a random charging time,
+\([u_i, d_i]\). If the time frames of the visit and the charger availability do not align, the null value is returned.
 
 The function \texttt{findFreeTime} is the algorithm that determines whether a visit's time at the station \([u_i, e_i]\) can be
 placed in the time availability of charger \(q\). The algorithm is defined in \ref{alg:find-free-time}. Let \(L\) and \(U\) be
 the lower and upper bound of the time between scheduled times. The set of cases is shown in \ref{fig:find-free}. In each case
 depicted by \ref{fig:find-free}, the red line shows the arrival and departure time for a BEB visit, \(i\). The blue lines
-indicate regions in which charger \(v_i\) is active. \(C \in \C_q \subset \C\) represents one of the ranges between the blue lines,
-\([L, U]\), which stand for the lower and upper bounds of the region, respectively. That is, the only scheduling
-constraint is that the arrival time is before charger \(q\) is available to charge the bus. Therefore, the bus must wait
-until \(L\) before changer \(q\) may charge it. Furthermore, the range that \(u_i\) must be selected from is \([L,e]\). Lines
-24-26 update the times slices for which charger \(q\) is available.
+indicate regions in which charger \(v_i\) is active. \(C \in \C_q\) represents one of the ranges between the blue lines, \([L,
+U]\).
+
+The \texttt{findFreeTime} algorithm behaves as follows. Lines 1 and 2 of \ref{alg:find-free-tim} extract the lower and upper
+bounds of the charger availability. Lines 3 - 20 check whether the BEB visit can be assigned to the charger available
+time slice. Lines 4 - 6 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits entirely within the
+charger availability and the charge time may be anywhere in the range \([a_i, e_i]\). Lines 8 - 11 coincides with
+\ref{subfig:all} where the arrival time is before the charger is available. Therefore, the BEB may charge anywhere in
+the time \([L, e_i]\). On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} represents the
+scenario in which the BEB departs after the upper bound of the charger availability. Thus, the BEB may be charged
+anywhere in the time frame of \([a_i, U]\). Naturally, Lines 16 - 19 corresponds to the scenario in
+\ref{subfig:invertsandwhich} where the upper and lower bound of the visit is constrained by the charger availability
+such that the time that the BEB can charge is \([L,U]\). Lines 24-28 relate to the scenarios in which the BEB visit does
+not fall within the charger availability time slice. Line 27 returns the updated charger availability. Line 30 returns
+the original charger availability and null values for the charge times upon failure.
 
 \begin{algorithm}[H]
   \caption{New visit algorithm} \label{alg:new-visit}
@@ -903,55 +911,58 @@ until \(L\) before changer \(q\) may charge it. Furthermore, the range that \(u_
     \end{tikzpicture}
 \end{subfigure}
 
-\caption{This figure depicts the different states in which a charger with an availability time frame, $[L,U]$, can be on a timeline relative to a visit's total time at the station. The blue lines indicate ranges where the charger is being uilized. The point $L$ is the lower bound of the available time and $U$ is the upper bound. The red lines, $\bar{ae}$, indicate the time slice in which visit $i$ is at the station. The time range from which a charger may be assigned to a charging queue, with respect to the charger availability and the time the BEB is at the station, may be extracted. For example, \ref{subfig:sandwich} allows the BEB to be charged anywhere in the time range $[a, e]$. \ref{subfig:all} allows a BEB to charge in the time frame $[L,e]$. \ref{subfig:egu} allows a BEB to charge in the time frame $[a,U]$. \ref{subfig:invertsandwhich} allows charging during the time frame $[L,U]$. The last two permutations, \ref{subfig:invalid-upper} and \ref{subfig:invalid-lower}, do not allow the BEB to be assigned.}
+\caption{This figure depicts the different states in which a charger with an availability time frame, $[L,U]$, can be on a timeline relative to a visit's total time at the station. The blue lines indicate ranges where the charger is being uilized. The point $L$ is the lower bound of the available time and $U$ is the upper bound. The red lines, $\bar{ae}$, indicate the time slice in which visit $i$ is at the station. Thus, the BEB may be assigned a charge time anywhere in the range between $L$ and $U$. For example, \ref{subfig:sandwich} allows the BEB to be charged anywhere in the time range $[a, e]$. \ref{subfig:all} allows a BEB to charge in the time frame $[L,e]$. \ref{subfig:egu} allows a BEB to charge in the time frame $[a,U]$. \ref{subfig:invertsandwhich} allows charging during the time frame $[L,U]$. The last two permutations, \ref{subfig:invalid-upper} and \ref{subfig:invalid-lower}, do not allow the BEB to be assigned.}
 \label{fig:find-free}
 \end{figure}
 \begin{algorithm}[H]
-\caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
+\caption{Find free time algorithm checks whether the BEB time at the station, $[a_i, e_i]$ fits within the charger availability $[L,U]$. If it does, a random charge time slice is returned, otherwise the null value is returned.}
+\label{alg:find-free-time}
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(C,a,e)$}
-    \KwOut{($C',u,d)$}
+    \KwOut{($\bar{C},u,d)$}
 
-    \tcc{Extract the lower and upper bounds.}
-    L \(\leftarrow\) \(\{L \in C\}\)\;
-    U \(\leftarrow\) \(\{L \in C\}\)\;
+    \tcc{Extract the lower and upper bounds.} L \(\leftarrow\) \(\{C.L\}\)\; U \(\leftarrow\) \(\{C.U\}\)\;
 
     \Begin
     {
         \If(\tcc*[f]{If $L < a < e < U]$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
         {
-                u $\leftarrow$ $\U_{[a,e]}$\;
-                d $\leftarrow$ $\U_{[u,e]}$\;
+                $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
+                $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
         }
         \ElseIf(\tcc*[f]{Else if $a < L < e < U$ (\autoref{subfig:all})}){$L > a$ and $U \geq e$}
         {
-                u $\leftarrow$ $\U_{[L,e]}$\;
-                d $\leftarrow$ $\U_{[u,e]}$\;
+                $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
+                $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
         }
         \ElseIf(\tcc*[f]{Else if $L < a < U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U < e$}
         {
-                u $\leftarrow$ $\U_{[a,U]}$\;
-                d $\leftarrow$ $\U_{[u,U]}$\;
+                $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
+                $\bar{d}\leftarrow$ $\U_{[u,U]}$\;
         }
         \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L > a$ and $U < e$}
         {
-                u $\leftarrow$ $\U_{[a,L], [U,e]}$\;
-                d $\leftarrow$ $\U_{[u,L], [u,e]}$\;
+                $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
+                $\bar{d}\leftarrow$ $\U_{[u,L], [u,e]}$\;
         }
         \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
         {
-                u $\leftarrow$ $\varnothing$\;
-                d $\leftarrow$ $\varnothing$\;
+                $\bar{u}\leftarrow$ $\varnothing$\;
+                $\bar{d}\leftarrow$ $\varnothing$\;
         }
 
         \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
         {
-            $C' \leftarrow C' \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
-            $C' \leftarrow \{[L,u], [d, U]\}$\tcc*{Update the charger free time slices}
+            $\bar{C} \leftarrow \bar{C} \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
+            $\bar{C} \leftarrow \{[L,\bar{u}], [\bar{d}, U]\}$\tcc*{Update the charger free time slices}
+          \Return{($\bar{C},\bar{u},\bar{d}$)}
+        }
+        \Else(\tcc*[f]{Otherwise the assignment failed})
+        {
+          \Return{($\bar{C},\varnothing, \varnothing$)}
         }
 
-        \Return{($C',u,d$)}
     }
 \end{algorithm}
 
@@ -971,7 +982,7 @@ availability.
 
     \Begin
     {
-        $\bar{\C} \leftarrow \C \setminus \C_{v_i}^i$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
+        $\bar{\C} \leftarrow \C \setminus \C_{i.v_i}$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
         \Return{$\bar{\C}$}\tcc*{Return updated tuple}
     }
   \end{algorithm}

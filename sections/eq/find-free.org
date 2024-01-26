@@ -1,50 +1,53 @@
 #+begin_src latex
   \begin{algorithm}[H]
-  \caption{Find free time algorithm searches and returns the available time frames} \label{alg:find-free-time}
+  \caption{Find free time algorithm checks whether the BEB time at the station, $[a_i, e_i]$ fits within the charger availability $[L,U]$. If it does, a random charge time slice is returned, otherwise the null value is returned.}
+  \label{alg:find-free-time}
       \LinesNumbered
       \TitleOfAlgo{Find Free Time}
       \KwIn{$(C,a,e)$}
-      \KwOut{($C',u,d)$}
+      \KwOut{($\bar{C},u,d)$}
 
-      \tcc{Extract the lower and upper bounds.}
-      L \(\leftarrow\) \(\{L \in C\}\)\;
-      U \(\leftarrow\) \(\{L \in C\}\)\;
+      \tcc{Extract the lower and upper bounds.} L \(\leftarrow\) \(\{C.L\}\)\; U \(\leftarrow\) \(\{C.U\}\)\;
 
       \Begin
       {
           \If(\tcc*[f]{If $L < a < e < U]$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
           {
-                  u $\leftarrow$ $\U_{[a,e]}$\;
-                  d $\leftarrow$ $\U_{[u,e]}$\;
+                  $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
           }
           \ElseIf(\tcc*[f]{Else if $a < L < e < U$ (\autoref{subfig:all})}){$L > a$ and $U \geq e$}
           {
-                  u $\leftarrow$ $\U_{[L,e]}$\;
-                  d $\leftarrow$ $\U_{[u,e]}$\;
+                  $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
           }
           \ElseIf(\tcc*[f]{Else if $L < a < U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U < e$}
           {
-                  u $\leftarrow$ $\U_{[a,U]}$\;
-                  d $\leftarrow$ $\U_{[u,U]}$\;
+                  $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[u,U]}$\;
           }
           \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L > a$ and $U < e$}
           {
-                  u $\leftarrow$ $\U_{[a,L], [U,e]}$\;
-                  d $\leftarrow$ $\U_{[u,L], [u,e]}$\;
+                  $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[u,L], [u,e]}$\;
           }
           \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
           {
-                  u $\leftarrow$ $\varnothing$\;
-                  d $\leftarrow$ $\varnothing$\;
+                  $\bar{u}\leftarrow$ $\varnothing$\;
+                  $\bar{d}\leftarrow$ $\varnothing$\;
           }
 
           \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
           {
-              $C' \leftarrow C' \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
-              $C' \leftarrow \{[L,u], [d, U]\}$\tcc*{Update the charger free time slices}
+              $\bar{C} \leftarrow \bar{C} \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
+              $\bar{C} \leftarrow \{[L,\bar{u}], [\bar{d}, U]\}$\tcc*{Update the charger free time slices}
+            \Return{($\bar{C},\bar{u},\bar{d}$)}
+          }
+          \Else(\tcc*[f]{Otherwise the assignment failed})
+          {
+            \Return{($\bar{C},\varnothing, \varnothing$)}
           }
 
-          \Return{($C',u,d$)}
       }
   \end{algorithm}
 #+end_src
