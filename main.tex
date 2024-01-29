@@ -1,4 +1,4 @@
-% Created 2024-01-28 Sun 17:45
+% Created 2024-01-29 Mon 08:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -666,7 +666,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orgab2475f}
+\label{sec:org3f42e8e}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -685,7 +685,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgfaa1598}
+\label{sec:org227bb31}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -1018,11 +1018,10 @@ was unsuccessful, then the generator returns a tuple of null values.
 
 \paragraph{New charger}
 \label{new-charger}
-The new charger generator (shown in \ref{alg:new-charger}) moves a visit \(\I_i\) to a new charging queue while
-maintaining the same charge time, \([u_i, d_i]\). Line 2 from \ref{alg:new-charger} purges the visit from the charger
-availability set. Line 3 randomly selects a charger queue index, \(q\). Line 4 checks if there is an available time slice
-\([a_i, e_i]\) for charger \(q\). Line 5 sets and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then the
-generator returns a tuple of null values.
+The new charger generator moves a visit \(\I_i\) to a new charging queue while maintaining the same charge time, \([u_i,
+d_i]\). Line 2 from \ref{alg:new-charger} purges the visit from the charger availability set. Line 3 randomly selects a
+charger queue index, \(q\). Line 4 checks if there is an available time slice \([a_i, e_i]\) for charger \(q\). Line 5 sets
+and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
   \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}
@@ -1108,14 +1107,14 @@ previously described and returns either a new charge schedule or a modified char
 
 \paragraph{Charge Schedule Generation}
 \label{sec:charge-schedule-generation}
-The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. The generator
-is given \(\I = \varnothing\), which represents the set of unscheduled BEBs. Line 3 of
-\ref{alg:charge-schedule-generation} loops through each visit.
+The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. Line 3 of
+\ref{alg:charge-schedule-generation} loops through each visit. Line 3 extracts the visit index, and Line 4 executes
+\ref{alg:wait}.
 
 \begin{algorithm}[H]
 \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
     \LinesNumbered
-    \TitleOfAlgo{CSG}
+    \TitleOfAlgo{Candidate Solution Generator}
     \KwIn{$\I$, $\C$}
     \KwOut{$\bar{\I}$, $\bar{\C}$}
 
@@ -1123,8 +1122,6 @@ is given \(\I = \varnothing\), which represents the set of unscheduled BEBs. Lin
 
     \Begin
     {
-        $\I \leftarrow \; \varnothing$\tcc*[f]{Begin with empty set of scheduled visits.}
-
         \tcc{Select an unscheduled BEB visit from a randomly indexed set of visits}
         \ForEach {$\I_i \in \I$}
         {
@@ -1138,22 +1135,21 @@ is given \(\I = \varnothing\), which represents the set of unscheduled BEBs. Lin
 \paragraph{Perturb Schedule}
 \label{sec:tweak-schedule}
 As described in SA, local searches are also employed to try and exploit a given solution
-\cite{radosavljevic-2018-metah-optim}. After each step of the cooling function, the new candidate solution will be
-altered by one primitive generation function and compared to the active solution. This process is done over many
-iterations. That is, the local solution space shall be explored in an attempt to find an optima. The method that will be
+\cite{radosavljevic-2018-metah-optim}. After each step of the cooling function, the active solution will be iteratively
+altered by a primitive generator to create a neighboring candidate solution over a total of \(n_K\) iterations. The
+algorithm describes the method by which the SA algorithm decides how to perturb the schedule. The method that will be
 employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
-primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
-distribution. Let \(n_G\) denote the number of primitive generators available and let \texttt{PGF} be the primitive generation
-function, Line 3 selects a primitive generation function with a uniform distribution. Line 5 executes the generation
-function.
+primitive generator once. Line 2 of \ref{alg:perturb-schedule} selects a visit at random with a uniform distribution.
+Line 3 extracts the visit index. Let \(n_G\) denote the number of primitive generating functions. Line 4 selects a
+primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
 
 \begin{algorithm}[H]
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
 
     \LinesNumbered
-    \TitleOfAlgo{PS}
+    \TitleOfAlgo{Perturb Schedule}
     \KwIn{$\I$, $\C$}
-    \KwOut{$\I_i'$, $\C'$}
+    \KwOut{$\bar{\I_i}$, $\bar{\C}$}
 
     \SetKwFunction{PGF}{PGF}
 
@@ -1162,8 +1158,8 @@ function.
         $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
         $PGF \leftarrow\; \U_{[1,n_G]}$\tcc*{Select one of the generator functions}
-        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($\I'$, $\C'$)}
+        $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
+        \Return{($\bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 \section{Optimization Algorithm}

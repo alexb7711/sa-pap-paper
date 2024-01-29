@@ -2,7 +2,7 @@
   \begin{algorithm}[H]
   \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
       \LinesNumbered
-      \TitleOfAlgo{CSG}
+      \TitleOfAlgo{Candidate Solution Generator}
       \KwIn{$\I$, $\C$}
       \KwOut{$\bar{\I}$, $\bar{\C}$}
 
@@ -10,8 +10,6 @@
 
       \Begin
       {
-          $\I \leftarrow \; \varnothing$\tcc*[f]{Begin with empty set of scheduled visits.}
-
           \tcc{Select an unscheduled BEB visit from a randomly indexed set of visits}
           \ForEach {$\I_i \in \I$}
           {

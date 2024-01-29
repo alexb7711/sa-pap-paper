@@ -231,11 +231,10 @@ was unsuccessful, then the generator returns a tuple of null values.
 :PROPERTIES:
 :CUSTOM_ID: new-charger
 :END:
-The new charger generator (shown in \ref{alg:new-charger}) moves a visit $\I_i$ to a new charging queue while
-maintaining the same charge time, $[u_i, d_i]$. Line 2 from \ref{alg:new-charger} purges the visit from the charger
-availability set. Line 3 randomly selects a charger queue index, $q$. Line 4 checks if there is an available time slice
-$[a_i, e_i]$ for charger $q$. Line 5 sets and returns the updated visit. If =findFreetime= was unsuccessful, then the
-generator returns a tuple of null values.
+The new charger generator moves a visit $\I_i$ to a new charging queue while maintaining the same charge time, $[u_i,
+d_i]$. Line 2 from \ref{alg:new-charger} purges the visit from the charger availability set. Line 3 randomly selects a
+charger queue index, $q$. Line 4 checks if there is an available time slice $[a_i, e_i]$ for charger $q$. Line 5 sets
+and returns the updated visit. If =findFreetime= was unsuccessful, then the generator returns a tuple of null values.
 
 #+include: eq/new-charger.org
 
@@ -273,9 +272,9 @@ previously described and returns either a new charge schedule or a modified char
 :PROPERTIES:
 :CUSTOM_ID: sec:charge-schedule-generation
 :END:
-The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. The generator
-is given $\I = \varnothing$, which represents the set of unscheduled BEBs. Line 3 of
-\ref{alg:charge-schedule-generation} loops through each visit.
+The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. Line 3 of
+\ref{alg:charge-schedule-generation} loops through each visit. Line 3 extracts the visit index, and Line 4 executes
+\ref{alg:wait}.
 
 #+include: eq/charge-schedule-generation.org
 
@@ -284,14 +283,13 @@ is given $\I = \varnothing$, which represents the set of unscheduled BEBs. Line 
 :CUSTOM_ID: sec:tweak-schedule
 :END:
 As described in SA, local searches are also employed to try and exploit a given solution
-[cite:@radosavljevic-2018-metah-optim]. After each step of the cooling function, the new candidate solution will be
-altered by one primitive generation function and compared to the active solution. This process is done over many
-iterations. That is, the local solution space shall be explored in an attempt to find an optima. The method that will be
+[cite:@radosavljevic-2018-metah-optim]. After each step of the cooling function, the active solution will be iteratively
+altered by a primitive generator to create a neighboring candidate solution over a total of $n_K$ iterations. The
+algorithm describes the method by which the SA algorithm decides how to perturb the schedule. The method that will be
 employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
-primitive generator. The algorithm is outlined in \ref{alg:perturb-schedule}. Line 2 selects a visit with a uniform
-distribution. Let $n_G$ denote the number of primitive generators available and let =PGF= be the primitive generation
-function, Line 3 selects a primitive generation function with a uniform distribution. Line 5 executes the generation
-function.
+primitive generator once. Line 2 of \ref{alg:perturb-schedule} selects a visit at random with a uniform distribution.
+Line 3 extracts the visit index. Let $n_G$ denote the number of primitive generating functions. Line 4 selects a
+primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
 
 #+include: eq/tweak-schedule.org
 
