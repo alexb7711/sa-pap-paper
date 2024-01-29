@@ -1,10 +1,7 @@
 #+begin_src latex
   \begin{algorithm}[H]
-  \caption{Slide Visit Algorithm} \label{alg:slide-visit}
-      \LinesNumbered
-      \TitleOfAlgo{Slide Visit}
-      \KwIn{$\Sol$}
-      \KwOut{$\bar{\Sol}$}
+    \caption{Slide Visit Algorithm} \label{alg:slide-visit} \LinesNumbered \TitleOfAlgo{Slide Visit} \KwIn{$\Sol$}
+    \KwOut{$\bar{\Sol}$}
 
       \SetKwFunction{Purge}{Purge}
 
@@ -18,7 +15,7 @@
             \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
           }
 
-          $\I_i \leftarrow$ ($\I_{i.q},u,d,\C$)\tcc*{Reassign the original visit if the generator fails}
+          $\C_i \leftarrow$ {$[L,a]$, $[e,U]$}\tcc*{Reassign the original visit if the generator fails}
           \Return{($\varnothing$)}\tcc*{Return nothing}
       }
     \end{algorithm}

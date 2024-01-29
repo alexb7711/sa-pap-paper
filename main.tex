@@ -1,4 +1,4 @@
-% Created 2024-01-26 Fri 15:07
+% Created 2024-01-28 Sun 17:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -68,7 +68,7 @@
  pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
+ pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
  pdflang={English}}
 \begin{document}
 
@@ -534,10 +534,9 @@ constraint is deactivated and BEB \(j\) is in a queue index greater than that of
 
 \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
 bus \(b_i\). \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} ensures that the BEB's SOC does not
-go below 0. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in \ref{eq:ac}. This is done by
-checking if the initial charge for visit \(i\) is greater than or equal to the minimum allowed charge. \ref{seq:c11}
-ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less than the detach
-time which is less than the time the bus exits the station and all must be less than the time horizon).
+go below 0. \ref{seq:c11} ensures the continuity of the times (i.e. the arrival time is less than the initial charge
+which is less than the detach time which is less than the time the bus exits the station and all must be less than the
+time horizon).
 
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable \(\iota\). These
 constraints define three \(n_H \times n_Q\) matrices that enforce \(\iota_h^q = 1\) if \(q = v_i\) and \(u_i \le t_h \le d_i\), \(\iota_h^q = 0\)
@@ -667,7 +666,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org5a2a6c0}
+\label{sec:orgab2475f}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -686,7 +685,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org9255e41}
+\label{sec:orgfaa1598}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -724,7 +723,7 @@ depicted by \ref{fig:find-free}, the red line shows the arrival and departure ti
 indicate regions in which charger \(v_i\) is active. \(C \in \C_q\) represents one of the ranges between the blue lines, \([L,
 U]\).
 
-The \texttt{findFreeTime} algorithm behaves as follows. Lines 1 and 2 of \ref{alg:find-free-tim} extract the lower and upper
+The \texttt{findFreeTime} algorithm behaves as follows. Lines 1 and 2 of \ref{alg:find-free-time} extract the lower and upper
 bounds of the charger availability. Lines 3 - 20 check whether the BEB visit can be assigned to the charger available
 time slice. Lines 4 - 6 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits entirely within the
 charger availability and the charge time may be anywhere in the range \([a_i, e_i]\). Lines 8 - 11 coincides with
@@ -989,19 +988,16 @@ availability.
 
 \paragraph{Slide visit}
 \label{slide-visit}
-Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
+Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c11} there may be
 some room to manipulate \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and \(d_i\) are randomly
 selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 from
 \ref{alg:slide-visit} purges the visit from the charger availability set. Line 4 retrieves the window that was opened up
-by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). Line 5 the updated visit. If \texttt{findFreeTime}
+by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). Line 5 the updates visit. If \texttt{findFreeTime}
 was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
-\caption{Slide Visit Algorithm} \label{alg:slide-visit}
-    \LinesNumbered
-    \TitleOfAlgo{Slide Visit}
-    \KwIn{$\Sol$}
-    \KwOut{$\bar{\Sol}$}
+  \caption{Slide Visit Algorithm} \label{alg:slide-visit} \LinesNumbered \TitleOfAlgo{Slide Visit} \KwIn{$\Sol$}
+  \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{Purge}{Purge}
 
@@ -1015,7 +1011,7 @@ was unsuccessful, then the generator returns a tuple of null values.
           \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
         }
 
-        $\I_i \leftarrow$ ($\I_{i.q},u,d,\C$)\tcc*{Reassign the original visit if the generator fails}
+        $\C_i \leftarrow$ {$[L,a]$, $[e,U]$}\tcc*{Reassign the original visit if the generator fails}
         \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1023,10 +1019,10 @@ was unsuccessful, then the generator returns a tuple of null values.
 \paragraph{New charger}
 \label{new-charger}
 The new charger generator (shown in \ref{alg:new-charger}) moves a visit \(\I_i\) to a new charging queue while
-maintaining the same charge time, \([u_i, d_i]\). Line 2 purges the visit from the charger availability set. Line 3
-randomly selects a charger queue index, \(q\). Line 4 checks if there is an available time slice \([a_i, e_i]\) for charger
-\(q\). Line 5 sets and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple
-of null values.
+maintaining the same charge time, \([u_i, d_i]\). Line 2 from \ref{alg:new-charger} purges the visit from the charger
+availability set. Line 3 randomly selects a charger queue index, \(q\). Line 4 checks if there is an available time slice
+\([a_i, e_i]\) for charger \(q\). Line 5 sets and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then the
+generator returns a tuple of null values.
 
 \begin{algorithm}[H]
   \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}
@@ -1045,7 +1041,7 @@ of null values.
         \Return{($q,\I_{i.u}, \I_{i.d},\C$)}
       }
 
-      $\I_i \leftarrow$ ($\I_{i.q},u,d,C$)\tcc*{Reassign the original visit if the generator fails}
+      $\C_i \leftarrow$ $\{[L,a]$, $[e,U]\}$\tcc*{Reassign the original visit if the generator fails}
       \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1054,7 +1050,8 @@ of null values.
 \label{sec:wait}
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
 Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the charger availability
-set of the wait queue for bus \(b\). Note that \(C_L \le u_i \le d_i \le C_U\). Line 4 returns the updated visit.
+set of the wait queue for bus \(b\). Note that \(C_L \le u_i \le d_i \le C_U\). Line 4 returns the updated visit. Note that a
+check for failure is not included here because this primitive cannot fail.
 
 \begin{algorithm}[H]
 \caption{Wait algorithm} \label{alg:wait}
@@ -1098,7 +1095,7 @@ back into the schedule using the new visit generator. Line 4 assigns and returns
       \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
     }
 
-    $\I_i \leftarrow$ ($\I_{i.q},u,d,C$)\tcc*{Reassign the original visit if the generator fails}
+    $\C_i \leftarrow$ {$[L,a]$, $[e,U]$}\tcc*{Reassign the original visit if the generator fails}
     \Return{($\varnothing$)}\tcc*{Return nothing}
   }
 \end{algorithm}
@@ -1111,8 +1108,8 @@ previously described and returns either a new charge schedule or a modified char
 
 \paragraph{Charge Schedule Generation}
 \label{sec:charge-schedule-generation}
-The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. To generate
-this starting point, the generator is given \(\I\), which represents the set of unscheduled BEBs. Line 3 of
+The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. The generator
+is given \(\I = \varnothing\), which represents the set of unscheduled BEBs. Line 3 of
 \ref{alg:charge-schedule-generation} loops through each visit.
 
 \begin{algorithm}[H]
@@ -1254,12 +1251,10 @@ the validity of the set values. \ref{seq:c5} can be directly calculated and \ref
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
 battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated while
-\ref{seq:c7}-\ref{seq:c9} can be evaluated to ensure the charge propagation is feasible. Thus, the constraints to
-enable/disable the penalty function, \ref{seq:c9}-\ref{seq:c10}, can be executed to determine the value of \(\phi_i\) for
-each visit. \ref{seq:c12}-\ref{seq:c15} may also be evaluated to find the values of \(\theta_h^{v_i}\) and \(\mu_h^{v_i}\) which
-then directly leads to \ref{seq:c16} being able to be determined. Once all these constraints have been calculated and
-evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as
-\(S\).
+\ref{seq:c7}-\ref{seq:c8} can be evaluated to ensure the charge propagation is feasible. \ref{seq:c12}-\ref{seq:c15} may
+also be evaluated to find the values of \(\theta_h^{v_i}\) and \(\mu_h^{v_i}\) which then directly leads to \ref{seq:c16} being
+able to be determined. Once all these constraints have been calculated and evaluated to be true will a generated
+solution be considered in the feasible space. Let the feasible space be denoted as \(S\).
 
 Line 2 initializes the SA algorithm by creating a vector of temperature values based on a temperature schedule \(\Tau\),
 and an initial temperature \(\Tau_0\). Line 3 generates the initial candidate solution \(\omega\), note that \(CSG(\cdot)\) is used to
@@ -1315,5 +1310,5 @@ if the candidate is within the solution space. That it, it satisfies the constra
 
 
 \bibliographystyle{plain}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
 \end{document}

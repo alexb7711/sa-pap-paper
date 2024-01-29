@@ -186,7 +186,7 @@ depicted by [[fig:find-free]], the red line shows the arrival and departure time
 indicate regions in which charger $v_i$ is active. $C \in \C_q$ represents one of the ranges between the blue lines, $[L,
 U]$.
 
-The =findFreeTime= algorithm behaves as follows. Lines 1 and 2 of \ref{alg:find-free-tim} extract the lower and upper
+The =findFreeTime= algorithm behaves as follows. Lines 1 and 2 of \ref{alg:find-free-time} extract the lower and upper
 bounds of the charger availability. Lines 3 - 20 check whether the BEB visit can be assigned to the charger available
 time slice. Lines 4 - 6 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits entirely within the
 charger availability and the charge time may be anywhere in the range $[a_i, e_i]$. Lines 8 - 11 coincides with
@@ -218,11 +218,11 @@ availability.
 :PROPERTIES:
 :CUSTOM_ID: slide-visit
 :END:
-Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c10} there may be
+Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c11} there may be
 some room to manipulate $u_i$ and $d_i$ within the window $[a_i, e_i]$. Two new values, $u_i$ and $d_i$ are randomly
 selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 from
 \ref{alg:slide-visit} purges the visit from the charger availability set. Line 4 retrieves the window that was opened up
-by purging visit $i$. Line 4 sets the new charge time frame, $[u_i, d_i]$. Line 5 the updated visit. If =findFreeTime=
+by purging visit $i$. Line 4 sets the new charge time frame, $[u_i, d_i]$. Line 5 the updates visit. If =findFreeTime=
 was unsuccessful, then the generator returns a tuple of null values.
 
 #+include: eq/slide-visit.org
@@ -232,10 +232,10 @@ was unsuccessful, then the generator returns a tuple of null values.
 :CUSTOM_ID: new-charger
 :END:
 The new charger generator (shown in \ref{alg:new-charger}) moves a visit $\I_i$ to a new charging queue while
-maintaining the same charge time, $[u_i, d_i]$. Line 2 purges the visit from the charger availability set. Line 3
-randomly selects a charger queue index, $q$. Line 4 checks if there is an available time slice $[a_i, e_i]$ for charger
-$q$. Line 5 sets and returns the updated visit. If =findFreetime= was unsuccessful, then the generator returns a tuple
-of null values.
+maintaining the same charge time, $[u_i, d_i]$. Line 2 from \ref{alg:new-charger} purges the visit from the charger
+availability set. Line 3 randomly selects a charger queue index, $q$. Line 4 checks if there is an available time slice
+$[a_i, e_i]$ for charger $q$. Line 5 sets and returns the updated visit. If =findFreetime= was unsuccessful, then the
+generator returns a tuple of null values.
 
 #+include: eq/new-charger.org
 
@@ -245,7 +245,8 @@ of null values.
 :END:
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
 Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the charger availability
-set of the wait queue for bus $b$. Note that $C_L \le u_i \le d_i \le C_U$. Line 4 returns the updated visit.
+set of the wait queue for bus $b$. Note that $C_L \le u_i \le d_i \le C_U$. Line 4 returns the updated visit. Note that a
+check for failure is not included here because this primitive cannot fail.
 
 #+include: eq/wait.org
 
@@ -272,8 +273,8 @@ previously described and returns either a new charge schedule or a modified char
 :PROPERTIES:
 :CUSTOM_ID: sec:charge-schedule-generation
 :END:
-The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. To generate
-this starting point, the generator is given $\I$, which represents the set of unscheduled BEBs. Line 3 of
+The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. The generator
+is given $\I = \varnothing$, which represents the set of unscheduled BEBs. Line 3 of
 \ref{alg:charge-schedule-generation} loops through each visit.
 
 #+include: eq/charge-schedule-generation.org
