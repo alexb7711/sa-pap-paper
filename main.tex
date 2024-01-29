@@ -1,4 +1,4 @@
-% Created 2024-01-29 Mon 08:09
+% Created 2024-01-29 Mon 08:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -666,7 +666,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org3f42e8e}
+\label{sec:orge76ed24}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -685,7 +685,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org227bb31}
+\label{sec:orge33a086}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -1170,18 +1170,18 @@ PAP algorithm.
 
 \subsection{Simulated Annealing Pseudo Code}
 \label{sec:simulated-annealing-pseudo-code}
-Consider \ref{alg:sa-pseudo} \cite{henderson-1989-theor-pract}. Let \(\omega\) and \(\bar{\omega}\) denote the current solution and
+Consider \ref{alg:sa-pseudo} \cite{henderson-1989-theor-pract}. Let \(\omega\) and \(\bar{\omega}\) denote the active solution and
 the candidate solution, respectively. Let \(\Tau\) be the temperature function and \(\Tau_0\) the initial temperature.
 Furthermore, let \(t\) be defined as the vector of temperatures defined by \(t = \Tau(\Tau_0)\), and let \(t_m\) be defined as
 being an element of \(t\), \(t_m \in t\). Let \(n_K\) be the repetition counter, it defines the number of iterations to execute
 exploit a solution at a constant temperature \(t_m\).
 
-Recall the objective of the SA algorithm is to iteratively manipulate an active solution to a neighboring one. The
-fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is always taken as
-the active solution. If it is not, then it may be selected as the new candidate solution with some probability that is a
-function of the difference in the objective function values and the current temperature. This process is iteratively
-done until the temperature function reaches its minimum value. With the high level summary in mind, the SA pseudo code
-is to be presented.
+Recall the objective of the SA algorithm is to iteratively create a neighboring candidate solution from the active
+solution. The fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is
+always taken as the active solution. If it is not, then it may be selected as the new candidate solution with some
+probability that is a function of the difference in the objective function values and the current temperature. This
+process is iteratively done until the temperature function reaches its minimum value. With the high level summary in
+mind, the SA pseudocode is to be presented.
 
 The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm with the active
 solution, \(\omega\), and temperature schedule, \(t\), respectively. The outer loop on Line 3 iterates through all the
