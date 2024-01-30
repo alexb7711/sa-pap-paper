@@ -17,7 +17,7 @@
         \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
       }
 
-      $\C_i \leftarrow$ {$[L,a]$, $[e,U]$}\tcc*{Reassign the original visit if the generator fails}
+      $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
       \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}

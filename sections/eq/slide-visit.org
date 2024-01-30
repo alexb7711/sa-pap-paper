@@ -15,7 +15,7 @@
             \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
           }
 
-          $\C_i \leftarrow$ {$[L,a]$, $[e,U]$}\tcc*{Reassign the original visit if the generator fails}
+          $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
           \Return{($\varnothing$)}\tcc*{Return nothing}
       }
     \end{algorithm}
