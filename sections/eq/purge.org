@@ -4,12 +4,12 @@
       \LinesNumbered
       \TitleOfAlgo{Purge}
       \KwIn{$\Sol$}
-      \KwOut{$\Sol'$}
+      \KwOut{$\bar{\Sol}$}
 
       \Begin
       {
-          $\C' \leftarrow \C \setminus \C_{v_i}^i$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
-          \Return{$\Sol' \leftarrow \C'$}\tcc*{Return updated tuple}
+          $\bar{\C} \leftarrow \C \setminus \C_{i.v_i}$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
+          \Return{$\bar{\C}$}\tcc*{Return updated tuple}
       }
-  \end{algorithm}
+    \end{algorithm}
 #+end_src

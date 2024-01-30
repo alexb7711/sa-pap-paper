@@ -1,6 +1,7 @@
-#+name: eq:constraints
 \begin{multicols}{2}
 \begin{subequations}
+\label{eq:constraints}
+
   \begin{equation}
       \label{seq:c0}
       u_i - d_j - (\sigma_{ij} - 1)T \ge 0
@@ -31,19 +32,11 @@
   \end{equation}
   \begin{equation}
       \label{seq:c7}
-       \eta_{i} + r_{v_i}s_i - \Delta_i \ge \nu \kappa_{\Xi_i}
-  \end{equation}
-  \begin{equation}
-      \label{seq:c8}
       \kappa_{\Xi_i} \geq \eta_{i} + r_{v_i}s_i
   \end{equation}
   \begin{equation}
-      \label{seq:c9}
-      \eta_{i} - m\kappa_{b_i} \le T (1 - \phi_{i})
-  \end{equation}
-  \begin{equation}
-      \label{seq:c10}
-      m_{k_i} - \eta_{i} > T \phi_{i}
+      \label{seq:c8}
+      \eta_{i} + r_{v_i}s_i - \Delta_i \ge \nu \kappa_{\Xi_i}
   \end{equation}
   \begin{equation}
       \label{seq:c11}

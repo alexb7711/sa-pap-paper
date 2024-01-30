@@ -2,23 +2,21 @@
   \begin{algorithm}[H]
   \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
       \LinesNumbered
-      \TitleOfAlgo{CSG}
+      \TitleOfAlgo{Candidate Solution Generator}
       \KwIn{$\I$, $\C$}
-      \KwOut{$\I'$, $\C'$}
+      \KwOut{$\bar{\I}$, $\bar{\C}$}
 
-      \SetKwFunction{NewVisit}{NewVisit}
+      \SetKwFunction{Wait}{Wait}
 
       \Begin
       {
-          $\I' \leftarrow \; \varnothing$\tcc*[f]{Begin with empty set of scheduled visits.}
-
           \tcc{Select an unscheduled BEB visit from a randomly indexed set of visits}
-          \ForEach {$\I_i \in \{\ \U_{\I} \}$}
+          \ForEach {$\I_i \in \I$}
           {
-              $i\leftarrow\; \I_i$\tcc*{Extract the visit index}
-              ($\I'$, $\C'$) $\leftarrow$ \NewVisit{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
+              $i \leftarrow \I_i$\tcc*{Extract the visit index}
+              ($\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
           }
-              \Return{($\I'$, $\C'$)}
+              \Return{($\bar{\I}$, $\bar{\C}$)}
       }
-  \end{algorithm}
+    \end{algorithm}
 #+end_src

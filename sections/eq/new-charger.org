@@ -1,27 +1,23 @@
 #+begin_src latex
   \begin{algorithm}[H]
-  \caption{New Charger Algorithm} \label{alg:new-charger}
-      \LinesNumbered
-      \TitleOfAlgo{New Charger}
-      \KwIn{$\Sol$}
-      \KwOut{$\Sol'$}
+    \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}
+    \KwOut{$\bar{\Sol}$}
 
       \SetKwFunction{Purge}{Purge}
 
       \Begin
       {
-          $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*[f]{Purge visit $i$ from its charger}
+        $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+        $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
 
-          \tcc{For each element in the uniformly random set of time slices from charger $q$}
-          \ForEach {$C_{q} \in \{ \U_{\Qset} \}$}
-          {
-              \If(\tcc*[f]{If there is time available in $C_{q}$}){$x_i' \leftarrow$ \findFreeTime{$C_{q}$, ($a_i, e_i$)} $\not\in \varnothing$}
-              {
-                  $x_i' \leftarrow (u_i, d_i)$\tcc*{Keep previous start/stop times}
-                  \Return{$\Sol' \leftarrow x_i'$}\tcc*[f]{Return visit}
-              }
-          }
+        \If(\tcc*[f]{If there is time available in $C_{q}$}){\findFreeTime{$C_{q}$, ($a_i, e_i$)} $\not\in \varnothing$}
+        {
+          \tcc{Return visit, note $u$ and $d$ are the original inital/final charge times.}
+          \Return{($q,\I_{i.u}, \I_{i.d},\C$)}
+        }
 
+        $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
+        \Return{($\varnothing$)}\tcc*{Return nothing}
       }
-  \end{algorithm}
+    \end{algorithm}
 #+end_src

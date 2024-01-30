@@ -11,10 +11,14 @@
 
     \Begin
     {
-      $\C_{v_i}^{i'} \leftarrow$ \Purge{$\Sol$}\tcc*{Purge visit $i$ from its charger}
-      $\I_i' \leftarrow$ \NewVisit{$\Sol'$}\tcc*{Add visit $i$ back in randomly}
+      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \varnothing$}
+      {
+        \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
+      }
 
-      \Return{$\Sol' \leftarrow x_i'$} \tcc*[f]{Return visit}
+      $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
+      \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
 #+end_src

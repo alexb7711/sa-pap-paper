@@ -6,11 +6,11 @@
 # =========================================================================================================================
 # LaTeX packages
 #+LATEX_CLASS: article
-#+latex_header: \usepackage{xcolor}                          % Code in LaTeX
+#+latex_header: \usepackage{xcolor}                         % Color time
 #+latex_header: \usepackage{listings}                       % Code in LaTeX
 #+latex_header: \usepackage{listings-rust}                  % Code in LaTeX
 #+latex_header: \usepackage{amsfonts}                       % Cool math fonts
-#+latex_header: \usepackage{tabularx}
+#+latex_header: \usepackage{tabularx}                       % Cool tables
 #+latex_header: \usepackage{multicol}                       % Add capability to make columns
 #+latex_header: \usepackage{hyperref}                       % Cool clean hyperlinks
 #+latex_header: \setlength\parindent{0pt}                   % No indent for paragraphs
@@ -22,9 +22,9 @@
 # =========================================================================================================================
 # `autoref' formatting
 #+latex_header: \renewcommand*{\sectionautorefname}{Section}
-#+latex_header: \renewcommand*{\subsectionautorefname}{Subsection}
-#+latex_header: \renewcommand*{\subsubsectionautorefname}{Subsubsection}
-#+latex_header: \renewcommand*{\paragraphautorefname}{Paragraph}
+#+latex_header: \renewcommand*{\subsectionautorefname}{Section}
+#+latex_header: \renewcommand*{\subsubsectionautorefname}{Section}
+#+latex_header: \renewcommand*{\paragraphautorefname}{Section}
 #+latex_header: \renewcommand*{\algorithmautorefname}{Algorithm}
 
 # =========================================================================================================================
@@ -43,11 +43,11 @@
 #+latex_header: \newcommand{\T}{\mathcal{T}}                % To make it clear the difference
 #+latex_header: \newcommand{\Tau}{T}                        % between Tau and T
 #+latex_header: \newcommand{\AC}{AC(u, d, v, \eta)}         % Set the parameters for AC once
-#+latex_header: \newcommand{\PC}{PC(u, d, v)}               % Set the parameters for PC once
+#+latex_header: \newcommand{\UC}{UC(u, d, v)}               % Set the parameters for UC once
 #+latex_header: \newcommand{\ACi}{AC(u_i, d_i, v_i, \eta_i)}% Set the parameters for AC once
-#+latex_header: \newcommand{\PCi}{PC(u_i, d_i, v_i)}        % Set the parameters for PC once
+#+latex_header: \newcommand{\UCi}{UC(u_i, d_i, v_i)}        % Set the parameters for UC once
 #+latex_header: \newcommand{\Not}{\textbf{not }}            % Custom `not' operator
-#+latex_header: \newcommand{\visit}{(i, b_i, a_i, e_i, u_i, d_i, v_i, \eta_i, \xi_i)}
+#+latex_header: \newcommand{\visit}{(i, b, a, e, u, d, v, \eta, \xi)}
 #+latex_haeder:                                             % Single visit tuple
 #+latex_header: \newcommand{\I}{\mathbb{I}}                 % Set of visit tuples
 #+latex_header: \newcommand{\C}{\mathbb{C}}                 % Charger availability information
@@ -57,14 +57,14 @@
 #+latex_header: \newcommand{\Hd}{\mathbb{H}}                % Set of discrete times
 #+latex_header: \newcommand{\Nu}{\mathcal{V}}               % Draw a nice Nu
 
-#+latex_header: \newcommand{\Iset}{\mathcal{I}}             % Set of visits 1-I
-#+latex_header: \newcommand{\Isetinit}{\mathcal{I}_0}       % Set of visits inital visits
-#+latex_header: \newcommand{\Isetfinal}{\mathcal{I}_f}      % Set of visits final visits
-#+latex_header: \newcommand{\Bset}{\mathcal{B}}             % Set of visits 1-B
-#+latex_header: \newcommand{\Qset}{\mathcal{Q}}             % Set of visits 1-Q
-#+latex_header: \newcommand{\Jset}{\mathcal{J}}             % Set of visits 1-J
+#+latex_header: \newcommand{\Iset}{I}                       % Set of visits 1-I
+#+latex_header: \newcommand{\Isetinit}{I_0}                 % Set of visits inital visits
+#+latex_header: \newcommand{\Isetfinal}{I_f}                % Set of visits final visits
+#+latex_header: \newcommand{\Bset}{B}                       % Set of visits 1-B
+#+latex_header: \newcommand{\Qset}{Q}                       % Set of visits 1-Q
+#+latex_header: \newcommand{\Jset}{J}                       % Set of visits 1-J
 #+latex_header: \newcommand{\Jsetq}{\mathbb{J}}             % Set of visits 1-J for queue active times
-#+latex_header: \newcommand{\Hset}{\mathcal{H}}             % Set of visits 1-H
+#+latex_header: \newcommand{\Hset}{H}                       % Set of visits 1-H
 
 # =========================================================================================================================
 # More document configuration
