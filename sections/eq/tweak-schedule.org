@@ -3,9 +3,9 @@
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
 
     \LinesNumbered
-    \TitleOfAlgo{PS}
+    \TitleOfAlgo{Perturb Schedule}
     \KwIn{$\I$, $\C$}
-    \KwOut{$\I_i'$, $\C'$}
+    \KwOut{$\bar{\I_i}$, $\bar{\C}$}
 
     \SetKwFunction{PGF}{PGF}
 
@@ -14,8 +14,8 @@
         $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
         $PGF \leftarrow\; \U_{[1,n_G]}$\tcc*{Select one of the generator functions}
-        $\Sol' \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($\I'$, $\C'$)}
+        $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
+        \Return{($\bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 #+end_export

@@ -12,18 +12,18 @@ PAP algorithm.
 :CUSTOM_ID: sec:simulated-annealing-pseudo-code
 :END:
 
-Consider \ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\bar{\omega}$ denote the current solution and
+Consider \ref{alg:sa-pseudo} [cite:@henderson-1989-theor-pract]. Let $\omega$ and $\bar{\omega}$ denote the active solution and
 the candidate solution, respectively. Let $\Tau$ be the temperature function and $\Tau_0$ the initial temperature.
 Furthermore, let $t$ be defined as the vector of temperatures defined by $t = \Tau(\Tau_0)$, and let $t_m$ be defined as
 being an element of $t$, $t_m \in t$. Let $n_K$ be the repetition counter, it defines the number of iterations to execute
 exploit a solution at a constant temperature $t_m$.
 
-Recall the objective of the SA algorithm is to iteratively manipulate an active solution to a neighboring one. The
-fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is always taken as
-the active solution. If it is not, then it may be selected as the new candidate solution with some probability that is a
-function of the difference in the objective function values and the current temperature. This process is iteratively
-done until the temperature function reaches its minimum value. With the high level summary in mind, the SA pseudo code
-is to be presented.
+Recall the objective of the SA algorithm is to iteratively create a neighboring candidate solution from the active
+solution. The fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is
+always taken as the active solution. If it is not, then it may be selected as the new candidate solution with some
+probability that is a function of the difference in the objective function values and the current temperature. This
+process is iteratively done until the temperature function reaches its minimum value. With the high level summary in
+mind, the SA pseudocode is to be presented.
 
 The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm with the active
 solution, $\omega$, and temperature schedule, $t$, respectively. The outer loop on Line 3 iterates through all the
@@ -58,12 +58,10 @@ the validity of the set values. \ref{seq:c5} can be directly calculated and \ref
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
 battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated while
-\ref{seq:c7}-\ref{seq:c9} can be evaluated to ensure the charge propagation is feasible. Thus, the constraints to
-enable/disable the penalty function, \ref{seq:c9}-\ref{seq:c10}, can be executed to determine the value of $\phi_i$ for
-each visit. \ref{seq:c12}-\ref{seq:c15} may also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which
-then directly leads to \ref{seq:c16} being able to be determined. Once all these constraints have been calculated and
-evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as
-$S$.
+\ref{seq:c7}-\ref{seq:c8} can be evaluated to ensure the charge propagation is feasible. \ref{seq:c12}-\ref{seq:c15} may
+also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which then directly leads to \ref{seq:c16} being
+able to be determined. Once all these constraints have been calculated and evaluated to be true will a generated
+solution be considered in the feasible space. Let the feasible space be denoted as $S$.
 
 Line 2 initializes the SA algorithm by creating a vector of temperature values based on a temperature schedule $\Tau$,
 and an initial temperature $\Tau_0$. Line 3 generates the initial candidate solution $\omega$, note that $CSG(\cdot)$ is used to

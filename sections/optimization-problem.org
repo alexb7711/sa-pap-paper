@@ -266,10 +266,9 @@ constraint is deactivated and BEB $j$ is in a queue index greater than that of B
 
 \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
 bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} ensures that the BEB's SOC does not
-go below 0. \ref{seq:c9} and \ref{seq:c10} are used to enable and disable the penalty method in [[eq:ac]]. This is done by
-checking if the initial charge for visit $i$ is greater than or equal to the minimum allowed charge. \ref{seq:c11}
-ensures the continuity of the times (i.e. the arrival time is less than the initial charge which is less than the detach
-time which is less than the time the bus exits the station and all must be less than the time horizon).
+go below 0. \ref{seq:c11} ensures the continuity of the times (i.e. the arrival time is less than the initial charge
+which is less than the detach time which is less than the time the bus exits the station and all must be less than the
+time horizon).
 
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable $\iota$. These
 constraints define three $n_H \times n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i \le t_h \le d_i$, $\iota_h^q = 0$
