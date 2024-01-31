@@ -1,4 +1,4 @@
-% Created 2024-01-31 Wed 07:58
+% Created 2024-01-31 Wed 13:25
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -307,7 +307,20 @@ calculating the demand cost. That is, \(\iota_h^{v_i} \in \{0,1\} = 1\) when \(\
 will be covered in more depth in \ref{sec:objective-function}.
 
 A penalty method is to be implemented in the objective function that is enabled when the \(\eta_i\) falls below a defined
-threshold. Let the activating boolean decision variable be denoted as \(\phi_i \in \{0,1\}\).
+threshold. Let the piecewise function that enables/disables the penalty method be of the from of \ref{eq:penalty}.
+
+\begin{equation}
+\label{eq:penalty}
+  \phi(x) =
+  \begin{cases}
+    0   & x \ge 0 \\
+    x^2 & x < 0\\
+  \end{cases}
+\end{equation}
+
+If \(x = \eta_i - \nu_{\Xi_i} \kappa_i\), then \ref{eq:penalty} defines the penalty method that encourages schedules to maintain the SOC for
+each visit above \(\nu_{\Xi_i} \kappa_i\). If the SOC is falls below the specified threshold, a penalty proportional to the
+difference of the SOC and the threshold squared is applied.
 
 The variables \(\sigma_{ij}\) and \(\psi_{ij}\) are used to indicate whether a visit pair \((i, j)\) overlap the same space as show in
 \ref{fig:spacial-and-temporal-constr}. Formally, \ref{eq:bus-spat-temp} describes the relationship that \(\sigma_{ij}\) and \(\psi_{ij}\)
@@ -350,12 +363,13 @@ on insufficient charge. These considerations are divided into two components: Th
 Suppose the objective function is of the form \(\text{min } J = \AC + \UC\). \(\AC\) is the assignment cost, and \(\UC\) is
 the utility cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the
 chosen charging period, \([u_i, d_i]\). \(v_i \in \Qset\) is the charger index, \(u_i\) is the initial charge time, \(d_i\) is the
-detach time for visit \(i\), \(\phi_i\) is a binary decision variable\footnote{This is being changed into a decision variable. This footnote is to keep track of this text.}, \(\nu\) is a vector of the minimum charge percentage
-allowed for each BEB \(\kappa_i\) is the battery capacity for visit \(i\), and \(\eta_i\) is the initial charge for visit \(i\).
+detach time for visit \(i\), \(\phi_i(x)\) is a piecewise function utilized as a penalty method, \(\nu\) is a vector of the minimum
+charge percentage allowed for each BEB \(\kappa_i\) is the battery capacity for visit \(i\), and \(\eta_i\) is the initial charge for
+visit \(i\).
 
 \begin{equation}
 \label{eq:ac}
-\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
+\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - m \kappa_i) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue \(q \in Q\). Let \(\epsilon\)
@@ -370,11 +384,11 @@ still encouraging the use of slow chargers over fast. While the \(\epsilon\) vec
 form shown above is the method applied to this work.
 
 The second term is the penalty function that is either enabled or disabled by \(\phi_i\)
-\cite{luenberger-2008-penal-barrier-method}. The penalty function is enabled, \(\phi_i = 1\), if the SOC falls below a
-specified SOC threshold, \(\eta_i \le \nu \kappa_{\Xi_i}\), and is disabled, \(\phi_i = 0\), otherwise. This term is considered an assignment
-cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not impacted by how
-much the system consumes energy, but by how the BEBs have been assigned. \(C\) is a large constant value used to scale the
-penalty function. The mechanisms that enables or disables \(\phi_i\) is derived in \ref{sec:constraints}.
+\cite{luenberger-2008-penal-barrier-method}. The penalty function is enabled, \(\phi_i = (\eta_i - \nu_{\Xi_i} \kappa_i)^2\), if the SOC
+falls below a specified SOC threshold, \(\eta_i \le \nu \kappa_{\Xi_i}\), and is disabled, \(\phi_i = 0\), otherwise. This term is considered
+an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not
+impacted by how much the system consumes energy, but by how the BEBs have been assigned. \(C\) is a large constant value
+used to scale the penalty function. The mechanisms that enables or disables \(\phi_i\) is derived in \ref{sec:constraints}.
 
 The utility cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation
 of all the energy being used over all the active periods for each charger in the time horizon, \(\T\), as written in
@@ -722,7 +736,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org4c9c101}
+\label{sec:org19e33de}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -741,7 +755,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgdea952a}
+\label{sec:org3dfe755}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger

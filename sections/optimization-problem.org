@@ -93,11 +93,14 @@ not. Specifically it indicates if $t_h$ is within an active charging period for 
 calculating the demand cost. That is, $\iota_h^{v_i} \in \{0,1\} = 1$ when $\mu_h^{v_i} = 1$ and $\theta_h^{v_i} = 1$. This topic
 will be covered in more depth in [[#sec:objective-function]].
 
-#+begin_comment
-TODO: Revisit this paragraph
-#+end_comment
 A penalty method is to be implemented in the objective function that is enabled when the $\eta_i$ falls below a defined
-threshold. Let the activating boolean decision variable be denoted as $\phi_i \in \{0,1\}$.
+threshold. Let the piecewise function that enables/disables the penalty method be of the from of [[eq:penalty]].
+
+#+include: eq/penalty.org
+
+If $x = \eta_i - \nu_{\Xi_i} \kappa_i$, then [[eq:penalty]] defines the penalty method that encourages schedules to maintain the SOC for
+each visit above $\nu_{\Xi_i} \kappa_i$. If the SOC is falls below the specified threshold, a penalty proportional to the
+difference of the SOC and the threshold squared is applied.
 
 The variables $\sigma_{ij}$ and $\psi_{ij}$ are used to indicate whether a visit pair $(i, j)$ overlap the same space as show in
 [[fig:spacial-and-temporal-constr]]. Formally, [[eq:bus-spat-temp]] describes the relationship that $\sigma_{ij}$ and $\psi_{ij}$
@@ -125,16 +128,13 @@ on insufficient charge. These considerations are divided into two components: Th
 Suppose the objective function is of the form $\text{min } J = \AC + \UC$. $\AC$ is the assignment cost, and $\UC$ is
 the utility cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the
 chosen charging period, $[u_i, d_i]$. $v_i \in \Qset$ is the charger index, $u_i$ is the initial charge time, $d_i$ is the
-detach time for visit $i$, $\phi_i$ is a binary decision variable[fn:2], $\nu$ is a vector of the minimum charge percentage
-allowed for each BEB $\kappa_i$ is the battery capacity for visit $i$, and $\eta_i$ is the initial charge for visit $i$.
-
-#+begin_comment
-TODO: Rewrite the penalty method portion of the equation
-#+end_comment
+detach time for visit $i$, $\phi_i(x)$ is a piecewise function utilized as a penalty method, $\nu$ is a vector of the minimum
+charge percentage allowed for each BEB $\kappa_i$ is the battery capacity for visit $i$, and $\eta_i$ is the initial charge for
+visit $i$.
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i (\eta_i - m \kappa_i)^{2}\Big)
+\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - m \kappa_i) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q \in Q$. Let $\epsilon$
@@ -148,16 +148,12 @@ $n_B < v_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost whe
 still encouraging the use of slow chargers over fast. While the $\epsilon$ vector can be constructed in many other ways, the
 form shown above is the method applied to this work.
 
-#+begin_comment
-TODO: The \phi part of this is going to have to be updated to be a function
-#+end_comment
-
 The second term is the penalty function that is either enabled or disabled by $\phi_i$
-[cite:@luenberger-2008-penal-barrier-method]. The penalty function is enabled, $\phi_i = 1$, if the SOC falls below a
-specified SOC threshold, $\eta_i \le \nu \kappa_{\Xi_i}$, and is disabled, $\phi_i = 0$, otherwise. This term is considered an assignment
-cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not impacted by how
-much the system consumes energy, but by how the BEBs have been assigned. $C$ is a large constant value used to scale the
-penalty function. The mechanisms that enables or disables $\phi_i$ is derived in [[#sec:constraints]].
+[cite:@luenberger-2008-penal-barrier-method]. The penalty function is enabled, $\phi_i = (\eta_i - \nu_{\Xi_i} \kappa_i)^2$, if the SOC
+falls below a specified SOC threshold, $\eta_i \le \nu \kappa_{\Xi_i}$, and is disabled, $\phi_i = 0$, otherwise. This term is considered
+an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not
+impacted by how much the system consumes energy, but by how the BEBs have been assigned. $C$ is a large constant value
+used to scale the penalty function. The mechanisms that enables or disables $\phi_i$ is derived in [[#sec:constraints]].
 
 The utility cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation
 of all the energy being used over all the active periods for each charger in the time horizon, $\T$, as written in
@@ -279,7 +275,5 @@ to the next discrete time step, $t_h$. The final constraint \ref{seq:c16} is a $
 whether charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product [cite:@horn-1985-matrix-analy].
 Let $A$ and $B$ be two $n_H \times n_Q$ matrices. The Hadamard Product is defined as the element-wise product of the two
 matrices, $A \circ B = [a_{ij}b_{ij}]$.
-
-[fn:2] This is being changed into a decision variable. This footnote is to keep track of this text.
 
 #  LocalWords: BEB MILP BEBs Hadamard
