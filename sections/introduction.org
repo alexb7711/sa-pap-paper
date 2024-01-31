@@ -17,7 +17,7 @@ the health of the battery due to fast charging [cite:@lutsey-2019-updat-elect].
 BEBs have been in service for many major markets, North America, Europe, and China, for more than a decade with expected
 growth in the near future [cite:@deng-2021-survey-elect]. The Asia Pacific market is forecasted to dominate the sales
 and some major companies of the industry have also begun to enter the global market such as Volvo, BYD, and Proterra by
-2025 [cite:@deng-2021-survey-elect]. Much focus has been placed on the engineering of individual BEBs such as battery
+2025 [cite:@deng-2021-survey-elect]. Much focus has been placed on the engineering of individual BEBs, such as: battery
 type, brake regenerative charging, optimal battery charging, and battery degradation [cite:@chen-2008-desig-grey;
 @abdollahi-2016-optim-batter;@kuhne-2010-elect;@deng-2021-survey-elect]. The interest of route scheduling, charging
 fleets, and optimizing the infrastructure are problems of more recent interest and are therefore timely and increasingly
