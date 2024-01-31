@@ -128,13 +128,9 @@ on insufficient charge. These considerations are divided into two components: Th
 Suppose the objective function is of the form $\text{min } J = \AC + \UC$. $\AC$ is the assignment cost, and $\UC$ is
 the utility cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the
 chosen charging period, $[u_i, d_i]$. $v_i \in \Qset$ is the charger index, $u_i$ is the initial charge time, $d_i$ is the
-detach time for visit $i$, $\phi_i(x)$ is a piecewise function utilized with the penalty method, $\nu$ is a vector of the
-minimum charge percentage allowed for each BEB $\kappa_i$ is the battery capacity for visit $i$, and $\eta_i$ is the initial
-charge for visit $i$.
-
-#+begin_comment
-TODO: Rewrite the penalty method portion of the equation
-#+end_comment
+detach time for visit $i$, $\phi_i(x)$ is a piecewise function utilized as a penalty method, $\nu$ is a vector of the minimum
+charge percentage allowed for each BEB $\kappa_i$ is the battery capacity for visit $i$, and $\eta_i$ is the initial charge for
+visit $i$.
 
 #+name: eq:ac
 \begin{equation}
