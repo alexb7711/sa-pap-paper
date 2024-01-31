@@ -3,32 +3,82 @@
 :CUSTOM_ID: sec:introduction
 :END:
 
-This document outlines a Simulated Annealing (SA) approach to the bus charging scheduling problem that utilizes Mixed
-Integer Linear Programming (MILP) constraints to determine feasible charging schedules. The problem involves generating
-an optimal charging schedule for a fleet of Battery Electric Buses (BEBs) based on a set of routes and a mix of fast and
-slow chargers. The aim is to minimize both the consumption cost (amount of electricity used over a certain time) and the
-demand cost (rate at which electricity is being used) while ensuring that the buses maintain sufficient charge to
-complete their workday without delays.
+Public transportation systems are a critical component urban areas. An increased awareness and concern of environmental
+impacts of petroleum based public transportation has driven an effort to reduce the pollutant footprint
+[cite:@de-2014-simul-elect;@xylia-2018-role-charg;@guida-2017-zeeus-repor-europ;@li-2016-batter-elect]. Particularly,
+the electrification of public bus transportation via battery power, i.e., battery electric buses (BEBs), has received
+significant attention [cite:@li-2016-batter-elect]. Although the technology provides benefits beyond reduction in
+emissions, such as lower driving costs, lower maintenance costs, and reduced vehicle noise, battery powered systems
+introduce new challenges such as larger upfront costs, and potentially several hours long "refueling" periods
+[cite:@xylia-2018-role-charg;@li-2016-batter-elect]. Furthermore, the problem is exacerbated by the constraints of the
+transit schedule to which the fleet must adhere, the limited amount of chargers available, and the adverse affects in
+the health of the battery due to fast charging [cite:@lutsey-2019-updat-elect].
 
-The SA algorithm is introduced and constrained by a set of MILP constraints derived from the Position Allocation Problem
-(PAP) to ensure the validity of proposed charging schedules. Objective functions describing consumption cost and demand
-cost are used to minimize power consumption and total cost of using the BEBs.
+BEBs have been in service for many major markets, North America, Europe, and China, for more than a decade with expected
+growth in the near future [cite:@deng-2021-survey-elect]. The Asia Pacific market is forecasted to dominate the sales
+and some major companies of the industry have also begun to enter the global market such as Volvo, BYD, and Proterra by
+2025 [cite:@deng-2021-survey-elect]. Much focus has been placed on the engineering of individual BEBs, such as: battery
+type, brake regenerative charging, optimal battery charging, and battery degradation [cite:@chen-2008-desig-grey;
+@abdollahi-2016-optim-batter;@kuhne-2010-elect;@deng-2021-survey-elect]. The interest of route scheduling, charging
+fleets, and optimizing the infrastructure are problems of more recent interest and are therefore timely and increasingly
+relevant problems as EV/BEBs become more commonplace [cite:@hoke-2014-accoun-lithium; @sebastiani-2016-evaluat-elect;
+@wei-2018-optim-spatio].
+
+Literature shows an interest in solving the problem of assigning BEBs to charging queues or optimizing their
+infrastructure [cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect;
+@hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. Two of the main problems that have been of recent interest are
+solving the problems of route scheduling and charging fleets as well as determining the infrastructure upon which they
+rely. Additionally, the prospect of solving both problems simultaneously has received much attention
+[cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect; @hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. These
+problems vary by including assignment of buses to routes [cite:@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim;
+@tang-2019-robus-sched; @li-2014-trans-bus], determining whether a set of existing combustion based buses should be
+replaced with BEBs [cite:@zhou-2020-bi-objec; @duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet;
+@zhou-2020-collab-optim], and accounting for uncertainties [cite:@bie-2021-optim-elect; @duan-2021-refor-mixed;
+@tang-2019-robus-sched;@ursavas-2016-optim-polic]. These problems add additional complexities that warrant
+simplifications due to computational complexities. One other source, as far as the reseach for this work has shown,
+describes a method of producing a BEB charge schedule wih a high fidelity while accounting for multiple charger times as
+well as being able to minimize over the total charger count [cite:@whitaker-2023-a-network].
+
+In some works, it was assumed that the charge received is proportional to the time spent on the charger
+[cite:@liu-2020-batter-elect;@yang-2018-charg-sched]. While the linear battery dynamics is a valid assumption when the
+battery SOC is below 80% [cite:@liu-2020-batter-elect], non-linear battery dynamics can be implemented to more
+accurately model the charge curve. A common way to model the non-linear battery dynamics is utilizing Constant Voltage
+(CV), Constant Current (CC), and Constant Current Constant Voltage (CCCV) [cite:@abdollahi-2016-optim-batter;
+@chen-2008-desig-grey]. It has also been suggested that the dynamics can be modeled as a piecewise function containing a
+linear and non-linear component from which a piecewise function approach may be taken for the CV and CC components
+[cite:@zhang-2021-optim-elect;@abdollahi-2016-optim-batter]. Others have modeled the battery dynamics as a discrete
+first order dynamics model [cite:@whitaker-2023-a-network]. The first-order differential system, when provided a step
+input, approximates the non-linear relationship between time and the current SOC [cite:@whitaker-2023-a-network].
+
+Works concerning charge planning often use a version of the vehicle scheduling problem [cite:@tang-2019-robus-sched;
+@li-2014-trans-bus; @he-2020-optim-charg]. Variants of this problem address infrastructure as well as determining
+existing buses that should be replaced by a BEB [cite:@zhou-2020-bi-objec; @duan-2021-refor-mixed;
+@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim]. Other works introduce a directed graph approach to model the flow
+of BEBs [cite:@whitaker-2023-a-network;@liu-2020-batter-elect], where this concept was expanded to simultaneously
+accounting for multiple charger types, partial charging, non-linear battery charge profiles
+[cite:@whitaker-2023-a-network]. The directed graph approach provides an easy method of modeling the scheduling by
+discretizing the time horizon to $n_Q$ sets of nodes. The nodes represent the chargers availability and can have a
+maximum of one bus at a time. The buses can flow into a node to be charged and then later can exit allowing a new bus to
+enter. Another method similar to the directed graph that fits the modeling of the BEB charging scenario is the Position
+Allocation Problem (PAP) [cite:@qarebagh-2019-optim-sched]. The PAP is derived from the Berth Allocation Problem (BAP)
+which takes an input of vessel arrival times and outputs the selection of the berthing quay. The PAP utilizes this model
+and redefines its inputs to EV arrival times and outputs queues for the EVs to be charged. While the visits remain as
+discrete events, the time that the BEB is on the charger is modeled in continuous time similar to
+[cite:@frojan-2015-contin-berth; @qarebagh-2019-optim-sched;@zhou-2020-collab-optim]. Due to the close relationship
+between the BAP and PAP, BAP literature may be used for the PAP. The literature shows methods of handling multiple quays
+(sets of chargers) to handle general berthing scenarios [cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy].
+Heuristic procedures for quicker solve times have also been introduced [cite:@imai-2001-dynam-berth]. Methods of
+defining static (full time horizon) and dynamic (rolling-time horizon) models have been created for daily and real-time
+solutions, respectively, and even fuzzy set theory has been applied to allow for more flexible schedules
+[cite:@bello-2019-fuzzy-activ].
+
+In the what follows, a description of the optimization problem is provided in [[#sec:optimization-problem]]. This section
+introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,
+objective function and constraints. In [[#sec:simulated-annealing]], the concept and theory of SA is introduced. In
+particular the algorithms and methods utilized for the SA implementation for this work are discussed.
+[[#sec:optimization-algorithm]] outlines a generic SA algorithm, and then combines the previous sections to introduce the
+particular implementation for the SA-PAP.
 
 #+begin_comment
-*:DELETEME: This stuff is more relevant in a literature review :DELETEME:*
-
-It is assumed that each visit occurs within the planning time horizon $T = \{t : t_0 \le t \le t_f \}$. The concept of
-"arrivals" is derived from the PAP [cite:@qarebagh-2019-optim-sched]. The notion of a visit is useful in the sense that
-it provides simple mechanism to describe the state of any arbitrary BEB at the time of arrival; however, a BEB may visit
-the station multiple times. The issue arises due to model's assumption that each arrival is unique (i.e. no single BEB
-arrives more than once). Therefore, a system must be put in place to track each BEB across visits.
-#+end_comment
-
-#+begin_comment
-*This may be useful in an introduction or SA description*
-
-To explore the feasible space, the generators are employed with a sense of randomness to their respective outputs.
-Because of that, the modified subset of the tuple, $\bar{x}_i$, may be considered a random variable. Let the set of
-states for the output be defined as $\bar{x}_i \in \bar{x}_i \subset \bar{\Sol}$ where $\bar{x}_i$ defines the feasible region
-for the subset of decision variables.
+TODO: Add words about the example section when that comes around
 #+end_comment
