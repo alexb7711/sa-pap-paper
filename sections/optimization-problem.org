@@ -41,12 +41,12 @@ each BEB and let $\Xi_i \in B$ denote the identification number of the BEB for v
 be represented as $\eta_{i \in \Isetinit} = \alpha_{\Xi_i} \cdot \kappa_{\Xi_i}$ where $\kappa_{\Xi_i}$ is the battery capacity for bus $\Xi_i$. The
 rest of the values for $\eta_i$, $i \not\in I$ are considered decision variables and will be further discussed in
 [[#sec:decision-variables]]. The notation $t_h$ is used to denote the discrete time employed in calculating the demand cost.
-$dt_h$ is the discrete time slice $dt_h = t_h - t_{h-1}$. \epsilon_q$ is the cost for assigning a charger to queue $q \in Q$.
-$\xi_i$ represents the next arrival index for bus $b_i$. In other words, suppose the ID of each BEB is recorded in order
-of arrival. Further suppose that recorded list is $\xi = \{ 2,1,3,2 \}$, using a starting index of 1, $\xi_1 = 4$ as that is
-the next visit by bus 2, the same as the first visit index. The arrival and departure times of bus visit $i$ to the
-station are denoted as $a_i$ and $e_i$, respectively. Lastly, $r_q$ represents the power supplied from the charger in
-queue $q \in Q$.
+$dt_h$ is the discrete time slice $dt_h = t_h - t_{h-1}$. The cost for assigning a charger to queue $q \in Q$ is defined
+by $\epsilon_q$. $\xi_i$ represents the next arrival index for bus $b_i$. In other words, suppose the ID of each BEB is recorded
+in order of arrival. Further suppose that recorded list is $\xi = \{ 2,1,3,2 \}$, using a starting index of 1, $\xi_1 = 4$
+as that is the next visit by bus 2, the same as the first visit index. The arrival and departure times of bus visit $i$
+to the station are denoted as $a_i$ and $e_i$, respectively. Lastly, $r_q$ represents the power supplied from the
+charger in queue $q \in Q$.
 
 #+include: "tab/variables.org"
 
@@ -134,15 +134,15 @@ visit $i$.
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - m \kappa_i) \Big)
+\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q \in Q$. Let $\epsilon$
-describe the vector $\epsilon = [1000, 2000, ..., 1000*n_Q]$, this form encourages the objective function to minimize the total
+describe the vector $\epsilon = [1000, 2000, ..., 1000n_Q]$, this form encourages the objective function to minimize the total
 amount of chargers. Iterating on this concept, let the first $n_B$ indices to be waiting queues (i.e. queues in which no
 charge is supplied), the next $n_{Q_s}$ indices to be slow chargers, and the next $n_{Q_f}$ indices to be fast chargers,
 where $n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}$ and $n_B + n_{Q_s} + n_{Q_f} = n_Q$. The $\epsilon$ vector thus be concatenated as follows:
-$\epsilon = [\mathbf{0}_{n_B}, [1000, 2000, ..., 1000*n_Q]]$, where $\mathbf{0}_{n_B}$ indicates a zero vector of length $n_B$.
+$\epsilon = [\mathbf{0}_{n_B}, [1000, 2000, ..., 1000n_Q]]$, where $\mathbf{0}_{n_B}$ indicates a zero vector of length $n_B$.
 That is, $\epsilon_{v_i}$ has no cost if $v_i \le n_B$ or is incrementally penalized as the selected queue index increases if
 $n_B < v_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost when assigning a BEB to a waiting queue while
 still encouraging the use of slow chargers over fast. While the $\epsilon$ vector can be constructed in many other ways, the
@@ -261,10 +261,9 @@ Similarly, $\psi_{ij}$ determines whether the vehicles will be charging in the s
 constraint is deactivated and BEB $j$ is in a queue index greater than that of BEB $i$.
 
 \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
-bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} ensures that the BEB's SOC does not
-go below 0. \ref{seq:c11} ensures the continuity of the times (i.e. the arrival time is less than the initial charge
-which is less than the detach time which is less than the time the bus exits the station and all must be less than the
-time horizon).
+bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c11} ensures the continuity of the
+times (i.e. the arrival time is less than the initial charge which is less than the detach time which is less than the
+time the bus exits the station and all must be less than the time horizon).
 
 The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable $\iota$. These
 constraints define three $n_H \times n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i \le t_h \le d_i$, $\iota_h^q = 0$
