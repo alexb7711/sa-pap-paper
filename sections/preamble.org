@@ -6,6 +6,7 @@
 # =========================================================================================================================
 # LaTeX packages
 #+LATEX_CLASS: article
+#+latex_header: \usepackage{subfloat}                       % Subfigures
 #+latex_header: \usepackage{xcolor}                         % Color time
 #+latex_header: \usepackage{listings}                       % Code in LaTeX
 #+latex_header: \usepackage{listings-rust}                  % Code in LaTeX

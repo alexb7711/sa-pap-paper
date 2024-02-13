@@ -70,7 +70,7 @@ where $\beta = 0.01$ in [[fig:cool]]. A typical range for $\beta$ is $0.8 \le \b
 #+ATTR_ORG: :width 200
 #+ATTR_LATEX: :width 0.5\textwidth
 #+caption: Cooling equations
-[[file:../img/cool_func.png]]
+[[file:img/cool_func.png]]
 
 ** Acceptance Criteria
 :PROPERTIES:
@@ -200,7 +200,7 @@ not fall within the charger availability time slice. Line 27 returns the updated
 the original charger availability and null values for the charge times upon failure.
 
 #+include: eq/new-visit.org
-#+include: ../img/find-free.org
+#+include: img/find-free.org
 #+include: eq/find-free.org
 
 **** Purge

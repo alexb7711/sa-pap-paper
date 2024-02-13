@@ -17,6 +17,7 @@
 #+include: sections/optimization-problem.org
 #+include: sections/simulated-annealing.org
 #+include: sections/optimization-algorithm.org
+#+include: sections/example.org
 
 
 # ======================================================================================================================
