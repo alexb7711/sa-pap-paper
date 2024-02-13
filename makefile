@@ -11,7 +11,7 @@ SHELL  = /bin/bash
 # DIRECTORIES
 ##==============================================================================
 SCRIPTS = ./org-doc-scripts
-IMG     = img
+IMG     = sections/img
 
 ##==============================================================================
 # FILES
@@ -19,7 +19,7 @@ IMG     = img
 DOC_SRC         = main.tex
 TARGET          = sa-pap.pdf
 ALL             = $(shell find . -type f -name "*.org")
-FIGURES_TEX     = $(wildcard img/*tex)
+FIGURES_TEX     = $(wildcard $(IMG)/*tex)
 FIGURES_PDF     = $(patsubst %.tex, %.pdf, $(FIGURES_TEX))
 
 ##==============================================================================
