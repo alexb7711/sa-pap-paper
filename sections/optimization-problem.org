@@ -248,7 +248,7 @@ placed into, and the x-axis represents the time that can be reserved for each vi
 time that has been scheduled in the x-axis, and the queue allocated for each bus visit in the y-direction. In other
 words, the set of constraints \ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
 
-#+include: "img/spacial-temporal-constr.org"
+#+include: ../img/spacial-temporal-constr.org
 
 Constraint \ref{seq:c4} states that the starting service time for BEB $i$, $u_i$, must begin after the previous BEB
 departs, $d_j$. The last term utilizes big-M notation to activate or deactivate the constraint. A value of $\sigma_{ij} = 1$

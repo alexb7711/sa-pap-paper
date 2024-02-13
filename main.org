@@ -13,7 +13,6 @@
 # Document
 
 #+include: sections/introduction.org
-# +include: sections/background-and-related-work.org
 #+include: sections/problem-description.org
 #+include: sections/optimization-problem.org
 #+include: sections/simulated-annealing.org
