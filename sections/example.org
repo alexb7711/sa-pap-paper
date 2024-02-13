@@ -6,6 +6,50 @@
 # ################################################################################
 
 * Example
+:PROPERTIES:
+:custom_id: sec:example
+:END:
+
+An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. A description of
+the scenario presented followed by a brief introduction of the original MILP-PAP implementation as well as an
+alternative heuristic based planning strategy called Quin-Modified which is used as a comparison to the SA PAP. Results
+are then presented for each of planning strategies are presented, analyzed, and discussed.
+
+** BEB Scenario
+:PROPERTIES:
+:custom_id: beb-scenario
+:END:
+
+To display the capabilities of the model, an example scenario is presented. The scenario was run over a time horizon of
+$T=24$ hours, utilizes $n_B = \A$ buses with $n_V = \N$ visits to the station divided between the $n_B$ buses. As stated
+before, the route times are sampled from a set of routes from the UTA. Each bus has \batsize KWh battery that is
+required to stay above \mincharge charge (\fpeval{\batsize * \minchargeD} KWh) to maintain battery health. Each bus is
+assumed to begin the working day with \fpeval{\acharge*100}% charge (\fpeval{\acharge * \batsize} KWh). Additionally,
+each bus is required to end the day with a minimum charge of \fpeval{\bcharge * 100}% (\fpeval{\bcharge * \batsize}
+KWh). This assumes that overnight charging can account for at least 20% of the charge. Each bus is assumed to discharge
+at a rate of 30 KW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
+simplicity an average rate is used. $n_C = \fpeval{\fast + \slow}$ chargers are utilized where \slow of the chargers are
+slow charging (\slows KW) and \fast are fast charging (\fasts KW). A technique to minimize chargers will be employed.
+
+To encourage the SA PAP problem to utilize the fewest number of chargers, the value of $m_q$ in the objective function,
+\autoref{eq:objective}, is $\forall q \in \{1,2,..., n_B \}; m_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q$.
+The charge duration scalar, $\epsilon_q$, is defined as $\epsilon_q = r_q$ to create a consumption cost term, $g_{iq}\epsilon_q$. This is
+utilized to also encourage the model to minimize active charger times, particularly for the fast chargers.
+
+Another heuristic-based optimization strategy, referred to as Quin-Modified, is also employed as a means of comparison
+with the results of the SA PAP. The Quin-Modified strategies is a based on the threshold strategy of
+[cite:@qin-2016-numer-analy]. The strategy has been modified slightly to accommodate the case of multiple charger types
+and without exhaustive search for the best charger type. The heuristic is based on a set of rules that revolve around
+the initial charge of the bus at visit $i$. There are three different thresholds, low (85%), medium (90%), and high
+(95%). Buses below the low threshold are prioritized to fast chargers then are allowed to utilize slow chargers if no
+fast chargers are available. Buses between the low and medium threshold prioritize slow chargers first and utilize fast
+chargers only if no slow chargers are available. Buses above the medium threshold and below high will only be assigned
+to slow chargers. Buses above the high threshold will not be charged. Once a bus has been assigned to a charger, it
+remains on the charger for the duration of the time it is at the station, or it reaches 95% charge, whichever comes
+first.
+
+UTA bus routing data that occurs over a 24-hour time period. The optimization was performed using a machine running an
+AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to run for \timeran hours.
 
 # --------------------------------------------------------------------------------
 # Charge schedule
