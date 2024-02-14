@@ -3,7 +3,7 @@
     \caption{New visit algorithm} \label{alg:new-visit}
     \LinesNumbered
     \TitleOfAlgo{New Visit}
-    \KwIn{($\Sol$)}
+    \KwIn{$\Sol$}
     \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{Union}{Union}
