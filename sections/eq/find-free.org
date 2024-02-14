@@ -5,31 +5,33 @@
       \LinesNumbered
       \TitleOfAlgo{Find Free Time}
       \KwIn{$(C,a,e)$}
-      \KwOut{($\bar{C},u,d)$}
+      \KwOut{($\bar{C},\bar{u},\bar{d})$}
 
-      \tcc{Extract the lower and upper bounds.} L \(\leftarrow\) \(\{C.L\}\)\; U \(\leftarrow\) \(\{C.U\}\)\;
+      \tcc{Extract the lower and upper bounds.}
+      L \(\leftarrow\) \(\{C.L\}\)\;
+      U \(\leftarrow\) \(\{C.U\}\)\;
 
       \Begin
       {
-          \If(\tcc*[f]{If $L < a < e < U]$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
+          \If(\tcc*[f]{If $L \le a \le e \le U$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
           {
                   $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
-                  $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
           }
-          \ElseIf(\tcc*[f]{Else if $a < L < e < U$ (\autoref{subfig:all})}){$L > a$ and $U \geq e$}
+          \ElseIf(\tcc*[f]{Else if $a \le L \le e < U$ (\autoref{subfig:all})}){$L \ge a$ and $U \geq e$}
           {
                   $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
-                  $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
           }
-          \ElseIf(\tcc*[f]{Else if $L < a < U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U < e$}
+          \ElseIf(\tcc*[f]{Else if $L \le a \le U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U \le e$}
           {
                   $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
-                  $\bar{d}\leftarrow$ $\U_{[u,U]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[\bar{u},U]}$\;
           }
-          \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L > a$ and $U < e$}
+          \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L \ge a$ and $U \le e$}
           {
                   $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
-                  $\bar{d}\leftarrow$ $\U_{[u,L], [u,e]}$\;
+                  $\bar{d}\leftarrow$ $\U_{[\bar{u},L], [\bar{u},e]}$\;
           }
           \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
           {
@@ -37,15 +39,14 @@
                   $\bar{d}\leftarrow$ $\varnothing$\;
           }
 
-          \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
+          \If (\tcc*[f]{If an assignment was made}) {$\bar{u},\bar{d} \ne \varnothing$}
           {
-              $\bar{C} \leftarrow \bar{C} \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
-              $\bar{C} \leftarrow \{[L,\bar{u}], [\bar{d}, U]\}$\tcc*{Update the charger free time slices}
+            $\bar{C}' \leftarrow C \cup \{[L, U], [\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
             \Return{($\bar{C},\bar{u},\bar{d}$)}
           }
           \Else(\tcc*[f]{Otherwise the assignment failed})
           {
-            \Return{($\bar{C},\varnothing, \varnothing$)}
+            \Return{($C,\varnothing, \varnothing$)}
           }
 
       }
