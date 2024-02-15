@@ -28,7 +28,7 @@ assumed to begin the working day with \fpeval{\acharge*100}% charge (\fpeval{\ac
 each bus is required to end the day with a minimum charge of \fpeval{\bcharge * 100}% (\fpeval{\bcharge * \batsize}
 KWh). This assumes that overnight charging can account for at least 20% of the charge. Each bus is assumed to discharge
 at a rate of 30 KW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
-simplicity an average rate is used. $n_C = \fpeval{\fast + \slow}$ chargers are utilized where \slow of the chargers are
+simplicity an average rate is used. $n_C =$ \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are
 slow charging (\slows KW) and \fast are fast charging (\fasts KW). A technique to minimize chargers will be employed.
 
 To encourage the SA PAP problem to utilize the fewest number of chargers, the value of $m_q$ in the objective function,

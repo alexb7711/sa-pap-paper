@@ -1,4 +1,4 @@
-% Created 2024-02-13 Tue 15:13
+% Created 2024-02-14 Wed 21:30
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -752,7 +752,7 @@ of interest, information about the current state of visits, \(\I\), and the curr
 generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org29802eb}
+\label{sec:org0d17f8d}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -771,7 +771,7 @@ Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine 
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org0198713}
+\label{sec:org85b9b6e}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -826,24 +826,26 @@ the original charger availability and null values for the charge times upon fail
   \caption{New visit algorithm} \label{alg:new-visit}
   \LinesNumbered
   \TitleOfAlgo{New Visit}
-  \KwIn{($\Sol$)}
+  \KwIn{$\Sol$}
   \KwOut{$\bar{\Sol}$}
 
   \SetKwFunction{Union}{Union}
   \SetKwFunction{findFreeTime}{findFreeTime}
 
-  \Begin {
-    $a_i \leftarrow \I_{i.e}$\tcc*{Extract the arrivial time for visit $i$}
-    $e_i \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
-    $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
-    $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
-
-    \If(\tcc*[f]{If there is time available in $C_q^j$}){\findFreeTime{$C, (a_i, e_i)$} $\not\in \varnothing$}
+  \Begin
     {
-      \Return{($q,u,d,\C$)}\tcc*[f]{Return visit}
-    }
+      $a \leftarrow \I_{i.a}$\tcc*{Extract the arrivial time for visit $i$}
+      $e \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
+      $\bar{q} \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
+      $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
 
-    \Return{($\varnothing$)}\tcc*{Return nothing} }
+      \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, a, e$} $\not\in \varnothing$}
+         {
+           \Return{($\_, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
+         }
+
+         \Return{($\varnothing$)}\tcc*{Return nothing}
+    }
 \end{algorithm}
 
 \begin{figure}
@@ -1005,31 +1007,33 @@ the original charger availability and null values for the charge times upon fail
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(C,a,e)$}
-    \KwOut{($\bar{C},u,d)$}
+    \KwOut{($\bar{C},\bar{u},\bar{d})$}
 
-    \tcc{Extract the lower and upper bounds.} L \(\leftarrow\) \(\{C.L\}\)\; U \(\leftarrow\) \(\{C.U\}\)\;
+    \tcc{Extract the lower and upper bounds.}
+    L \(\leftarrow\) \(\{C_L\}\)\;
+    U \(\leftarrow\) \(\{C_U\}\)\;
 
     \Begin
     {
-        \If(\tcc*[f]{If $L < a < e < U]$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
+        \If(\tcc*[f]{If $L \le a \le e \le U$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
         {
                 $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
+                $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
         }
-        \ElseIf(\tcc*[f]{Else if $a < L < e < U$ (\autoref{subfig:all})}){$L > a$ and $U \geq e$}
+        \ElseIf(\tcc*[f]{Else if $a \le L \le e < U$ (\autoref{subfig:all})}){$L \ge a$ and $U \geq e$}
         {
                 $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
+                $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
         }
-        \ElseIf(\tcc*[f]{Else if $L < a < U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U < e$}
+        \ElseIf(\tcc*[f]{Else if $L \le a \le U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U \le e$}
         {
                 $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,U]}$\;
+                $\bar{d}\leftarrow$ $\U_{[\bar{u},U]}$\;
         }
-        \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L > a$ and $U < e$}
+        \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L \ge a$ and $U \le e$}
         {
                 $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,L], [u,e]}$\;
+                $\bar{d}\leftarrow$ $\U_{[\bar{u},L], [\bar{u},e]}$\;
         }
         \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
         {
@@ -1037,15 +1041,14 @@ the original charger availability and null values for the charge times upon fail
                 $\bar{d}\leftarrow$ $\varnothing$\;
         }
 
-        \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
+        \If (\tcc*[f]{If an assignment was made}) {$\bar{u},\bar{d} \ne \varnothing$}
         {
-            $\bar{C} \leftarrow \bar{C} \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
-            $\bar{C} \leftarrow \{[L,\bar{u}], [\bar{d}, U]\}$\tcc*{Update the charger free time slices}
+          $\bar{C}' \leftarrow C' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
           \Return{($\bar{C},\bar{u},\bar{d}$)}
         }
         \Else(\tcc*[f]{Otherwise the assignment failed})
         {
-          \Return{($\bar{C},\varnothing, \varnothing$)}
+          \Return{($C,\varnothing, \varnothing$)}
         }
 
     }
@@ -1068,7 +1071,7 @@ availability.
     \Begin
     {
         $\bar{\C} \leftarrow \C \setminus \C_{i.v_i}$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
-        \Return{$\bar{\C}$}\tcc*{Return updated tuple}
+        \Return{$(\varnothing, \bar{\C})$}\tcc*{Return updated tuple}
     }
   \end{algorithm}
 
@@ -1082,22 +1085,24 @@ by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). L
 was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
-  \caption{Slide Visit Algorithm} \label{alg:slide-visit} \LinesNumbered \TitleOfAlgo{Slide Visit} \KwIn{$\Sol$}
+  \caption{Slide Visit Algorithm} \label{alg:slide-visit}
+  \LinesNumbered
+  \TitleOfAlgo{Slide Visit}
+  \KwIn{$\Sol$}
   \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
-      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the visit just purged}
 
-        \If(\tcc*[f]{If there is time available in $C$}){\findFreeTime{$C$, ($a_i, e_i$)} $\not\in \varnothing$}
+        \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
         {
-          \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
+          \Return{($\_, (\I_{i.v_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
         }
 
-        $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
         \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1117,16 +1122,15 @@ and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then t
 
     \Begin
     {
-      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
 
-      \If(\tcc*[f]{If there is time available in $C_{q}$}){\findFreeTime{$C_{q}$, ($a_i, e_i$)} $\not\in \varnothing$}
+      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \_$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
       {
         \tcc{Return visit, note $u$ and $d$ are the original inital/final charge times.}
-        \Return{($q,\I_{i.u}, \I_{i.d},\C$)}
+        \Return{($\_, (q,\I_{i.u}, \I_{i.d}),\bar{\C}$)}
       }
 
-      $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
       \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1149,8 +1153,8 @@ check for failure is not included here because this primitive cannot fail.
 
     \Begin
     {
-      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $\bar{\C}_{\I_{i.b}} \leftarrow \{[C_L, a_i], [e_i, C_U]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.b}$}
+      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.v_i}$}
       \Return{$(\I_{i.b}, \I_{i.a}, \I_{i.e}, \bar{\C})$}\tcc*[f]{Return visit}
     }
   \end{algorithm}
@@ -1167,21 +1171,23 @@ back into the schedule using the new visit generator. Line 4 assigns and returns
   \LinesNumbered
   \TitleOfAlgo{New Window}
   \KwIn{$\Sol$}
-  \KwOut{$\Sol'$}
+  \KwOut{$\bar{\Sol}$}
 
   \SetKwFunction{NewVisit}{NewVisit}
   \SetKwFunction{Purge}{Purge}
 
   \Begin
   {
-    $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-    \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \varnothing$}
-    {
-      \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
-    }
+    $\bar{\Sol} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+    \If(\tcc*[f]{Add visit $i$ back in randomly})
+       {
+         $\bar{\bar{\Sol}} \leftarrow$ \NewVisit{$\bar{\Sol}$} $\not\in \varnothing$
+       }
+       {
+         \Return{$\bar{\bar{\Sol}}$} \tcc*[f]{Return visit}
+       }
 
-    $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
-    \Return{($\varnothing$)}\tcc*{Return nothing}
+       \Return{($\varnothing$)}\tcc*{Return nothing}
   }
 \end{algorithm}
 
@@ -1393,7 +1399,7 @@ if the candidate is within the solution space. That it, it satisfies the constra
 \section{Example}
 \label{sec:example}
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. A description of
-the scenario presented followed by a brief introduction of a the original MILP-PAP implementation as well as an
+the scenario presented followed by a brief introduction of the original MILP-PAP implementation as well as an
 alternative heuristic based planning strategy called Quin-Modified which is used as a comparison to the SA PAP. Results
 are then presented for each of planning strategies are presented, analyzed, and discussed.
 
@@ -1407,7 +1413,7 @@ assumed to begin the working day with \fpeval{\acharge*100}\% charge (\fpeval{\a
 each bus is required to end the day with a minimum charge of \fpeval{\bcharge * 100}\% (\fpeval{\bcharge * \batsize}
 KWh). This assumes that overnight charging can account for at least 20\% of the charge. Each bus is assumed to discharge
 at a rate of 30 KW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
-simplicity an average rate is used. \(n_C = \fpeval{\fast + \slow}\) chargers are utilized where \slow of the chargers are
+simplicity an average rate is used. \(n_C =\) \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are
 slow charging (\slows KW) and \fast are fast charging (\fasts KW). A technique to minimize chargers will be employed.
 
 To encourage the SA PAP problem to utilize the fewest number of chargers, the value of \(m_q\) in the objective function,

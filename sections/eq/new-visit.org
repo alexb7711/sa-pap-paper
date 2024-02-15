@@ -18,10 +18,9 @@
 
         \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, a, e$} $\not\in \varnothing$}
            {
-             \Return{($\bar{q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return visit}
+             \Return{($\_, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
            }
 
-           $\C_q \leftarrow (\I_{i.u}, \I_{i.d})$\tcc*{Reassign the original visit if the generator fails}
            \Return{($\varnothing$)}\tcc*{Return nothing}
       }
   \end{algorithm}

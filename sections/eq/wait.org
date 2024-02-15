@@ -10,8 +10,8 @@
 
       \Begin
       {
-        $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-        $\bar{\C}_{\I_{i.b}} \leftarrow \{[C_L, a_i], [e_i, C_U]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.b}$}
+        $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+        $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.v_i}$}
         \Return{$(\I_{i.b}, \I_{i.a}, \I_{i.e}, \bar{\C})$}\tcc*[f]{Return visit}
       }
     \end{algorithm}
