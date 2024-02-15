@@ -14,9 +14,9 @@
           \ForEach {$\I_i \in \I$}
           {
               $i \leftarrow \I_i$\tcc*{Extract the visit index}
-              ($\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
+              (\_, $\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
           }
-              \Return{($\bar{\I}$, $\bar{\C}$)}
+              \Return{(\_, $\bar{\I}$, $\bar{\C}$)}
       }
     \end{algorithm}
 #+end_src

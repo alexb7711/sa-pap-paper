@@ -5,7 +5,7 @@
     \LinesNumbered
     \TitleOfAlgo{Perturb Schedule}
     \KwIn{$\I$, $\C$}
-    \KwOut{$\bar{\I_i}$, $\bar{\C}$}
+    \KwOut{$\bar{\I}$, $\bar{\C}$}
 
     \SetKwFunction{PGF}{PGF}
 
