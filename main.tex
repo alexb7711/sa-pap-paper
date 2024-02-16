@@ -1,4 +1,4 @@
-% Created 2024-02-14 Wed 21:40
+% Created 2024-02-15 Thu 19:34
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -749,10 +749,15 @@ This section discusses in detail the expected inputs and outputs of each generat
 parameters to have an understanding of the generator algorithms to be derived. The input consists of the bus visit index
 of interest, information about the current state of visits, \(\I\), and the current state of the charger availability,
 \(\C\). The availability of each charger, \(\C\), is iteratively constructed throughout the SA process. The output of each
-generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
+generator affects the tuple (or a subset of the tuple) of decision variables \((v_i, u_i, d_i)\) and charger availability
+\(\C\).
+
+In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
+suppose the arrival time is desired to be extracted from visit \(i\). Given \(\Sol\), the notation that describes extracting
+the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orgf88a9b8}
+\label{sec:org1d27aa9}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -762,16 +767,15 @@ To derive \(\C\), consider its complement, \(\C'\), which is the set of ``active
 \C'\) describes the active times for charger \(q\). Focusing on an individual charger, consider \(\C_q'\) before a schedule
 has been imposed upon it, \(\C_q' = \{ \varnothing \}\). In other words, no buses have been assigned to be charged over
 some time period \([u_i, d_i]\). After the scheduling process is complete, \(\C_q'\) will have a set of active periods of
-the form \(\C_q' = \{[u_j, d_j]: j \in \Jsetq \}\) where \(\Jsetq \subset \mathcal{I}\). With a fully defined set \(\C_q'\), its compliment can
-be found, \(\C_q\).
+the form \(\C_q' = \{[u_i, d_i]: i \in I\}\). With a fully defined set \(\C_q'\), its compliment can be found, \(\C_q\).
 
-Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine the inverse of \(\C_q'\), begin by noting
+Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determine the inverse of \(\C_q'\), begin by noting
 \(\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing\), is said to be disjoint (i.e. the sets share no common elements)
 \cite{halmos-1974-naive-set-theor}. The inverse of a disjoint set can be found by the De Morgan Law: \((A \cap B)' = A' \cup
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org4244f45}
+\label{sec:orge3c8087}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -786,10 +790,6 @@ BEB. Because of this, the set of queues is fully defined as \(q \in \{1,..., n_B
 total amount of chargers and \(n_B\) number of BEBs. The use case for the idle queues are for when a bus is not to be
 placed on a charger. Rather, it will be placed in the queue, \(v_i \in \{1,..., n_B\}\), which satisfies the previously
 defined spatial constraints while allowing the bus to be ``set aside''.
-
-In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
-suppose the arrival time is desired to be extracted from visit \(i\). Given \(\Sol\), the notation that describes extracting
-the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{New visit}
 \label{sec:new-visit}
