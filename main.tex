@@ -1,4 +1,4 @@
-% Created 2024-02-15 Thu 19:34
+% Created 2024-02-18 Sun 16:29
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -757,7 +757,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org1d27aa9}
+\label{sec:orgc73b316}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -775,7 +775,7 @@ Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determin
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orge3c8087}
+\label{sec:org550fac0}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -1416,10 +1416,10 @@ at a rate of 30 KW. Note that there are many factors that play a role in the rat
 simplicity an average rate is used. \(n_C =\) \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are
 slow charging (\slows KW) and \fast are fast charging (\fasts KW). A technique to minimize chargers will be employed.
 
-To encourage the SA PAP problem to utilize the fewest number of chargers, the value of \(m_q\) in the objective function,
-\autoref{eq:objective}, is \(\forall q \in \{1,2,..., n_B \}; m_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q\).
-The charge duration scalar, \(\epsilon_q\), is defined as \(\epsilon_q = r_q\) to create a consumption cost term, \(g_{iq}\epsilon_q\). This is
-utilized to also encourage the model to minimize active charger times, particularly for the fast chargers.
+To encourage the SA PAP problem to utilize the fewest number of chargers, the value of \(m_q\) in the objective function
+is \(\forall q \in \{1,2,..., n_B \}; m_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q\). The charge duration
+scalar, \(\epsilon_q\), is defined as \(\epsilon_q = r_q\) to create a consumption cost term, \(g_{iq}\epsilon_q\). This is utilized to also
+encourage the model to minimize active charger times, particularly for the fast chargers.
 
 Another heuristic-based optimization strategy, referred to as Quin-Modified, is also employed as a means of comparison
 with the results of the SA PAP. The Quin-Modified strategies is a based on the threshold strategy of

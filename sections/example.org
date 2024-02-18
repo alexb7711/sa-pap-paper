@@ -31,10 +31,10 @@ at a rate of 30 KW. Note that there are many factors that play a role in the rat
 simplicity an average rate is used. $n_C =$ \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are
 slow charging (\slows KW) and \fast are fast charging (\fasts KW). A technique to minimize chargers will be employed.
 
-To encourage the SA PAP problem to utilize the fewest number of chargers, the value of $m_q$ in the objective function,
-\autoref{eq:objective}, is $\forall q \in \{1,2,..., n_B \}; m_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q$.
-The charge duration scalar, $\epsilon_q$, is defined as $\epsilon_q = r_q$ to create a consumption cost term, $g_{iq}\epsilon_q$. This is
-utilized to also encourage the model to minimize active charger times, particularly for the fast chargers.
+To encourage the SA PAP problem to utilize the fewest number of chargers, the value of $m_q$ in the objective function
+is $\forall q \in \{1,2,..., n_B \}; m_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q$. The charge duration
+scalar, $\epsilon_q$, is defined as $\epsilon_q = r_q$ to create a consumption cost term, $g_{iq}\epsilon_q$. This is utilized to also
+encourage the model to minimize active charger times, particularly for the fast chargers.
 
 Another heuristic-based optimization strategy, referred to as Quin-Modified, is also employed as a means of comparison
 with the results of the SA PAP. The Quin-Modified strategies is a based on the threshold strategy of
