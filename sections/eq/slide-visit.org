@@ -11,7 +11,7 @@
       \Begin
       {
         $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-        $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the visit just purged}
+        $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the purged visit}
 
           \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
           {

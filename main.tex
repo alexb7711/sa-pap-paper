@@ -1,4 +1,4 @@
-% Created 2024-02-18 Sun 16:29
+% Created 2024-02-19 Mon 14:59
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -757,7 +757,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orgc73b316}
+\label{sec:orgdf0df3a}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -775,7 +775,7 @@ Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determin
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org550fac0}
+\label{sec:org2f38398}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -793,34 +793,37 @@ defined spatial constraints while allowing the bus to be ``set aside''.
 
 \paragraph{New visit}
 \label{sec:new-visit}
-The new visit generator describes the process of moving an unsigned BEB \(b \in B\) to a charging queue, \(v_i \in \{n_B+1,...,
-n_B + n_Q\}\) within its arrival/departure time \([a_i, e_i]\). Let \(\U_{\cdot}\) indicate that an element is selected randomly
-with a uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a_i, e_i]}\) indicates that a value will be selected
-between \(a_i\) and \(u_i\) with a uniform distribution. Lines 2 and 3 of \ref{alg:new-visit} extract the arrival and
-departure times of visit \(i\). Note that in subsequent algorithms these lines will be omitted for conciseness. Lines 4
-and 5 select a charging queue, \(q\), and time slice for which \(q\) is available at random with uniform distributions,
-respectively. Line 6 quickly verifies that the inactive period selected is viable and returns a random charging time,
-\([u_i, d_i]\). If the time frames of the visit and the charger availability do not align, the null value is returned.
+The new visit generator describes the process of moving an unsigned BEB, \(b \in B\), to a charging queue, \(v_i \in
+\{n_B+1,..., n_B + n_Q\}\), within its arrival/departure time \([a_i, e_i]\). Let \(\U_{\{\cdot\}}\) indicate that an element is
+selected randomly with a uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a_i, e_i]}\) indicates that a
+value will be selected between \(a_i\) and \(u_i\) with a uniform distribution. Lines 2 through 3 of \ref{alg:new-visit}
+extract the arrival and departure times of visit \(i\). Lines 4 and 5 select a charging queue, \(q\), and time slice for
+which \(q\) is available at random with uniform distributions, respectively. Line 6 verifies that the inactive period
+selected is viable and returns a random charging time, \([u_i, d_i]\). If the time frames of the visit and the charger
+availability do not align, the null value is returned.
 
-The function \texttt{findFreeTime} is the algorithm that determines whether a visit's time at the station \([u_i, e_i]\) can be
-placed in the time availability of charger \(q\). The algorithm is defined in \ref{alg:find-free-time}. Let \(L\) and \(U\) be
-the lower and upper bound of the time between scheduled times. The set of cases is shown in \ref{fig:find-free}. In each case
-depicted by \ref{fig:find-free}, the red line shows the arrival and departure time for a BEB visit, \(i\). The blue lines
-indicate regions in which charger \(v_i\) is active. \(C \in \C_q\) represents one of the ranges between the blue lines, \([L,
-U]\).
+The function \texttt{findFreeTime} is the algorithm that determines whether a visit's time at the station \([a_i, e_i]\) can be
+placed in the time availability, \(C\), of charger \(q\). The algorithm is defined in \ref{alg:find-free-time}. Let \(L\) and
+\(U\) be the lower and upper bound of the time between scheduled times. The set of cases is shown in \ref{fig:find-free}. In
+each case depicted by \ref{fig:find-free}, the red lines depict the arrival and departure time for a BEB visit, \(i\). The blue
+lines indicate regions in which charger \(q\) is active. \(C \in \C_q\) represents one of the ranges between the blue lines,
+\([L, U]\). Note the symbol \(\_\) is used to indicate variables that are either unchanged or unused i.e. in the case of
+return statements and variable extraction, respectively.
 
-The \texttt{findFreeTime} algorithm behaves as follows. Lines 1 and 2 of \ref{alg:find-free-time} extract the lower and upper
-bounds of the charger availability. Lines 3 - 20 check whether the BEB visit can be assigned to the charger available
-time slice. Lines 4 - 6 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits entirely within the
-charger availability and the charge time may be anywhere in the range \([a_i, e_i]\). Lines 8 - 11 coincides with
-\ref{subfig:all} where the arrival time is before the charger is available. Therefore, the BEB may charge anywhere in
-the time \([L, e_i]\). On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} represents the
-scenario in which the BEB departs after the upper bound of the charger availability. Thus, the BEB may be charged
-anywhere in the time frame of \([a_i, U]\). Naturally, Lines 16 - 19 corresponds to the scenario in
-\ref{subfig:invertsandwhich} where the upper and lower bound of the visit is constrained by the charger availability
-such that the time that the BEB can charge is \([L,U]\). Lines 24-28 relate to the scenarios in which the BEB visit does
-not fall within the charger availability time slice. Line 27 returns the updated charger availability. Line 30 returns
-the original charger availability and null values for the charge times upon failure.
+The \texttt{findFreeTime} algorithm is outlined in \ref{alg:find-free-time} and behaves as follows. Lines 2 and 3 extract the
+lower and upper bounds of the charger availability. Lines 4 - 23 check whether the BEB visit can be assigned to the
+charger available time slice. Lines 4 - 7 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits
+entirely within the charger availability and the charge time may be anywhere in the range \([a_i, e_i]\). Lines 8 - 11
+coincides with \ref{subfig:all} where the BEB arrives before the charger is available. Therefore, the BEB may charge
+anywhere in the time \([L, e_i]\). On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} in which
+the BEB departs after the upper bound of the charger availability. Thus, the BEB may be charged anywhere in the time
+frame of \([a_i, U]\). Naturally, Lines 16 - 19 corresponds to the scenario in \ref{subfig:invertsandwhich} where the
+upper and lower bound of the visit is constrained by the charger availability such that the time that the BEB can charge
+is between the time slice \([L,U]\). Lines 20-24 relate to the scenarios in which the BEB visit does not fall within the
+charger availability and assigns the null value to both \(\bar{u}\) and \(\bar{d}\). Lines 24-28 check if a time range has
+been assigned. If one has, the time slice \([\bar{u}_i, \bar{d}_i]\) is assigned to the compliment of the charger
+availability. Line 26 returns tuple of the updated charger availability and the initial and final charging times. Line
+29 returns the original charger availability and null values for the charge times upon failure.
 
 \begin{algorithm}[H]
   \caption{New visit algorithm} \label{alg:new-visit}
@@ -1009,57 +1012,56 @@ the original charger availability and null values for the charge times upon fail
     \KwIn{$(C,a,e)$}
     \KwOut{($\bar{C},\bar{u},\bar{d})$}
 
-    \tcc{Extract the lower and upper bounds.}
-    L \(\leftarrow\) \(\{C_L\}\)\;
-    U \(\leftarrow\) \(\{C_U\}\)\;
-
     \Begin
     {
-        \If(\tcc*[f]{If $L \le a \le e \le U$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
-        }
-        \ElseIf(\tcc*[f]{Else if $a \le L \le e < U$ (\autoref{subfig:all})}){$L \ge a$ and $U \geq e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
-        }
-        \ElseIf(\tcc*[f]{Else if $L \le a \le U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U \le e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
-                $\bar{d}\leftarrow$ $\U_{[\bar{u},U]}$\;
-        }
-        \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L \ge a$ and $U \le e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[\bar{u},L], [\bar{u},e]}$\;
-        }
-        \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
-        {
-                $\bar{u}\leftarrow$ $\varnothing$\;
-                $\bar{d}\leftarrow$ $\varnothing$\;
-        }
+      \tcc{Extract the lower and upper bounds.}
+      L \(\leftarrow\) \(\{C_L\}\)\;
+      U \(\leftarrow\) \(\{C_U\}\)\;
 
-        \If (\tcc*[f]{If an assignment was made}) {$\bar{u},\bar{d} \ne \varnothing$}
-        {
-          $\bar{C}' \leftarrow C' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
-          \Return{($\bar{C},\bar{u},\bar{d}$)}
-        }
-        \Else(\tcc*[f]{Otherwise the assignment failed})
-        {
-          \Return{($C,\varnothing, \varnothing$)}
-        }
+      \If(\tcc*[f]{If $L \le a \le e \le U$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
+      }
+      \ElseIf(\tcc*[f]{Else if $a \le L \le e < U$ (\autoref{subfig:all})}){$L \ge a$ and $U \geq e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
+      }
+      \ElseIf(\tcc*[f]{Else if $L \le a \le U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U \le e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},U]}$\;
+      }
+      \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L \ge a$ and $U \le e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},L], [\bar{u},e]}$\;
+      }
+      \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
+      {
+        $\bar{u}\leftarrow$ $\varnothing$\;
+        $\bar{d}\leftarrow$ $\varnothing$\;
+      }
 
+      \If (\tcc*[f]{If an assignment was made}) {$\bar{u},\bar{d} \ne \varnothing$}
+      {
+        $\bar{C}' \leftarrow C' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
+        \Return{($\bar{C},\bar{u},\bar{d}$)}
+      }
+      \Else(\tcc*[f]{Otherwise the assignment failed})
+      {
+        \Return{($C,\varnothing, \varnothing$)}
+      }
     }
 \end{algorithm}
 
 \paragraph{Purge}
 \label{sec:purge}
-The purge primitive generator simply removes a visit from a charger schedule, \(\C\). This generator exists so that other
-primitive generators may place the visit back into the schedule without creating duplicate entries in \(\C\). Line 2 from
-\ref{alg:purge} updates \(\C\) with the set of visits excluding visit \(i\). Line 3 returns the updated set of charger
-availability.
+The purge primitive generator simply removes a visit from a charger availability schedule, \(\C\). This generator exists
+so that other primitives may place the visit back into the schedule without creating duplicate entries in \(\C\). Line 2
+from \ref{alg:purge} updates \(\C\) with the set of visits excluding visit \(i\) from charging queue \(v_i\). Line 3 returns
+the updated set of charger availability.
 
 \begin{algorithm}[H]
   \caption{Purge algorithm} \label{alg:purge}
@@ -1071,18 +1073,18 @@ availability.
     \Begin
     {
         $\bar{\C} \leftarrow \C \setminus \C_{i.v_i}$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
-        \Return{$(\varnothing, \bar{\C})$}\tcc*{Return updated tuple}
+        \Return{$(\_, \bar{\C})$}\tcc*{Return updated tuple}
     }
   \end{algorithm}
 
 \paragraph{Slide visit}
 \label{slide-visit}
-Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c11} there may be
-some room to manipulate \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and \(d_i\) are randomly
-selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 from
-\ref{alg:slide-visit} purges the visit from the charger availability set. Line 4 retrieves the window that was opened up
-by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). Line 5 the updates visit. If \texttt{findFreeTime}
-was unsuccessful, then the generator returns a tuple of null values.
+This primitive generator is used for buses that have already been scheduled. Because of the constraint \ref{seq:c11}
+there may be some slack to manipulate \([u_i, d_i]\) within the window \([a_i, e_i]\). That is, two new values, \(u_i\) and
+\(d_i\) are randomly selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 from
+\ref{alg:slide-visit} purges the visit from the charger availability schedule. Line 4 retrieves the window that was
+opened up by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). Line 5 returns the updated visit
+information. If \texttt{findFreeTime} was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
   \caption{Slide Visit Algorithm} \label{alg:slide-visit}
@@ -1096,7 +1098,7 @@ was unsuccessful, then the generator returns a tuple of null values.
     \Begin
     {
       $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the visit just purged}
+      $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the purged visit}
 
         \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
         {
@@ -1111,8 +1113,8 @@ was unsuccessful, then the generator returns a tuple of null values.
 \label{new-charger}
 The new charger generator moves a visit \(\I_i\) to a new charging queue while maintaining the same charge time, \([u_i,
 d_i]\). Line 2 from \ref{alg:new-charger} purges the visit from the charger availability set. Line 3 randomly selects a
-charger queue index, \(q\). Line 4 checks if there is an available time slice \([a_i, e_i]\) for charger \(q\). Line 5 sets
-and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple of null values.
+charger queue index, \(q\). Line 4 checks if there is an available time slice \([a_i, e_i]\) for charger \(q\). Line 5 returns
+the updated visit data. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
   \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}
@@ -1138,9 +1140,9 @@ and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then t
 \paragraph{Wait}
 \label{sec:wait}
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
-Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the charger availability
-set of the wait queue for bus \(b\). Note that \(C_L \le u_i \le d_i \le C_U\). Line 4 returns the updated visit. Note that a
-check for failure is not included here because this primitive cannot fail.
+Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the complement charger
+availability schedule of the wait queue for bus \(b\). Line 5 returns the updated visit. Line 7 returns the null set upon
+failure of assignment.
 
 \begin{algorithm}[H]
 \caption{Wait algorithm} \label{alg:wait}
@@ -1155,16 +1157,17 @@ check for failure is not included here because this primitive cannot fail.
     {
       $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.v_i}$}
-      \Return{$(\I_{i.b}, \I_{i.a}, \I_{i.e}, \bar{\C})$}\tcc*[f]{Return visit}
+      \Return{$(\_, (\I_{i.b}, \I_{i.a}, \I_{i.e}), \bar{\C})$}\tcc*[f]{Return visit}
     }
   \end{algorithm}
 
 \paragraph{New Window}
 \label{sec:new-window}
-New window is a combination of the purge and then new visit generators. By this it is meant that current scheduled tuple
-\((v_i, u_i, d_i)\) is purged and added back in as if it were a new visit. This implies that the BEB may be assigned to a
-different queue and a new charge time slice. Line 2 purges the BEB visit from the schedule and Line 3 places the BEB
-back into the schedule using the new visit generator. Line 4 assigns and returns the updated visit.
+New window is a combination of \ref{alg:new-visit} (new visit) and \ref{alg:purge} (purge). By this it is meant that
+visit \(i\) is purged and added back in as if it were a new visit. This implies that the BEB may be assigned to a
+different queue and a new charge time slice. Line 2 purges the BEB visit from the schedule producing \(\bar{\Sol}\). Line
+3 places the BEB back into the schedule using the new visit generator, producing \(\bar{\bar{\Sol}}\). Line 4 assigns and
+returns the updated visit. Line 6 returns the null visit upon failure of \ref{alg:new-visit}.
 
 \begin{algorithm}[H]
   \caption{New window algorithm} \label{alg:new-window}
