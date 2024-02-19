@@ -18,9 +18,9 @@ the BEB arrives at the station to receive a charge that is sufficient to complet
 multiple visits to the station throughout their working day. This paper describes a method to optimize the assignment of
 each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
 
-Consider a fleet of $n_B$ BEBs that collectively visit a station $n_I$ times. At said station, let there exist a pool of
+Consider a fleet of $n_B$ BEBs that collectively visit a station $n_V$ times. At said station, let there exist a pool of
 $n_Q$ charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as $\Iset = \{ 1, ...
-n_I \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \} \subset \mathbb{B}$. Each visit can be
+n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \} \subset \mathbb{B}$. Each visit can be
 represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i \in I$, BEB
 identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in \mathbb{R}$, initial
 charge time, $u \in \mathbb{R}$, final charge time, $d$, the charger queue for the BEB to be placed into, $v \in Q$, the SOC upon

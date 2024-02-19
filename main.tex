@@ -1,4 +1,4 @@
-% Created 2024-02-19 Mon 14:59
+% Created 2024-02-19 Mon 16:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -25,6 +25,7 @@
 \usepackage{amsfonts}                       % Cool math fonts
 \usepackage{tabularx}                       % Cool tables
 \usepackage{multicol}                       % Add capability to make columns
+\usepackage{soul}                           % Highlight text
 \usepackage{hyperref}                       % Cool clean hyperlinks
 \setlength\parindent{0pt}                   % No indent for paragraphs
 \lstset{language=Rust, style=boxed}
@@ -186,9 +187,9 @@ the BEB arrives at the station to receive a charge that is sufficient to complet
 multiple visits to the station throughout their working day. This paper describes a method to optimize the assignment of
 each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
 
-Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_I\) times. At said station, let there exist a pool of
+Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_V\) times. At said station, let there exist a pool of
 \(n_Q\) charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as \(\Iset = \{ 1, ...
-n_I \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \} \subset \mathbb{B}\). Each visit can be
+n_V \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \} \subset \mathbb{B}\). Each visit can be
 represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index, \(i \in I\), BEB
 identification number, \(b \in B\), arrival time to the station, \(a \in \mathbb{R}\), departure time from the station, \(e \in \mathbb{R}\), initial
 charge time, \(u \in \mathbb{R}\), final charge time, \(d\), the charger queue for the BEB to be placed into, \(v \in Q\), the SOC upon
@@ -262,14 +263,14 @@ charger in queue \(q \in Q\).
 \hline
 Constants &  & Constants & \\[0pt]
 \(C\) & Penalty method gain factor & \(n_B\) & Number of buses in use\\[0pt]
-\(n_H\) & Number of discrete steps, \(h\), in time horizon & \(n_I\) & Number of total visits\\[0pt]
+\(n_H\) & Number of discrete steps, \(h\), in time horizon & \(n_V\) & Number of total visits\\[0pt]
 \(J(u,d,v,\eta)\) & Objective function & \(n_K\) & Number of discrete steps in time horizon\\[0pt]
 \(n_M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(n_Q\) & Number of chargers\\[0pt]
 \(\T\) & Time horizon &  & \\[0pt]
 \hline
 Input variables &  & Input Variables & \\[0pt]
 \(\Delta_i\) & Discharge of visit over after visit \(i\) & \(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
-\(\delta_i\) & Discharge rate for vehicle \(i\) per mile & \(\nu\) & Minimum charge percentage allowed for each visit \(i\)\\[0pt]
+\(\delta_i\) & Discharge rate for vehicle \(i\) per mile & \(\nu_b\) & Minimum charge percentage allowed for each BEB \(b \in \Bset\)\\[0pt]
 \(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for bus \(b\)\\[0pt]
 \(\rho_i\) & Route distance after visit \(i\) & \(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
 \(a_i\) & Arrival time of visit \(i\) & \(\Xi_i\) & ID for bus visit \(i\)\\[0pt]
@@ -390,7 +391,7 @@ visit \(i\).
 
 \begin{equation}
 \label{eq:ac}
-\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
+\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue \(q \in Q\). Let \(\epsilon\)
@@ -418,7 +419,7 @@ charger will be utilized, \(s_i\).
 
 \begin{equation}
 \label{eq:consumption-cost}
-  \sum_{i=1}^{n_I} r_{v_i}s_i
+  \sum_{i=1}^{n_V} r_{v_i}s_i
 \end{equation}
 
 The demand cost quantifies the amount of power being used over a given period of time and increases the cost if too much
@@ -757,7 +758,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orgdf0df3a}
+\label{sec:orge1c1ce6}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -775,7 +776,7 @@ Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determin
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org2f38398}
+\label{sec:orga997165}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -1196,15 +1197,16 @@ returns the updated visit. Line 6 returns the null visit upon failure of \ref{al
 
 \subsubsection{Generator Wrappers}
 \label{sec:generator-wrappers}
-This section covers the algorithms utilized to select and execute different generation processes for the SA algorithm.
-The generator wrappers are the methods immediately called by the SA algorithm. Each wrapper utilizes the generators
-previously described and returns either a new charge schedule or a modified charge schedule.
+This section covers the algorithms utilized to select and execute different generation processes. The generator wrappers
+are the methods immediately called by the SA algorithm. Each wrapper utilizes the primitive generators previously
+described and returns either a new charge schedule or a modified charge schedule.
 
 \paragraph{Charge Schedule Generation}
 \label{sec:charge-schedule-generation}
-The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. Line 3 of
-\ref{alg:charge-schedule-generation} loops through each visit. Line 3 extracts the visit index, and Line 4 executes
-\ref{alg:wait}.
+The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. Specifically,
+this generator exists to initialize the system with a solution that is spatiotemporally feasible, but does not satisfy
+the battery dynamic constraints. Line 2 of \ref{alg:charge-schedule-generation} loops through each visit and Line 4
+executes \ref{alg:wait}.
 
 \begin{algorithm}[H]
 \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
@@ -1220,23 +1222,23 @@ The objective of this generator is to assign each BEB to its waiting queue provi
         \tcc{Select an unscheduled BEB visit from a randomly indexed set of visits}
         \ForEach {$\I_i \in \I$}
         {
-            $i \leftarrow \I_i$\tcc*{Extract the visit index}
-            (\_, $\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
+            (\_, $\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($\I_i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
         }
-            \Return{(\_, $\bar{\I}$, $\bar{\C}$)}
+            \Return{($\bar{\I}$, $\bar{\C}$)}
     }
   \end{algorithm}
 
 \paragraph{Perturb Schedule}
 \label{sec:tweak-schedule}
-As described in SA, local searches are also employed to try and exploit a given solution
-\cite{radosavljevic-2018-metah-optim}. After each step of the cooling function, the active solution will be iteratively
-altered by a primitive generator to create a neighboring candidate solution over a total of \(n_K\) iterations. The
-algorithm describes the method by which the SA algorithm decides how to perturb the schedule. The method that will be
-employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
-primitive generator once. Line 2 of \ref{alg:perturb-schedule} selects a visit at random with a uniform distribution.
-Line 3 extracts the visit index. Let \(n_G\) denote the number of primitive generating functions. Line 4 selects a
-primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
+Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
+create candidate solutions. After each step of the cooling function, the active solution will be altered \(n_k\) times by
+a random primitive generator. During these \(n_k\) iterations the active solution is modified to create a neighboring
+candidate solution. This candidate solution with then be compared against the active solution in the manner discussed in
+\ref{sec:acceptance}. This algorithm describes the method by which the SA algorithm decides how to perturb the schedule. The
+method that will be employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and
+execute said primitive generator once. Thus, \ref{alg:perturb-schedule} is as follows: Line 2 selects a visit at random
+with a uniform distribution. Line 3 extracts the visit index. Letting \(n_G\) denote the number of primitive generating
+functions, Line 4 selects a primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
 
 \begin{algorithm}[H]
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
@@ -1254,7 +1256,7 @@ primitive generator. Line 5 executes the primitive, and Line 6 returns the resul
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
         $PGF \leftarrow\; \U_{[1,n_G]}$\tcc*{Select one of the generator functions}
         $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($\bar{\I}$, $\bar{\C}$)}
+        \Return{($\_, \bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 \section{Optimization Algorithm}
@@ -1265,7 +1267,7 @@ PAP algorithm.
 
 \subsection{Simulated Annealing Pseudo Code}
 \label{sec:simulated-annealing-pseudo-code}
-Consider \ref{alg:sa-pseudo} \cite{henderson-1989-theor-pract}. Let \(\omega\) and \(\bar{\omega}\) denote the active solution and
+Let \(\omega\) and \(\bar{\omega}\) denote the active solution and
 the candidate solution, respectively. Let \(\Tau\) be the temperature function and \(\Tau_0\) the initial temperature.
 Furthermore, let \(t\) be defined as the vector of temperatures defined by \(t = \Tau(\Tau_0)\), and let \(t_m\) be defined as
 being an element of \(t\), \(t_m \in t\). Let \(n_K\) be the repetition counter, it defines the number of iterations to execute
@@ -1276,17 +1278,16 @@ solution. The fitness of the two solutions are compared and if the candidate sol
 always taken as the active solution. If it is not, then it may be selected as the new candidate solution with some
 probability that is a function of the difference in the objective function values and the current temperature. This
 process is iteratively done until the temperature function reaches its minimum value. With the high level summary in
-mind, the SA pseudocode is to be presented.
+mind, the SA pseudocode is to be presented \cite{henderson-1989-theor-pract}.
 
-The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm with the active
-solution, \(\omega\), and temperature schedule, \(t\), respectively. The outer loop on Line 3 iterates through all the
-temperature values in \(t\). After each iteration of the outer loop, the temperature is decreased as specified by the
-selected temperature function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates
-\(n_K\) times at a constant temperature, \(t_k\). Line 6, perturbs the active solution \(\omega\) to a neighboring candidate
-solution \(\bar{\omega} = N(\omega)\). Line 7 then calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-13 updates
-\(\omega\) with \(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\omega
-, \bar{\omega}}}{t_m}}\) if the candidate solution is less fit than the active solution. Line 14 updates the repetition
-counter.
+The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm an active solution,
+\(\omega\), and temperature schedule, \(t\), respectively. The outer loop on Line 3 iterates through all the temperature values
+in \(t\). After each iteration of the outer loop, the temperature is decreased as specified by the selected temperature
+function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates \(n_K\) times at a
+constant temperature, \(t_k\). Line 6, perturbs the active solution \(\omega\) to a neighboring candidate solution \(\bar{\omega} =
+N(\omega)\). Line 7 then calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-13 updates \(\omega\) with \(\bar{\omega}\)
+if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\omega , \bar{\omega}}}{t_m}}\)
+if the candidate solution is less fit than the active solution. Line 14 updates the repetition counter.
 
 \begin{algorithm}[H]
 \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
@@ -1300,10 +1301,9 @@ counter.
 
     \Begin
     {
+        $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}
-
-        $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
 
         \ForEach{$t_m \in t$}
         {
@@ -1326,37 +1326,39 @@ counter.
 
 \subsection{SA PAP Pseudo Code}
 \label{sec:sa-pap-pseudo-code}
-Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP in \ref{alg:sa-pap}. While
-the SA PAP generally is written almost identically to that of the general SA algorithm, SA assumes that the new solution
-generated is in the solution space of the problem, \(\omega \in S\) where \(S\) is the solution space. Referring to
-\ref{alg:charge-schedule-generation}, the generating function for SA PAP, note that all the assignments are placed in
-their respective waiting queues. One is to expect that the output generated by this function will not be in the solution
-space for most (if not all) scenarios of any interest. Therefore, the constraints introduced in \ref{sec:constraints} must be
-employed to verify that the output of \ref{alg:charge-schedule-generation} is in the feasible space, \(S\).
+Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP (\ref{alg:sa-pap}). While
+the SA PAP generally is written almost identically to that of the general SA algorithm, SA assumes that the generated
+candidate solutions are in the solution space of the problem, \(\omega \in S\) where \(S\) is the solution space. Referring to
+\ref{alg:charge-schedule-generation}, the generating function that initializes the SA PAP assigns all the BEBs to their
+respective waiting queues. It is to be expected that the output generated by this function will not be in the solution
+space for most (if not all) scenarios of any interest. Therefore, the objective function and constraints introduced in
+\ref{sec:constraints} and \ref{sec:objective-function}, respectively, must be employed to verify that the output of
+\ref{alg:charge-schedule-generation} is in the feasible space, \(S\).
 
 As previously stated, the generating functions directly influence the values of the assigned charge queue, charge
 initialization time, and charge completion time: \(v_i\), \(u_i\), and \(d_i\), respectively. Having generated those values,
 the rest of the decision variables may be derived. Let's begin by reviewing over the packing constraints.
 \ref{seq:c0}-\ref{seq:c1} are employed to enable and disable \(\sigma_{ij}\) and \(\psi_{ij}\) and \ref{seq:c2}-\ref{seq:c4} ensure
-the validity of the set values. \ref{seq:c5} can be directly calculated and \ref{seq:c11} is fully defined.
+the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq:c11} is fully defined.
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
-battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated while
-\ref{seq:c7} is evaluated to ensure the BEB is not over charged. \ref{seq:c12}-\ref{seq:c15} may also be evaluated to
-find the values of \(\theta_h^{v_i}\) and \(\mu_h^{v_i}\) which then directly leads to \ref{seq:c16} being able to be determined.
-Once all these constraints have been calculated and evaluated to be true will a generated solution be considered in the
-feasible space. Let the feasible space be denoted as \(S\).
+battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after
+a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. TODO: \hl{{\ref{seq:c12}}-{\ref{seq:c15}} may also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which then directly leads to {\ref{seq:c16}} being able to be determined. Once all these constraints have been calculated and evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as $S$.} The penalty method implemented in \ref{sec:objective-function} is set in place to allow the SOC to go below the
+specified threshold, \(\nu_b \kappa_b\), but punish the solution for doing so. Thus, over time, the candidate solutions will be
+encouraged toward a solution that does not activate the penalty method.
 
-Line 2 initializes the SA algorithm by creating a vector of temperature values based on a temperature schedule \(\Tau\),
-and an initial temperature \(\Tau_0\). Line 3 generates the initial candidate solution \(\omega\), note that \(CSG(\cdot)\) is used to
-denote specific candidate solution generator being utilized, for SA PAP it is \ref{alg:charge-schedule-generation}. Line
-4 loops through each of the step in the temperature schedule \(t_m \in t\). Line 5 resets the iteration count to 0. Line 5
-specifies the inner loop that iterates \(n_K\) times at a constant temperature, \(t_k\). Line 6, perturbs the active
-solution \(\omega\) to a neighboring candidate solution \(\bar{\omega} = N(\omega)\). Line 7 then calculates the difference in the fitness
-of \(\omega\) and \(\bar{\omega}\). Lines 8-14 are similar to \ref{alg:sa-pseudo} where it updates \(\omega\) with \(\bar{\omega}\) if the candidate
-solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}\) if the candidate
-solution is less fit than the active solution. What makes these lines unique is that the active solution is only updated
-if the candidate is within the solution space. That it, it satisfies the constraints defined in \ref{eq:constraints}.
+The SA-PAP algorithm will now be outlined. Line 2 initializes the SA algorithm by creating a vector of temperature
+values based on a temperature schedule \(\Tau\), and an initial temperature \(\Tau_0\). Line 3 generates the initial
+candidate solution \(\omega\), note that \(CSG(\cdot)\) (candidate solution generator) is used to denote the specific candidate
+solution generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through each of
+the step in the temperature schedule \(t_m \in t\). Line 5 resets the iteration count to 0. Line 6 specifies the inner loop
+that iterates \(n_K\) times at a constant temperature, \(t_k\). Line 7, perturbs the active solution \(\omega\) to a neighboring
+candidate solution \(\bar{\omega} = PS(\omega)\), where \(PS(\cdot)\) (perturb schedule) is \ref{alg:perturb-schedule}. Line 8 calculates
+the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-14 are similar to \ref{alg:sa-pseudo} where it updates \(\omega\)
+with \(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability
+\(e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}\) if the candidate solution is less fit than the active solution. What makes these lines
+unique is that the active solution is only updated if the candidate is within the solution space. That it, it satisfies
+the constraints defined in \ref{eq:constraints}.
 
 \begin{algorithm}[H]
   \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
@@ -1385,7 +1387,7 @@ if the candidate is within the solution space. That it, it satisfies the constra
         \tcc{For each step in the repitition schedule}
         \While{$k \le n_K$}
         {
-          $\bar{\omega} \subset (\bar{\I}, \bar{\C}) \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
+          $\bar{\omega} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
           $\Omega_{\bar{\omega},\omega} = $ \Obj{$\bar{\omega}$}  - \Obj{$\omega$} \tcc*{Calculate the difference of fitness scores}
 
           \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}

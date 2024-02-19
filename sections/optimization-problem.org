@@ -134,7 +134,7 @@ visit $i$.
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
+\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q \in Q$. Let $\epsilon$
@@ -162,7 +162,7 @@ charger will be utilized, $s_i$.
 
 #+name: eq:consumption-cost
 \begin{equation}
-  \sum_{i=1}^{n_I} r_{v_i}s_i
+  \sum_{i=1}^{n_V} r_{v_i}s_i
 \end{equation}
 
 The demand cost quantifies the amount of power being used over a given period of time and increases the cost if too much
