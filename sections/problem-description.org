@@ -20,12 +20,11 @@ each visit to a charger given a schedule for a fleet of BEBs that follow the beh
 
 Consider a fleet of $n_B$ BEBs that collectively visit a station $n_V$ times. At said station, let there exist a pool of
 $n_Q$ charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as $\Iset = \{ 1, ...
-n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \} \subset \mathbb{B}$. Each visit can be
-represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i \in I$, BEB
-identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in \mathbb{R}$, initial
-charge time, $u \in \mathbb{R}$, final charge time, $d$, the charger queue for the BEB to be placed into, $v \in Q$, the SOC upon
-arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the currently visiting BEB, $\xi \in I$. Let the set of all visits be
-denoted as $\I$.
+n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \} \subset \mathbb{Z}$. Each visit can be represented by
+the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i \in I$, BEB identification number,
+$b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in \mathbb{R}$, initial charge time, $u \in \mathbb{R}$,
+final charge time, $d$, the charger queue for the BEB to be placed into, $v \in Q$, the SOC upon arrival, $\eta \in \mathbb{R}$, and the
+index of the next visit for the currently visiting BEB, $\xi \in I$. Let the set of all visits be denoted as $\I$.
 
 For each visit, a BEB must be placed in a single queue, $q \in \Qset$. The charger $q$ is assumed to be either a fast
 charger, slow charger, or no charger at all (denoted as a waiting queue). A BEB is only allowed to be assigned to one

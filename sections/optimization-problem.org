@@ -88,18 +88,18 @@ $i$.
 \end{equation}
 
 As described in the previous section, a method of determining whether a discrete time $t_h$ is within the range $[u_i,
-d_i]$ is desired. A third variable $\iota_h^{v_i}$ is introduced to indicate if the inequality $u_i \le t_h \le d_i$ is true or
-not. Specifically it indicates if $t_h$ is within an active charging period for the charger $v_i$ which will assist in
-calculating the demand cost. src_latex{\hl{That is, $\iota_h^{v_i} \in \{0,1\} = 1$ when $\mu_h^{v_i} = 1$ and $\theta_h^{v_i} =
-1$.}} This topic will be covered in more depth in [[#sec:objective-function]].
+d_i]$ is desired. src_latex{\hl{A third variable $\iota_h^{v_i}$ is introduced to indicate if the inequality $u_i \le t_h \le
+d_i$ is true or not. Specifically it indicates if $t_h$ is within an active charging period for the charger $v_i$ which
+will assist in calculating the demand cost. That is, $\iota_h^{v_i} \in \{0,1\} = 1$ when $\mu_h^{v_i} = 1$ and $\theta_h^{v_i} = 1$.
+This topic will be covered in more depth in}} [[#sec:objective-function]].
 
 A penalty method is to be implemented in the objective function that is enabled when the $\eta_i$ falls below a defined
 threshold. Let the piecewise function that enables/disables the penalty method be of the from of [[eq:penalty]].
 
 #+include: eq/penalty.org
 
-If $x = \eta_i - \nu_{\Xi_i} \kappa_i$, then [[eq:penalty]] defines the penalty method that encourages schedules to maintain the SOC for
-each visit above $\nu_{\Xi_i} \kappa_i$. If the SOC is falls below the specified threshold, a penalty proportional to the
+If $x = \eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}$, then [[eq:penalty]] defines the penalty method that encourages schedules to maintain the SOC
+for each visit above $\nu_{\Xi_i} \kappa_{\Xi_i}$. If the SOC is falls below the specified threshold, a penalty proportional to the
 difference of the SOC and the threshold squared is applied.
 
 The variables $\sigma_{ij}$ and $\psi_{ij}$ are used to indicate whether a visit pair $(i, j)$ overlap the same space as show in
@@ -129,12 +129,12 @@ Suppose the objective function is of the form $\text{min } J = \AC + \UC$. $\AC$
 the utility cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the
 chosen charging period, $[u_i, d_i]$. $v_i \in \Qset$ is the charger index, $u_i$ is the initial charge time, $d_i$ is the
 detach time for visit $i$, $\phi_i(x)$ is a piecewise function utilized as a penalty method, $\nu$ is a vector of the minimum
-charge percentage allowed for each BEB $\kappa_i$ is the battery capacity for visit $i$, and $\eta_i$ is the initial charge for
-visit $i$.
+charge percentage allowed for each BEB, $\kappa$ is a vector of the battery capacities of each BEB, and $\eta_i$ is the initial
+charge for visit $i$.
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
+\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q \in Q$. Let $\epsilon$
@@ -149,11 +149,11 @@ still encouraging the use of slow chargers over fast. While the $\epsilon$ vecto
 form shown above is the method applied to this work.
 
 The second term is the penalty function that is either enabled or disabled by $\phi_i$
-[cite:@luenberger-2008-penal-barrier-method]. The penalty function is enabled, $\phi_i = (\eta_i - \nu_{\Xi_i} \kappa_i)^2$, if the SOC
-falls below a specified SOC threshold, $\eta_i \le \nu \kappa_{\Xi_i}$, and is disabled, $\phi_i = 0$, otherwise. This term is considered
-an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not
-impacted by how much the system consumes energy, but by how the BEBs have been assigned. $C$ is a large constant value
-used to scale the penalty function. The mechanism that enables or disables $\phi_i$ is derived in [[#sec:constraints]].
+[cite:@luenberger-2008-penal-barrier-method]. The penalty function is enabled, $\phi_i = (\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i})^2$, if the
+SOC falls below a specified SOC threshold, $\eta_i \le \nu \kappa_{\Xi_i}$, and is disabled, $\phi_i = 0$, otherwise. This term is
+considered an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost
+is not impacted by how much the system consumes energy, but by how the BEBs have been assigned. $C$ is a large constant
+value used to scale the penalty function. The mechanism that enables or disables $\phi_i$ is derived in [[#sec:constraints]].
 
 The utility cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation
 of all the energy being used over all the active periods for each charger in the time horizon, $\T$, as written in
@@ -195,13 +195,13 @@ p_d(t) = \max(p_{fix},p_{max}(t))z
 of discrete power consumption and let $p_h \in p$ be the discrete power demand at time step $h$ where $h \in \{ 1, 2, ...,
 n_H \} \subset \mathcal{Z}$, $n_H = \frac{T}{0.25}$, and $p$ is an $n_H \times 1$ vector. For conciseness of notation we will abuse $t_h$ to
 denote the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2,
-..., n_H \}$. Let $\iota$ be a $n_H \times n_Q$ matrix of binary variables that is enabled if charger $v_i \in \Qset$ is active
-during the time frame $dt_h$ and $r$ is a $n_Q \times 1$ vector of charger rates. Thus, the discrete power utilized over the
-time horizon is calculated as follows.
+..., n_H \}$. src_latex{\hl{Let $\iota$ be a $n_H \times n_Q$ matrix of binary variables that is enabled if charger $v_i \in \Qset$
+is active during the time frame $dt_h$ and $r$ is a $n_Q \times 1$ vector of charger rates. Thus, the discrete power utilized
+over the time horizon is calculated as follows.}}
 
 #+name: eq:discrete-power
 \begin{equation}
-  p = \iota r
+  \mathcolorbox{p = \iota r}
 \end{equation}
 
 If $n_H$ is defined to express the number of discrete steps that span a 15-minute interval then $n_H = 0.25/dt_h$. The
@@ -265,14 +265,17 @@ bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq
 times (i.e. the arrival time is less than the initial charge which is less than the detach time which is less than the
 time the bus exits the station and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable $\iota$. These
-constraints define three $n_H \times n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i \le t_h \le d_i$, $\iota_h^q = 0$
-otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit $i$,
-$u_i$, is greater than or equal to the discrete time, $0.25 \cdot h$. That is, $\mu_h^{v_i} = 1$ if $u_i t_h$, $u_h^{v_i} = 0$
-otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, $d_i$, is less than or equal
-to the next discrete time step, $t_h$. The final constraint \ref{seq:c16} is a $n_H \times n_Q$ matrix that represents
-whether charger $v_i \in \Qset$ is active. Note that $\circ$ represents the Hadamard Product [cite:@horn-1985-matrix-analy].
-Let $A$ and $B$ be two $n_H \times n_Q$ matrices. The Hadamard Product is defined as the element-wise product of the two
-matrices, $A \circ B = [a_{ij}b_{ij}]$.
+#+begin_src latex
+  \hl{The last set of constraints {\ref{seq:c12}} - {\ref{seq:c16}} specifies the rule set for the decision variable
+    $\iota$. These constraints define three $n_H \times n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i
+    \le t_h \le d_i$, $\iota_h^q = 0$ otherwise. {\ref{seq:c12}} and {\ref{seq:c13}} utilizes big-M notation to ensure
+    that the initial charge time for visit $i$, $u_i$, is greater than or equal to the discrete time, $0.25 \cdot h$. That
+    is, $\mu_h^{v_i} = 1$ if $u_i t_h$, $u_h^{v_i} = 0$ otherwise. Similarly, {\ref{seq:c14}} and {\ref{seq:c15}} ensures
+    that the final charge time, $d_i$, is less than or equal to the next discrete time step, $t_h$. The final constraint
+    {\ref{seq:c16}} is a $n_H \times n_Q$ matrix that represents whether charger $v_i \in \Qset$ is active. Note that
+    $\circ$ represents the Hadamard Product \cite{horn-1985-matrix-analy}. Let $A$ and $B$ be two $n_H \times n_Q$
+    matrices. The Hadamard Product is defined as the element-wise product of the two matrices, $A \circ B =
+    [a_{ij}b_{ij}]$.}
+#+end_src
 
 #  LocalWords: BEB MILP BEBs Hadamard
