@@ -3,23 +3,25 @@
     \caption{New visit algorithm} \label{alg:new-visit}
     \LinesNumbered
     \TitleOfAlgo{New Visit}
-    \KwIn{($\Sol$)}
+    \KwIn{$\Sol$}
     \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{Union}{Union}
     \SetKwFunction{findFreeTime}{findFreeTime}
 
-    \Begin {
-      $a_i \leftarrow \I_{i.e}$\tcc*{Extract the arrivial time for visit $i$}
-      $e_i \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
-      $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
-      $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
-
-      \If(\tcc*[f]{If there is time available in $C_q^j$}){\findFreeTime{$C, (a_i, e_i)$} $\not\in \varnothing$}
+    \Begin
       {
-        \Return{($q,u,d,\C$)}\tcc*[f]{Return visit}
-      }
+        $a \leftarrow \I_{i.a}$\tcc*{Extract the arrivial time for visit $i$}
+        $e \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
+        $\bar{q} \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
+        $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
 
-      \Return{($\varnothing$)}\tcc*{Return nothing} }
+        \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, a, e$} $\not\in \varnothing$}
+           {
+             \Return{($\_, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
+           }
+
+           \Return{($\varnothing$)}\tcc*{Return nothing}
+      }
   \end{algorithm}
 #+end_src

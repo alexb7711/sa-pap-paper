@@ -1,4 +1,4 @@
-% Created 2024-02-13 Tue 15:13
+% Created 2024-02-19 Mon 19:32
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -25,6 +25,7 @@
 \usepackage{amsfonts}                       % Cool math fonts
 \usepackage{tabularx}                       % Cool tables
 \usepackage{multicol}                       % Add capability to make columns
+\usepackage{soul}                           % Highlight text
 \usepackage{hyperref}                       % Cool clean hyperlinks
 \setlength\parindent{0pt}                   % No indent for paragraphs
 \lstset{language=Rust, style=boxed}
@@ -37,6 +38,7 @@
 \newcommand{\Or}{\textbf{ or }}
 \renewcommand*{\And}{\textbf{ and }}
 \newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}%
+\newcommand{\mathcolorbox}[1]{\colorbox{yellow}{$\displaystyle #1$}}
 \newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{gray}{#1}}
 \newcommand{\T}{\mathcal{T}}                % To make it clear the difference
 \newcommand{\Tau}{T}                        % between Tau and T
@@ -186,9 +188,9 @@ the BEB arrives at the station to receive a charge that is sufficient to complet
 multiple visits to the station throughout their working day. This paper describes a method to optimize the assignment of
 each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above.
 
-Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_I\) times. At said station, let there exist a pool of
+Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_V\) times. At said station, let there exist a pool of
 \(n_Q\) charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as \(\Iset = \{ 1, ...
-n_I \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \} \subset \mathbb{B}\). Each visit can be
+n_V \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \} \subset \mathbb{B}\). Each visit can be
 represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index, \(i \in I\), BEB
 identification number, \(b \in B\), arrival time to the station, \(a \in \mathbb{R}\), departure time from the station, \(e \in \mathbb{R}\), initial
 charge time, \(u \in \mathbb{R}\), final charge time, \(d\), the charger queue for the BEB to be placed into, \(v \in Q\), the SOC upon
@@ -262,14 +264,14 @@ charger in queue \(q \in Q\).
 \hline
 Constants &  & Constants & \\[0pt]
 \(C\) & Penalty method gain factor & \(n_B\) & Number of buses in use\\[0pt]
-\(n_H\) & Number of discrete steps, \(h\), in time horizon & \(n_I\) & Number of total visits\\[0pt]
+\(n_H\) & Number of discrete steps, \(h\), in time horizon & \(n_V\) & Number of total visits\\[0pt]
 \(J(u,d,v,\eta)\) & Objective function & \(n_K\) & Number of discrete steps in time horizon\\[0pt]
 \(n_M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(n_Q\) & Number of chargers\\[0pt]
 \(\T\) & Time horizon &  & \\[0pt]
 \hline
 Input variables &  & Input Variables & \\[0pt]
 \(\Delta_i\) & Discharge of visit over after visit \(i\) & \(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
-\(\delta_i\) & Discharge rate for vehicle \(i\) per mile & \(\nu\) & Minimum charge percentage allowed for each visit \(i\)\\[0pt]
+\(\delta_i\) & Discharge rate for vehicle \(i\) per mile & \(\nu_b\) & Minimum charge percentage allowed for each BEB \(b \in \Bset\)\\[0pt]
 \(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for bus \(b\)\\[0pt]
 \(\rho_i\) & Route distance after visit \(i\) & \(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
 \(a_i\) & Arrival time of visit \(i\) & \(\Xi_i\) & ID for bus visit \(i\)\\[0pt]
@@ -279,10 +281,10 @@ Input variables &  & Input Variables & \\[0pt]
 \hline
 Direct Decision Variables &  & Direct Decision Variables & \\[0pt]
 \(u_i\) & Time to start charging for visit \(i\) & \(d_i\) & Time to detach bus from charger for visit \(i\)\\[0pt]
-\(\mu\) & \(n_Q \times n_N\) matrix of binary variables such that \(\mu_h^{v_i} = 1\) if \(u_i \le t_h\), 0 otherwise & \(\theta\) & \(n_Q \times n_N\) matrix of binary variables such that \(\theta_h^{v_i} = 1\) if \(d_i \ge t_h\), 0 otherwise\\[0pt]
+\hl{$\mu$} & \(n_Q \times n_N\) matrix of binary variables such that \(\mu_h^{v_i} = 1\) if \(u_i \le t_h\), 0 otherwise & \hl{$\theta$} & \(n_Q \times n_N\) matrix of binary variables such that \(\theta_h^{v_i} = 1\) if \(d_i \ge t_h\), 0 otherwise\\[0pt]
 \(v_i\) & Assigned queue for visit \(i\) &  & \\[0pt]
 Indirect Decision Variables &  & Indirect Decision Variables & \\[0pt]
-\(\eta_i\) & Charge for the bus at the beginning of visit \(i\) & \(\iota\) & \(n_Q \times n_N\) matrix of binary values such that \(\iota_h^{v_i} = 1\) if \(u_i \le t_h \le d_i\), 0 otherwise\\[0pt]
+\(\eta_i\) & Charge for the bus at the beginning of visit \(i\) & \hl{$\iota$} & \(n_Q \times n_N\) matrix of binary values such that \(\iota_h^{v_i} = 1\) if \(u_i \le t_h \le d_i\), 0 otherwise\\[0pt]
 \(\sigma_{ij}\) & Tracks temporal overlap for visit pair \((i,j)\) & \(d_i\) & Detach time from charger for visit \(i\)\\[0pt]
 \(p_{dem}(t)\) & Demand cost & \(s_i\) & Amount of time spent on charger for visit \(i\) (service time)\\[0pt]
 \(\psi_{ij}\) & Tracks spatial overlap for visit pair \((i,j)\) &  & \\[0pt]
@@ -301,10 +303,8 @@ indirect variables are those that are influenced by the direct.
 The first two variables are \(u_i\) and \(d_i \; \forall i \in \Iset\). They represent the initial and final charging times. These
 values must remain within range of the arrival time and departure time for visit \(i\), \([a_i, e_i]\). A method of
 determining if a discrete time step \(t_h\) is within the charging time for visit \(i\). Let \(n_T\) be defined as the total
-number of discrete steps taken over the time horizon, \(\mu\) and \(\theta\) are \(n_T \times n_Q\) matrices of binary decision variables,
-\(\mu_h^{v_i}, \theta_h^{v_i} \in \{0, 1\}\). \(\theta_h^{v_i} = 1\) when \(u_i \le t_h\), and \(\theta_h^{v_i} = 0\) otherwise. \(\mu_h^{v_i} = 1\)
-when \(d_i \ge t_h\) and \(\mu_h^{v_i} = 0\) otherwise. The last direct decision variable is the queue that bus visit \(i\) can
-be placed in to charge, \(v_i \in \Qset\).
+number of discrete steps taken over the time horizon, \hl{$\mu$ and $\theta$ are $n_T \times n_Q$ matrices of binary decision variables, $\mu_h^{v_i}, \theta_h^{v_i} \in \{0, 1\}$. $\theta_h^{v_i} = 1$ when $u_i \le t_h$, and $\theta_h^{v_i} = 0$ otherwise. $\mu_h^{v_i} = 1$ when $d_i \ge t_h$ and $\mu_h^{v_i} = 0$ otherwise.} The last direct decision variable is the queue that
+bus visit \(i\) can be placed in to charge, \(v_i \in \Qset\).
 
 \paragraph{Indirect Decision Variables}
 \label{sec:indirect-decision-variables}
@@ -324,8 +324,7 @@ plus the charge added to it by charger \(v_i\) over duration \(s_i = d_i - u_i\)
 As described in the previous section, a method of determining whether a discrete time \(t_h\) is within the range \([u_i,
 d_i]\) is desired. A third variable \(\iota_h^{v_i}\) is introduced to indicate if the inequality \(u_i \le t_h \le d_i\) is true or
 not. Specifically it indicates if \(t_h\) is within an active charging period for the charger \(v_i\) which will assist in
-calculating the demand cost. That is, \(\iota_h^{v_i} \in \{0,1\} = 1\) when \(\mu_h^{v_i} = 1\) and \(\theta_h^{v_i} = 1\). This topic
-will be covered in more depth in \ref{sec:objective-function}.
+calculating the demand cost. \hl{That is, $\iota_h^{v_i} \in \{0,1\} = 1$ when $\mu_h^{v_i} = 1$ and $\theta_h^{v_i} = 1$.} This topic will be covered in more depth in \ref{sec:objective-function}.
 
 A penalty method is to be implemented in the objective function that is enabled when the \(\eta_i\) falls below a defined
 threshold. Let the piecewise function that enables/disables the penalty method be of the from of \ref{eq:penalty}.
@@ -390,7 +389,7 @@ visit \(i\).
 
 \begin{equation}
 \label{eq:ac}
-\AC = \sum_{i=1}^{n_I} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
+\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue \(q \in Q\). Let \(\epsilon\)
@@ -409,7 +408,7 @@ The second term is the penalty function that is either enabled or disabled by \(
 falls below a specified SOC threshold, \(\eta_i \le \nu \kappa_{\Xi_i}\), and is disabled, \(\phi_i = 0\), otherwise. This term is considered
 an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not
 impacted by how much the system consumes energy, but by how the BEBs have been assigned. \(C\) is a large constant value
-used to scale the penalty function. The mechanisms that enables or disables \(\phi_i\) is derived in \ref{sec:constraints}.
+used to scale the penalty function. The mechanism that enables or disables \(\phi_i\) is derived in \ref{sec:constraints}.
 
 The utility cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation
 of all the energy being used over all the active periods for each charger in the time horizon, \(\T\), as written in
@@ -418,7 +417,7 @@ charger will be utilized, \(s_i\).
 
 \begin{equation}
 \label{eq:consumption-cost}
-  \sum_{i=1}^{n_I} r_{v_i}s_i
+  \sum_{i=1}^{n_V} r_{v_i}s_i
 \end{equation}
 
 The demand cost quantifies the amount of power being used over a given period of time and increases the cost if too much
@@ -534,23 +533,23 @@ on time. The aforementioned constraints are shown in \ref{eq:constraints}.
   \end{equation}
   \begin{equation}
       \label{seq:c12}
-      dt_h - u_i \le T\theta_h^{v_i}
+      \mathcolorbox{dt_h - u_i \le T\theta_h^{v_i}}
   \end{equation}
   \begin{equation}
       \label{seq:c13}
-       u_i - dt_h \le T(1 - \theta_h^{v_i})
+       \mathcolorbox{u_i - dt_h \le T(1 - \theta_h^{v_i})}
   \end{equation}
   \begin{equation}
       \label{seq:c14}
-      d_i - dt_h \le T\mu_h^{v_i}
+      \mathcolorbox{d_i - dt_h \le T\mu_h^{v_i}}
   \end{equation}
   \begin{equation}
       \label{seq:c15}
-      dt_h - d_i \le T(1 - \mu_h^{v_i})
+      \mathcolorbox{dt_h - d_i \le T(1 - \mu_h^{v_i})}
   \end{equation}
   \begin{equation}
       \label{seq:c16}
-      \iota = \mu \circ \theta
+      \mathcolorbox{\iota = \mu \circ \theta}
   \end{equation}
 \end{subequations}
 \end{multicols}
@@ -749,10 +748,15 @@ This section discusses in detail the expected inputs and outputs of each generat
 parameters to have an understanding of the generator algorithms to be derived. The input consists of the bus visit index
 of interest, information about the current state of visits, \(\I\), and the current state of the charger availability,
 \(\C\). The availability of each charger, \(\C\), is iteratively constructed throughout the SA process. The output of each
-generator affects the tuple of decision variables \((v_i, u_i, d_i)\) and charger availability \(\C\).
+generator affects the tuple (or a subset of the tuple) of decision variables \((v_i, u_i, d_i)\) and charger availability
+\(\C\).
+
+In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
+suppose the arrival time is desired to be extracted from visit \(i\). Given \(\Sol\), the notation that describes extracting
+the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org29802eb}
+\label{sec:org0b17518}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -762,16 +766,15 @@ To derive \(\C\), consider its complement, \(\C'\), which is the set of ``active
 \C'\) describes the active times for charger \(q\). Focusing on an individual charger, consider \(\C_q'\) before a schedule
 has been imposed upon it, \(\C_q' = \{ \varnothing \}\). In other words, no buses have been assigned to be charged over
 some time period \([u_i, d_i]\). After the scheduling process is complete, \(\C_q'\) will have a set of active periods of
-the form \(\C_q' = \{[u_j, d_j]: j \in \Jsetq \}\) where \(\Jsetq \subset \mathcal{I}\). With a fully defined set \(\C_q'\), its compliment can
-be found, \(\C_q\).
+the form \(\C_q' = \{[u_i, d_i]: i \in I\}\). With a fully defined set \(\C_q'\), its compliment can be found, \(\C_q\).
 
-Let \(j\text{th}\) inactive period shall be denoted as \(\C^j_q\). To determine the inverse of \(\C_q'\), begin by noting
+Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determine the inverse of \(\C_q'\), begin by noting
 \(\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing\), is said to be disjoint (i.e. the sets share no common elements)
 \cite{halmos-1974-naive-set-theor}. The inverse of a disjoint set can be found by the De Morgan Law: \((A \cap B)' = A' \cup
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org0198713}
+\label{sec:orgbffbee0}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -787,63 +790,64 @@ total amount of chargers and \(n_B\) number of BEBs. The use case for the idle q
 placed on a charger. Rather, it will be placed in the queue, \(v_i \in \{1,..., n_B\}\), which satisfies the previously
 defined spatial constraints while allowing the bus to be ``set aside''.
 
-In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
-suppose the arrival time is desired to be extracted from visit \(i\). Given \(\Sol\), the notation that describes extracting
-the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
-
 \paragraph{New visit}
 \label{sec:new-visit}
-The new visit generator describes the process of moving an unsigned BEB \(b \in B\) to a charging queue, \(v_i \in \{n_B+1,...,
-n_B + n_Q\}\) within its arrival/departure time \([a_i, e_i]\). Let \(\U_{\cdot}\) indicate that an element is selected randomly
-with a uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a_i, e_i]}\) indicates that a value will be selected
-between \(a_i\) and \(u_i\) with a uniform distribution. Lines 2 and 3 of \ref{alg:new-visit} extract the arrival and
-departure times of visit \(i\). Note that in subsequent algorithms these lines will be omitted for conciseness. Lines 4
-and 5 select a charging queue, \(q\), and time slice for which \(q\) is available at random with uniform distributions,
-respectively. Line 6 quickly verifies that the inactive period selected is viable and returns a random charging time,
-\([u_i, d_i]\). If the time frames of the visit and the charger availability do not align, the null value is returned.
+The new visit generator describes the process of moving an unsigned BEB, \(b \in B\), to a charging queue, \(v_i \in
+\{n_B+1,..., n_B + n_Q\}\), within its arrival/departure time \([a_i, e_i]\). Let \(\U_{\{\cdot\}}\) indicate that an element is
+selected randomly with a uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a_i, e_i]}\) indicates that a
+value will be selected between \(a_i\) and \(u_i\) with a uniform distribution. Lines 2 through 3 of \ref{alg:new-visit}
+extract the arrival and departure times of visit \(i\). Lines 4 and 5 select a charging queue, \(q\), and time slice for
+which \(q\) is available at random with uniform distributions, respectively. Line 6 verifies that the inactive period
+selected is viable and returns a random charging time, \([u_i, d_i]\). If the time frames of the visit and the charger
+availability do not align, the null value is returned.
 
-The function \texttt{findFreeTime} is the algorithm that determines whether a visit's time at the station \([u_i, e_i]\) can be
-placed in the time availability of charger \(q\). The algorithm is defined in \ref{alg:find-free-time}. Let \(L\) and \(U\) be
-the lower and upper bound of the time between scheduled times. The set of cases is shown in \ref{fig:find-free}. In each case
-depicted by \ref{fig:find-free}, the red line shows the arrival and departure time for a BEB visit, \(i\). The blue lines
-indicate regions in which charger \(v_i\) is active. \(C \in \C_q\) represents one of the ranges between the blue lines, \([L,
-U]\).
+The function \texttt{findFreeTime} is the algorithm that determines whether a visit's time at the station \([a_i, e_i]\) can be
+placed in the time availability, \(C\), of charger \(q\). The algorithm is defined in \ref{alg:find-free-time}. Let \(L\) and
+\(U\) be the lower and upper bound of the time between scheduled times. The set of cases is shown in \ref{fig:find-free}. In
+each case depicted by \ref{fig:find-free}, the red lines depict the arrival and departure time for a BEB visit, \(i\). The blue
+lines indicate regions in which charger \(q\) is active. \(C \in \C_q\) represents one of the ranges between the blue lines,
+\([L, U]\). Note the symbol \(\_\) is used to indicate variables that are either unchanged or unused i.e. in the case of
+return statements and variable extraction, respectively.
 
-The \texttt{findFreeTime} algorithm behaves as follows. Lines 1 and 2 of \ref{alg:find-free-time} extract the lower and upper
-bounds of the charger availability. Lines 3 - 20 check whether the BEB visit can be assigned to the charger available
-time slice. Lines 4 - 6 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits entirely within the
-charger availability and the charge time may be anywhere in the range \([a_i, e_i]\). Lines 8 - 11 coincides with
-\ref{subfig:all} where the arrival time is before the charger is available. Therefore, the BEB may charge anywhere in
-the time \([L, e_i]\). On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} represents the
-scenario in which the BEB departs after the upper bound of the charger availability. Thus, the BEB may be charged
-anywhere in the time frame of \([a_i, U]\). Naturally, Lines 16 - 19 corresponds to the scenario in
-\ref{subfig:invertsandwhich} where the upper and lower bound of the visit is constrained by the charger availability
-such that the time that the BEB can charge is \([L,U]\). Lines 24-28 relate to the scenarios in which the BEB visit does
-not fall within the charger availability time slice. Line 27 returns the updated charger availability. Line 30 returns
-the original charger availability and null values for the charge times upon failure.
+The \texttt{findFreeTime} algorithm is outlined in \ref{alg:find-free-time} and behaves as follows. Lines 2 and 3 extract the
+lower and upper bounds of the charger availability. Lines 4 - 23 check whether the BEB visit can be assigned to the
+charger available time slice. Lines 4 - 7 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits
+entirely within the charger availability and the charge time may be anywhere in the range \([a_i, e_i]\). Lines 8 - 11
+coincides with \ref{subfig:all} where the BEB arrives before the charger is available. Therefore, the BEB may charge
+anywhere in the time \([L, e_i]\). On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} in which
+the BEB departs after the upper bound of the charger availability. Thus, the BEB may be charged anywhere in the time
+frame of \([a_i, U]\). Naturally, Lines 16 - 19 corresponds to the scenario in \ref{subfig:invertsandwhich} where the
+upper and lower bound of the visit is constrained by the charger availability such that the time that the BEB can charge
+is between the time slice \([L,U]\). Lines 20-24 relate to the scenarios in which the BEB visit does not fall within the
+charger availability and assigns the null value to both \(\bar{u}\) and \(\bar{d}\). Lines 24-28 check if a time range has
+been assigned. If one has, the time slice \([\bar{u}_i, \bar{d}_i]\) is assigned to the compliment of the charger
+availability. Line 26 returns tuple of the updated charger availability and the initial and final charging times. Line
+29 returns the original charger availability and null values for the charge times upon failure.
 
 \begin{algorithm}[H]
   \caption{New visit algorithm} \label{alg:new-visit}
   \LinesNumbered
   \TitleOfAlgo{New Visit}
-  \KwIn{($\Sol$)}
+  \KwIn{$\Sol$}
   \KwOut{$\bar{\Sol}$}
 
   \SetKwFunction{Union}{Union}
   \SetKwFunction{findFreeTime}{findFreeTime}
 
-  \Begin {
-    $a_i \leftarrow \I_{i.e}$\tcc*{Extract the arrivial time for visit $i$}
-    $e_i \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
-    $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
-    $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
-
-    \If(\tcc*[f]{If there is time available in $C_q^j$}){\findFreeTime{$C, (a_i, e_i)$} $\not\in \varnothing$}
+  \Begin
     {
-      \Return{($q,u,d,\C$)}\tcc*[f]{Return visit}
-    }
+      $a \leftarrow \I_{i.a}$\tcc*{Extract the arrivial time for visit $i$}
+      $e \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
+      $\bar{q} \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
+      $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
 
-    \Return{($\varnothing$)}\tcc*{Return nothing} }
+      \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, a, e$} $\not\in \varnothing$}
+         {
+           \Return{($\_, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
+         }
+
+         \Return{($\varnothing$)}\tcc*{Return nothing}
+    }
 \end{algorithm}
 
 \begin{figure}
@@ -1005,58 +1009,58 @@ the original charger availability and null values for the charge times upon fail
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
     \KwIn{$(C,a,e)$}
-    \KwOut{($\bar{C},u,d)$}
-
-    \tcc{Extract the lower and upper bounds.} L \(\leftarrow\) \(\{C.L\}\)\; U \(\leftarrow\) \(\{C.U\}\)\;
+    \KwOut{($\bar{C},\bar{u},\bar{d})$}
 
     \Begin
     {
-        \If(\tcc*[f]{If $L < a < e < U]$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
-        }
-        \ElseIf(\tcc*[f]{Else if $a < L < e < U$ (\autoref{subfig:all})}){$L > a$ and $U \geq e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,e]}$\;
-        }
-        \ElseIf(\tcc*[f]{Else if $L < a < U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U < e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,U]}$\;
-        }
-        \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L > a$ and $U < e$}
-        {
-                $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
-                $\bar{d}\leftarrow$ $\U_{[u,L], [u,e]}$\;
-        }
-        \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
-        {
-                $\bar{u}\leftarrow$ $\varnothing$\;
-                $\bar{d}\leftarrow$ $\varnothing$\;
-        }
+      \tcc{Extract the lower and upper bounds.}
+      L \(\leftarrow\) \(\{C_L\}\)\;
+      U \(\leftarrow\) \(\{C_U\}\)\;
 
-        \If (\tcc*[f]{If an assignment was made}) {$u,d \ne \varnothing$}
-        {
-            $\bar{C} \leftarrow \bar{C} \setminus [L,U]$\tcc*{Remove $[L,U]$ from the set of free time for the current charger}
-            $\bar{C} \leftarrow \{[L,\bar{u}], [\bar{d}, U]\}$\tcc*{Update the charger free time slices}
-          \Return{($\bar{C},\bar{u},\bar{d}$)}
-        }
-        \Else(\tcc*[f]{Otherwise the assignment failed})
-        {
-          \Return{($\bar{C},\varnothing, \varnothing$)}
-        }
+      \If(\tcc*[f]{If $L \le a \le e \le U$ (\autoref{subfig:sandwich})}){$L \leq a$ and $U \geq e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[a,e]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
+      }
+      \ElseIf(\tcc*[f]{Else if $a \le L \le e < U$ (\autoref{subfig:all})}){$L \ge a$ and $U \geq e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[L,e]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},e]}$\;
+      }
+      \ElseIf(\tcc*[f]{Else if $L \le a \le U < e$ (\autoref{subfig:egu})}){$L \leq a$ and $U \le e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[a,U]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},U]}$\;
+      }
+      \ElseIf(\tcc*[f]{Else if $a \leq u \leq d \leq L$ or $U \leq a \leq d \leq e$ (\autoref{subfig:invertsandwhich})}){$L \ge a$ and $U \le e$}
+      {
+        $\bar{u}\leftarrow$ $\U_{[a,L], [U,e]}$\;
+        $\bar{d}\leftarrow$ $\U_{[\bar{u},L], [\bar{u},e]}$\;
+      }
+      \Else(\tcc*[f]{Otherwise the bus cannot be scheduled in this time frame (\autoref{subfig:invalid-lower}, \autoref{subfig:invalid-upper})})
+      {
+        $\bar{u}\leftarrow$ $\varnothing$\;
+        $\bar{d}\leftarrow$ $\varnothing$\;
+      }
 
+      \If (\tcc*[f]{If an assignment was made}) {$\bar{u},\bar{d} \ne \varnothing$}
+      {
+        $\bar{C}' \leftarrow C' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
+        \Return{($\bar{C},\bar{u},\bar{d}$)}
+      }
+      \Else(\tcc*[f]{Otherwise the assignment failed})
+      {
+        \Return{($C,\varnothing, \varnothing$)}
+      }
     }
 \end{algorithm}
 
 \paragraph{Purge}
 \label{sec:purge}
-The purge primitive generator simply removes a visit from a charger schedule, \(\C\). This generator exists so that other
-primitive generators may place the visit back into the schedule without creating duplicate entries in \(\C\). Line 2 from
-\ref{alg:purge} updates \(\C\) with the set of visits excluding visit \(i\). Line 3 returns the updated set of charger
-availability.
+The purge primitive generator simply removes a visit from a charger availability schedule, \(\C\). This generator exists
+so that other primitives may place the visit back into the schedule without creating duplicate entries in \(\C\). Line 2
+from \ref{alg:purge} updates \(\C\) with the set of visits excluding visit \(i\) from charging queue \(v_i\). Line 3 returns
+the updated set of charger availability.
 
 \begin{algorithm}[H]
   \caption{Purge algorithm} \label{alg:purge}
@@ -1068,36 +1072,38 @@ availability.
     \Begin
     {
         $\bar{\C} \leftarrow \C \setminus \C_{i.v_i}$\tcc*{Remove assignment of visit $i$ to charger $v_i$}
-        \Return{$\bar{\C}$}\tcc*{Return updated tuple}
+        \Return{$(\_, \bar{\C})$}\tcc*{Return updated tuple}
     }
   \end{algorithm}
 
 \paragraph{Slide visit}
 \label{slide-visit}
-Slide visit is used for buses that have already been scheduled. Because of the constraint \ref{seq:c11} there may be
-some room to manipulate \(u_i\) and \(d_i\) within the window \([a_i, e_i]\). Two new values, \(u_i\) and \(d_i\) are randomly
-selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 from
-\ref{alg:slide-visit} purges the visit from the charger availability set. Line 4 retrieves the window that was opened up
-by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). Line 5 the updates visit. If \texttt{findFreeTime}
-was unsuccessful, then the generator returns a tuple of null values.
+This primitive generator is used for buses that have already been scheduled. Because of the constraint \ref{seq:c11}
+there may be some slack to manipulate \([u_i, d_i]\) within the window \([a_i, e_i]\). That is, two new values, \(u_i\) and
+\(d_i\) are randomly selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 from
+\ref{alg:slide-visit} purges the visit from the charger availability schedule. Line 4 retrieves the window that was
+opened up by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i, d_i]\). Line 5 returns the updated visit
+information. If \texttt{findFreeTime} was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
-  \caption{Slide Visit Algorithm} \label{alg:slide-visit} \LinesNumbered \TitleOfAlgo{Slide Visit} \KwIn{$\Sol$}
+  \caption{Slide Visit Algorithm} \label{alg:slide-visit}
+  \LinesNumbered
+  \TitleOfAlgo{Slide Visit}
+  \KwIn{$\Sol$}
   \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
-      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the visit just purged}
+      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the purged visit}
 
-        \If(\tcc*[f]{If there is time available in $C$}){\findFreeTime{$C$, ($a_i, e_i$)} $\not\in \varnothing$}
+        \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
         {
-          \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
+          \Return{($\_, (\I_{i.v_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
         }
 
-        $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
         \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1106,8 +1112,8 @@ was unsuccessful, then the generator returns a tuple of null values.
 \label{new-charger}
 The new charger generator moves a visit \(\I_i\) to a new charging queue while maintaining the same charge time, \([u_i,
 d_i]\). Line 2 from \ref{alg:new-charger} purges the visit from the charger availability set. Line 3 randomly selects a
-charger queue index, \(q\). Line 4 checks if there is an available time slice \([a_i, e_i]\) for charger \(q\). Line 5 sets
-and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple of null values.
+charger queue index, \(q\). Line 4 checks if there is an available time slice \([a_i, e_i]\) for charger \(q\). Line 5 returns
+the updated visit data. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
   \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}
@@ -1117,16 +1123,15 @@ and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then t
 
     \Begin
     {
-      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
 
-      \If(\tcc*[f]{If there is time available in $C_{q}$}){\findFreeTime{$C_{q}$, ($a_i, e_i$)} $\not\in \varnothing$}
+      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \_$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
       {
         \tcc{Return visit, note $u$ and $d$ are the original inital/final charge times.}
-        \Return{($q,\I_{i.u}, \I_{i.d},\C$)}
+        \Return{($\_, (q,\I_{i.u}, \I_{i.d}),\bar{\C}$)}
       }
 
-      $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
       \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
@@ -1134,9 +1139,9 @@ and returns the updated visit. If \texttt{findFreetime} was unsuccessful, then t
 \paragraph{Wait}
 \label{sec:wait}
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
-Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the charger availability
-set of the wait queue for bus \(b\). Note that \(C_L \le u_i \le d_i \le C_U\). Line 4 returns the updated visit. Note that a
-check for failure is not included here because this primitive cannot fail.
+Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the complement charger
+availability schedule of the wait queue for bus \(b\). Line 5 returns the updated visit. Line 7 returns the null set upon
+failure of assignment.
 
 \begin{algorithm}[H]
 \caption{Wait algorithm} \label{alg:wait}
@@ -1149,53 +1154,57 @@ check for failure is not included here because this primitive cannot fail.
 
     \Begin
     {
-      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $\bar{\C}_{\I_{i.b}} \leftarrow \{[C_L, a_i], [e_i, C_U]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.b}$}
-      \Return{$(\I_{i.b}, \I_{i.a}, \I_{i.e}, \bar{\C})$}\tcc*[f]{Return visit}
+      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.v_i}$}
+      \Return{$(\_, (\I_{i.b}, \I_{i.a}, \I_{i.e}), \bar{\C})$}\tcc*[f]{Return visit}
     }
   \end{algorithm}
 
 \paragraph{New Window}
 \label{sec:new-window}
-New window is a combination of the purge and then new visit generators. By this it is meant that current scheduled tuple
-\((v_i, u_i, d_i)\) is purged and added back in as if it were a new visit. This implies that the BEB may be assigned to a
-different queue and a new charge time slice. Line 2 purges the BEB visit from the schedule and Line 3 places the BEB
-back into the schedule using the new visit generator. Line 4 assigns and returns the updated visit.
+New window is a combination of \ref{alg:new-visit} (new visit) and \ref{alg:purge} (purge). By this it is meant that
+visit \(i\) is purged and added back in as if it were a new visit. This implies that the BEB may be assigned to a
+different queue and a new charge time slice. Line 2 purges the BEB visit from the schedule producing \(\bar{\Sol}\). Line
+3 places the BEB back into the schedule using the new visit generator, producing \(\bar{\bar{\Sol}}\). Line 4 assigns and
+returns the updated visit. Line 6 returns the null visit upon failure of \ref{alg:new-visit}.
 
 \begin{algorithm}[H]
   \caption{New window algorithm} \label{alg:new-window}
   \LinesNumbered
   \TitleOfAlgo{New Window}
   \KwIn{$\Sol$}
-  \KwOut{$\Sol'$}
+  \KwOut{$\bar{\Sol}$}
 
   \SetKwFunction{NewVisit}{NewVisit}
   \SetKwFunction{Purge}{Purge}
 
   \Begin
   {
-    $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-    \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \varnothing$}
-    {
-      \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
-    }
+    $\bar{\Sol} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+    \If(\tcc*[f]{Add visit $i$ back in randomly})
+       {
+         $\bar{\bar{\Sol}} \leftarrow$ \NewVisit{$\bar{\Sol}$} $\not\in \varnothing$
+       }
+       {
+         \Return{$\bar{\bar{\Sol}}$} \tcc*[f]{Return visit}
+       }
 
-    $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
-    \Return{($\varnothing$)}\tcc*{Return nothing}
+       \Return{($\varnothing$)}\tcc*{Return nothing}
   }
 \end{algorithm}
 
 \subsubsection{Generator Wrappers}
 \label{sec:generator-wrappers}
-This section covers the algorithms utilized to select and execute different generation processes for the SA algorithm.
-The generator wrappers are the methods immediately called by the SA algorithm. Each wrapper utilizes the generators
-previously described and returns either a new charge schedule or a modified charge schedule.
+This section covers the algorithms utilized to select and execute different generation processes. The generator wrappers
+are the methods immediately called by the SA algorithm. Each wrapper utilizes the primitive generators previously
+described and returns either a new charge schedule or a modified charge schedule.
 
 \paragraph{Charge Schedule Generation}
 \label{sec:charge-schedule-generation}
-The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. Line 3 of
-\ref{alg:charge-schedule-generation} loops through each visit. Line 3 extracts the visit index, and Line 4 executes
-\ref{alg:wait}.
+The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. Specifically,
+this generator exists to initialize the system with a solution that is spatiotemporally feasible, but does not satisfy
+the battery dynamic constraints. Line 2 of \ref{alg:charge-schedule-generation} loops through each visit and Line 4
+executes \ref{alg:wait}.
 
 \begin{algorithm}[H]
 \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
@@ -1211,8 +1220,7 @@ The objective of this generator is to assign each BEB to its waiting queue provi
         \tcc{Select an unscheduled BEB visit from a randomly indexed set of visits}
         \ForEach {$\I_i \in \I$}
         {
-            $i \leftarrow \I_i$\tcc*{Extract the visit index}
-            ($\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
+            (\_, $\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($\I_i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
         }
             \Return{($\bar{\I}$, $\bar{\C}$)}
     }
@@ -1220,14 +1228,15 @@ The objective of this generator is to assign each BEB to its waiting queue provi
 
 \paragraph{Perturb Schedule}
 \label{sec:tweak-schedule}
-As described in SA, local searches are also employed to try and exploit a given solution
-\cite{radosavljevic-2018-metah-optim}. After each step of the cooling function, the active solution will be iteratively
-altered by a primitive generator to create a neighboring candidate solution over a total of \(n_K\) iterations. The
-algorithm describes the method by which the SA algorithm decides how to perturb the schedule. The method that will be
-employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and execute said
-primitive generator once. Line 2 of \ref{alg:perturb-schedule} selects a visit at random with a uniform distribution.
-Line 3 extracts the visit index. Let \(n_G\) denote the number of primitive generating functions. Line 4 selects a
-primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
+Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
+create candidate solutions. After each step of the cooling function, the active solution will be altered \(n_k\) times by
+a random primitive generator. During these \(n_k\) iterations the active solution is modified to create a neighboring
+candidate solution. This candidate solution with then be compared against the active solution in the manner discussed in
+\ref{sec:acceptance}. This algorithm describes the method by which the SA algorithm decides how to perturb the schedule. The
+method that will be employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and
+execute said primitive generator once. Thus, \ref{alg:perturb-schedule} is as follows: Line 2 selects a visit at random
+with a uniform distribution. Line 3 extracts the visit index. Letting \(n_G\) denote the number of primitive generating
+functions, Line 4 selects a primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
 
 \begin{algorithm}[H]
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
@@ -1235,7 +1244,7 @@ primitive generator. Line 5 executes the primitive, and Line 6 returns the resul
     \LinesNumbered
     \TitleOfAlgo{Perturb Schedule}
     \KwIn{$\I$, $\C$}
-    \KwOut{$\bar{\I_i}$, $\bar{\C}$}
+    \KwOut{$\bar{\I}$, $\bar{\C}$}
 
     \SetKwFunction{PGF}{PGF}
 
@@ -1245,7 +1254,7 @@ primitive generator. Line 5 executes the primitive, and Line 6 returns the resul
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
         $PGF \leftarrow\; \U_{[1,n_G]}$\tcc*{Select one of the generator functions}
         $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($\bar{\I}$, $\bar{\C}$)}
+        \Return{($\_, \bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 \section{Optimization Algorithm}
@@ -1256,7 +1265,7 @@ PAP algorithm.
 
 \subsection{Simulated Annealing Pseudo Code}
 \label{sec:simulated-annealing-pseudo-code}
-Consider \ref{alg:sa-pseudo} \cite{henderson-1989-theor-pract}. Let \(\omega\) and \(\bar{\omega}\) denote the active solution and
+Let \(\omega\) and \(\bar{\omega}\) denote the active solution and
 the candidate solution, respectively. Let \(\Tau\) be the temperature function and \(\Tau_0\) the initial temperature.
 Furthermore, let \(t\) be defined as the vector of temperatures defined by \(t = \Tau(\Tau_0)\), and let \(t_m\) be defined as
 being an element of \(t\), \(t_m \in t\). Let \(n_K\) be the repetition counter, it defines the number of iterations to execute
@@ -1267,17 +1276,16 @@ solution. The fitness of the two solutions are compared and if the candidate sol
 always taken as the active solution. If it is not, then it may be selected as the new candidate solution with some
 probability that is a function of the difference in the objective function values and the current temperature. This
 process is iteratively done until the temperature function reaches its minimum value. With the high level summary in
-mind, the SA pseudocode is to be presented.
+mind, the SA pseudocode is to be presented \cite{henderson-1989-theor-pract}.
 
-The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm with the active
-solution, \(\omega\), and temperature schedule, \(t\), respectively. The outer loop on Line 3 iterates through all the
-temperature values in \(t\). After each iteration of the outer loop, the temperature is decreased as specified by the
-selected temperature function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates
-\(n_K\) times at a constant temperature, \(t_k\). Line 6, perturbs the active solution \(\omega\) to a neighboring candidate
-solution \(\bar{\omega} = N(\omega)\). Line 7 then calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-13 updates
-\(\omega\) with \(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\omega
-, \bar{\omega}}}{t_m}}\) if the candidate solution is less fit than the active solution. Line 14 updates the repetition
-counter.
+The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm an active solution,
+\(\omega\), and temperature schedule, \(t\), respectively. The outer loop on Line 3 iterates through all the temperature values
+in \(t\). After each iteration of the outer loop, the temperature is decreased as specified by the selected temperature
+function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates \(n_K\) times at a
+constant temperature, \(t_k\). Line 6, perturbs the active solution \(\omega\) to a neighboring candidate solution \(\bar{\omega} =
+N(\omega)\). Line 7 then calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-13 updates \(\omega\) with \(\bar{\omega}\)
+if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\omega , \bar{\omega}}}{t_m}}\)
+if the candidate solution is less fit than the active solution. Line 14 updates the repetition counter.
 
 \begin{algorithm}[H]
 \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
@@ -1291,10 +1299,9 @@ counter.
 
     \Begin
     {
+        $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}
-
-        $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
 
         \ForEach{$t_m \in t$}
         {
@@ -1317,37 +1324,39 @@ counter.
 
 \subsection{SA PAP Pseudo Code}
 \label{sec:sa-pap-pseudo-code}
-Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP in \ref{alg:sa-pap}. While
-the SA PAP generally is written almost identically to that of the general SA algorithm, SA assumes that the new solution
-generated is in the solution space of the problem, \(\omega \in S\) where \(S\) is the solution space. Referring to
-\ref{alg:charge-schedule-generation}, the generating function for SA PAP, note that all the assignments are placed in
-their respective waiting queues. One is to expect that the output generated by this function will not be in the solution
-space for most (if not all) scenarios of any interest. Therefore, the constraints introduced in \ref{sec:constraints} must be
-employed to verify that the output of \ref{alg:charge-schedule-generation} is in the feasible space, \(S\).
+Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP (\ref{alg:sa-pap}). While
+the SA PAP generally is written almost identically to that of the general SA algorithm, SA assumes that the generated
+candidate solutions are in the solution space of the problem, \(\omega \in S\) where \(S\) is the solution space. Referring to
+\ref{alg:charge-schedule-generation}, the generating function that initializes the SA PAP assigns all the BEBs to their
+respective waiting queues. It is to be expected that the output generated by this function will not be in the solution
+space for most (if not all) scenarios of any interest. Therefore, the objective function and constraints introduced in
+\ref{sec:constraints} and \ref{sec:objective-function}, respectively, must be employed to verify that the output of
+\ref{alg:charge-schedule-generation} is in the feasible space, \(S\).
 
 As previously stated, the generating functions directly influence the values of the assigned charge queue, charge
 initialization time, and charge completion time: \(v_i\), \(u_i\), and \(d_i\), respectively. Having generated those values,
 the rest of the decision variables may be derived. Let's begin by reviewing over the packing constraints.
 \ref{seq:c0}-\ref{seq:c1} are employed to enable and disable \(\sigma_{ij}\) and \(\psi_{ij}\) and \ref{seq:c2}-\ref{seq:c4} ensure
-the validity of the set values. \ref{seq:c5} can be directly calculated and \ref{seq:c11} is fully defined.
+the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq:c11} is fully defined.
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
-battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated while
-\ref{seq:c7} is evaluated to ensure the BEB is not over charged. \ref{seq:c12}-\ref{seq:c15} may also be evaluated to
-find the values of \(\theta_h^{v_i}\) and \(\mu_h^{v_i}\) which then directly leads to \ref{seq:c16} being able to be determined.
-Once all these constraints have been calculated and evaluated to be true will a generated solution be considered in the
-feasible space. Let the feasible space be denoted as \(S\).
+battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after
+a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. TODO: \hl{{\ref{seq:c12}}-{\ref{seq:c15}} may also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which then directly leads to {\ref{seq:c16}} being able to be determined. Once all these constraints have been calculated and evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as $S$.} The penalty method implemented in \ref{sec:objective-function} is set in place to allow the SOC to go below the
+specified threshold, \(\nu_b \kappa_b\), but punish the solution for doing so. Thus, over time, the candidate solutions will be
+encouraged toward a solution that does not activate the penalty method.
 
-Line 2 initializes the SA algorithm by creating a vector of temperature values based on a temperature schedule \(\Tau\),
-and an initial temperature \(\Tau_0\). Line 3 generates the initial candidate solution \(\omega\), note that \(CSG(\cdot)\) is used to
-denote specific candidate solution generator being utilized, for SA PAP it is \ref{alg:charge-schedule-generation}. Line
-4 loops through each of the step in the temperature schedule \(t_m \in t\). Line 5 resets the iteration count to 0. Line 5
-specifies the inner loop that iterates \(n_K\) times at a constant temperature, \(t_k\). Line 6, perturbs the active
-solution \(\omega\) to a neighboring candidate solution \(\bar{\omega} = N(\omega)\). Line 7 then calculates the difference in the fitness
-of \(\omega\) and \(\bar{\omega}\). Lines 8-14 are similar to \ref{alg:sa-pseudo} where it updates \(\omega\) with \(\bar{\omega}\) if the candidate
-solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}\) if the candidate
-solution is less fit than the active solution. What makes these lines unique is that the active solution is only updated
-if the candidate is within the solution space. That it, it satisfies the constraints defined in \ref{eq:constraints}.
+The SA-PAP algorithm will now be outlined. Line 2 initializes the SA algorithm by creating a vector of temperature
+values based on a temperature schedule \(\Tau\), and an initial temperature \(\Tau_0\). Line 3 generates the initial
+candidate solution \(\omega\), note that \(CSG(\cdot)\) (candidate solution generator) is used to denote the specific candidate
+solution generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through each of
+the step in the temperature schedule \(t_m \in t\). Line 5 resets the iteration count to 0. Line 6 specifies the inner loop
+that iterates \(n_K\) times at a constant temperature, \(t_k\). Line 7, perturbs the active solution \(\omega\) to a neighboring
+candidate solution \(\bar{\omega} = PS(\omega)\), where \(PS(\cdot)\) (perturb schedule) is \ref{alg:perturb-schedule}. Line 8 calculates
+the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-14 are similar to \ref{alg:sa-pseudo} where it updates \(\omega\)
+with \(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability
+\(e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}\) if the candidate solution is less fit than the active solution. What makes these lines
+unique is that the active solution is only updated if the candidate is within the solution space. That it, it satisfies
+the constraints defined in \ref{eq:constraints}.
 
 \begin{algorithm}[H]
   \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
@@ -1376,7 +1385,7 @@ if the candidate is within the solution space. That it, it satisfies the constra
         \tcc{For each step in the repitition schedule}
         \While{$k \le n_K$}
         {
-          $\bar{\omega} \subset (\bar{\I}, \bar{\C}) \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
+          $\bar{\omega} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
           $\Omega_{\bar{\omega},\omega} = $ \Obj{$\bar{\omega}$}  - \Obj{$\omega$} \tcc*{Calculate the difference of fitness scores}
 
           \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
@@ -1393,7 +1402,7 @@ if the candidate is within the solution space. That it, it satisfies the constra
 \section{Example}
 \label{sec:example}
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. A description of
-the scenario presented followed by a brief introduction of a the original MILP-PAP implementation as well as an
+the scenario presented followed by a brief introduction of the original MILP-PAP implementation as well as an
 alternative heuristic based planning strategy called Quin-Modified which is used as a comparison to the SA PAP. Results
 are then presented for each of planning strategies are presented, analyzed, and discussed.
 
@@ -1407,13 +1416,13 @@ assumed to begin the working day with \fpeval{\acharge*100}\% charge (\fpeval{\a
 each bus is required to end the day with a minimum charge of \fpeval{\bcharge * 100}\% (\fpeval{\bcharge * \batsize}
 KWh). This assumes that overnight charging can account for at least 20\% of the charge. Each bus is assumed to discharge
 at a rate of 30 KW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
-simplicity an average rate is used. \(n_C = \fpeval{\fast + \slow}\) chargers are utilized where \slow of the chargers are
+simplicity an average rate is used. \(n_C =\) \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are
 slow charging (\slows KW) and \fast are fast charging (\fasts KW). A technique to minimize chargers will be employed.
 
-To encourage the SA PAP problem to utilize the fewest number of chargers, the value of \(m_q\) in the objective function,
-\autoref{eq:objective}, is \(\forall q \in \{1,2,..., n_B \}; m_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q\).
-The charge duration scalar, \(\epsilon_q\), is defined as \(\epsilon_q = r_q\) to create a consumption cost term, \(g_{iq}\epsilon_q\). This is
-utilized to also encourage the model to minimize active charger times, particularly for the fast chargers.
+To encourage the SA PAP problem to utilize the fewest number of chargers, the value of \(m_q\) in the objective function
+is \(\forall q \in \{1,2,..., n_B \}; m_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q\). The charge duration
+scalar, \(\epsilon_q\), is defined as \(\epsilon_q = r_q\) to create a consumption cost term, \(g_{iq}\epsilon_q\). This is utilized to also
+encourage the model to minimize active charger times, particularly for the fast chargers.
 
 Another heuristic-based optimization strategy, referred to as Quin-Modified, is also employed as a means of comparison
 with the results of the SA PAP. The Quin-Modified strategies is a based on the threshold strategy of

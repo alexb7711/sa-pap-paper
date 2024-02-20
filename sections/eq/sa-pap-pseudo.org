@@ -26,7 +26,7 @@
           \tcc{For each step in the repitition schedule}
           \While{$k \le n_K$}
           {
-            $\bar{\omega} \subset (\bar{\I}, \bar{\C}) \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
+            $\bar{\omega} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
             $\Omega_{\bar{\omega},\omega} = $ \Obj{$\bar{\omega}$}  - \Obj{$\omega$} \tcc*{Calculate the difference of fitness scores}
 
             \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}

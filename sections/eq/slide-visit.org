@@ -1,21 +1,23 @@
 #+begin_src latex
   \begin{algorithm}[H]
-    \caption{Slide Visit Algorithm} \label{alg:slide-visit} \LinesNumbered \TitleOfAlgo{Slide Visit} \KwIn{$\Sol$}
+    \caption{Slide Visit Algorithm} \label{alg:slide-visit}
+    \LinesNumbered
+    \TitleOfAlgo{Slide Visit}
+    \KwIn{$\Sol$}
     \KwOut{$\bar{\Sol}$}
 
       \SetKwFunction{Purge}{Purge}
 
       \Begin
       {
-        $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-        $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the visit just purged}
+        $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+        $C \leftarrow \bar{C}_{i.v_i}$\tcc*{Get the time availability of the purged visit}
 
-          \If(\tcc*[f]{If there is time available in $C$}){\findFreeTime{$C$, ($a_i, e_i$)} $\not\in \varnothing$}
+          \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
           {
-            \Return{($\I_{i.q},\bar{u},\bar{d},\bar{C}$)}\tcc*[f]{Return updated visit}
+            \Return{($\_, (\I_{i.v_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
           }
 
-          $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
           \Return{($\varnothing$)}\tcc*{Return nothing}
       }
     \end{algorithm}

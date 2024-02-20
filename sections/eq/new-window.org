@@ -4,21 +4,23 @@
     \LinesNumbered
     \TitleOfAlgo{New Window}
     \KwIn{$\Sol$}
-    \KwOut{$\Sol'$}
+    \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{NewVisit}{NewVisit}
     \SetKwFunction{Purge}{Purge}
 
     \Begin
     {
-      $\bar{\C} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      \If(\tcc*[f]{Add visit $i$ back in randomly}) {($\bar{\I}, \bar{\C}) \leftarrow$ \NewVisit{$\Sol'$} $\not\in \varnothing$}
-      {
-        \Return{($\bar{\I}, \bar{\C}$)} \tcc*[f]{Return visit}
-      }
+      $\bar{\Sol} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      \If(\tcc*[f]{Add visit $i$ back in randomly})
+         {
+           $\bar{\bar{\Sol}} \leftarrow$ \NewVisit{$\bar{\Sol}$} $\not\in \varnothing$
+         }
+         {
+           \Return{$\bar{\bar{\Sol}}$} \tcc*[f]{Return visit}
+         }
 
-      $\bar{\C} \leftarrow \C$\tcc*{Reassign the original visit if the generator fails}
-      \Return{($\varnothing$)}\tcc*{Return nothing}
+         \Return{($\varnothing$)}\tcc*{Return nothing}
     }
   \end{algorithm}
 #+end_src

@@ -11,10 +11,9 @@
 
       \Begin
       {
+          $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
           \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
           $t \leftarrow$ \Temp{$\Tau_0$}
-
-          $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
 
           \ForEach{$t_m \in t$}
           {
