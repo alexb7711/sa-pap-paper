@@ -1,4 +1,4 @@
-% Created 2024-02-19 Mon 19:32
+% Created 2024-02-20 Tue 08:38
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -91,7 +91,7 @@
  pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
+ pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
  pdflang={English}}
 \begin{document}
 
@@ -190,12 +190,11 @@ each visit to a charger given a schedule for a fleet of BEBs that follow the beh
 
 Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_V\) times. At said station, let there exist a pool of
 \(n_Q\) charging queues from which a visiting BEB may be assigned. The set of arrivals is denoted as \(\Iset = \{ 1, ...
-n_V \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \} \subset \mathbb{B}\). Each visit can be
-represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index, \(i \in I\), BEB
-identification number, \(b \in B\), arrival time to the station, \(a \in \mathbb{R}\), departure time from the station, \(e \in \mathbb{R}\), initial
-charge time, \(u \in \mathbb{R}\), final charge time, \(d\), the charger queue for the BEB to be placed into, \(v \in Q\), the SOC upon
-arrival, \(\eta \in \mathbb{R}\), and the index of the next visit for the currently visiting BEB, \(\xi \in I\). Let the set of all visits be
-denoted as \(\I\).
+n_V \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \} \subset \mathbb{Z}\). Each visit can be represented by
+the tuple: \(\visit\), in which the elements within the tuple denote the visit index, \(i \in I\), BEB identification number,
+\(b \in B\), arrival time to the station, \(a \in \mathbb{R}\), departure time from the station, \(e \in \mathbb{R}\), initial charge time, \(u \in \mathbb{R}\),
+final charge time, \(d\), the charger queue for the BEB to be placed into, \(v \in Q\), the SOC upon arrival, \(\eta \in \mathbb{R}\), and the
+index of the next visit for the currently visiting BEB, \(\xi \in I\). Let the set of all visits be denoted as \(\I\).
 
 For each visit, a BEB must be placed in a single queue, \(q \in \Qset\). The charger \(q\) is assumed to be either a fast
 charger, slow charger, or no charger at all (denoted as a waiting queue). A BEB is only allowed to be assigned to one
@@ -272,7 +271,7 @@ Constants &  & Constants & \\[0pt]
 Input variables &  & Input Variables & \\[0pt]
 \(\Delta_i\) & Discharge of visit over after visit \(i\) & \(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
 \(\delta_i\) & Discharge rate for vehicle \(i\) per mile & \(\nu_b\) & Minimum charge percentage allowed for each BEB \(b \in \Bset\)\\[0pt]
-\(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for bus \(b\)\\[0pt]
+\(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for each BEB \(b \in \Bset\)\\[0pt]
 \(\rho_i\) & Route distance after visit \(i\) & \(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
 \(a_i\) & Arrival time of visit \(i\) & \(\Xi_i\) & ID for bus visit \(i\)\\[0pt]
 \(t_h\) & Discrete step in time horizon & \(dt_h\) & Discrete time slice in time horizon \(dt_h = t_h - t_{h-1}\)\\[0pt]
@@ -322,9 +321,7 @@ plus the charge added to it by charger \(v_i\) over duration \(s_i = d_i - u_i\)
 \end{equation}
 
 As described in the previous section, a method of determining whether a discrete time \(t_h\) is within the range \([u_i,
-d_i]\) is desired. A third variable \(\iota_h^{v_i}\) is introduced to indicate if the inequality \(u_i \le t_h \le d_i\) is true or
-not. Specifically it indicates if \(t_h\) is within an active charging period for the charger \(v_i\) which will assist in
-calculating the demand cost. \hl{That is, $\iota_h^{v_i} \in \{0,1\} = 1$ when $\mu_h^{v_i} = 1$ and $\theta_h^{v_i} = 1$.} This topic will be covered in more depth in \ref{sec:objective-function}.
+d_i]\) is desired. \hl{A third variable $\iota_h^{v_i}$ is introduced to indicate if the inequality $u_i \le t_h \le d_i$ is true or not. Specifically it indicates if $t_h$ is within an active charging period for the charger $v_i$ which will assist in calculating the demand cost. That is, $\iota_h^{v_i} \in \{0,1\} = 1$ when $\mu_h^{v_i} = 1$ and $\theta_h^{v_i} = 1$. This topic will be covered in more depth in} \ref{sec:objective-function}.
 
 A penalty method is to be implemented in the objective function that is enabled when the \(\eta_i\) falls below a defined
 threshold. Let the piecewise function that enables/disables the penalty method be of the from of \ref{eq:penalty}.
@@ -338,8 +335,8 @@ threshold. Let the piecewise function that enables/disables the penalty method b
   \end{cases}
 \end{equation}
 
-If \(x = \eta_i - \nu_{\Xi_i} \kappa_i\), then \ref{eq:penalty} defines the penalty method that encourages schedules to maintain the SOC for
-each visit above \(\nu_{\Xi_i} \kappa_i\). If the SOC is falls below the specified threshold, a penalty proportional to the
+If \(x = \eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}\), then \ref{eq:penalty} defines the penalty method that encourages schedules to maintain the SOC
+for each visit above \(\nu_{\Xi_i} \kappa_{\Xi_i}\). If the SOC is falls below the specified threshold, a penalty proportional to the
 difference of the SOC and the threshold squared is applied.
 
 The variables \(\sigma_{ij}\) and \(\psi_{ij}\) are used to indicate whether a visit pair \((i, j)\) overlap the same space as show in
@@ -384,12 +381,12 @@ Suppose the objective function is of the form \(\text{min } J = \AC + \UC\). \(\
 the utility cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the
 chosen charging period, \([u_i, d_i]\). \(v_i \in \Qset\) is the charger index, \(u_i\) is the initial charge time, \(d_i\) is the
 detach time for visit \(i\), \(\phi_i(x)\) is a piecewise function utilized as a penalty method, \(\nu\) is a vector of the minimum
-charge percentage allowed for each BEB \(\kappa_i\) is the battery capacity for visit \(i\), and \(\eta_i\) is the initial charge for
-visit \(i\).
+charge percentage allowed for each BEB, \(\kappa\) is a vector of the battery capacities of each BEB, and \(\eta_i\) is the initial
+charge for visit \(i\).
 
 \begin{equation}
 \label{eq:ac}
-\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + \frac{1}{2} C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_i) \Big)
+\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) \Big)
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue \(q \in Q\). Let \(\epsilon\)
@@ -404,11 +401,11 @@ still encouraging the use of slow chargers over fast. While the \(\epsilon\) vec
 form shown above is the method applied to this work.
 
 The second term is the penalty function that is either enabled or disabled by \(\phi_i\)
-\cite{luenberger-2008-penal-barrier-method}. The penalty function is enabled, \(\phi_i = (\eta_i - \nu_{\Xi_i} \kappa_i)^2\), if the SOC
-falls below a specified SOC threshold, \(\eta_i \le \nu \kappa_{\Xi_i}\), and is disabled, \(\phi_i = 0\), otherwise. This term is considered
-an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost is not
-impacted by how much the system consumes energy, but by how the BEBs have been assigned. \(C\) is a large constant value
-used to scale the penalty function. The mechanism that enables or disables \(\phi_i\) is derived in \ref{sec:constraints}.
+\cite{luenberger-2008-penal-barrier-method}. The penalty function is enabled, \(\phi_i = (\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i})^2\), if the
+SOC falls below a specified SOC threshold, \(\eta_i \le \nu \kappa_{\Xi_i}\), and is disabled, \(\phi_i = 0\), otherwise. This term is
+considered an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost
+is not impacted by how much the system consumes energy, but by how the BEBs have been assigned. \(C\) is a large constant
+value used to scale the penalty function. The mechanism that enables or disables \(\phi_i\) is derived in \ref{sec:constraints}.
 
 The utility cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation
 of all the energy being used over all the active periods for each charger in the time horizon, \(\T\), as written in
@@ -450,13 +447,11 @@ p_d(t) = \max(p_{fix},p_{max}(t))z
 of discrete power consumption and let \(p_h \in p\) be the discrete power demand at time step \(h\) where \(h \in \{ 1, 2, ...,
 n_H \} \subset \mathcal{Z}\), \(n_H = \frac{T}{0.25}\), and \(p\) is an \(n_H \times 1\) vector. For conciseness of notation we will abuse \(t_h\) to
 denote the time in discrete form (as opposed to \(t\) being continuous), let \(dt_h = t_h - t_{h-1}\), and \(\Hset = \{ 1, 2,
-..., n_H \}\). Let \(\iota\) be a \(n_H \times n_Q\) matrix of binary variables that is enabled if charger \(v_i \in \Qset\) is active
-during the time frame \(dt_h\) and \(r\) is a \(n_Q \times 1\) vector of charger rates. Thus, the discrete power utilized over the
-time horizon is calculated as follows.
+..., n_H \}\). \hl{Let $\iota$ be a $n_H \times n_Q$ matrix of binary variables that is enabled if charger $v_i \in \Qset$ is active during the time frame $dt_h$ and $r$ is a $n_Q \times 1$ vector of charger rates. Thus, the discrete power utilized over the time horizon is calculated as follows.}
 
 \begin{equation}
 \label{eq:discrete-power}
-  p = \iota r
+  \mathcolorbox{p = \iota r}
 \end{equation}
 
 If \(n_H\) is defined to express the number of discrete steps that span a 15-minute interval then \(n_H = 0.25/dt_h\). The
@@ -623,15 +618,16 @@ bus \(b_i\). \ref{seq:c7} ensures that the bus is not being over-charged. \ref{s
 times (i.e. the arrival time is less than the initial charge which is less than the detach time which is less than the
 time the bus exits the station and all must be less than the time horizon).
 
-The last set of constraints \ref{seq:c12} - \ref{seq:c16} specifies the rule set for the decision variable \(\iota\). These
-constraints define three \(n_H \times n_Q\) matrices that enforce \(\iota_h^q = 1\) if \(q = v_i\) and \(u_i \le t_h \le d_i\), \(\iota_h^q = 0\)
-otherwise. \ref{seq:c12} and \ref{seq:c13} utilizes big-M notation to ensure that the initial charge time for visit \(i\),
-\(u_i\), is greater than or equal to the discrete time, \(0.25 \cdot h\). That is, \(\mu_h^{v_i} = 1\) if \(u_i t_h\), \(u_h^{v_i} = 0\)
-otherwise. Similarly, \ref{seq:c14} and \ref{seq:c15} ensures that the final charge time, \(d_i\), is less than or equal
-to the next discrete time step, \(t_h\). The final constraint \ref{seq:c16} is a \(n_H \times n_Q\) matrix that represents
-whether charger \(v_i \in \Qset\) is active. Note that \(\circ\) represents the Hadamard Product \cite{horn-1985-matrix-analy}.
-Let \(A\) and \(B\) be two \(n_H \times n_Q\) matrices. The Hadamard Product is defined as the element-wise product of the two
-matrices, \(A \circ B = [a_{ij}b_{ij}]\).
+\hl{The last set of constraints {\ref{seq:c12}} - {\ref{seq:c16}} specifies the rule set for the decision variable
+  $\iota$. These constraints define three $n_H \times n_Q$ matrices that enforce $\iota_h^q = 1$ if $q = v_i$ and $u_i
+  \le t_h \le d_i$, $\iota_h^q = 0$ otherwise. {\ref{seq:c12}} and {\ref{seq:c13}} utilizes big-M notation to ensure
+  that the initial charge time for visit $i$, $u_i$, is greater than or equal to the discrete time, $0.25 \cdot h$. That
+  is, $\mu_h^{v_i} = 1$ if $u_i t_h$, $u_h^{v_i} = 0$ otherwise. Similarly, {\ref{seq:c14}} and {\ref{seq:c15}} ensures
+  that the final charge time, $d_i$, is less than or equal to the next discrete time step, $t_h$. The final constraint
+  {\ref{seq:c16}} is a $n_H \times n_Q$ matrix that represents whether charger $v_i \in \Qset$ is active. Note that
+  $\circ$ represents the Hadamard Product \cite{horn-1985-matrix-analy}. Let $A$ and $B$ be two $n_H \times n_Q$
+  matrices. The Hadamard Product is defined as the element-wise product of the two matrices, $A \circ B =
+  [a_{ij}b_{ij}]$.}
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is a well-studied local search metaheuristic used to solve discrete and (to a lesser degree) continuous problem
@@ -756,7 +752,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org0b17518}
+\label{sec:org8a387a7}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -774,7 +770,7 @@ Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determin
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgbffbee0}
+\label{sec:org311ef17}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -1341,7 +1337,7 @@ the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
 battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after
-a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. TODO: \hl{{\ref{seq:c12}}-{\ref{seq:c15}} may also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which then directly leads to {\ref{seq:c16}} being able to be determined. Once all these constraints have been calculated and evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as $S$.} The penalty method implemented in \ref{sec:objective-function} is set in place to allow the SOC to go below the
+a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. \hl{{\ref{seq:c12}}-{\ref{seq:c15}} may also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which then directly leads to {\ref{seq:c16}} being able to be determined. Once all these constraints have been calculated and evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as $S$.} The penalty method implemented in \ref{sec:objective-function} is set in place to allow the SOC to go below the
 specified threshold, \(\nu_b \kappa_b\), but punish the solution for doing so. Thus, over time, the candidate solutions will be
 encouraged toward a solution that does not activate the penalty method.
 
@@ -1535,5 +1531,5 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
 
 
 \bibliographystyle{plain}
-\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
+\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
 \end{document}

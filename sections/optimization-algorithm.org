@@ -58,7 +58,7 @@ the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
 battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after
-a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. src_latex{TODO:
+a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. src_latex{
 \hl{{\ref{seq:c12}}-{\ref{seq:c15}} may also be evaluated to find the values of $\theta_h^{v_i}$ and $\mu_h^{v_i}$ which then
 directly leads to {\ref{seq:c16}} being able to be determined. Once all these constraints have been calculated and
 evaluated to be true will a generated solution be considered in the feasible space. Let the feasible space be denoted as
