@@ -13,7 +13,8 @@
 \begin{document}
 
 \pgfplotstableread[col sep= comma]{data/qm-charge-cnt.csv}\usagedataquin
-\pgfplotstableread[col sep= comma]{data/sa-quick-charge-cnt.csv}\usagedatasa
+\pgfplotstableread[col sep= comma]{data/sa-quick-charge-cnt.csv}\usagedatasaquick
+\pgfplotstableread[col sep= comma]{data/sa-exhaustive-charge-cnt.csv}\usagedatasaexhaustive
 \pgfplotstableread[col sep= comma]{data/milp-charge-cnt.csv}\usagedatamilp
 
 \resizebox{\columnwidth}{4in}{%
@@ -27,8 +28,10 @@
     \addlegendentry{Quin}
     \addplot[red!80!black, fill=red, fill opacity=0.25, no markers] table[x=visit, y=fast] {\usagedatamilp};
     \addlegendentry{MILP}
-    \addplot[green!80!black, fill=green, fill opacity=0.5, no markers] table[x=visit, y=fast] {\usagedatasa};
-    \addlegendentry{SA}
+    \addplot[green!80!black, fill=green, fill opacity=0.5, no markers] table[x=visit, y=fast] {\usagedatasaquick};
+    \addlegendentry{SA Slow}
+    \addplot[yellow!80!black, fill=yellow, fill opacity=0.5, no markers] table[x=visit, y=fast] {\usagedatasaquick};
+    \addlegendentry{SA Exhaustive}
 \end{axis}
 \end{tikzpicture}%
 }
