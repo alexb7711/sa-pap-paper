@@ -12,7 +12,8 @@
 \begin{document}
 
 \pgfplotstableread[col sep = comma]{data/qm-acc-energy-usage.csv}\accenergydataquin
-\pgfplotstableread[col sep = comma]{data/sa-quick-acc-energy-usage.csv}\accenergydatasa
+\pgfplotstableread[col sep = comma]{data/sa-quick-acc-energy-usage.csv}\accenergydatasaquick
+\pgfplotstableread[col sep = comma]{data/sa-exhaustive-acc-energy-usage.csv}\accenergydatasaexhaustive
 \pgfplotstableread[col sep = comma]{data/milp-acc-energy-usage.csv}\accenergydatamilp
 
 \resizebox{\columnwidth}{4in}{%
@@ -31,10 +32,15 @@
              table[x=time, y=power] {\accenergydatamilp};
     \addlegendentry{MILP}
 
-    % SA ----------
+    % SA Quick ----------
     \addplot[green!100!black, no markers]
-             table[x=time, y=power] {\accenergydatasa};
-    \addlegendentry{SA}
+             table[x=time, y=power] {\accenergydatasaquick};
+    \addlegendentry{SA Quick}
+
+    % SA Exhaustive ----------
+    \addplot[yellow!100!black, no markers]
+             table[x=time, y=power] {\accenergydatasaexhaustive};
+    \addlegendentry{SA Exhaustive}
 \end{axis}
 \end{tikzpicture}%
 }
