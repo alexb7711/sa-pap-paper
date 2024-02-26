@@ -54,7 +54,7 @@ As previously stated, the generating functions directly influence the values of 
 initialization time, and charge completion time: $v_i$, $u_i$, and $d_i$, respectively. Having generated those values,
 the rest of the decision variables may be derived. Let's begin by reviewing over the packing constraints.
 \ref{seq:c0}-\ref{seq:c1} are employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\ref{seq:c4} ensure
-the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq:c11} is fully defined.
+the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq:c8} is fully defined.
 
 Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
 battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after

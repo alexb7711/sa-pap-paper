@@ -35,7 +35,7 @@
       \kappa_{\Xi_i} \geq \eta_{i} + r_{v_i}s_i
   \end{equation}
   \begin{equation}
-      \label{seq:c11}
+      \label{seq:c8}
       a_i \leq u_i \leq d_i \le e_i \le \T
   \end{equation}
 \end{subequations}

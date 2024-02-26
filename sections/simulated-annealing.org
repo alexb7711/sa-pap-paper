@@ -12,22 +12,21 @@ advantage of speed in finding a satisfactory solution for large-scale practical 
 [cite:@radosavljevic-2018-metah-optim]. SA, however, is sometimes criticized for the speed at which it converges to the
 global optimum [cite:@gendreau-2018-handb-metah; @henderson-1989-theor-pract].
 
-SA is an exploitation oriented, single-solution based metaheuristic with, in addition the previously stated, advantages
-of simplicity, both theoretically and implementation, as well as its inherit ability to overcome non-linearities
+SA is an exploitation oriented, single-solution based metaheuristic. In addition to the advantages of simplicity, both
+theoretically and implementation, the algorithm has an inherent ability to overcome non-linearities
 [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. This model is named after its analogized process
 where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most regular possible
 crystal lattice configuration [cite:@henderson-1989-theor-pract]. SA establishes a connection between this thermodynamic
-and searching for global optima for an optimization problem.
+process and the search for global optima in optimization problems.
 
 There are five key components to SA: initial temperature, cooling schedule (temperature function), generation
-mechanisms, acceptance criteria, local search iteration count (temperature change counter)
-[cite:@keller-2019-multi-objec]. The temperature solution describes the speed at which the system is "cooled" over each
-iteration. The temperature of the system describes the likelihood that a system is willing to explore the solution
-space. The generation mechanisms provide a means of modifying the system by some singular discrete change that is within
-the neighborhood [cite:@gendreau-2018-handb-metah]. The acceptance criteria is a function of the system temperature that
-makes the decision whether the system will accept an inferior solution in favor of exploring the solution space.
-Finally, the local search iteration count is the number of steps taken to try to exploit a solution at a constant
-temperature. Each of these mechanisms are elaborated in the subsequent sections.
+mechanisms, acceptance criteria, and a local search iteration count (temperature change counter)
+[cite:@keller-2019-multi-objec]. The temperature function describes the speed at which the system is "cooled" over each
+iteration. The generation mechanisms provide a means of modifying the system by some singular discrete change that is
+within the neighborhood of the previous solution [cite:@gendreau-2018-handb-metah]. The acceptance criteria is a
+function of the system temperature that makes the decision whether the system will accept an inferior solution in favor
+of exploring the solution space. Finally, the local search iteration count is the number of steps taken to try to
+exploit a solution at a constant temperature. Each of these mechanisms are elaborated in the subsequent sections.
 
 ** Cooling Equation
 :PROPERTIES:
@@ -38,33 +37,34 @@ encourages exploration. As the process begins to "cools down" (in accordance to 
 encourage local exploitation of the solution (rather than exploration)
 [cite:@rutenbar-1989-simul-anneal-algor;@henderson-1989-theor-pract]. There are three common basic types of cooling
 equations: linear, geometric, and exponential. Each schedule is depicted in [[fig:cool]] [cite:@keller-2019-multi-objec].
-Each plot begin with an initial temperature of $500^\circ\; C$ and a final temperature of $1^\circ\; C$. The different cooling
-schedules dictate the rate at which the algorithm progressively disallows exploration. A linear cooling schedule is
-defined by [[eq:cool0]].
+Every plot begin with an initial temperature of $T_0 = 500^\circ\; C$ and a final temperature of $T_f = 1^\circ\; C$. The
+different cooling schedules dictate the rate at which the algorithm progressively disallows exploration. Let the vector
+of temperatures described by a cooling schedule be defined as $t$. Furthermore, let an element of the vector be denoted
+as $t_m \in t$, where $m \in [0,...,M]$ and $M = \lvert t \rvert$. A linear cooling schedule is defined by [[eq:cool0]].
 
 #+name: eq:cool0
 \begin{equation}
-\Tau[n] = \Tau[n-1] - \Delta_0
+t_m = t_{m-1} - \delta_0
 \end{equation}
 
-with $\Tau[0] = \Tau_0$ and $\Delta_0 = 1/2\; C^\circ$ in [[fig:cool]]. The value of $\Delta_0 \in \mathbb{R}^+$. A geometric cooling schedules is as
-defined in [[eq:cool1]]. The cooling schedule type most widely used in practice [cite:@keller-2019-multi-objec]. As such, it
-will also be employed by the work in this paper.
+with $t_0 = \Tau_0$ and $\delta_0 = 1/2\; C^\circ$ in [[fig:cool]]. The value of $\delta_0$ may vary anywhere in the range $\delta_0 \in \mathbb{R}^+$. A
+geometric cooling schedules is as defined in [[eq:cool1]]. This schedule type is most widely used in practice
+[cite:@keller-2019-multi-objec]. As such, it will also be employed by the work in this paper.
 
 #+name: eq:cool1
   \begin{equation}
-  \Tau[n] = \alpha \Tau[n-1]
+  t_m = \delta t_{m-1}
   \end{equation}
 
-where $\alpha = 0.995$ in [[fig:cool]]. $\alpha$ may vary anywhere between the range $[0,1)$. An Exponential cooling schedule is
-defined by the difference equation is defined as [[eq:cool2]].
+where $\delta = 0.995$ in [[fig:cool]]. The gain variable, $\delta$, may vary anywhere between the range $[0,1)$. An exponential
+cooling schedule is defined by the difference equation as shown in [[eq:cool2]].
 
 #+name: eq:cool2
 \begin{equation}
-\Tau[n] = e^{-\beta}\Tau[n-1]
+t_m = e^{-\delta}t_{m-1}
 \end{equation}
 
-where $\beta = 0.01$ in [[fig:cool]]. A typical range for $\beta$ is $0.8 \le \beta \le 0.99$ [cite:@delahaye-2019-simul].
+where $\delta = 0.01$ in [[fig:cool]]. A typical range for $\delta$ is $0.8 \le \delta \le 0.99$ [cite:@delahaye-2019-simul].
 
 #+name: fig:cool
 #+ATTR_ORG: :width 200
@@ -83,18 +83,19 @@ determine if the active solution is to be replaced, an acceptance criteria is de
 more fit than active solution (fitness being dictated by the objective function) is always accepted as the new active
 solution. In an effort to encourage exploration, inferior candidate solutions have a probability of being accepted as
 the active solution. The probability of accepting an inferior candidate solution is described by the function
-$\exp(-\frac{J(x) - J(\bar{x})}{\Tau})$ where $J(\cdot)$ is the objective functions described in [[#sec:objective-function]] and
-$\Tau$ is current temperature. The probability of acceptance is a function of the current temperature and the difference
-of the active solution and a new candidate solution. Formally, let $\Delta E \equiv J(x) - J(\bar{x})$ where $x$ is the current
-solution and $\bar{x}$ is the new candidate solution. Let $f(\cdot)$ be the function that describes the probability of
-accepting a candidate solution $\bar{x}$, and is defined by [[eq:candaccept]] [cite:@keller-2019-multi-objec].
+$\exp(-\frac{J(x) - J(\bar{x})}{t_m})$ where $J(\cdot)$ is the objective functions described in [[#sec:objective-function]],
+$t_m$ is current temperature, $x$ is the current solution, and $\bar{x}$ is the new candidate solution. The probability
+of acceptance is a function of the current temperature and the difference of the active solution and a new candidate
+solution. Formally, let $\Delta E \equiv J(x) - J(\bar{x})$ and let $f(\cdot)$ be the function that describes the probability of
+accepting a candidate solution $\bar{x}$. The acceptance of a candidate solution is thus of the form shown in
+[[eq:candaccept]] [cite:@keller-2019-multi-objec].
 
 #+name: eq:candaccept
 \begin{equation}
-f(x,\bar{x},T) =
+f(x,\bar{x},t_m) =
 \begin{cases}
   1                   & \Delta E > 0 \\
-  e^{- \frac{\Delta E}{T}} & \text{otherwise}
+  e^{- \frac{\Delta E}{t_m}} & \text{otherwise}
 \end{cases}
 \end{equation}
 
@@ -105,16 +106,16 @@ f(x,\bar{x},T) =
 Generation mechanisms are used to create a neighboring candidate solution [cite:@gendreau-2018-handb-metah]. That is,
 the generating function creates a solution that can be reached in a single iteration from the active solution. In the
 case of the problem statement made in [[#sec:problem-description]], six primitive generation mechanism shall be used: new
-visit, slide visit, new charger, wait, new window, and purge. The purpose of each of these generators is to assign new
+visit, slide visit, new charger, new window, wait, and purge. The purpose of each of these generators is to assign new
 visits to a charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from
 one charger to another with the same charge schedule, move a bus to its idle queue, and remove a charger from the set
 of charger availability's. Each generator will be discussed in more detail in [[#sec:generators]].
 
-These generator mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
+These generation mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
 an initial candidate solutions for SA to compare with other solutions, and the perturb schedule generator is used to
-take a candidate solution and alter it slightly in an attempt to fall into a global/local minimum. The wrapper functions
-will be discussed in [[#sec:generator-wrappers]]. However, prior to discussing the primitives and wrapper generating
-functions, their respective inputs and outputs must be defined.
+take a candidate solution and alter it slightly in an attempt to step toward a global or local minimum. The wrapper
+functions will be discussed in [[#sec:generator-wrappers]]. However, prior to discussing the primitives and wrapper
+generating functions, their respective inputs and outputs must be defined.
 
 *** Generator Input/Output
 :PROPERTIES:
@@ -143,17 +144,17 @@ has been imposed upon it, $\C_q' = \{ \varnothing \}$. In other words, no buses 
 some time period $[u_i, d_i]$. After the scheduling process is complete, $\C_q'$ will have a set of active periods of
 the form $\C_q' = \{[u_i, d_i]: i \in I\}$. With a fully defined set $\C_q'$, its compliment can be found, $\C_q$.
 
-Let $i\text{th}$ inactive period shall be denoted as $\C_{i.q}$. To determine the inverse of $\C_q'$, begin by noting
-$\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing$, is said to be disjoint (i.e. the sets share no common elements)
-[cite:@halmos-1974-naive-set-theor]. The inverse of a disjoint set can be found by the De Morgan Law: $(A \cap B)' = A' \cup
-B'$. Using De Morgan's Law, the set of inactive periods can be written as $\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}$.
+Let $i^{\text{th}}$ inactive period be denoted as $\C_{i.q}$. To determine the inverse of $\C_q'$, begin by noting that
+$\C_q'$ is said to be disjoint, $\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing$ (i.e. the sets share no common
+elements) [cite:@halmos-1974-naive-set-theor]. The inverse of a disjoint set can be found by the De Morgan Law: $(A \cap
+B)' = A' \cup B'$. Using De Morgan's Law, the set of inactive periods can be written as $\C_q \equiv \bigcup \{[u_j, d_j]': j \in
+\Jsetq\}$.
 
 **** Generator Output
-The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
-$\bar{\Sol}$ and the modified subset of the tuple be defined by $\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
-\bar{\C})$, (as opposed to $x_i$ being unmodified). To be explicit, $\bar{x}_i$ consists of the modified charger
-inactive times and the direct decision variables: the chosen queue, initial charge time, and detach time from the
-charger. The other direct variables and indirect variables may be implied.
+The output of the generating functions is the same as the input, $\Sol$, but with changes applied to it by a generator.
+Let a modified variable be denoted with a bar, $\bar{\cdot}$. Thus, the modified input tuple is written as $\bar{\Sol}$.
+Although not all the variables in $\Sol$ are modified, it is written in this manner for the sake of consistency and
+simplicity in bookkeeping. Steps within the notation are taken to clearly identify variables of interest.
 
 *** Generators
 :PROPERTIES:
@@ -170,37 +171,38 @@ defined spatial constraints while allowing the bus to be "set aside".
 :PROPERTIES:
 :CUSTOM_ID: sec:new-visit
 :END:
-The new visit generator describes the process of moving an unsigned BEB, $b \in B$, to a charging queue, $v_i \in
-\{n_B+1,..., n_B + n_Q\}$, within its arrival/departure time $[a_i, e_i]$. Let $\U_{\{\cdot\}}$ indicate that an element is
-selected randomly with a uniform distribution from the set $\{\cdot\}$. For example, $\U_{[a_i, e_i]}$ indicates that a
-value will be selected between $a_i$ and $u_i$ with a uniform distribution. Lines 2 through 3 of \ref{alg:new-visit}
+The new visit generator describes the process of moving a BEB, $b \in B$, from a waiting queue, $v_i \in B$, to a charging
+queue, $v_i \in \{n_B+1,..., n_B + n_Q\}$, within its arrival/departure time $[a, e]$. Let $\U_{\{\cdot\}}$ indicate that an
+element is selected randomly with a uniform distribution from the set $\{\cdot\}$. For example, $\U_{[a, e]}$ indicates that
+a value will be selected between $a$ and $u$ with a uniform distribution. Lines 2 through 3 of \ref{alg:new-visit}
 extract the arrival and departure times of visit $i$. Lines 4 and 5 select a charging queue, $q$, and time slice for
 which $q$ is available at random with uniform distributions, respectively. Line 6 verifies that the inactive period
-selected is viable and returns a random charging time, $[u_i, d_i]$. If the time frames of the visit and the charger
+selected is viable and returns a random charging time, $[u, d]$. If the time frames of the visit and the charger
 availability do not align, the null value is returned.
 
-The function =findFreeTime= is the algorithm that determines whether a visit's time at the station $[a_i, e_i]$ can be
-placed in the time availability, $C$, of charger $q$. The algorithm is defined in \ref{alg:find-free-time}. Let $L$ and
-$U$ be the lower and upper bound of the time between scheduled times. The set of cases is shown in [[fig:find-free]]. In
-each case depicted by [[fig:find-free]], the red lines depict the arrival and departure time for a BEB visit, $i$. The blue
-lines indicate regions in which charger $q$ is active. $C \in \C_q$ represents one of the ranges between the blue lines,
-$[L, U]$. Note the symbol $\_$ is used to indicate variables that are either unchanged or unused i.e. in the case of
-return statements and variable extraction, respectively.
+The function =findFreeTime= is the algorithm that determines whether a visit's time at the station $[a, e]$ can be placed
+in the time availability of charger $q$. Let the available time for charger $q$ for visit $i$ be denoted as $C \equiv
+\C_{i.q}$. The algorithm is defined in \ref{alg:find-free-time}. Let $C_L$ and $C_U$ be the lower and upper bound of the
+time between active times for charger $q$. The set of cases in which the ranges $[a, e]$ and $[C_L, C_U]$ may interact
+is shown in [[fig:find-free]]. In each case depicted by [[fig:find-free]], the red lines depict the arrival and departure time
+for a BEB visit, $i$. The blue lines indicate regions in which charger $q$ is active. $C \in \C_q$ represents one of the
+ranges between the blue lines, $[C_L, C_U]$. Note the symbol $\_$ is used to indicate variables that are either
+unchanged or unused, for example in the case of return statements and variable extraction, respectively.
 
 The =findFreeTime= algorithm is outlined in \ref{alg:find-free-time} and behaves as follows. Lines 2 and 3 extract the
 lower and upper bounds of the charger availability. Lines 4 - 23 check whether the BEB visit can be assigned to the
 charger available time slice. Lines 4 - 7 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits
-entirely within the charger availability and the charge time may be anywhere in the range $[a_i, e_i]$. Lines 8 - 11
+entirely within the charger availability and the charge time may be anywhere in the range $[a, e]$. Lines 8 - 11
 coincides with \ref{subfig:all} where the BEB arrives before the charger is available. Therefore, the BEB may charge
-anywhere in the time $[L, e_i]$. On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} in which
+anywhere in the time $[L, e]$. On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} in which
 the BEB departs after the upper bound of the charger availability. Thus, the BEB may be charged anywhere in the time
-frame of $[a_i, U]$. Naturally, Lines 16 - 19 corresponds to the scenario in \ref{subfig:invertsandwhich} where the
-upper and lower bound of the visit is constrained by the charger availability such that the time that the BEB can charge
-is between the time slice $[L,U]$. Lines 20-24 relate to the scenarios in which the BEB visit does not fall within the
-charger availability and assigns the null value to both $\bar{u}$ and $\bar{d}$. Lines 24-28 check if a time range has
-been assigned. If one has, the time slice $[\bar{u}_i, \bar{d}_i]$ is assigned to the compliment of the charger
-availability. Line 26 returns tuple of the updated charger availability and the initial and final charging times. Line
-29 returns the original charger availability and null values for the charge times upon failure.
+frame of $[a, U]$. Lines 16 - 19 corresponds to the scenario in \ref{subfig:invertsandwhich} where the upper and lower
+bound of the visit is constrained by the charger availability such that the time that the BEB can charge is between the
+time slice $[L,U]$. Lines 20-24 relate to the scenarios in which the BEB visit does not fall within the charger
+availability and assigns the null value to both $\bar{u}$ and $\bar{d}$. Lines 24-28 check if a time range has been
+assigned. If one has, the time slice $[\bar{u}, \bar{d}]$ is assigned to the compliment of the charger availability.
+Line 26 returns tuple of the updated charger availability and the initial and final charging times. Line 29 returns the
+original charger availability and null values for the charge times upon failure.
 
 #+include: eq/new-visit.org
 #+include: img/find-free.org
@@ -221,7 +223,7 @@ the updated set of charger availability.
 :PROPERTIES:
 :CUSTOM_ID: slide-visit
 :END:
-This primitive generator is used for buses that have already been scheduled. Because of the constraint \ref{seq:c11}
+This primitive generator is used for buses that have already been scheduled. Because of the constraint \ref{seq:c8}
 there may be some slack to manipulate $[u_i, d_i]$ within the window $[a_i, e_i]$. That is, two new values, $u_i$ and
 $d_i$ are randomly selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 from
 \ref{alg:slide-visit} purges the visit from the charger availability schedule. Line 4 retrieves the window that was
@@ -278,8 +280,9 @@ described and returns either a new charge schedule or a modified charge schedule
 :END:
 The objective of this generator is to assign each BEB to its idle queue provided a schedule of routes. Specifically,
 this generator exists to initialize the system with a solution that is spatiotemporally feasible, but does not satisfy
-the battery dynamic constraints. Line 2 of \ref{alg:charge-schedule-generation} loops through each visit and Line 4
-executes \ref{alg:wait}.
+the battery dynamic constraints. This problem is addressed by the penalty method by allowing the infeasible battery SOCs
+to occur, but penalizing the system for doing so. Line 2 of \ref{alg:charge-schedule-generation} loops through each
+visit and Line 4 executes \ref{alg:wait}.
 
 #+include: eq/charge-schedule-generation.org
 
@@ -290,12 +293,13 @@ executes \ref{alg:wait}.
 Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
 create candidate solutions. After each step of the cooling function, the active solution will be altered $n_k$ times by
 a random primitive generator. During these $n_k$ iterations the active solution is modified to create a neighboring
-candidate solution. This candidate solution with then be compared against the active solution in the manner discussed in
+candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
 [[#sec:acceptance]]. This algorithm describes the method by which the SA algorithm decides how to perturb the schedule. The
-method that will be employed to exploit the given solution is as follows: pick a visit, pick a primitive generator, and
-execute said primitive generator once. Thus, \ref{alg:perturb-schedule} is as follows: Line 2 selects a visit at random
-with a uniform distribution. Line 3 extracts the visit index. Letting $n_G$ denote the number of primitive generating
-functions, Line 4 selects a primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
+method that will be employed generate a neighboring solution is as follows: pick a visit, pick a primitive generator,
+and execute said primitive generator once. Thus, \ref{alg:perturb-schedule} is as follows: Line 2 selects a visit at
+random with a uniform distribution. Line 3 extracts the visit index. Letting $n_G$ denote the number of primitive
+generating functions, Line 4 selects a primitive generator. Line 5 executes the primitive, and Line 6 returns the
+result.
 
 #+include: eq/tweak-schedule.org
 
