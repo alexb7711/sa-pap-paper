@@ -4,7 +4,7 @@
 #+name: tab:variables
 #+caption: Table of variables used in the paper.
 #+ATTR_LATEX: :environment tabularx :width \textwidth :align L{0.3} L{1.2} L{0.3} L{1.2}
-| *Variable*                  | *Description*                                                                        | *Variable*                  | *Description*                                                |
+| *Variable*                    | *Description*                                                                          | *Variable*                    | *Description*                                                  |
 |-----------------------------+--------------------------------------------------------------------------------------+-----------------------------+--------------------------------------------------------------|
 | Constants                   |                                                                                      | Constants                   |                                                              |
 | $C$                         | Penalty method gain factor                                                           | $n_B$                       | Number of buses in use                                       |
@@ -25,7 +25,7 @@
 |-----------------------------+--------------------------------------------------------------------------------------+-----------------------------+--------------------------------------------------------------|
 | Direct Decision Variables   |                                                                                      | Direct Decision Variables   |                                                              |
 | $u_i$                       | Time to start charging for visit $i$                                                 | $d_i$                       | Time to detach bus from charger for visit $i$                |
-| $v_i$                       | Assigned queue for visit $i$                                                         |                             |                                                              |
+| $q_i$                       | Assigned queue for visit $i$                                                         |                             |                                                              |
 | Indirect Decision Variables |                                                                                      | Indirect Decision Variables |                                                              |
 | $\eta_i$                       | Charge for the bus at the beginning of visit $i$                                     | $\psi_{ij}$                    | Tracks spatial overlap for visit pair $(i,j)$                |
 | $\sigma_{ij}$                    | Tracks temporal overlap for visit pair $(i,j)$                                       | $d_i$                       | Detach time from charger for visit $i$                       |

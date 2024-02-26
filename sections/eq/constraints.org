@@ -8,7 +8,7 @@
   \end{equation}
   \begin{equation}
       \label{seq:c1}
-      v_j - v_i - 1 - (\psi_{ij} - 1)Q \ge 0
+      q_j - q_i - 1 - (\psi_{ij} - 1)Q \ge 0
   \end{equation}
   \begin{equation}
       \label{seq:c2}
@@ -28,11 +28,11 @@
   \end{equation}
   \begin{equation}
       \label{seq:c6}
-       \eta_{\xi_i} = \eta_{i} + r_{v_i}s_i - \Delta_i
+       \eta_{\xi_i} = \eta_{i} + r_{q_i}s_i - \Delta_i
   \end{equation}
   \begin{equation}
       \label{seq:c7}
-      \kappa_{\Xi_i} \geq \eta_{i} + r_{v_i}s_i
+      \kappa_{\Xi_i} \geq \eta_{i} + r_{q_i}s_i
   \end{equation}
   \begin{equation}
       \label{seq:c8}

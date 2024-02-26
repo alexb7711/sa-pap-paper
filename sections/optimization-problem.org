@@ -64,7 +64,7 @@ variables are those that are influenced by the direct.
 :END:
 The first two variables are $u_i$ and $d_i \; \forall i \in \Iset$. They represent the initial and final charging times. These
 values must remain within range of the arrival and departure times, $[a_i, e_i]$, for visit $i$. The last direct
-decision variable is the queue that bus visit $i$ can be placed in to charge, $v_i \in \Qset$.
+decision variable is the queue that bus visit $i$ can be placed in to charge, $q_i \in \Qset$.
 
 **** Indirect Decision Variables
 :PROPERTIES:
@@ -73,12 +73,12 @@ decision variable is the queue that bus visit $i$ can be placed in to charge, $v
 Let the initial SOC for a visit be written as $\eta_i$, where $i \in \Iset \setminus \Iset_0$. The initial charge for visit $i$ forms
 the foundation from which the SOC of the next visit, $\xi_i$, is calculated. This propagation of the SOC is evaluated as
 shown in [[eq:bat-chain]]. The equation states that the charge for bus $i$'s next visit is equal to the initial charge for
-visit $i$ plus the charge added to it by charger $v_i$ over duration $s_i = d_i - u_i$ minus the discharge accumulated
+visit $i$ plus the charge added to it by charger $q_i$ over duration $s_i = d_i - u_i$ minus the discharge accumulated
 over route $i$.
 
 #+name: eq:bat-chain
 \begin{equation}
-  \eta_{\xi_i} = \eta_i + r_{v_i}s_i - \Delta_i
+  \eta_{\xi_i} = \eta_i + r_{q_i}s_i - \Delta_i
 \end{equation}
 
 A penalty method is to be implemented in the objective function that is enabled when the $\eta_i$ falls below a defined
@@ -120,7 +120,7 @@ system if it falls below a specified SOC threshold. The assignment cost is defin
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{v_i}r_{v_i} + C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) \Big)\text{.}
+\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{q_i}r_{q_i} + C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) \Big)\text{.}
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q \in Q$. Let $\epsilon$ be
@@ -129,8 +129,8 @@ minimize the total amount of chargers. Iterating on this concept, let the first 
 queues in which no charge is supplied), the next $n_{Q_s}$ indices to be slow chargers, and the next $n_{Q_f}$ indices
 to be fast chargers, where $n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}$ and $n_B + n_{Q_s} + n_{Q_f} = n_Q$. The $\epsilon$ vector thus be
 concatenated as follows: $\epsilon = [[\mathbf{0}; n_B], [100, 200, ..., 100n_Q]]$, where $\mathbf{0}_{n_B}$ indicates a zero
-vector of length $n_B$. That is, $\epsilon_{v_i}$ has no cost if $v_i \le n_B$ or is incrementally penalized as the selected
-queue index increases if $n_B < v_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost when assigning a BEB
+vector of length $n_B$. That is, $\epsilon_{q_i}$ has no cost if $q_i \le n_B$ or is incrementally penalized as the selected
+queue index increases if $n_B < q_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost when assigning a BEB
 to an idle queue while still minimizing charger count and encouraging the use of slow chargers over fast. While the $\epsilon$
 vector can be constructed in many other ways, the form shown above is the method applied to this work.
 
@@ -143,7 +143,7 @@ value used to scale the penalty function.
 
 The utility cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation
 of all the energy being used over all the active periods for each charger in the time horizon, $\sum_{i=1}^{n_V}
-r_{v_i}s_i$. That is, the charge rate, $r_{v_i}$, for the active charger, $v_i$, is multiplied by the time that the
+r_{q_i}s_i$. That is, the charge rate, $r_{q_i}$, for the active charger, $q_i$, is multiplied by the time that the
 charger will be utilized, $s_i$.
 
 The demand cost quantifies the amount of power being used over a given period of time and increases the cost if too much
@@ -176,7 +176,7 @@ Hence, [[eq:pdem]] begins with a value of $p_{fix}$ from which it may only incre
 2, ..., n_H \} \subset \mathcal{Z}$ and $n_H = \frac{T}{900}$. Furthermore, let $p$ define the vector of discrete power consumption and
 let $p_h \in p$ be the discrete power demand at time step $h$. For conciseness of notation we will abuse $t_h$ to denote
 the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2, ...,
-n_H \}$. Knowing the charger speed, $r_{v_i}$, and the initial and final charge times, $u_i$ and $d_i$, respectively.
+n_H \}$. Knowing the charger speed, $r_{q_i}$, and the initial and final charge times, $u_i$ and $d_i$, respectively.
 The corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be determined by first calculating the
 total number of steps in the range $n_h = \frac{d_i - u_i}{dt}$. Once the number of steps are know, the consumed power,
 $r_{vi}$ can be added to the correct indices in $p$. This procedure is outlined in \ref{alg:calc-p}.
@@ -202,7 +202,7 @@ To write the utility cost the consumption and [[eq:pd-dis]] are added together t
 
 #+name: eq:pc
 \begin{equation}
-\UC = p_d + \sum_{i=1}^I \Big( r_{v_i}s_i \Big)
+\UC = p_d + \sum_{i=1}^I \Big( r_{q_i}s_i \Big)
 \end{equation}
 
 ** Constraints

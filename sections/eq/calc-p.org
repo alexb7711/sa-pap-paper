@@ -19,7 +19,7 @@
       \tcc{For each index in the time slice $[u_i, d_i]$}
       \ForEach {$h \in \{\frac{u_i}{dt}, \frac{u_i + dt}{dt}, ..., \frac{u_i + n_h dt}{dt}\}$}
       {
-        $p[h] \leftarrow p[h] + r_{\I_{i.v}}$\tcc*{Add the consumed power during discrete step}
+        $p[h] \leftarrow p[h] + r_{\I_{i.q}}$\tcc*{Add the consumed power during discrete step}
       }
     }
     \Return{$p$}

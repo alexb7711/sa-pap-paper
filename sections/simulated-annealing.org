@@ -125,7 +125,7 @@ This section discusses in detail the expected inputs and outputs of each generat
 parameters to have an understanding of the generator algorithms to be derived. The input consists of the bus visit index
 of interest, information about the current state of visits, $\I$, and the current state of the charger availability,
 $\C$. The availability of each charger, $\C$, is iteratively constructed throughout the SA process. The output of each
-generator affects the tuple (or a subset of the tuple) of decision variables $(v_i, u_i, d_i)$ and charger availability
+generator affects the tuple (or a subset of the tuple) of decision variables $(q_i, u_i, d_i)$ and charger availability
 $\C$.
 
 In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
@@ -164,15 +164,15 @@ This section describes and outlines the algorithm pool for the different generat
 wrapper functions. Recall that to satisfy constraints, $n_B$ extra idle queues are added that provide no power to the
 BEB. Because of this, the set of queues is fully defined as $q \in \{1,..., n_B, n_B+1,..., n_Q+n_B\}$ where $n_Q$ is the
 total amount of chargers and $n_B$ number of BEBs. The use case for the idle queues are for when a bus is not to be
-placed on a charger. Rather, it will be placed in the queue, $v_i \in \{1,..., n_B\}$, which satisfies the previously
+placed on a charger. Rather, it will be placed in the queue, $q_i \in \{1,..., n_B\}$, which satisfies the previously
 defined spatial constraints while allowing the bus to be "set aside".
 
 **** New visit
 :PROPERTIES:
 :CUSTOM_ID: sec:new-visit
 :END:
-The new visit generator describes the process of moving a BEB, $b \in B$, from a waiting queue, $v_i \in B$, to a charging
-queue, $v_i \in \{n_B+1,..., n_B + n_Q\}$, within its arrival/departure time $[a, e]$. Let $\U_{\{\cdot\}}$ indicate that an
+The new visit generator describes the process of moving a BEB, $b \in B$, from a waiting queue, $q_i \in B$, to a charging
+queue, $q_i \in \{n_B+1,..., n_B + n_Q\}$, within its arrival/departure time $[a, e]$. Let $\U_{\{\cdot\}}$ indicate that an
 element is selected randomly with a uniform distribution from the set $\{\cdot\}$. For example, $\U_{[a, e]}$ indicates that
 a value will be selected between $a$ and $u$ with a uniform distribution. Lines 2 through 3 of \ref{alg:new-visit}
 extract the arrival and departure times of visit $i$. Lines 4 and 5 select a charging queue, $q$, and time slice for
@@ -214,7 +214,7 @@ original charger availability and null values for the charge times upon failure.
 :END:
 The purge primitive generator simply removes a visit from a charger availability schedule, $\C$. This generator exists
 so that other primitives may place the visit back into the schedule without creating duplicate entries in $\C$. Line 2
-from \ref{alg:purge} updates $\C$ with the set of visits excluding visit $i$ from charging queue $v_i$. Line 3 returns
+from \ref{alg:purge} updates $\C$ with the set of visits excluding visit $i$ from charging queue $q_i$. Line 3 returns
 the updated set of charger availability.
 
 #+include: eq/purge.org
@@ -247,7 +247,7 @@ the updated visit data. If =findFreetime= was unsuccessful, then the generator r
 :PROPERTIES:
 :CUSTOM_ID: sec:wait
 :END:
-The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(v_i \in \{1,...,B\}\).
+The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(q_i \in \{1,...,B\}\).
 Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the complement charger
 availability schedule of the wait queue for bus $b$. Line 5 returns the updated visit. Line 7 returns the null set upon
 failure of assignment.

@@ -25,7 +25,7 @@ $n_Q$ charging queues from which a visiting BEB may be assigned. Let $\mathbb{Z}
 is denoted as $\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \} \subset \mathbb{Z}$.
 Each visit can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i
 \in I$, BEB identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in
-\mathbb{R}$, initial charge time, $u \in \mathbb{R}$, final charge time, $d \in \mathbb{R}$, the charger queue for the BEB to be placed into, $v \in Q$,
+\mathbb{R}$, initial charge time, $u \in \mathbb{R}$, final charge time, $d \in \mathbb{R}$, the charger queue for the BEB to be placed into, $q \in Q$,
 the SOC upon arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the currently visiting BEB, $\xi \in I$. Let the ordered
 set of visits be denoted as $\I$.
 
