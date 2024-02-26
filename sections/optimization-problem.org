@@ -25,12 +25,6 @@ manipulate.
 :PROPERTIES:
 :CUSTOM_ID: sec:input-variables
 :END:
-#+begin_comment
-As mentioned before the discharge for visit all visits $i \in \{\Iset \setminus \Isetfinal\}$, is defined by $\Delta_i = \delta_i \cdot \rho_i$
-where $\delta_i$ is the amount of energy consumed by the bus per mile and $\rho_i$ is the route mileage after visit $i$. $\rho_i$
-is calculated using $\rho_i = \text{average mph} \cdot (a_{\xi_i} - d_i)$. For the final visits, $\rho_{i \in \Isetfinal} = 0$. The
-average MPH is assumed to be 20 miles per hour.
-#+end_comment
 
 This section introduces the parameters used in the SA algorithm. The variables to be introduced are summarized in
 [[tab:variables]]. $\Delta_i$ is the amount energy required to complete the bus route after visit $i$. Because there is no route
