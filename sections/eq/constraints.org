@@ -4,11 +4,11 @@
 
   \begin{equation}
       \label{seq:c0}
-      u_i - d_j - (\sigma_{ij} - 1)T \ge 0
+      u_j - d_i - (\sigma_{ij} - 1)T \ge 0
   \end{equation}
   \begin{equation}
       \label{seq:c1}
-      v_i - v_j - 1 - (\psi_{ij} - 1)Q \ge 0
+      v_j - v_i - 1 - (\psi_{ij} - 1)Q \ge 0
   \end{equation}
   \begin{equation}
       \label{seq:c2}
@@ -36,7 +36,7 @@
   \end{equation}
   \begin{equation}
       \label{seq:c11}
-      a_i \leq u_i \leq d_i \le e_i \le T
+      a_i \leq u_i \leq d_i \le e_i \le \T
   \end{equation}
 \end{subequations}
 \end{multicols}

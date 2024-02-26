@@ -107,7 +107,7 @@ the generating function creates a solution that can be reached in a single itera
 case of the problem statement made in [[#sec:problem-description]], six primitive generation mechanism shall be used: new
 visit, slide visit, new charger, wait, new window, and purge. The purpose of each of these generators is to assign new
 visits to a charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from
-one charger to another with the same charge schedule, move a bus to its waiting queue, and remove a charger from the set
+one charger to another with the same charge schedule, move a bus to its idle queue, and remove a charger from the set
 of charger availability's. Each generator will be discussed in more detail in [[#sec:generators]].
 
 These generator mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
@@ -276,7 +276,7 @@ described and returns either a new charge schedule or a modified charge schedule
 :PROPERTIES:
 :CUSTOM_ID: sec:charge-schedule-generation
 :END:
-The objective of this generator is to assign each BEB to its waiting queue provided a schedule of routes. Specifically,
+The objective of this generator is to assign each BEB to its idle queue provided a schedule of routes. Specifically,
 this generator exists to initialize the system with a solution that is spatiotemporally feasible, but does not satisfy
 the battery dynamic constraints. Line 2 of \ref{alg:charge-schedule-generation} loops through each visit and Line 4
 executes \ref{alg:wait}.

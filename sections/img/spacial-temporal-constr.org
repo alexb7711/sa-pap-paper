@@ -44,7 +44,7 @@
 
     \end{tikzpicture}
   }}
-  \caption{The representation of the berth-time space. The x and y-axis represent time and space, respectively. Along the y-axis, the dashed lines represent discrete berthing locations. These locations may be chosen to be continuous. The shaded rectangles represent schedules vessels to serviced. The height of each shaded rectangle represents the space taken on the berth and the width being the time to service said vessel. The vertical dasched lines are associated with vessel D and represent the arrival time, berthing time, sercivce completion time, and departure time. Note that the arrival time may be before the berthing time and the completion time may before the departure time.}
+  \caption{The representation of the queue-time space. The x and y-axis represent time and space, respectively. Along the y-axis, the dashed lines represent discrete queuing locations. The shaded rectangles represent schedules BEBs to be charged. The height of each shaded rectangle represents the space taken on the queue and the width being the time to service said BEB. The vertical dashed lines are associated with vessel D and represent the arrival time, initial charge time, charge completion time, and departure time. Note that the arrival time may be before the initial charge time and the completion time may before the departure time.}
   \label{fig:spacial-and-temporal-constr}
 \end{figure}
 #+end_export
