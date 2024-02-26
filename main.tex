@@ -1,4 +1,4 @@
-% Created 2024-02-26 Mon 12:07
+% Created 2024-02-26 Mon 12:49
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -737,7 +737,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org166ffcd}
+\label{sec:org129782c}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -756,7 +756,7 @@ B)' = A' \cup B'\). Using De Morgan's Law, the set of inactive periods can be wr
 \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgb405260}
+\label{sec:org1a14b00}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -818,12 +818,14 @@ original charger availability and null values for the charge times upon failure.
 
   \Begin
     {
+      $i \leftarrow \Sol_{i}$\tcc*{Extract visit index}
       $a \leftarrow \I_{i.a}$\tcc*{Extract the arrivial time for visit $i$}
       $e \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
+      $q \leftarrow \I_{i.q}$\tcc*{Extract the current charge queue for visit $i$}
       $\bar{q} \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
       $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
 
-      \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, a, e$} $\not\in \varnothing$}
+      \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, i, q, a, e$} $\not\in \varnothing$}
          {
            \Return{($\_, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
          }
@@ -990,11 +992,13 @@ original charger availability and null values for the charge times upon failure.
 \label{alg:find-free-time}
     \LinesNumbered
     \TitleOfAlgo{Find Free Time}
-    \KwIn{$(C,a,e)$}
-    \KwOut{($\bar{C},\bar{u},\bar{d})$}
+    \KwIn{$(\C, i, q, a, e)$}
+    \KwOut{($\bar{\C}, \bar{u}, \bar{d})$}
 
     \Begin
-    { \tcc{Extract the lower and upper bounds.} \(C_L \leftarrow\) \(\{C\}\)\; \(C_U \leftarrow\) \(\{C\}\)\;
+    { \tcc{Extract the lower and upper bounds.}
+      $C_L \leftarrow \C_{i.q}$\;
+      $C_U \leftarrow \C_{i.q}$\;
 
       \If(\tcc*[f]{If $C_L \le a \le e \le C_U$ (\autoref{subfig:sandwich})}){$C_L \leq a$ and $C_U \geq e$}
       {
@@ -1024,7 +1028,7 @@ original charger availability and null values for the charge times upon failure.
 
       \If (\tcc*[f]{If an assignment was made}) {$\bar{u},\bar{d} \ne \varnothing$}
       {
-        $\bar{C}' \leftarrow C' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
+        $\bar{\C}_q' \leftarrow \C_q' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
         \Return{($\bar{C},\bar{u},\bar{d}$)}
       }
       \Else(\tcc*[f]{Otherwise the assignment failed})
@@ -1076,9 +1080,10 @@ information. If \texttt{findFreeTime} was unsuccessful, then the generator retur
       $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $C \leftarrow \bar{C}_{i.q_i}$\tcc*{Get the time availability of the purged visit}
 
-        \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$,
-            $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$} { \Return{($\_,
-            (\I_{i.q_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit} }
+        \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
+        {
+          \Return{($\_, (\I_{i.q_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
+        }
 
         \Return{($\varnothing$)}\tcc*{Return nothing}
     }
@@ -1102,7 +1107,7 @@ the updated visit data. If \texttt{findFreetime} was unsuccessful, then the gene
       $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
 
-      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \_$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
+      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \_$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
       {
         \tcc{Return visit, note $u$ and $d$ are the original inital/final charge times.}
         \Return{($\_, (q,\I_{i.u}, \I_{i.d}),\bar{\C}$)}

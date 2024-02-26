@@ -4,11 +4,13 @@
   \label{alg:find-free-time}
       \LinesNumbered
       \TitleOfAlgo{Find Free Time}
-      \KwIn{$(C,a,e)$}
-      \KwOut{($\bar{C},\bar{u},\bar{d})$}
+      \KwIn{$(\C, i, q, a, e)$}
+      \KwOut{($\bar{\C}, \bar{u}, \bar{d})$}
 
       \Begin
-      { \tcc{Extract the lower and upper bounds.} \(C_L \leftarrow\) \(\{C\}\)\; \(C_U \leftarrow\) \(\{C\}\)\;
+      { \tcc{Extract the lower and upper bounds.}
+        $C_L \leftarrow \C_{i.q}$\;
+        $C_U \leftarrow \C_{i.q}$\;
 
         \If(\tcc*[f]{If $C_L \le a \le e \le C_U$ (\autoref{subfig:sandwich})}){$C_L \leq a$ and $C_U \geq e$}
         {
@@ -38,7 +40,7 @@
 
         \If (\tcc*[f]{If an assignment was made}) {$\bar{u},\bar{d} \ne \varnothing$}
         {
-          $\bar{C}' \leftarrow C' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
+          $\bar{\C}_q' \leftarrow \C_q' \cup \{[\bar{u},\bar{d}]\}$\tcc*{Update the compliment of the charger free time slices}
           \Return{($\bar{C},\bar{u},\bar{d}$)}
         }
         \Else(\tcc*[f]{Otherwise the assignment failed})

@@ -10,7 +10,7 @@
         $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
         $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
 
-        \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \_$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
+        \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \_$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
         {
           \tcc{Return visit, note $u$ and $d$ are the original inital/final charge times.}
           \Return{($\_, (q,\I_{i.u}, \I_{i.d}),\bar{\C}$)}
