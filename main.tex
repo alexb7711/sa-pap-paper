@@ -1,4 +1,4 @@
-% Created 2024-02-29 Thu 11:53
+% Created 2024-02-29 Thu 12:12
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -741,7 +741,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orge066cb2}
+\label{sec:orgd458b57}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -759,7 +759,7 @@ Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determin
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org0918b54}
+\label{sec:orgad4796c}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -1465,14 +1465,14 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
 \begin{subfigures}
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % Fast
-    \begin{figure}[htpb]
+    \begin{figure}[!ht]
     \centering
         \includegraphics{sections/img/charger-count-fast-milp-qin}
         \caption{Number of fast chargers for Quin and MILP PAP.}
         \label{subfig:fast-charger-usage}
     \end{figure}
 
-    \begin{figure}[htpb]
+    \begin{figure}[!ht]
     \centering
         \includegraphics{sections/img/charger-count-fast-sa}
         \caption{Number of fast chargers for quick and exhaustive SA executions.}
@@ -1490,7 +1490,7 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
         \includegraphics{sections/img/charger-count-slow-milp-qin}
         \caption{Number of slow chargers for Quin and MILP PAP.}
         \label{subfig:slow-charger-usage}
-    \end{figure}
+    \end{figure}[!ht]
     \centering
         \includegraphics{sections/img/charger-count-slow-sa}
         \caption{Number of slow chargers for the quick and exhaustive SA executions.}

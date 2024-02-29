@@ -98,14 +98,14 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
   \begin{subfigures}
       %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       % Fast
-      \begin{figure}[htpb]
+      \begin{figure}[!ht]
       \centering
           \includegraphics{sections/img/charger-count-fast-milp-qin}
           \caption{Number of fast chargers for Quin and MILP PAP.}
           \label{subfig:fast-charger-usage}
       \end{figure}
 
-      \begin{figure}[htpb]
+      \begin{figure}[!ht]
       \centering
           \includegraphics{sections/img/charger-count-fast-sa}
           \caption{Number of fast chargers for quick and exhaustive SA executions.}
@@ -123,7 +123,7 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
           \includegraphics{sections/img/charger-count-slow-milp-qin}
           \caption{Number of slow chargers for Quin and MILP PAP.}
           \label{subfig:slow-charger-usage}
-      \end{figure}
+      \end{figure}[!ht]
       \centering
           \includegraphics{sections/img/charger-count-slow-sa}
           \caption{Number of slow chargers for the quick and exhaustive SA executions.}
