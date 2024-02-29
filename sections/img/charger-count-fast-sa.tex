@@ -1,0 +1,34 @@
+\documentclass[float=false, crop=true]{standalone}
+
+\usepackage
+{
+    fp,                                                                         % For calculations
+    tikz,                                                                       % Generate figures in LaTeX
+    pgfplots,                                                                   % Plot in LaTeX
+    pgfplotstable,
+}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{automata, positioning, arrows.meta}                             % Tikz macros
+
+\begin{document}
+
+\pgfplotstableread[col sep= comma]{data/sa-quick-charge-cnt.csv}\usagedatasaquick
+\pgfplotstableread[col sep= comma]{data/sa-exhaustive-charge-cnt.csv}\usagedatasaexhaustive
+
+\begin{tikzpicture}
+  \begin{axis}[title={Fast Charger Usage},
+      scale only axis,
+      height=0.325\paperheight, width=0.8\paperwidth,
+      grid=both,
+      xlabel={Time [hr]},ylabel={Count},
+      xmin=4, xmax=24,
+      ytick distance=1,
+      legend style={nodes={scale=0.75, transform shape}}]
+    \addplot[green!80!black, fill=green, fill opacity=0.25, no markers] table[x=visit, y=fast] {\usagedatasaquick};
+    \addlegendentry{SA Slow}
+    \addplot[gray!80!black, fill=gray, fill opacity=0.25, no markers] table[x=visit, y=fast] {\usagedatasaexhaustive};
+    \addlegendentry{SA Exhaustive}
+  \end{axis}
+\end{tikzpicture}
+
+\end{document}

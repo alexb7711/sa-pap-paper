@@ -13,28 +13,23 @@
 \begin{document}
 
 \pgfplotstableread[col sep = comma]{data/qm-charge-cnt.csv}\usagedataquin
-\pgfplotstableread[col sep = comma]{data/sa-quick-charge-cnt.csv}\usagedatasaquick
-\pgfplotstableread[col sep = comma]{data/sa-exhaustive-charge-cnt.csv}\usagedatasaexhaustive
 \pgfplotstableread[col sep = comma]{data/milp-charge-cnt.csv}\usagedatamilp
 
-\resizebox{\columnwidth}{4in}{%
 \begin{tikzpicture}
-\begin{axis}[title={Slow Charge Usage},
-             xlabel={Time [hr]},ylabel={Count},
-             xmin=4, xmax=24,
-             ytick distance=1,
-             legend style={nodes={scale=0.75, transform shape}},
-             legend pos = north west]
+  \begin{axis}[title={Slow Charge Usage},
+      scale only axis,
+      height=0.325\paperheight, width=0.8\paperwidth,
+      grid=both,
+      xlabel={Time [hr]},ylabel={Count},
+      xmin=4, xmax=24,
+      ytick distance=1,
+      legend style={nodes={scale=0.75, transform shape}},
+      legend pos = north west]
     \addplot[blue!80!black, fill=blue, fill opacity=0.25, no markers] table[x=visit, y=slow] {\usagedataquin};
     \addlegendentry{Quin}
     \addplot[red!80!black, fill=red, fill opacity=0.25, no markers] table[x=visit, y=slow] {\usagedatamilp};
     \addlegendentry{MILP}
-    \addplot[green!80!black, fill=green, fill opacity=0.5, no markers] table[x=visit, y=slow] {\usagedatasaquick};
-    \addlegendentry{SA Slow}
-    \addplot[gray!80!black, fill=gray, fill opacity=0.5, no markers] table[x=visit, y=slow] {\usagedatasaexhaustive};
-    \addlegendentry{SA Exhaustive}
-\end{axis}
+  \end{axis}
 \end{tikzpicture}%\
-}
 
 \end{document}
