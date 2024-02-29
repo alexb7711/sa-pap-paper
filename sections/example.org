@@ -11,33 +11,31 @@
 :END:
 
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. A description of
-the scenario presented followed by a brief introduction of the original MILP-PAP implementation as well as an
-alternative heuristic based planning strategy called Quin-Modified which is used as a comparison to the SA PAP. Results
-are then presented for each of planning strategies are presented, analyzed, and discussed.
+the scenario presented followed by a brief introduction of the original MILP-PAP implementation an alternative heuristic
+based planning strategy called Qin-Modified, and a heuristic modification to the SA-PAP, is used as a comparison to the
+SA-PAP previously presented. Results are then presented for each of planning strategies are presented, analyzed, and
+discussed.
 
 ** BEB Scenario
 :PROPERTIES:
 :custom_id: beb-scenario
 :END:
 
-To display the capabilities of the model, an example scenario is presented. The scenario was run over a time horizon of
-$T=24$ hours, utilizes $n_B = \A$ buses with $n_V = \N$ visits to the station divided between the $n_B$ buses. As stated
-before, the route times are sampled from a set of routes from the UTA. Each bus has \batsize kWh battery that is
-required to stay above \mincharge charge (\fpeval{\batsize * \minchargeD} kWh) to maintain battery health. Each bus is
-assumed to begin the working day with \fpeval{\acharge*100}% charge (\fpeval{\acharge * \batsize} kWh). Additionally,
-each bus is required to end the day with a minimum charge of \fpeval{\bcharge * 100}% (\fpeval{\bcharge * \batsize}
-kWh). This assumes that overnight charging can account for at least 20% of the charge. Each bus is assumed to discharge
-at a rate of 30 KW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
+The test scenario was run over a time horizon of $T=24$ hours, with a total of $n_V = \N$ visits to the station shared
+between $n_B = \A$ buses. Each BEB has a battery capacity of $\kappa_b = $ \batsize kWh battery that is required to stay
+above $\nu_b\kappa_b =$ \mincharge charge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day
+with \fpeval{\acharge*100}% charge (\fpeval{\acharge * \batsize} kWh). Each bus is assumed to discharge at a rate of
+$\Delta_i =$ 30 kW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
 simplicity an average rate is used. $n_C =$ \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are
-slow charging (\slows KW) and \fast are fast charging (\fasts KW). A technique to minimize chargers will be employed.
+slow charging (\slows kW) and \fast are fast charging (\fasts kW).
 
-To encourage the SA PAP problem to utilize the fewest number of chargers, the value of $m_q$ in the objective function
-is $\forall q \in \{1,2,..., n_B \}; m_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 1000q$. The charge duration
-scalar, $\epsilon_q$, is defined as $\epsilon_q = r_q$ to create a consumption cost term, $g_{iq}\epsilon_q$. This is utilized to also
-encourage the model to minimize active charger times, particularly for the fast chargers.
+As previously introduced, to encourage the SA PAP problem to utilize the fewest number of chargers, the value of $m_q$
+in the objective function is $\forall q \in \{1,2,..., n_B \}; m_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 100q$.
+The charge duration scalar, $\epsilon_q$, is defined as $\epsilon_q = r_q$ to create a consumption cost term, $g_{iq}\epsilon_q$. This is
+utilized to also encourage the model to minimize active charger times, particularly for the fast chargers.
 
-Another heuristic-based optimization strategy, referred to as Quin-Modified, is also employed as a means of comparison
-with the results of the SA PAP. The Quin-Modified strategies is a based on the threshold strategy of
+Another heuristic-based optimization strategy, referred to as Qin-Modified, is also employed as a means of comparison
+with the results of the SA PAP. The Qin-Modified strategies is a based on the threshold strategy of
 [cite:@qin-2016-numer-analy]. The strategy has been modified slightly to accommodate the case of multiple charger types
 and without exhaustive search for the best charger type. The heuristic is based on a set of rules that revolve around
 the initial charge of the bus at visit $i$. There are three different thresholds, low (85%), medium (90%), and high
@@ -51,128 +49,143 @@ first.
 UTA bus routing data that occurs over a 24-hour time period. The optimization was performed using a machine running an
 AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to run for \timeran hours.
 
+** Results
+:PROPERTIES:
+:custom_id: results
+:END:
+
+** Conclusion
+:PROPERTIES:
+:custom_id: conclusion
+:END:
+
 # --------------------------------------------------------------------------------
 # Charge schedule
 #+begin_src latex
-  \newpage
-  \begin{subfigures}
+  \begin{figure}
     \centering
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    % Quinn
-    \begin{figure}[!ht]
-      \centering \includegraphics{sections/img/schedule-quinn}
-      \caption{Charging schedule generated by Quin Modified algorithm.}
-      \label{subfig:schedule-quin}
-    \end{figure}
+    % Qinn
+    \begin{subfigure}[t]{\textwidth}
+      \centering
+      \includegraphics{sections/img/schedule-quinn}
+      \caption{Charging schedule generated by Qin Modified algorithm.}
+      \label{subfig:schedule-quinn}
+    \end{subfigure}
+
+    \hfill
 
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % MILP
-    \begin{figure}[!ht]
-      \centering \includegraphics{sections/img/schedule-milp}
+    \begin{subfigure}[t]{\textwidth}
+      \centering
+      \includegraphics{sections/img/schedule-milp}
       \caption{Charging schedule generated by MILP PAP algorithm.}
       \label{subfig:schedule-milp}
-    \end{figure}
+    \end{subfigure}
+  \end{figure}
 
+  \begin{figure} \ContinuedFloat
+    \centering
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % SA quick
-    \begin{figure}[!ht]
+    \begin{subfigure}[t]{\textwidth}
       \centering \includegraphics{sections/img/schedule-sa-quick}
       \caption{Charging schedule generated by SA PAP algorithm.}
       \label{subfig:schedule-quick-sa}
-    \end{figure}
+    \end{subfigure}
+
+    \hfill
 
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % SA exhaustive
-    \begin{figure}[!ht]
+    \begin{subfigure}[t]{\textwidth}
       \centering \includegraphics{sections/img/schedule-sa-exhaustive}
       \caption{Charging schedule generated by SA PAP algorithm.}
       \label{subfig:schedule-exhaustive-sa}
-    \end{figure}
-  \end{subfigures}
-  \newpage
+    \end{subfigure}
+  \end{figure}
 #+end_src
 
 # --------------------------------------------------------------------------------
 # Charger usage count
 #+begin_src latex
-  \begin{subfigures}
+  \begin{figure}
       %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       % Fast
-      \begin{figure}[!ht]
+      \begin{subfigure}[t]{\textwidth}
       \centering
           \includegraphics{sections/img/charger-count-fast-milp-qin}
-          \caption{Number of fast chargers for Quin and MILP PAP.}
+          \caption{Number of fast chargers for Qin and MILP PAP.}
           \label{subfig:fast-charger-usage}
-      \end{figure}
+      \end{subfigure}
 
-      \begin{figure}[!ht]
+      \begin{subfigure}[t]{\textwidth}
       \centering
           \includegraphics{sections/img/charger-count-fast-sa}
           \caption{Number of fast chargers for quick and exhaustive SA executions.}
           \label{subfig:fast-charger-usage}
-      \end{figure}
-  \end{subfigures}
+      \end{subfigure}
+  \end{figure}
 
-  \newpage
-
-  \begin{subfigures}
+  \begin{figure}
       %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       % Slow
-      \begin{figure}[!ht]
+      \begin{subfigure}[t]{\textwidth}
       \centering
           \includegraphics{sections/img/charger-count-slow-milp-qin}
-          \caption{Number of slow chargers for Quin and MILP PAP.}
+          \caption{Number of slow chargers for Qin and MILP PAP.}
           \label{subfig:slow-charger-usage}
-      \end{figure}[!ht]
+      \end{subfigure}
+      \begin{subfigure}[t]{\textwidth}
       \centering
           \includegraphics{sections/img/charger-count-slow-sa}
           \caption{Number of slow chargers for the quick and exhaustive SA executions.}
           \label{subfig:slow-charger-usage-sa}
-      \end{figure}
-  \end{subfigures}
-  \newpage
+      \end{subfigure}
+  \end{figure}
 #+end_src
 
 # --------------------------------------------------------------------------------
 # Bus charges
 #+begin_src latex
-  \begin{subfigures}
+  \begin{figure}
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    % Quinn
-    \begin{figure}[htpb]
+    % Qinn
+    \begin{subfigure}[t]{\textwidth}
       \centering
-      \includegraphics{sections/img/charge-quinn}
-      \caption{Bus charges for the Quin Modified charging schedule. The charging scheme of the Quin charger is more predictable during the working day.}
-      \label{subfig:quin-charge}
-    \end{figure}
-
+      \includegraphics{sections/img/charge-qinn}
+      \caption{Bus charges for the Qin Modified charging schedule. The charging scheme of the Qin charger is more predictable during the working day.}
+      \label{subfig:qin-charge}
+    \end{subfigure}
+    \hfill
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % MILP
-    \begin{figure}[htpb]
+    \begin{subfigure}[t]{\textwidth}
       \centering
       \includegraphics{sections/img/charge-milp}
       \caption{The bus charges for the MILP PAP charging schedule. The MILP model allows for guarantees of minimum/maximum changes during the working day as well as charges at the end of the day.}
       \label{subfig:milp-charge}
-    \end{figure}
-
+    \end{subfigure}
+    \hfill
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % SA Quick
-    \begin{figure}[htpb]
+    \begin{subfigure}[t]{\textwidth}
       \centering
       \includegraphics{sections/img/charge-sa-quick}
       \caption{The bus charges for the SA PAP charging schedule. The SA model allows for guarantees of minimum/maximum changes during the working day as well as charges at the end of the day.}
       \label{subfig:sa-charge}
-    \end{figure}
-
+    \end{subfigure}
+    \hfill
     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     % SA Exhaustive
-    \begin{figure}[htpb]
+    \begin{subfigure}[t]{\textwidth}
       \centering
       \includegraphics{sections/img/charge-sa-exhaustive}
       \caption{The bus charges for the SA PAP charging schedule. The SA model allows for guarantees of minimum/maximum changes during the working day as well as charges at the end of the day.}
       \label{subfig:sa-charge}
-    \end{figure}
-  \end{subfigures}
+    \end{subfigure}
+  \end{figure}
 #+end_src
 
 # --------------------------------------------------------------------------------
@@ -181,7 +194,7 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
 \begin{figure}[htpb]
 \centering
     \includegraphics{sections/img/power}
-    \caption{Amount of power consumed by Quin-Modified and MILP schedule over the time horizon.}
+    \caption{Amount of power consumed by Qin-Modified and MILP schedule over the time horizon.}
     \label{fig:power-usage}
 \end{figure}
 #+end_src
@@ -191,7 +204,7 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
 #+begin_src latex
   \begin{figure}[htpb]
   \centering \includegraphics{sections/img/energy}
-      \caption{Total accumulated energy consumed by the Quin-Modified and MILP schedule throughout the time horizon.}
+      \caption{Total accumulated energy consumed by the Qin-Modified and MILP schedule throughout the time horizon.}
       \label{fig:energy-usage}
   \end{figure}
   \newpage
