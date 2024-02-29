@@ -1,4 +1,4 @@
-% Created 2024-02-29 Thu 13:33
+% Created 2024-02-29 Thu 15:30
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -67,6 +67,7 @@
 % Experiment parameters
 \newcommand{\A}{35 }                                                            % Number of buses
 \newcommand{\N}{338 }                                                           % Number of visits
+\newcommand{\Cgain}{9000}                                                       % Gain applied to penalty method
 \newcommand{\acharge}{0.9}                                                      % BOD charge percentage
 \newcommand{\bcharge}{0.7 }                                                     % EOD charge percentage
 \newcommand{\mincharge}{25\% }                                                  % Min visit charge percent
@@ -741,7 +742,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org3df93c6}
+\label{sec:org3fc050b}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -759,7 +760,7 @@ Let \(i\text{th}\) inactive period shall be denoted as \(\C_{i.q}\). To determin
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgccf7ae2}
+\label{sec:org2957474}
 The output of the generating functions is a modified subset of an input tuple. Let a modified input tuple be denoted as
 \(\bar{\Sol}\) and the modified subset of the tuple be defined by \(\bar{x}_i \equiv (\bar{v_i}, \bar{u_i}, \bar{d_i},
 \bar{\C})\), (as opposed to \(x_i\) being unmodified). To be explicit, \(\bar{x}_i\) consists of the modified charger
@@ -1396,17 +1397,23 @@ discussed.
 \subsection{BEB Scenario}
 \label{beb-scenario}
 The test scenario was run over a time horizon of \(T=24\) hours, with a total of \(n_V = \N\) visits to the station shared
-between \(n_B = \A\) buses. Each BEB has a battery capacity of \$\(\kappa\)\textsubscript{b} = \$ \batsize kWh battery that is required to stay
-above \(\nu_b\kappa_b =\) \mincharge charge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day
-with \fpeval{\acharge*100}\% charge (\fpeval{\acharge * \batsize} kWh). Each bus is assumed to discharge at a rate of
-\(\Delta_i =\) 30 kW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
-simplicity an average rate is used. \(n_C =\) \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are
-slow charging (\slows kW) and \fast are fast charging (\fasts kW).
+between \(n_B = \A\) buses. Each BEB has a battery capacity of \(\kappa_b =\) \batsize kWh battery that is required to stay above
+\(\nu_b\kappa_b =\) \mincharge charge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day with
+\fpeval{\acharge*100}\% charge (\fpeval{\acharge * \batsize} kWh). Each bus is assumed to discharge at a rate of \(\Delta_i =\)
+30 kW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of simplicity
+an average rate is used. The penalty method employs a gain of \(C = \Cgain\). A total of \(n_C =\) \fpeval{\fast + \slow}
+chargers are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW).
+As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of \(\epsilon_q\) in the
+objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q\).
 
-As previously introduced, to encourage the SA PAP problem to utilize the fewest number of chargers, the value of \(m_q\)
-in the objective function is \(\forall q \in \{1,2,..., n_B \}; m_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; m_q = 100q\).
-The charge duration scalar, \(\epsilon_q\), is defined as \(\epsilon_q = r_q\) to create a consumption cost term, \(g_{iq}\epsilon_q\). This is
-utilized to also encourage the model to minimize active charger times, particularly for the fast chargers.
+TODO: Talk about heuristic SA.
+
+One of the methods utilized to compare with the SA-PAP is the MILP-PAP. This framework is the true MILP implementation
+of the PAP derived from \cite{qarebagh-2019-optim-sched}. The inputs to the system are the same as those discussed
+above, except for assignment cost gain, \(\epsilon_q\). Rather than scaling by \(100\), the MILP-PAP scales the gain by \(1000\).
+Furthermore, the MILP-PAP does not implement the peak-15 in its objective function. The optimization in this work was
+performed by the Gurobi MILP solver and was allowed to run for 7200 seconds on a machine equipped with an AMD Ryzen 9
+5900X 12 - Processor (24 core) at 4.95GHz \cite{gurobi-2021-gurob-optim}.
 
 Another heuristic-based optimization strategy, referred to as Qin-Modified, is also employed as a means of comparison
 with the results of the SA PAP. The Qin-Modified strategies is a based on the threshold strategy of
@@ -1512,7 +1519,7 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
   % Qinn
   \begin{subfigure}[t]{\textwidth}
     \centering
-    \includegraphics{sections/img/charge-qinn}
+    \includegraphics{sections/img/charge-quinn}
     \caption{Bus charges for the Qin Modified charging schedule. The charging scheme of the Qin charger is more predictable during the working day.}
     \label{subfig:qin-charge}
   \end{subfigure}
