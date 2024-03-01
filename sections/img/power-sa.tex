@@ -10,10 +10,8 @@
 
 \begin{document}
 
-\pgfplotstableread[col sep = comma]{data/qm-power-usage.csv}\powerdataquin
 \pgfplotstableread[col sep = comma]{data/sa-quick-power-usage.csv}\powerdatasaquick
 \pgfplotstableread[col sep = comma]{data/sa-exhaustive-power-usage.csv}\powerdatasaexhaustive
-\pgfplotstableread[col sep = comma]{data/milp-power-usage.csv}\powerdatamilp
 
 \begin{tikzpicture}
 \begin{axis}[title={Power Usage},
@@ -24,16 +22,6 @@
     xmin=4, xmax=24, ymin=0,
     legend style={nodes={scale=0.75, transform shape}},
     legend pos = north east]
-
-    % Quin ----------
-    \addplot[blue!80!black, fill=blue, fill opacity=0.25, no markers]
-             table[x=time, y=power] {\powerdataquin};
-    \addlegendentry{Quin}
-
-    % MILP ----------
-    \addplot[red!80!black, fill=red, fill opacity=0.25, no markers]
-             table[x=time, y=power] {\powerdatamilp};
-    \addlegendentry{MILP}
 
     % SA Quick ----------
     \addplot[green!80!black, fill=green, fill opacity=0.5, no markers]
