@@ -29,7 +29,10 @@ $\nu_b\kappa_b =$ \mincharge charge (\fpeval{\batsize * \minchargeD} kWh). Each 
 an average rate is used. The penalty method employs a gain of $C = \Cgain$. A total of $n_C =$ \fpeval{\fast + \slow}
 chargers are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW).
 As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
-objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q$.
+objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q$. The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\theta = 0.996$,
+resulting in a total of $n_M = \tempcnt$ steps. The algorithm also assumes a total of $n_K = \localcnt$ iterations for
+the local search at a constant temperature. In total, that results in $758,500$ configurations being searched.
 
 As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heuristics to the generating functions can
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
