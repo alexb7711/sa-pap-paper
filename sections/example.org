@@ -31,7 +31,16 @@ chargers are utilized where \slow of the chargers are slow charging (\slows kW) 
 As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
 objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q$.
 
-TODO: Talk about heuristic SA.
+As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heuristics to the generating functions can
+manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
+minimizing charger utilization, a simple heuristic was applied to \ref{alg:new-visit} and \ref{alg:new-charger} in the
+method that they select the new charging queue. Suppose rather than selecting a queue at random from $q \in Q$, the
+algorithms randomly select whether to place a BEB in a slow or fast charging queue. Once the charger type has been
+selected, the algorithm will then begin incrementally attempting to place the BEB in a queue of that type beginning from
+the smallest index of that charger type. For example, if a BEB has been selected to be placed in a queue with a slow
+charger, the algorithm begins by attempting to place the BEB in the charger queue $q = n_B + 1$. If it is unable to be
+placed in that queue, it then attempts to be placed in the next queue $q = n_B + 2$. This is done incrementally until
+all the queues have been exhausted. For this reason, this heuristic method is dubbed as the exhaustive approach.
 
 One of the methods utilized to compare with the SA-PAP is the MILP-PAP. This framework is the true MILP implementation
 of the PAP derived from [cite:@qarebagh-2019-optim-sched]. The inputs to the system are the same as those discussed
