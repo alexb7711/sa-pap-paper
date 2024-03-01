@@ -3,6 +3,10 @@
 :CUSTOM_ID: sec:introduction
 :END:
 
+#+begin_comment
+TODO: Add notes about work using heuristic searches for SA
+#+end_comment
+
 Public transportation systems are a critical component urban areas. An increased awareness and concern of environmental
 impacts of petroleum based public transportation has driven an effort to reduce the pollutant footprint
 [cite:@de-2014-simul-elect;@xylia-2018-role-charg;@guida-2017-zeeus-repor-europ;@li-2016-batter-elect]. Particularly,

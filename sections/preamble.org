@@ -90,6 +90,11 @@
 #+latex_header:\newcommand{\slows}{30 }                                                        % Speed of slow charger
 #+latex_header:\newcommand{\contvars}{7,511 }
 #+latex_header:\newcommand{\intvars}{328,282 }
+#+latex_header:\newcommand{\localcnt}{550 }                                                    % Number of local search iterations
+#+latex_header:\newcommand{\tempinit}{2000 }                                                   % Initial temperature
+#+latex_header:\newcommand{\tempcnt}{1517 }                                                    % Number of steps in temperature
+#+latex_header:\newcommand{\quicklocal}{0.45 }                                                 % Time to finish local quick
+#+latex_header:\newcommand{\exhaustivelocal}{0.5 }                                             % Time to finish local exhaustive
 
 #+latex_header:%%-------------------------------------------------------------------------------
 #+latex_header:%% Solve output

@@ -10,15 +10,16 @@
 :custom_id: sec:example
 :END:
 
-An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. A description of
-the scenario presented followed by a brief introduction of the original MILP-PAP implementation an alternative heuristic
-based planning strategy called Qin-Modified, and a heuristic modification to the SA-PAP, is used as a comparison to the
-SA-PAP previously presented. Results are then presented for each of planning strategies are presented, analyzed, and
-discussed.
+An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
+[[#sec:beb-scenario]] a description of the scenario presented followed by a brief introduction of the original MILP-PAP
+implementation an alternative heuristic based planning strategy called Qin-Modified, and a heuristic modification to the
+SA-PAP, is used as a comparison to the SA-PAP previously presented. [[#sec:results]] presents the results for each of
+planning strategies are presented, analyzed, and discussed. [[#sec:conclusion]] contains concluding remarks and interests in
+future work.
 
 ** BEB Scenario
 :PROPERTIES:
-:custom_id: beb-scenario
+:custom_id: sec:beb-scenario
 :END:
 
 The test scenario was run over a time horizon of $T=24$ hours, with a total of $n_V = \N$ visits to the station shared
@@ -32,7 +33,9 @@ As previously introduced, to encourage the SA PAP to utilize the fewest number o
 objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q$. The SA
 algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\theta = 0.996$,
 resulting in a total of $n_M = \tempcnt$ steps. The algorithm also assumes a total of $n_K = \localcnt$ iterations for
-the local search at a constant temperature. In total, that results in $758,500$ configurations being searched.
+the local search at a constant temperature. In total, that results in $758,500$ configurations being searched. On
+average each local search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
+src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
 
 As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heuristics to the generating functions can
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
@@ -43,7 +46,10 @@ selected, the algorithm will then begin incrementally attempting to place the BE
 the smallest index of that charger type. For example, if a BEB has been selected to be placed in a queue with a slow
 charger, the algorithm begins by attempting to place the BEB in the charger queue $q = n_B + 1$. If it is unable to be
 placed in that queue, it then attempts to be placed in the next queue $q = n_B + 2$. This is done incrementally until
-all the queues have been exhausted. For this reason, this heuristic method is dubbed as the exhaustive approach.
+all the queues have been exhausted. For this reason, this heuristic method is referred to as the exhaustive approach.
+Furthermore, the previously presented method shall be referred to as the quick approach. In the exhaustive approach, on
+average the local search took a total of $\exhaustivelocal$ seconds to complete, resulting in a total runtime of
+src_latex{\fpeval{\exhaustivelocal * \tempcnt}} seconds.
 
 One of the methods utilized to compare with the SA-PAP is the MILP-PAP. This framework is the true MILP implementation
 of the PAP derived from [cite:@qarebagh-2019-optim-sched]. The inputs to the system are the same as those discussed
@@ -69,12 +75,12 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
 
 ** Results
 :PROPERTIES:
-:custom_id: results
+:custom_id: sec:results
 :END:
 
 ** Conclusion
 :PROPERTIES:
-:custom_id: conclusion
+:custom_id: sec:conclusion
 :END:
 
 # --------------------------------------------------------------------------------
@@ -212,12 +218,23 @@ AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz. The solver was allowed to
 # --------------------------------------------------------------------------------
 # Power consumption
 #+begin_src latex
-\begin{figure}[htpb]
-\centering
-    \includegraphics{sections/img/power}
-    \caption{Amount of power consumed by Qin-Modified and MILP schedule over the time horizon.}
-    \label{fig:power-usage}
-\end{figure}
+  \begin{figure}
+    \begin{subfigure}[t]{\textwidth}
+      \centering
+      \includegraphics{sections/img/power-milp-qin}
+      \caption{Amount of power consumed by Qin-Modified and MILP schedule over the time horizon.}
+      \label{fig:power-usage}
+    \end{subfigure}
+
+    \hfill
+
+    \begin{subfigure}[t]{\textwidth}
+      \centering
+      \includegraphics{sections/img/power-sa}
+      \caption{Amount of power consumed by Qin-Modified and MILP schedule over the time horizon.}
+      \label{fig:power-usage}
+    \end{subfigure}
+  \end{figure}
 #+end_src
 
 # --------------------------------------------------------------------------------
