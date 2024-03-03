@@ -8,7 +8,7 @@
 
   \Begin
   {
-    $dt \leftarrow 900$\tcc*{Creat time step of 15 minutes}
+    $dt \leftarrow 60.0 $\tcc*{Creat time step of one minute}
     $p \leftarrow [0.0; n_H]$\tcc*{Allocate an $n_H \times 1$ vector filled with zeros}
 
     \tcc{For each visit}
@@ -19,7 +19,7 @@
       \tcc{For each index in the time slice $[u_i, d_i]$}
       \ForEach {$h \in \{\frac{u_i}{dt}, \frac{u_i + dt}{dt}, ..., \frac{u_i + n_h dt}{dt}\}$}
       {
-        $p[h] \leftarrow p[h] + r_{\I_{i.v}}$\tcc*{Add the consumed power during discrete step}
+        $p[h] \leftarrow p[h] + r_{\I_{i.q}}$\tcc*{Add the consumed power during discrete step}
       }
     }
     \Return{$p$}

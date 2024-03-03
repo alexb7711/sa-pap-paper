@@ -3,8 +3,8 @@
 :CUSTOM_ID: sec:introduction
 :END:
 
-Public transportation systems are a critical component urban areas. An increased awareness and concern of environmental
-impacts of petroleum based public transportation has driven an effort to reduce the pollutant footprint
+Public transportation systems are a critical component in urban areas. An increased awareness and concern of
+environmental impacts of petroleum based public transportation has driven an effort to reduce the pollutant footprint
 [cite:@de-2014-simul-elect;@xylia-2018-role-charg;@guida-2017-zeeus-repor-europ;@li-2016-batter-elect]. Particularly,
 the electrification of public bus transportation via battery power, i.e., battery electric buses (BEBs), has received
 significant attention [cite:@li-2016-batter-elect]. Although the technology provides benefits beyond reduction in
@@ -39,16 +39,16 @@ simplifications due to computational complexities. One other source, as far as t
 describes a method of producing a BEB charge schedule wih a high fidelity while accounting for multiple charger times as
 well as being able to minimize over the total charger count [cite:@whitaker-2023-a-network].
 
-In some works, it was assumed that the charge received is proportional to the time spent on the charger
+Some works assume that the charge received is proportional to the time spent on the charger
 [cite:@liu-2020-batter-elect;@yang-2018-charg-sched]. While the linear battery dynamics is a valid assumption when the
 battery SOC is below 80% [cite:@liu-2020-batter-elect], non-linear battery dynamics can be implemented to more
 accurately model the charge curve. A common way to model the non-linear battery dynamics is utilizing Constant Voltage
 (CV), Constant Current (CC), and Constant Current Constant Voltage (CCCV) [cite:@abdollahi-2016-optim-batter;
 @chen-2008-desig-grey]. It has also been suggested that the dynamics can be modeled as a piecewise function containing a
-linear and non-linear component from which a piecewise function approach may be taken for the CV and CC components
+linear and non-linear component from which the CV and CC models construct the linear and non-linear parts, respectively
 [cite:@zhang-2021-optim-elect;@abdollahi-2016-optim-batter]. Others have modeled the battery dynamics as a discrete
 first order dynamics model [cite:@whitaker-2023-a-network]. The first-order differential system, when provided a step
-input, approximates the non-linear relationship between time and the current SOC [cite:@whitaker-2023-a-network].
+input, approximates the non-linear relationship between time and SOC [cite:@whitaker-2023-a-network].
 
 Works concerning charge planning often use a version of the vehicle scheduling problem [cite:@tang-2019-robus-sched;
 @li-2014-trans-bus; @he-2020-optim-charg]. Variants of this problem address infrastructure as well as determining
@@ -57,28 +57,27 @@ existing buses that should be replaced by a BEB [cite:@zhou-2020-bi-objec; @duan
 of BEBs [cite:@whitaker-2023-a-network;@liu-2020-batter-elect], where this concept was expanded to simultaneously
 accounting for multiple charger types, partial charging, non-linear battery charge profiles
 [cite:@whitaker-2023-a-network]. The directed graph approach provides an easy method of modeling the scheduling by
-discretizing the time horizon to $n_Q$ sets of nodes. The nodes represent the chargers availability and can have a
-maximum of one bus at a time. The buses can flow into a node to be charged and then later can exit allowing a new bus to
-enter. Another method similar to the directed graph that fits the modeling of the BEB charging scenario is the Position
-Allocation Problem (PAP) [cite:@qarebagh-2019-optim-sched]. The PAP is derived from the Berth Allocation Problem (BAP)
-which takes an input of vessel arrival times and outputs the selection of the berthing quay. The PAP utilizes this model
-and redefines its inputs to EV arrival times and outputs queues for the EVs to be charged. While the visits remain as
-discrete events, the time that the BEB is on the charger is modeled in continuous time similar to
-[cite:@frojan-2015-contin-berth; @qarebagh-2019-optim-sched;@zhou-2020-collab-optim]. Due to the close relationship
-between the BAP and PAP, BAP literature may be used for the PAP. The literature shows methods of handling multiple quays
-(sets of chargers) to handle general berthing scenarios [cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy].
-Heuristic procedures for quicker solve times have also been introduced [cite:@imai-2001-dynam-berth]. Methods of
-defining static (full time horizon) and dynamic (rolling-time horizon) models have been created for daily and real-time
-solutions, respectively, and even fuzzy set theory has been applied to allow for more flexible schedules
-[cite:@bello-2019-fuzzy-activ].
+discretizing the time horizon into a sequence of nodes for each charger. The nodes represent the chargers availability
+and can have a maximum of one bus at a time. The buses can flow into a node to be charged and then later can exit
+allowing a new bus to enter future nodes. Another method similar to the directed graph that fits the modeling of the BEB
+charging scenario is the Position Allocation Problem (PAP) [cite:@qarebagh-2019-optim-sched]. The PAP is derived from
+the Berth Allocation Problem (BAP) which solves the problem of scheduling a set of vessels to be berthed and serviced.
+The model inputs a set of vessels arrival and service times and outputs a schedule that defines the selected berth and
+the time over which it is serviced. The PAP utilizes this model and redefines its inputs to EV arrival times and outputs
+queues for the EVs to be charged. While the visits remain as discrete events, the time that the BEB is on the charger is
+modeled as continuous, similar to [cite:@frojan-2015-contin-berth; @qarebagh-2019-optim-sched;@zhou-2020-collab-optim].
+Due to the close relationship between the BAP and PAP, BAP literature may be used for the PAP. The literature shows
+methods of handling multiple quays (sets of chargers) to handle general berthing scenarios
+[cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy]. Heuristic procedures for quicker solve times have also
+been introduced [cite:@imai-2001-dynam-berth]. Methods of defining static (full time horizon) and dynamic (rolling-time
+horizon) models have been created for daily and real-time solutions, respectively, and even fuzzy set theory has been
+applied to allow for more flexible schedules
+[cite:@bello-2019-fuzzy-activ;@dai-2008-suppl-chain-analy;@buhrkal-2011-model-discr;@frojan-2015-contin-berth].
 
-In the what follows, a description of the optimization problem is provided in [[#sec:optimization-problem]]. This section
+In what follows, the problem statement shall be provided in [[#sec:problem-description]]. [[#sec:optimization-problem]]
 introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,
 objective function and constraints. In [[#sec:simulated-annealing]], the concept and theory of SA is introduced. In
 particular the algorithms and methods utilized for the SA implementation for this work are discussed.
 [[#sec:optimization-algorithm]] outlines a generic SA algorithm, and then combines the previous sections to introduce the
-particular implementation for the SA-PAP.
-
-#+begin_comment
-TODO: Add words about the example section when that comes around
-#+end_comment
+particular implementation for the SA-PAP. In [[#sec:example]], an example problem is provided to demonstrate the capability
+of the work provided in this paper. The results will be presented and discussed.

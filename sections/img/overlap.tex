@@ -1,0 +1,22 @@
+\documentclass[float=false, crop=true]{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows.meta}                             % Tikz macros
+
+\begin{document}
+
+\resizebox{0.7\columnwidth}{!}{%
+\begin{tikzpicture}[scale=0.35]
+    \draw [thick,<->] (0,15) node[above]{Charger Queue} --
+                      (0,0)                           --
+                      (15,0) node[right]{Time};
+
+    \node[rectangle, draw, minimum width=1.5cm, minimum height = 1.5cm] at (5,8) {$i$};
+    \node[rectangle, draw, minimum width=1cm, minimum height = 1.5cm] at (2,3) {$j$};
+    \node[rectangle, draw, dashed, minimum width=1cm, minimum height = 1.5cm] at (5,13) {$k_1$};
+    \node[rectangle, draw, dashed, minimum width=1cm, minimum height = 1.5cm] at (7,8) {$k_3$};
+    \node[rectangle, draw, dashed, minimum width=1cm, minimum height = 1.5cm] at (4,3) {$k_2$};
+\end{tikzpicture}%
+}
+
+\end{document}
