@@ -14,6 +14,7 @@
 #+latex_header: \usepackage{tabularx}                       % Cool tables
 #+latex_header: \usepackage{multicol}                       % Add capability to make columns
 #+latex_header: \usepackage{soul}                           % Highlight text
+#+latex_header: \usepackage[stable]{footmisc}               % Allow footnotes in section headers
 #+latex_header: \usepackage{hyperref}                       % Cool clean hyperlinks
 #+latex_header: \setlength\parindent{0pt}                   % No indent for paragraphs
 
@@ -90,7 +91,7 @@
 #+latex_header:\newcommand{\slows}{30 }                                                        % Speed of slow charger
 #+latex_header:\newcommand{\contvars}{7,511 }
 #+latex_header:\newcommand{\intvars}{328,282 }
-#+latex_header:\newcommand{\localcnt}{550 }                                                    % Number of local search iterations
+#+latex_header:\newcommand{\localcnt}{500 }                                                    % Number of local search iterations
 #+latex_header:\newcommand{\tempinit}{2000 }                                                   % Initial temperature
 #+latex_header:\newcommand{\tempcnt}{1517 }                                                    % Number of steps in temperature
 #+latex_header:\newcommand{\quicklocal}{0.45 }                                                 % Time to finish local quick

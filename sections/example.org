@@ -1,7 +1,7 @@
 # ################################################################################
 # LINKS:
 #
-# https://github.com/maxbw117/DevelopmentPerSecond/blob/master/Tikz-pgfplots-and-latex/Tutorial#202-#20Figures#20and#20Large#20File#20Organization/Figures#20Chapter#201/01#20Ocean#20and#20Model#20Scale.tex
+# https://github.com/maxbw117/DevelopmentPerSecond/blob/master/Tikz-pgfplots-and-latex/Tutorial#202-#20Figures#20and#20Large#20File#20Organization/Figures#20Chapter#201/01#20Ocean#20and#20Model#20Scale.TeX
 # https://www.overleaf.com/learn/latex/Questions/I_have_a_lot_of_tikz#2C_matlab2tikz_or_pgfplots_figures#2C_so_I#27m_getting_a_compilation_timeout._Can_I_externalise_my_figures#3F
 # ################################################################################
 
@@ -11,10 +11,10 @@
 :END:
 
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
-[[#sec:beb-scenario]] a description of the scenario presented followed by a brief introduction of the original MILP PAP
-implementation an alternative heuristic based planning strategy called Qin-Modified, and a heuristic modification to the
-SA PAP, is used as a comparison to the SA PAP previously presented. [[#sec:results]] presents the results for each of
-planning strategies are presented, analyzed, and discussed. [[#sec:conclusion]] contains concluding remarks and interests in
+[[#sec:beb-scenario]] a description of the example scenario is presented followed by a brief introduction of the original
+MILP PAP. An alternative heuristic based planning strategy called Qin-Modified, and a heuristic modification to the SA
+PAP, are also used as comparisons to the SA PAP technique presented in this work. [[#sec:results]] presents the results for
+each of planning strategies. The results are also analyzed and discussed. [[#sec:conclusion]] contains concluding remarks and interests in
 future work.
 
 ** BEB Scenario
@@ -24,23 +24,23 @@ future work.
 
 The test scenario was run over a time horizon of $T=24$ hours, with a total of $n_V = \N$ visits to the station shared
 between $n_B = \A$ buses. Each BEB has a battery capacity of $\kappa_b =$ \batsize kWh battery that is required to stay above
-$\nu_b\kappa_b =$ \mincharge charge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day with
-\fpeval{\acharge*100}% charge (\fpeval{\acharge * \batsize} kWh). Each bus is assumed to discharge at a rate of $\Delta_i =$
-30 kW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of simplicity
-an average rate is used. The penalty method employs a gain of $C = \Cgain$. A total of $n_C =$ \fpeval{\fast + \slow}
-chargers are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW).
-As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
-objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q$. The SA
-algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\theta = 0.996$,
-resulting in a total of $n_M = \tempcnt$ steps. The algorithm also assumes a total of $n_K = \localcnt$ iterations for
-the local search at a constant temperature. In total, that results in $758,500$ configurations being searched. On
-average each local search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
-src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
+an SOC of $\nu_b =$ \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day with $\alpha
+=$ \fpeval{\acharge*100}% charge (\fpeval{\acharge * \batsize} kWh). Each bus is also assumed have a rate of discharge
+of $\Delta =$ 30 kW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
+simplicity an average rate is used. The penalty method employs a gain of $D = \Cgain$. A total of $n_C =$
+\fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are
+fast charging (\fasts kW). As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers,
+the value of $\epsilon_q$ in the objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,...,
+n_Q \}; \epsilon_q = 100q$. The SA algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 =
+\tempinit$ with $\theta = 0.996$, resulting in a total of $n_M = \tempcnt$ steps. The algorithm also assumes a total of $n_K
+= \localcnt$ iterations for the local search at a constant temperature. In total, that results in $758,500$
+configurations being searched. On average each local search took an average of $\quicklocal$ seconds to complete,
+resulting in a total runtime of src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
 
 As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heuristics to the generating functions can
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
 minimizing charger utilization, a simple heuristic was applied to \ref{alg:new-visit} and \ref{alg:new-charger} in the
-method that they select the new charging queue. Suppose rather than selecting a queue at random from $q \in Q$, the
+method that they select new charging queues. Suppose rather than selecting a queue at random from $q \in Q$, the
 algorithms randomly select whether to place a BEB in a slow or fast charging queue. Once the charger type has been
 selected, the algorithm will then begin incrementally attempting to place the BEB in a queue of that type beginning from
 the smallest index of that charger type. For example, if a BEB has been selected to be placed in a queue with a slow
@@ -52,52 +52,52 @@ average the local search took a total of $\exhaustivelocal$ seconds to complete,
 src_latex{\fpeval{\exhaustivelocal * \tempcnt}} seconds. The exhaustive generators were expected to be slightly slower
 due to its iterative approach.
 
-One of the methods utilized to compare with the SA PAP is the MILP PAP. This framework is the true MILP implementation
-of the PAP derived from [cite:@qarebagh-2019-optim-sched]. The inputs to the system are the same as those discussed
-above, except for assignment cost gain, $\epsilon_q$. Rather than scaling by $100$, the MILP PAP scales the gain by $1000$.
-Furthermore, the MILP PAP does not implement the peak-15 in its objective function. The optimization in this work was
-performed by the Gurobi MILP solver and was allowed to run for 7200 seconds on a machine equipped with an AMD Ryzen 9
-5900X 12 - Processor (24 core) at 4.95GHz [cite:@gurobi-2021-gurob-optim].
+One of the methods utilized to compare with the SA PAP is the MILP PAP. This framework is the original MILP
+implementation of the PAP derived from [cite:@qarebagh-2019-optim-sched]. The inputs to the system are the same as those
+discussed above, except for assignment cost gain, $\epsilon_q$. Rather than scaling by $100$, the MILP PAP scales the gain by
+$1000$. Furthermore, the MILP PAP does not implement the peak-15 in its objective function. The optimization in this
+work was performed by the Gurobi MILP solver and was allowed to run for 7200 seconds on a machine equipped with an AMD
+Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz [cite:@gurobi-2021-gurob-optim] [fn:1].
 
 Another heuristic-based optimization strategy, referred to as Qin-Modified, is also employed as a means of comparison
-with the results of the SA PAP. The Qin-Modified strategies is a based on the threshold strategy of
-[cite:@qin-2016-numer-analy]. The strategy has been modified slightly to accommodate the case of multiple charger types
-and without exhaustive search for the best charger type. The heuristic is based on a set of rules that revolve around
-the initial charge of the bus at visit $i$. There are three different thresholds, low (85%), medium (90%), and high
-(95%). Buses below the low threshold are prioritized to fast chargers then are allowed to utilize slow chargers if no
-fast chargers are available. Buses between the low and medium threshold prioritize slow chargers first and utilize fast
+with the results of the SA PAP. The Qin-Modified algorithm is a based on the threshold strategy of
+[cite:@qin-2016-numer-analy]. The algorithm has been modified slightly to accommodate the case of multiple charger types
+without an exhaustive search for the best charger type. The heuristic is based on a set of rules that revolve around the
+initial charge of the bus at visit $i$. There are three different thresholds, low (85%), medium (90%), and high (95%).
+Buses below the low threshold are prioritized to fast chargers then are allowed to utilize slow chargers if no fast
+chargers are available. Buses between the low and medium threshold prioritize slow chargers first and utilize fast
 chargers only if no slow chargers are available. Buses above the medium threshold and below high will only be assigned
 to slow chargers. Buses above the high threshold will not be charged. Once a bus has been assigned to a charger, it
 remains on the charger for the duration of the time it is at the station, or it reaches 95% charge, whichever comes
 first.
 
-** Results
+** Results[fn:3]
 :PROPERTIES:
 :custom_id: sec:results
 :END:
 
 The schedules generated by their respective framework is presented in \ref{fig:schedule}. \ref{subfig:schedule-quinn}
 represents the schedule generated by the Qin Modified algorithm, \ref{subfig:schedule-milp} is the schedule generated by
-the MILP PAP framework, \ref{subfig:schedule-exhaustive-sa} is the schedule created by the exhaustive strategy in the
-SA PAP algorithm, and \ref{subfig:schedule-quick-sa} is the schedule created by the quick strategy presented in this
-work. The most obvious comparison between the different schedules is the minimization of the chargers and the perceived
-organization of the Qin, MILP PAP, and exhaustive SA strategy as compared to the quick SA strategy. The Qin-Modified
-schedule utilizes four fast and slow chargers. With at most two fast and three slow chargers being utilized at any given
-moment as shown in \ref{subfig:fast-charger-usage-milp-qinn} and \ref{subfig:slow-charger-usage-milp-qinn}. The MILP PAP
-framework generated a schedule that utilizes two fast charges and six slow chargers as shown in
-\ref{subfig:schedule-milp}. This schedule utilizes at most two fast charges and six fast chargers simultaneously as
-represented in \ref{subfig:slow-charger-usage-milp-qinn}. The exhaustive SA strategy created its schedule with five slow
-charger queues and seven fast charging queues as shown in \ref{subfig:schedule-exhaustive-sa}. The schedule
-simultaneously utilizes all five slow charging queues as shown in \ref{subfig:slow-charger-usage-sa}, albeit briefly.
-The system, although creating a schedule utilizing seven fast chargers, only utilizes two simultaneously as can be seen
-in \ref{subfig:fast-charger-usage-sa}. The quick strategy for the SA algorithm created a schedule utilizing fifteen slow
-and fast chargers as is demonstrated in \ref{subfig:schedule-quick-sa}. The schedule only utilizes three slow chargers
-and four fast chargers simultaneously as shown in \ref{subfig:slow-charger-usage-sa} and
-\ref{subfig:fast-charger-usage-sa}. That is to say, the Qin-Modified and MILP PAP schedule are more efficient in
-minimizing the charger count than both SA techniques; however, the exhaustive strategy is much more efficient than the
-quick.
+the MILP PAP framework, \ref{subfig:schedule-exhaustive-sa} is the schedule created by the exhaustive strategy in the SA
+PAP algorithm, and \ref{subfig:schedule-quick-sa} is the schedule created by the quick strategy presented in this work.
+The most obvious comparison between the different schedules is the minimization of the total chargers utilized by the
+schedule and the perceived organization of the Qin, MILP PAP, and exhaustive SA strategy as compared to the quick SA
+strategy. The Qin-Modified schedule utilizes four fast and slow chargers. With at most two fast and three slow chargers
+being utilized at any given moment as shown in \ref{subfig:fast-charger-usage-milp-qinn} and
+\ref{subfig:slow-charger-usage-milp-qinn}. The MILP PAP framework generated a schedule that utilizes two fast charges
+and six slow chargers as shown in \ref{subfig:schedule-milp}. This schedule utilizes at most two fast charges and six
+fast chargers simultaneously as represented in \ref{subfig:slow-charger-usage-milp-qinn}. The exhaustive SA strategy
+created its schedule with five slow charger queues and seven fast charging queues as shown in
+\ref{subfig:schedule-exhaustive-sa}. The schedule simultaneously utilizes all five slow charging queues as shown in
+\ref{subfig:slow-charger-usage-sa}, albeit briefly. The system, although creating a schedule utilizing seven fast
+chargers, only utilizes two simultaneously as can be seen in \ref{subfig:fast-charger-usage-sa}. The quick strategy for
+the SA algorithm created a schedule utilizing fifteen slow and fast chargers as is demonstrated in
+\ref{subfig:schedule-quick-sa}. The schedule only utilizes three slow chargers and four fast chargers simultaneously as
+shown in \ref{subfig:slow-charger-usage-sa} and \ref{subfig:fast-charger-usage-sa}. That is to say, the Qin-Modified and
+MILP PAP schedule were more efficient in the minimization of the charger count than both SA techniques; however, the
+exhaustive strategy approximated the minimization more successfully than the quick strategy.
 
-Furthermore, the Quin-Modified, MILP PAP, and exhaustive strategy for the SA utilize the lowest index of the slow and
+Furthermore, the Quin-Modified, MILP PAP, and exhaustive strategy for the SA utilize the smallest index of the slow and
 fast chargers more efficiently than the quick strategy (\ref{fig:schedule}). The quick schedule, while having bias
 toward the slow chargers, evenly disperses the utilization of each charger among their relative charger types while the
 other three emphasize the usage of the first charger of each type as much as possible and utilizes other chargers when
@@ -105,35 +105,36 @@ necessary. The Quin and MILP PAP frameworks, while being more efficient in this 
 SA shows a larger emphasis on utilizing slow chargers than the Qin, and has a significantly smaller runtime than that of
 the MILP.
 
-\ref{fig:charge} depicts the SOC of each BEB throughout the simulation of each framework. Prior to analyzing each plot,
-it is important to note that the MILP PAP has a constraint that requires each BEB to complete the day with a minimum of
-70% SOC. Each BEB begins the working day with an SOC of $\alpha\kappa$ as shown in each plot in \ref{fig:charge}. The MILP PAP
-requires each BEB to stay above an SOC of 25% while the quick and exhaustive SA approaches heavily penalizes a schedule
-for allowing a BEB to go below the 25% SOC threshold. The MILP PAP was able to successfully keep the SOC above the
-threshold (\ref{subfig:milp-charge}) while both SA approaches were not. The SOC of the quick SA approach dropped to the
-50 kWh at about the fourteenth hour (\ref{subfig:sa-quick-charge}) and the exhaustive approach reach the 50 kWh SOC mark
-at the end of the working day (\ref{subfig:sa-exhaustive-charge}). The Qin model on the other hand allowed the SOC of
-three BEBs reach an SOC of 0% as shown in \ref{subfig:qin-charge}. As to be expected, no model allowed the SOC to go
-above the battery, $\kappa$.
+\ref{fig:charge} depicts the SOC of each BEB throughout the simulation of each framework.
+src_latex{\textcolor{blue}{Prior to analyzing each plot, it is important to note that the MILP PAP has a constraint that
+requires each BEB to complete the day with a minimum of 70\% SOC}}[fn:2]. Each BEB begins the working day with an SOC of
+$\alpha\kappa$ as shown in each plot in \ref{fig:charge}. The MILP PAP requires each BEB to stay above an SOC of 25% while the
+quick and exhaustive SA approaches heavily penalize a schedule for allowing a BEB to go below the 25% SOC threshold. The
+MILP PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge}) while both SA approaches
+were not. The SOC of the quick SA approach dropped to the 50 kWh at about the fourteenth hour
+(\ref{subfig:sa-quick-charge}) and the exhaustive approach reach the 50 kWh SOC mark at the end of the working day
+(\ref{subfig:sa-exhaustive-charge}). The Qin model allowed the SOC of three BEBs to reach an SOC of 0% as shown in
+\ref{subfig:qin-charge}. As to be expected, no model allowed the SOC to go above the battery capacity, $\kappa$.
 
 \ref{fig:power} depicts the power consumption over the time horizon for each model. Although the SA algorithm is
 equipped with the peak 15 in its objective function, the quick SA implementation has the largest peaks in power
 consumption at about 2,700 kW (\ref{fig:power-usage-sa}). The next largest peak is by the MILP PAP and exhaustive SA
 approach at about 1,900 kW (\ref{fig:power-usage-milp-qin}). The lowest peak observed is from the Qin-Modified algorithm
-at about 1,400 kW. Note that this technique was unable to keep the SOC above 0%. The MILP PAP has a median power
-consumption that it slightly above 1,000 kW with a low that ranges about 100 to 190 kW whereas the Qin-Modified has a
-median of about 900 kW with a low that ranges from 0 to 90 kW (\ref{fig:power-usage-milp-qin}). The quick has a median
-power consumption of about 90 kW with its low ranging roughly from 0 to 100 kW. The exhaustive SA on the other hand has
-a median of about 950 kW with its low values ranging from about 10 kW to 100 kW (\ref{fig:power-usage-sa}).
+at about 1,400 kW. It is again worth noting here that this technique was unable to keep the SOC above 0%. The MILP PAP
+has a median power consumption that it slightly above 1,000 kW with a low that ranged from 100 to 190 kW whereas the
+Qin-Modified has a median of about 900 kW with a low that ranges from 0 to 90 kW (\ref{fig:power-usage-milp-qin}). The
+quick SA has a median power consumption of about 90 kW with its low ranging roughly from 0 to 100 kW. The exhaustive SA
+on the other hand has a median of about 950 kW with its low values ranging from about 10 kW to 100 kW
+(\ref{fig:power-usage-sa}).
 
 The last comparison made is the energy consumed by the created schedule. The total energy consumed by each schedule is
 shown in \ref{fig:energy-usage}. The ordering of most energy consumed to least is as follows: MILP PAP, Qin-Modified,
-quick SA, exhaustive SA. The quick SA consumes about $0.4 \cdot 10^4$ kWh less than the MILP PAP. The quick and exhaustive
-SA techniques surpass the energy consumption of the MILP PAP and Qin at about the eighth hour and tenth hour,
+quick SA, exhaustive SA. The exhaustive SA consumed about $0.4 \cdot 10^4$ kWh less than the MILP PAP. The quick and
+exhaustive SA techniques surpass the energy consumption of the MILP PAP and Qin at about the eighth hour and tenth hour,
 respectively. At about the twelfth hour, both SA approaches fall below the non-SA frameworks. Only the exhaustive SA was
-able to consistently stay below the accumulated energy done by the other techniques. Again, it is worth noting that the
-MILP PAP requires the final SOC of each BEB to stay at or above 70% which accounts for the increase of consumed energy
-near the end of the working day.
+able to consistently stay below the accumulated energy done by the other techniques. src_latex{\textcolor{blue}{Again,
+it is worth noting that the MILP PAP requires the final SOC of each BEB to stay at or above 70% which accounts for the
+increase of consumed energy near the end of the working day.}}
 
 # --------------------------------------------------------------------------------
 # Charge schedule
@@ -304,5 +305,12 @@ near the end of the working day.
       \caption{Total accumulated energy consumed by the Qin-Modified and MILP schedule throughout the time horizon.}
       \label{fig:energy-usage}
   \end{figure}
-  \newpage
 #+end_src
+
+
+* Footnotes
+
+[fn:1] A better comparison would come from re-running the MILP PAP and letting the final SOC requirement to the same as
+$\nu_b$. I thought of this while reviewing this section. The results will be updated with that information.
+[fn:2] Remove when new data is applied.
+[fn:3]  Update comparisons after new data is applied
