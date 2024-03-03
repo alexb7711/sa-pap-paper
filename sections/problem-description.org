@@ -46,12 +46,14 @@ encouraged to maintain the SOC of each BEB visit above a minimum battery percent
 that the SOC of a BEB is allowed to go below $\nu_b\kappa_b$; however, if it does, the system heavily punishes the fitness
 score of schedule.
 
+#+include: img/spacial-temporal-constr.org
+
 The task of this paper shall be to define a method of scheduling the set of visits $\I$ to fulfill the minimum charge
 requirements over the time horizon, $\T$, while minimizing the cost, which can be decomposed into a utility cost and an
 assignment cost. The utility cost encapsulates the consumption and demand costs, and the assignment cost encapsulates
 the cost of assigning a BEB to a charger and a penalty method that punishes poor BEB assignment. An objective function
 is utilized to calculate this cost as a means of measuring the relative fitness of the results. Constraints are employed
 to ensure the validity of the prescribed schedule. Both the objective function and constraints are discussed in further
-detail in the proceeding section.
+detail in the proceeding section. An example output schedule is shown in [[fig:spacial-and-temporal-constr]].
 
 #  LocalWords: BEBs BEB BEB's

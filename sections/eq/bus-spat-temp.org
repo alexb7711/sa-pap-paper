@@ -3,7 +3,7 @@
 \begin{equation}
   \sigma_{ij} =
   \begin{cases}
-    1 & \text{if } u_i \ge d_j, \; i \ne j\\
+    1 & \text{if } u_j \ge d_i, \; i \ne j\\
     0 & \text{otherwise}
   \end{cases}
 \end{equation}
@@ -11,7 +11,7 @@
 \begin{equation}
   \psi_{ij} =
   \begin{cases}
-    1 & \text{if } q_i \ge q_j,\; i \ne j\\
+    1 & \text{if } q_j \ge q_i,\; i \ne j\\
     0 & \text{otherwise}
   \end{cases}
 \end{equation}

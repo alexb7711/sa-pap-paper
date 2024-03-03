@@ -7,7 +7,7 @@ function is required to allow relative comparisons between candidate solutions. 
 objective function is broken down into four major components: consumption cost, demand cost, assignment cost, as well as
 a penalty for under-charging a bus. The constraints ensure that candidate solutions are in the feasible region. They are
 composed of a set of equations defined by decision and input variables. Decision variables are those which may be
-manipulated, and are chosen in an attempt to optimize the objective function. Input variables are predefined.
+manipulated, and are chosen in an attempt to optimize the objective function. The input variables are predefined.
 
 The input and decision variables are introduced in [[#sec:input-variables]] and [[#sec:decision-variables]]. The
 objective function is introduced in [[#sec:objective-function]]. The constraints will then be introduced in
@@ -84,12 +84,20 @@ If $x = \eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}$, where $\nu_{\Xi_i} \kappa_{\Xi_i}$
 penalty method that encourages schedules to maintain the SOC for each visit above $\nu_{\Xi_i} \kappa_{\Xi_i}$. If the SOC is falls
 below the specified threshold, a penalty proportional to the difference of the SOC and the threshold squared is applied.
 
+#+begin_src latex
+  \begin{figure}[htpb]
+    \centering \includegraphics{sections/img/overlap}
+    \caption{Examples of different methods of overlapping. Space overlap: $q_{k_1} > q_{i} + 1 \therefore \psi_{ik_{1}} = 1$.
+      Time overlap $u_{k_2} < u_{j} + s_j \therefore \sigma_{k_{2}j} = 0$. Similarly, $\sigma_{k_3 i} = 0$.}
+    \label{fig:overlap}
+  \end{figure}
+#+end_src
+
 The variables $\sigma_{ij}$ and $\psi_{ij}$ are used to indicate whether a visit pair $(i, j)$ overlap the same space as show in
-[[fig:spacial-and-temporal-constr]]. Formally, [[eq:bus-spat-temp]] describes the relationship that $\sigma_{ij}$ and $\psi_{ij}$
-uphold. That is, for every visit, if the start charge time of visit $j$ is greater than the end charge time of visit
-$i$, then $\sigma_{ij}$ is active ($\sigma_{ij} = 1$). Similarly, if the queue for visit $j$ is in a queue that is in a queue of a
-greater index than visit $i$, then $\psi_{ij}$ is active ($\psi_{ij} = 1$). These variables will be further elaborated on in
-[[#sec:constraints]].
+\ref{fig:overlap}. Formally, [[eq:bus-spat-temp]] describes the relationship that $\sigma_{ij}$ and $\psi_{ij}$ uphold. That is, for
+every visit, if the start charge time of visit $j$ is greater than the end charge time of visit $i$, then $\sigma_{ij}$ is
+active ($\sigma_{ij} = 1$). Similarly, if the queue for visit $j$ is in a queue that is in a queue of a greater index than
+visit $i$, then $\psi_{ij}$ is active ($\psi_{ij} = 1$). These variables will be further elaborated on in [[#sec:constraints]].
 
 #+include: eq/bus-spat-temp.org
 
@@ -104,17 +112,18 @@ This objective function takes in input and decision variables to calculate some 
 objective function value can either be maximized or minimized; the desired option is dependent on the problem to be
 solved as well as the formulation of said objective function. Let $J$ represent the objective function. The objective
 function for this problem has four main considerations: charger assignment, consumption cost, demand cost, and penalty
-on insufficient charge. These considerations are divided into two components: The assignment cost and the utility cost.
+for an insufficient initial SOC. These considerations are divided into two components: The assignment cost and the
+utility cost.
 
 Suppose the objective function is of the form $\text{min } J = \AC + \UC$. $\AC$ is the assignment cost, and $\UC$ is
 the utility cost. The assignment cost represents the costs of assigning a bus to a particular queue as well as the
-chosen charging period, $[u_i, d_i]$. The assignment cost increases is cost as the selected index increases and the cost
-of the chosen charge times is implemented by utilizing a penalty method. The penalty method assigns a high cost to the
-system if it falls below a specified SOC threshold. The assignment cost is defined as
+chosen charging period, $[u_i, d_i]$. The assignment cost increases its cost as the selected index increases and the
+cost of the chosen charge times is implemented by utilizing a penalty method. The penalty method assigns a high cost to
+the system if it falls below the specified SOC threshold, $\nu_b \kappa_b$. The assignment cost is defined as
 
 #+name: eq:ac
 \begin{equation}
-\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{q_i}r_{q_i} + C \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) \Big)\text{.}
+\AC = \sum_{i=1}^{n_V} \Big(\epsilon_{q_i}r_{q_i} + D \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) \Big)\text{.}
 \end{equation}
 
 The first term in the summation represents the calculation of the cost for assigning a bus to queue $q \in Q$. Let $\epsilon$ be
@@ -122,17 +131,17 @@ a vector of the form $\epsilon = [100, 200, ..., 100n_Q]$. When written in this 
 minimize the total amount of chargers. Iterating on this concept, let the first $n_B$ indices to be idle queues (i.e.
 queues in which no charge is supplied), the next $n_{Q_s}$ indices to be slow chargers, and the next $n_{Q_f}$ indices
 to be fast chargers, where $n_B, n_{Q_s}, n_{Q_f} \in \mathcal{Z}$ and $n_B + n_{Q_s} + n_{Q_f} = n_Q$. The $\epsilon$ vector thus be
-concatenated as follows: $\epsilon = [[\mathbf{0}; n_B], [100, 200, ..., 100n_Q]]$, where $\mathbf{0}_{n_B}$ indicates a zero
-vector of length $n_B$. That is, $\epsilon_{q_i}$ has no cost if $q_i \le n_B$ or is incrementally penalized as the selected
-queue index increases if $n_B < q_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost when assigning a BEB
-to an idle queue while still minimizing charger count and encouraging the use of slow chargers over fast. While the $\epsilon$
-vector can be constructed in many other ways, the form shown above is the method applied to this work.
+concatenated as follows: $\epsilon = [[0; n_B], [100, 200, ..., 100n_Q]]$, where $[0; n_B]$ indicates a zero vector of length
+$n_B$. That is, $\epsilon_{q_i}$ has no cost if $q_i \le n_B$ or is incrementally penalized as the selected queue index increases
+if $n_B < q_i \le n_B + n_{Q_s} + n_{Q_f}$. In words, this form accrues no cost when assigning a BEB to an idle queue
+while still minimizing charger count and encouraging the use of slow chargers over fast. While the $\epsilon$ vector can be
+constructed in many other ways, the form shown above is the method applied to this work.
 
-The second term is the penalty function that is either enabled or disabled by $\phi_i$
+The second term is the penalty function that is either enabled or disabled by $\phi_i$ similarly to [[eq:penalty]]
 [cite:@luenberger-2008-penal-barrier-method]. The penalty function is enabled, $\phi_i = (\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i})^2$, if the
 SOC falls below a specified threshold, $\eta_i \le \nu_{\Xi_i} \kappa_{\Xi_i}$, and is disabled, $\phi_i = 0$, otherwise. This term is
 considered an assignment cost because the penalty method is enabled due to poor allocations of BEBs. That is, the cost
-is not impacted by how much the system consumes energy, but by how the BEBs have been assigned. $C$ is a large constant
+is not impacted by how much the system consumes energy, but by how the BEBs have been assigned. $D$ is a large constant
 value used to scale the penalty function.
 
 The utility cost is composed of the consumption cost and the demand cost. The consumption cost is merely the summation
@@ -166,14 +175,15 @@ defined as $p_{fix}$. Furthermore, let $z$ define the demand rate which has the 
 p_d(t) = \max(p_{fix},p_{max}(t))z
 \end{equation}
 
-Hence, [[eq:pdem]] begins with a value of $p_{fix}$ from which it may only increase if $p_{15}(t) > p_{fix}$. Let $h \in \{ 1,
-2, ..., n_H \} \subset \mathcal{Z}$ and $n_H = \frac{T}{900}$. Furthermore, let $p$ define the vector of discrete power consumption and
-let $p_h \in p$ be the discrete power demand at time step $h$. For conciseness of notation we will abuse $t_h$ to denote
-the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2, ...,
-n_H \}$. Knowing the charger speed, $r_{q_i}$, and the initial and final charge times, $u_i$ and $d_i$, respectively.
-The corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be determined by first calculating the
-total number of steps in the range $n_h = \frac{d_i - u_i}{dt}$. Once the number of steps are know, the consumed power,
-$r_{vi}$ can be added to the correct indices in $p$. This procedure is outlined in \ref{alg:calc-p}.
+Hence, [[eq:pdem]] begins with a value of $p_{fix}$ from which it may only increase if $p_{15}(t) > p_{fix}$. To discritize
+$p_d$, let $h \in \{ 1, 2, ..., n_H \} \subset \mathcal{Z}$ and $n_H = \frac{T}{900}$. Furthermore, let $p$ define the vector of discrete
+power consumption and let $p_h \in p$ be the discrete power demand at time step $h$. For conciseness of notation we will
+abuse $t_h$ to denote the time in discrete form (as opposed to $t$ being continuous), let $dt_h = t_h - t_{h-1}$, and
+$\Hset = \{ 1, 2, ..., n_H \}$. The charger speed, $r_{q_i}$, and the initial and final charge times, $u_i$ and $d_i$,
+respectively, are known. Thus, the corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be
+determined by first calculating the total number of steps in the range $n_h = \frac{d_i - u_i}{dt}$. Once the number of
+steps are know, the consumed power, $r_{vi}$ can be added to the correct indices in $p$. This procedure is outlined in
+\ref{alg:calc-p}.
 
 #+include: "eq/calc-p.org"
 
@@ -216,19 +226,18 @@ on time. The aforementioned constraints are shown in \ref{eq:constraints}.
 # Org mode is a little silly and does not take normal referencing syntax. This note is for future reference.
 
 Constraints \ref{seq:c0}-\ref{seq:c4} are the "queuing constraints". They are preventing overlap both spatially and
-temporally as shown in [[fig:spacial-and-temporal-constr]]. The y-axis represents the possible queues for a bus visit to be
-placed into, and the x-axis represents the time that can be reserved for each visit. The shaded rectangles represent
-time that has been scheduled in the horizontal direction, and the queue allocated for each bus visit in the vertical
-direction. In other words, the set of constraints \ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles
-never overlap.
+temporally as shown in \ref{fig:overlap}. The y-axis represents the possible queues for a bus visit to be placed into,
+and the x-axis represents the time that can be reserved for each visit. The shaded rectangles represent time that has
+been scheduled in the horizontal direction, and the queue allocated for each bus visit in the vertical direction. In
+other words, the set of constraints \ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never
+overlap.
 
-#+include: img/spacial-temporal-constr.org
-
-Constraint \ref{seq:c4} states that the starting service time for BEB $i$, $u_j$, must begin after the previous BEB
-departs, $d_i$. The last term utilizes big-M notation to activate or deactivate the constraint. A value of $\sigma_{ij} = 1$
-will activate the constraint to ensure that bus $i$ is complete before bus $j$ is allowed to begin being serviced. If
-$\sigma_{ij} = 0$, then the constraint is of the form $T + d_j > u_i$ rendering the constraint "inactive" because $u_i$
-cannot be larger than $d_i$. This effectively allows the charging windows of the vehicle to overlap. This is important when the BEBs are not in the same queue.
+Constraint \ref{seq:c4} states that the starting service time for BEB $u_j$ must begin after the previous BEB departs,
+$d_i$. The last term utilizes big-M notation to activate or deactivate the constraint. A value of $\sigma_{ij} = 1$ will
+activate the constraint to indicate that bus $i$ is complete before bus $j$ is allowed to begin being serviced. If
+$\sigma_{ij} = 0$, then the constraint is of the form $\T + d_i > u_j$ rendering the constraint "inactive" because $u_j$
+cannot be larger than $\T + d_i$. This effectively allows the charging windows of the vehicle to overlap. This is
+important when the BEBs are not in the same queue.
 
 Similarly, $\psi_{ij}$ determines whether the vehicles are charging in the same queue. If $\psi_{ij} = 1$ then \eqref{seq:c1}
 is active; thus, vehicle $i$ is in a queue index that is less than BEB $j$. If $\psi_{ij} = 0$ then the constraint is
