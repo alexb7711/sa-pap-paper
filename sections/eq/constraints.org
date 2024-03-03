@@ -4,11 +4,11 @@
 
   \begin{equation}
       \label{seq:c0}
-      u_i - d_j - (\sigma_{ij} - 1)T \ge 0
+      u_j - d_i - (\sigma_{ij} - 1)T \ge 0
   \end{equation}
   \begin{equation}
       \label{seq:c1}
-      v_i - v_j - 1 - (\psi_{ij} - 1)Q \ge 0
+      q_j - q_i - 1 - (\psi_{ij} - 1)Q \ge 0
   \end{equation}
   \begin{equation}
       \label{seq:c2}
@@ -28,15 +28,15 @@
   \end{equation}
   \begin{equation}
       \label{seq:c6}
-       \eta_{\xi_i} = \eta_{i} + r_{v_i}s_i - \Delta_i
+       \eta_{\xi_i} = \eta_{i} + r_{q_i}s_i - \Delta_i
   \end{equation}
   \begin{equation}
       \label{seq:c7}
-      \kappa_{\Xi_i} \geq \eta_{i} + r_{v_i}s_i
+      \kappa_{\Xi_i} \geq \eta_{i} + r_{q_i}s_i
   \end{equation}
   \begin{equation}
-      \label{seq:c11}
-      a_i \leq u_i \leq d_i \le e_i \le T
+      \label{seq:c8}
+      a_i \leq u_i \leq d_i \le e_i \le \T
   \end{equation}
 \end{subequations}
 \end{multicols}

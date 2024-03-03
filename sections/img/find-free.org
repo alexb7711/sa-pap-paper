@@ -19,10 +19,10 @@
         \draw[blue] (E) -- (F);
 
         \node[circle,fill=blue,radius=0.15]                     at (A) {};
-        \node[circle,fill=blue,radius=0.15,label=above : $L$]   at (B) {};
-        \node[circle,fill=red,radius=0.15,label=above  : $a$] at (C) {};
-        \node[circle,fill=red,radius=0.15,label=above  : $e$] at (D) {};
-        \node[circle,fill=blue,radius=0.15,label=above : $U$]   at (E) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_L$] at (B) {};
+        \node[circle,fill=red,radius=0.15,label=above  : $a$]   at (C) {};
+        \node[circle,fill=red,radius=0.15,label=above  : $e$]   at (D) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_U$] at (E) {};
         \node[circle,fill=blue,radius=0.15]                     at (F) {};
     \end{tikzpicture}
 \end{subfigure}
@@ -31,7 +31,7 @@
 
 \begin{subfigure}{\textwidth}
     \centering
-    \caption{Valid position: $L \leq u \leq d \leq e$}
+    \caption{Valid position: $C_L \leq u \leq d \leq e$}
     \label{subfig:all}
     \begin{tikzpicture}[scale=2]
         \coordinate (A) at (0,0);
@@ -46,10 +46,10 @@
         \draw[blue] (E) -- (F);
 
         \node[circle,fill=blue,radius=0.15]                     at (A) {};
-        \node[circle,fill=blue,radius=0.15,label=above : $L$]   at (B) {};
-        \node[circle,fill=red,radius=0.15,label=above  : $a$] at (C) {};
-        \node[circle,fill=red,radius=0.15,label=above  : $e$] at (D) {};
-        \node[circle,fill=blue,radius=0.15,label=above : $U$]   at (E) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_L$] at (B) {};
+        \node[circle,fill=red,radius=0.15,label=above  : $a$]   at (C) {};
+        \node[circle,fill=red,radius=0.15,label=above  : $e$]   at (D) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_U$] at (E) {};
         \node[circle,fill=blue,radius=0.15]                     at (F) {};
     \end{tikzpicture}
 \end{subfigure}
@@ -58,7 +58,7 @@
 
 \begin{subfigure}{\textwidth}
     \centering
-    \caption{Valid position: $a \leq u \le d \leq U$}
+    \caption{Valid position: $a \leq u \le d \leq C_U$}
     \label{subfig:egu}
     \begin{tikzpicture}[scale=2]
         \coordinate (A) at (0,0);
@@ -73,10 +73,10 @@
         \draw[blue] (E) -- (F);
 
         \node[circle,fill=blue,radius=0.15]                     at (A) {};
-        \node[circle,fill=blue,radius=0.15,label=above : $L$]   at (B) {};
-        \node[circle,fill=red,radius=0.15,label=above  : $a$] at (C) {};
-        \node[circle,fill=red,radius=0.15,label=above  : $e$] at (D) {};
-        \node[circle,fill=blue,radius=0.15,label=above : $U$]   at (E) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_L$] at (B) {};
+        \node[circle,fill=red,radius=0.15,label=above  : $a$]   at (C) {};
+        \node[circle,fill=red,radius=0.15,label=above  : $e$]   at (D) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_U$] at (E) {};
         \node[circle,fill=blue,radius=0.15]                     at (F) {};
     \end{tikzpicture}
 \end{subfigure}
@@ -85,7 +85,7 @@
 
 \begin{subfigure}{\textwidth}
     \centering
-    \caption{Valid position: $L \le u \leq d \leq U$}
+    \caption{Valid position: $C_L \le u \leq d \leq C_U$}
     \label{subfig:invertsandwhich}
     \begin{tikzpicture}[scale=2]
         \coordinate (A) at (0,0);
@@ -101,8 +101,8 @@
 
         \node[circle,fill=blue,radius=0.15]                    at (A) {};
         \node[circle,fill=red,radius=0.15,label=above : $a$]   at (B) {};
-        \node[circle,fill=blue,radius=0.15,label=above  : $L$] at (C) {};
-        \node[circle,fill=blue,radius=0.15,label=above  : $U$] at (D) {};
+        \node[circle,fill=blue,radius=0.15,label=above: $C_L$] at (C) {};
+        \node[circle,fill=blue,radius=0.15,label=above: $C_U$] at (D) {};
         \node[circle,fill=red,radius=0.15,label=above : $e$]   at (E) {};
         \node[circle,fill=blue,radius=0.15]                    at (F) {};
     \end{tikzpicture}
@@ -123,7 +123,7 @@
         \draw[-{Latex[width=3mm]},blue]  (A) -- (B);
         \draw[red]  (C) -- (D);
 
-        \node[circle,fill=blue,radius=0.15,label=above : $U$] at (A) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_U$] at (A) {};
         \node[circle,fill=red,radius=0.15,label=above  : $a$] at (C) {};
         \node[circle,fill=red,radius=0.15,label=above  : $e$] at (D) {};
     \end{tikzpicture}
@@ -144,13 +144,13 @@
         \draw[-{Latex[width=3mm]},blue]  (B) -- (A);
         \draw[red]  (C) -- (D);
 
-        \node[circle,fill=blue,radius=0.15,label=above : $L$] at (B) {};
+        \node[circle,fill=blue,radius=0.15,label=above : $C_L$] at (B) {};
         \node[circle,fill=red,radius=0.15,label=above  : $a$] at (C) {};
         \node[circle,fill=red,radius=0.15,label=above  : $e$] at (D) {};
     \end{tikzpicture}
 \end{subfigure}
 
-\caption{This figure depicts the different states in which a charger with an availability time frame, $[L,U]$, can be on a timeline relative to a visit's total time at the station. The blue lines indicate ranges where the charger is being uilized. The point $L$ is the lower bound of the available time and $U$ is the upper bound. The red lines, $\bar{ae}$, indicate the time slice in which visit $i$ is at the station. Thus, the BEB may be assigned a charge time anywhere in the range between $L$ and $U$. For example, \ref{subfig:sandwich} allows the BEB to be charged anywhere in the time range $[a, e]$. \ref{subfig:all} allows a BEB to charge in the time frame $[L,e]$. \ref{subfig:egu} allows a BEB to charge in the time frame $[a,U]$. \ref{subfig:invertsandwhich} allows charging during the time frame $[L,U]$. The last two permutations, \ref{subfig:invalid-upper} and \ref{subfig:invalid-lower}, do not allow the BEB to be assigned.}
+\caption{This figure depicts the different states in which a charger with an availability time frame, $[C_L,C_U]$, can be placed on a timeline relative to a visit's total time at the station. The blue lines indicate ranges where the charger is being uilized. The point $C_L$ is the lower bound of the available time and $C_U$ is the upper bound. The red lines, $\bar{ae}$, indicate the time slice in which visit $i$ is at the station. Thus, the BEB may be assigned a charge time anywhere in the range between $C_L$ and $C_U$. For example, \ref{subfig:sandwich} allows the BEB to be charged anywhere in the time range $[a, e]$. \ref{subfig:all} allows a BEB to charge in the time frame $[C_L,e]$. \ref{subfig:egu} allows a BEB to charge in the time frame $[a,C_U]$. \ref{subfig:invertsandwhich} allows charging during the time frame $[C_L,C_U]$. The last two permutations, \ref{subfig:invalid-upper} and \ref{subfig:invalid-lower}, do not allow the BEB to be assigned.}
 \label{fig:find-free}
 \end{figure}
 #+end_export
