@@ -133,7 +133,7 @@ quick SA, exhaustive SA. The exhaustive SA consumed about $0.4 \cdot 10^4$ kWh l
 exhaustive SA techniques surpass the energy consumption of the MILP PAP and Qin at about the eighth hour and tenth hour,
 respectively. At about the twelfth hour, both SA approaches fall below the non-SA frameworks. Only the exhaustive SA was
 able to consistently stay below the accumulated energy done by the other techniques. src_latex{\textcolor{blue}{Again,
-it is worth noting that the MILP PAP requires the final SOC of each BEB to stay at or above 70% which accounts for the
+it is worth noting that the MILP PAP requires the final SOC of each BEB to stay at or above 70\% which accounts for the
 increase of consumed energy near the end of the working day.}}
 
 # --------------------------------------------------------------------------------

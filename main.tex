@@ -1,4 +1,4 @@
-% Created 2024-03-03 Sun 16:52
+% Created 2024-03-03 Sun 17:05
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -755,7 +755,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orgfd2a55f}
+\label{sec:org7f2db2c}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -774,7 +774,7 @@ B)' = A' \cup B'\). Using De Morgan's Law, the set of inactive periods can be wr
 \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org4036330}
+\label{sec:orgf05caca}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -1517,7 +1517,7 @@ shown in \ref{fig:energy-usage}. The ordering of most energy consumed to least i
 quick SA, exhaustive SA. The exhaustive SA consumed about \(0.4 \cdot 10^4\) kWh less than the MILP PAP. The quick and
 exhaustive SA techniques surpass the energy consumption of the MILP PAP and Qin at about the eighth hour and tenth hour,
 respectively. At about the twelfth hour, both SA approaches fall below the non-SA frameworks. Only the exhaustive SA was
-able to consistently stay below the accumulated energy done by the other techniques. \textcolor{blue}{Again, it is worth noting that the MILP PAP requires the final SOC of each BEB to stay at or above 70% which accounts for the increase of consumed energy near the end of the working day.}
+able to consistently stay below the accumulated energy done by the other techniques. \textcolor{blue}{Again, it is worth noting that the MILP PAP requires the final SOC of each BEB to stay at or above 70\% which accounts for the increase of consumed energy near the end of the working day.}
 
 \begin{figure}
   \centering
