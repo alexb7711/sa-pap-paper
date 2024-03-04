@@ -1,4 +1,4 @@
-% Created 2024-03-03 Sun 17:05
+% Created 2024-03-03 Sun 17:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -755,7 +755,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org7f2db2c}
+\label{sec:orgd79cbfa}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -774,7 +774,7 @@ B)' = A' \cup B'\). Using De Morgan's Law, the set of inactive periods can be wr
 \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgf05caca}
+\label{sec:org6322072}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -1701,12 +1701,12 @@ available.
 Both of the SA techniques were unable to keep the SOC above the 25\% SOC threshold. Both techniques had the SOC fall to
 about 50 kW; however, the quick technique fell to the 50 kW mark during the time horizon while the exhaustive only reach
 the 50 kW mark at the end of the working day. The Qin-Modified had the SOC of three BEBs fall to 0\% SOC.
-\textcolor{blue}{The MILP PAP, on the other hand, has a constraint requiring the SOC to stay above an SOC of 25% which was reflected in schedule.}
+\textcolor{blue}{The MILP PAP, on the other hand, has a constraint requiring the SOC to stay above an SOC of 25\% which was reflected in schedule.}
 
 The power and energy consumption of each of the models was then compared. The peak power usage of the exhaustive SA,
 Qin-Modified, and MILP PAP had comparable peaks in power consumption; whereas the quick SA had the largest peak. The
 power consumption of the exhaustive SA was similar to that of the Qin-Modified which were both less than the MILP PAP.
-As for the accumulated energy consumption, the MILP PAP performed the worst. \textcolor{blue}{This is accounted for by a constraint that requires the SOC of each BEB to be above a 70% SOC.} The schedule that consumed the
+As for the accumulated energy consumption, the MILP PAP performed the worst. \textcolor{blue}{This is accounted for by a constraint that requires the SOC of each BEB to be above a 70\% SOC.} The schedule that consumed the
 least amount of energy is the exhaustive SA. The total range of energy consumption was about \(0.4 \cdot 10^4\) kWh.
 
 Further fields of interest are to investigate the performance of the quick and exhaustive SA approaches utilizing a denser

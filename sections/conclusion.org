@@ -33,13 +33,13 @@ Both of the SA techniques were unable to keep the SOC above the 25% SOC threshol
 about 50 kW; however, the quick technique fell to the 50 kW mark during the time horizon while the exhaustive only reach
 the 50 kW mark at the end of the working day. The Qin-Modified had the SOC of three BEBs fall to 0% SOC.
 src_latex{\textcolor{blue}{The MILP PAP, on the other hand, has a constraint requiring the SOC to stay above an SOC of
-25% which was reflected in schedule.}}
+25\% which was reflected in schedule.}}
 
 The power and energy consumption of each of the models was then compared. The peak power usage of the exhaustive SA,
 Qin-Modified, and MILP PAP had comparable peaks in power consumption; whereas the quick SA had the largest peak. The
 power consumption of the exhaustive SA was similar to that of the Qin-Modified which were both less than the MILP PAP.
 As for the accumulated energy consumption, the MILP PAP performed the worst. src_latex{\textcolor{blue}{This is
-accounted for by a constraint that requires the SOC of each BEB to be above a 70% SOC.}} The schedule that consumed the
+accounted for by a constraint that requires the SOC of each BEB to be above a 70\% SOC.}} The schedule that consumed the
 least amount of energy is the exhaustive SA. The total range of energy consumption was about $0.4 \cdot 10^4$ kWh.
 
 Further fields of interest are to investigate the performance of the quick and exhaustive SA approaches utilizing a denser
