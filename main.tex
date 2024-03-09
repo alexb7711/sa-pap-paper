@@ -1,4 +1,4 @@
-% Created 2024-03-09 Sat 11:55
+% Created 2024-03-09 Sat 12:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -186,19 +186,20 @@ This section introduces and defines the problem to be addressed by this work. A 
 followed by a mathematical interpretation. The scope of this work will also be provided as well as a high level
 introduction to the individual problems that will be addressed in order to achieve the proposed goal.
 
-Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. Suppose that an individual BEB
-from said fleet begins and completes an individual route at the same station from which it also receives its charge.
-During each route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied during its visit
-must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete its next route. The
-charge may be supplied from any single charger given a set of chargers at the station. Each time the BEB arrives at the
-station, let that be denoted as an ``arrival''. Once the BEB has awaited its predetermined time (whether it has received a
-charge or not), and departs from the station, let that be denoted as a ``visit''. Generalizing this to all BEBs, each BEB
-will have a set of prescribed routes from which their SOC is depleted by some amount. Once their respective routes are
-completed, each BEB arrives at the station to receive a charge that is sufficient to complete the next route. Each BEB
-may have multiple visits to the station throughout their working day. This paper describes a method to optimize the
-assignment of each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above. The
-model presented in this work optimizes over power and energy consumption, as well as attempts to optimize the amount of
-chargers utilized.
+Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. An individual BEB from said
+fleet begins and completes an individual route at the same station from which it also receives its charge. During each
+route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied during its visit must be enough
+to sustain the BEB's SOC at an appropriate level so that it may complete its next route. The charge may be supplied from
+any single charger given a set of chargers at the station. Let the term ``arrival'' describe the time at which a BEB
+reaches the station. Furthermore, let the term ``visit'' denote sequence of a BEB having awaited its predetermined time
+(whether it has received a charge or not) and departed from the station.
+
+Generalizing this to all BEBs, each BEB will have a set of prescribed routes from which their SOC is depleted by some
+amount. Once one of their respective routes are completed, each BEB arrives at the station to receive a charge that is
+sufficient to complete the next route. Each BEB may have multiple visits to the station throughout their working day.
+This paper describes a method to optimize the assignment of each visit to a charger given a schedule for a fleet of BEBs
+that follow the behavior described above. The model presented in this work optimizes over peak power usage and energy
+consumption, as well as attempts to optimize the amount of chargers utilized.
 
 Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_V\) times. At said station, let there exist a pool of
 \(n_Q\) charging queues from which a visiting BEB may be assigned. Let \(\mathbb{Z}\) define the set of integers. The set of arrivals
@@ -754,7 +755,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org884a90f}
+\label{sec:orgc5b6e2c}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -773,7 +774,7 @@ B)' = A' \cup B'\). Using De Morgan's Law, the set of inactive periods can be wr
 \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orgc90911c}
+\label{sec:orga1f1a34}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
