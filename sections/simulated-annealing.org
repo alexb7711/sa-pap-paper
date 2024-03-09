@@ -37,41 +37,42 @@ The temperature function models a "rate of cooling" for the SA process. Initiall
 encourages exploration. As the process begins to "cools down" (in accordance to the cooling schedule), it begins to
 encourage local exploitation of the solution (rather than exploration)
 [cite:@rutenbar-1989-simul-anneal-algor;@henderson-1989-theor-pract]. There are three common basic types of cooling
-equations: linear, geometric, and exponential. Each schedule is depicted in [[fig:cool]] [cite:@keller-2019-multi-objec].
-Every plot begin with an initial temperature of $T_0 = 500^\circ\; C$ and a final temperature of $T_f = 1^\circ\; C$. The
-different cooling schedules dictate the rate at which the algorithm progressively disallows exploration. Let the vector
-of temperatures described by a cooling schedule be defined as $t$. Furthermore, let an element of the vector be denoted
-as $t_m \in t$, where $m \in [0,...,M]$ and $M = \lvert t \rvert$. A linear cooling schedule is defined by [[eq:cool0]].
+equations: linear, geometric, and exponential. Each schedule type is depicted in \ref{fig:cool}
+[cite:@keller-2019-multi-objec]. Every plot begins with an initial temperature of $T_0 = 500^\circ\; C$ and a final
+temperature of $T_f = 1^\circ\; C$. The different cooling schedules dictate the rate at which the algorithm progressively
+disallows exploration. Let the vector of temperatures described by a cooling schedule be defined as $t$. Furthermore,
+let an element of the vector be denoted as $t_m \in t$, where $m \in [0,...,M]$ and $M = \lvert t \rvert$.
 
-#+name: eq:cool0
-\begin{equation}
-t_m = t_{m-1} - \beta_0
-\end{equation}
+A linear cooling schedule is defined by $t_m = t_{m-1} - \beta_0$. The terms utilized in \ref{fig:cool} are $t_0 = \Tau_0$
+and $\beta_0 = 1/2\; C^\circ$. An exponential cooling schedule is defined by the difference equation $t_m = e^{-\beta_2}t_{m-1}$.
+The values utilized in \ref{fig:cool} are $\beta_2 = 0.01$. A geometric cooling schedules is as defined in [[eq:cool]]. This
+schedule type is most widely used in practice [cite:@keller-2019-multi-objec]. As such, it will also be employed by this
+work.
 
-with $t_0 = \Tau_0$ and $\beta_0 = 1/2\; C^\circ$ in [[fig:cool]]. The value of $\beta_0$ may vary anywhere in the range $\beta_0 \in \mathbb{R}^+$. A
-geometric cooling schedules is as defined in [[eq:cool1]]. This schedule type is most widely used in practice
-[cite:@keller-2019-multi-objec]. As such, it will also be employed by the work in this paper.
-
-#+name: eq:cool1
+#+name: eq:cool
   \begin{equation}
-  t_m = \beta t_{m-1}
+  t_m = \beta_1 t_{m-1}
   \end{equation}
 
-where $\beta = 0.995$ in [[fig:cool]]. The gain variable, $\beta$, may vary anywhere between the range $[0,1)$. An exponential
-cooling schedule is defined by the difference equation as shown in [[eq:cool2]].
+The gain variable, $\beta_1$, in \ref{fig:cool} evaluated at $\beta_1 = 0.995$. The value of $\beta_1$ may vary anywhere between the
+range $[0,1)$. The further $\beta_1$ is from 1, the quicker the function converges to zero. \ref{fig:geometric} demonstrates
+this principle by plotting the geometric schedule using varying values of $\beta_1$.
 
-#+name: eq:cool2
-\begin{equation}
-t_m = e^{-\beta}t_{m-1}
-\end{equation}
-
-where $\beta = 0.01$ in [[fig:cool]]. A typical range for $\beta$ is $0.8 \le \beta \le 0.99$ [cite:@delahaye-2019-simul].
-
-#+name: fig:cool
-#+ATTR_ORG: :width 200
-#+ATTR_LATEX: :width 0.5\textwidth
-#+caption: Cooling equations
-[[file:img/cool_func.png]]
+#+begin_src latex
+  \begin{figure}[t!]
+    \begin{subfigure}[t]{0.5\textwidth}
+      \centering \includegraphics[width=\textwidth]{sections/img/cool_func.png}
+      \caption{Geometric, linear, and exponential cooling schedules.}
+      \label{fig:cool}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[t]{0.5\textwidth}
+      \centering \includegraphics[width=\textwidth]{sections/img/geometric.png}
+      \caption{Geometric cooling schedule utilizing various value of $\beta_1$.}
+      \label{fig:geometric}
+    \end{subfigure}
+  \end{figure}
+#+end_src
 
 ** Acceptance Criteria
 :PROPERTIES:

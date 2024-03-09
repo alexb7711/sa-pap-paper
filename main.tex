@@ -1,4 +1,4 @@
-% Created 2024-03-05 Tue 07:46
+% Created 2024-03-09 Sat 11:55
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -98,7 +98,7 @@
  pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
+ pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
  pdflang={English}}
 \begin{document}
 
@@ -664,40 +664,39 @@ The temperature function models a ``rate of cooling'' for the SA process. Initia
 encourages exploration. As the process begins to ``cools down'' (in accordance to the cooling schedule), it begins to
 encourage local exploitation of the solution (rather than exploration)
 \cite{rutenbar-1989-simul-anneal-algor,henderson-1989-theor-pract}. There are three common basic types of cooling
-equations: linear, geometric, and exponential. Each schedule is depicted in \ref{fig:cool} \cite{keller-2019-multi-objec}.
-Every plot begin with an initial temperature of \(T_0 = 500^\circ\; C\) and a final temperature of \(T_f = 1^\circ\; C\). The
-different cooling schedules dictate the rate at which the algorithm progressively disallows exploration. Let the vector
-of temperatures described by a cooling schedule be defined as \(t\). Furthermore, let an element of the vector be denoted
-as \(t_m \in t\), where \(m \in [0,...,M]\) and \(M = \lvert t \rvert\). A linear cooling schedule is defined by \ref{eq:cool0}.
+equations: linear, geometric, and exponential. Each schedule type is depicted in \ref{fig:cool}
+\cite{keller-2019-multi-objec}. Every plot begins with an initial temperature of \(T_0 = 500^\circ\; C\) and a final
+temperature of \(T_f = 1^\circ\; C\). The different cooling schedules dictate the rate at which the algorithm progressively
+disallows exploration. Let the vector of temperatures described by a cooling schedule be defined as \(t\). Furthermore,
+let an element of the vector be denoted as \(t_m \in t\), where \(m \in [0,...,M]\) and \(M = \lvert t \rvert\).
+
+A linear cooling schedule is defined by \(t_m = t_{m-1} - \beta_0\). The terms utilized in \ref{fig:cool} are \(t_0 = \Tau_0\)
+and \(\beta_0 = 1/2\; C^\circ\). An exponential cooling schedule is defined by the difference equation \(t_m = e^{-\beta_2}t_{m-1}\).
+The values utilized in \ref{fig:cool} are \(\beta_2 = 0.01\). A geometric cooling schedules is as defined in \ref{eq:cool}. This
+schedule type is most widely used in practice \cite{keller-2019-multi-objec}. As such, it will also be employed by this
+work.
 
 \begin{equation}
-\label{eq:cool0}
-t_m = t_{m-1} - \beta_0
+\label{eq:cool}
+t_m = \beta_1 t_{m-1}
 \end{equation}
 
-with \(t_0 = \Tau_0\) and \(\beta_0 = 1/2\; C^\circ\) in \ref{fig:cool}. The value of \(\beta_0\) may vary anywhere in the range \(\beta_0 \in \mathbb{R}^+\). A
-geometric cooling schedules is as defined in \ref{eq:cool1}. This schedule type is most widely used in practice
-\cite{keller-2019-multi-objec}. As such, it will also be employed by the work in this paper.
+The gain variable, \(\beta_1\), in \ref{fig:cool} evaluated at \(\beta_1 = 0.995\). The value of \(\beta_1\) may vary anywhere between the
+range \([0,1)\). The further \(\beta_1\) is from 1, the quicker the function converges to zero. \ref{fig:geometric} demonstrates
+this principle by plotting the geometric schedule using varying values of \(\beta_1\).
 
-\begin{equation}
-\label{eq:cool1}
-t_m = \beta t_{m-1}
-\end{equation}
-
-where \(\beta = 0.995\) in \ref{fig:cool}. The gain variable, \(\beta\), may vary anywhere between the range \([0,1)\). An exponential
-cooling schedule is defined by the difference equation as shown in \ref{eq:cool2}.
-
-\begin{equation}
-\label{eq:cool2}
-t_m = e^{-\beta}t_{m-1}
-\end{equation}
-
-where \(\beta = 0.01\) in \ref{fig:cool}. A typical range for \(\beta\) is \(0.8 \le \beta \le 0.99\) \cite{delahaye-2019-simul}.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.5\textwidth]{sections/img/cool_func.png}
-\caption{\label{fig:cool}Cooling equations}
+\begin{figure}[t!]
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering \includegraphics[width=\textwidth]{sections/img/cool_func.png}
+    \caption{Geometric, linear, and exponential cooling schedules.}
+    \label{fig:cool}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[t]{0.5\textwidth}
+    \centering \includegraphics[width=\textwidth]{sections/img/geometric.png}
+    \caption{Geometric cooling schedule utilizing various value of $\beta_1$.}
+    \label{fig:geometric}
+  \end{subfigure}
 \end{figure}
 
 \subsection{Acceptance Criteria}
@@ -755,7 +754,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orged6b758}
+\label{sec:org884a90f}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -774,7 +773,7 @@ B)' = A' \cup B'\). Using De Morgan's Law, the set of inactive periods can be wr
 \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:org49d05e5}
+\label{sec:orgc90911c}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -1715,5 +1714,5 @@ the SOC. Furthermore, ``fuzzifying'' the charge times is of interest to allow fl
 times for each BEB visit.
 
 \bibliographystyle{plain}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
 \end{document}
