@@ -30,7 +30,9 @@ Each visit can be represented by the tuple: $\visit$, in which the elements with
 \mathbb{R}$, time at which the BEB begins charging, $u \in \mathbb{R}$, time at which the BEB ends from the charging, $d \in \mathbb{R}$, the charger
 queue for the BEB to be placed into, $q \in Q$, the SOC upon arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the
 currently visiting BEB, $\xi \in I \cup \varnothing$. The null element, $\varnothing$, is used to specify when a BEB has no
-future visits. Let the ordered set of visits be denoted as $\I$ where the $i^{\text{th}}$ visit is denoted is $\I_i$.
+future visits. Let the ordered set of visits be denoted as $\I$ where the $i^{\text{th}}$ visit is denoted is $\I_i$ and
+a particular item from the tuple for visit $i$ to be written as $\cdot_i$. For example, the arrival time for visit $i$ is
+written as $a_i$.
 
 At each visit, the associated BEB is placed into a single queue corresponding to a particular charger. The charger is
 assumed to be either a fast charger, slow charger, or no charger at all (denoted as an idle queue). A BEB is only
