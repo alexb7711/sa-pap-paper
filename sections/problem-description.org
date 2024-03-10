@@ -23,24 +23,25 @@ consumption, as well as attempts to optimize the amount of chargers utilized.
 
 Consider a fleet of $n_B$ BEBs that collectively visit a station $n_V$ times. At said station, let there exist a pool of
 $n_Q$ charging queues from which a visiting BEB may be assigned. Let $\mathbb{Z}$ define the set of integers. The pool of queues
-from which a BEB may be placed is $\Qset = \{1, 2, ..., n_B\} \subset \mathbb{Z}$. Furthermore, let the set of arrivals be denoted as
-$\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number in the set $B = \{ 1, ..., n_B \} \subset \mathbb{Z}$.
-Each visit can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i
-\in I$, BEB identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in
-\mathbb{R}$, time at which the BEB begins charging, $u \in \mathbb{R}$, time at which the BEB ends from the charging, $d \in \mathbb{R}$, the charger
-queue for the BEB to be placed into, $q \in Q$, the SOC upon arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the
-currently visiting BEB, $\xi \in I \cup \varnothing$. The null element, $\varnothing$, is used to specify when a BEB has no
-future visits. Let the ordered set of visits be denoted as $\I$ where the $i^{\text{th}}$ visit is denoted is $\I_i$ and
-a particular item from the tuple for visit $i$ to be written as $\cdot_i$. For example, the arrival time for visit $i$ is
-written as $a_i$.
+from which a BEB may be placed is $\Qset = \{1, 2, ..., n_B, n_B+1, n_B+2, ..., n_B + n_Q\} \subset \mathbb{Z}$ where the first $n_B$
+queues are denoted as idle queues and next $n_Q$ queues are chargers ordered from slow to fast. Furthermore, let the set
+of arrivals be denoted as $\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number in the set $B =
+\{ 1, ..., n_B \} \subset \mathbb{Z}$. Each visit can be represented by the tuple: $\visit$, in which the elements within the tuple
+denote the visit index, $i \in I$, BEB identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure
+time from the station, $e \in \mathbb{R}$, time at which the BEB begins charging, $u \in \mathbb{R}$, time at which the BEB ends from the
+charging, $d \in \mathbb{R}$, the charger queue for the BEB to be placed into, $q \in Q$, the SOC upon arrival, $\eta \in \mathbb{R}$, and the
+index of the next visit for the currently visiting BEB, $\xi \in I \cup \varnothing$. The null element, $\varnothing$, is used
+to specify when a BEB has no future visits. Let the ordered set of visits be denoted as $\I$ where the $i^{\text{th}}$
+visit is denoted is $\I_i$ and a particular item from the tuple for visit $i$ to be written as $\cdot_i$. For example, the
+arrival time for visit $i$ is written as $a_i$.
 
 At each visit, the associated BEB is placed into a single queue corresponding to a particular charger. The charger is
-assumed to be either a fast charger, slow charger, or no charger at all (denoted as an idle queue). A BEB is only
-allowed to be assigned to one queue per visit; however, there may be multiple BEBs charging simultaneously across
-different queues. The amount of time the BEB is allowed to charge is dictated by the scheduled arrival time and required
-departure time, $[a_i, e_i]$. Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and
-the SOC must stay above 0%. The battery dynamics in this work is modeled as linear, which remains accurate up to about
-an SOC of 80% charge [cite:@li-2016-batter-elect].
+assumed to be either an idle queue, slow charger, or fast charger. A BEB is only allowed to be assigned to one queue per
+visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time the BEB
+is allowed to charge is dictated by the scheduled arrival time and required departure time, $[a_i, e_i]$. Partial
+charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC must stay above 0%. The
+battery dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80% charge
+[cite:@li-2016-batter-elect].
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired "route" that the BEB must perform after the
 visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus is assumed to have
