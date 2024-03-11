@@ -61,9 +61,9 @@ implemented in [[#sec:objective-function]] is set in place to allow the SOC to g
 \kappa_{\Xi_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
 solution that does not activate the penalty method (i.e. is solution is truly feasible).
 
-The SA-PAP algorithm in \ref{alg:sa-pap-pseudo} will now be outlined. Line 2 initializes the SA algorithm by creating a
-vector of temperature values based on a temperature schedule $\Tau$, and initial temperature $\Tau_0$. Line 3 generates
-the initial candidate solution $\omega$, note that $CSG(\cdot)$ (candidate solution generator) is used to denote the specific
+The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. Line 2 initializes the SA algorithm by creating a vector
+of temperature values based on a temperature schedule $\Tau$, and initial temperature $\Tau_0$. Line 3 generates the
+initial candidate solution $\omega$, note that $CSG(\cdot)$ (candidate solution generator) is used to denote the specific
 candidate solution generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through
 each of the step in the temperature schedule $t_m \in t$. Line 5 resets the iteration count to 0. Line 6 specifies the
 inner loop that iterates $n_K$ times at a constant temperature, $t_k$. Line 7, perturbs the active solution $\omega$ to a

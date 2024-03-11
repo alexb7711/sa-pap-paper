@@ -1,6 +1,7 @@
 #+begin_src latex
   \begin{algorithm}[H]
-    \caption{New visit algorithm} \label{alg:new-visit}
+    \caption{New visit algorithm}
+    \label{alg:new-visit}
     \LinesNumbered
     \TitleOfAlgo{New Visit}
     \KwIn{$\Sol$}
