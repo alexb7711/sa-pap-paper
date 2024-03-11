@@ -54,22 +54,22 @@ the rest of the decision variables may be derived. Let's begin by reviewing over
 \ref{seq:c0}-\ref{seq:c1} are employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\ref{seq:c4} ensure
 the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq:c8} is fully defined.
 
-Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
-battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after
-a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty
-method implemented in [[#sec:objective-function]] is set in place to allow the SOC to go below the specified threshold,
-$\nu_{\Xi_i} \kappa_{\Xi_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged
-toward a solution that does not activate the penalty method (i.e. is solution is truly feasible).
+Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
+dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after a given
+schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method
+implemented in [[#sec:objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{\Xi_i}
+\kappa_{\Xi_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
+solution that does not activate the penalty method (i.e. is solution is truly feasible).
 
-The SA-PAP algorithm will now be outlined. Line 2 initializes the SA algorithm by creating a vector of temperature
-values based on a temperature schedule $\Tau$, and initial temperature $\Tau_0$. Line 3 generates the initial candidate
-solution $\omega$, note that $CSG(\cdot)$ (candidate solution generator) is used to denote the specific candidate solution
-generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through each of the step
-in the temperature schedule $t_m \in t$. Line 5 resets the iteration count to 0. Line 6 specifies the inner loop that
-iterates $n_K$ times at a constant temperature, $t_k$. Line 7, perturbs the active solution $\omega$ to a neighboring
-candidate solution $\bar{\omega} = PS(\omega)$, where $PS(\cdot)$ (perturb schedule) is \ref{alg:perturb-schedule}. Line 8 calculates
-the difference in the fitness of $\omega$ and $\bar{\omega}$. Lines 8-14 are similar to \ref{alg:sa-pseudo} where it updates $\omega$
-with $\bar{\omega}$ if the candidate solution is more fit, or updates $\omega$ with $\bar{\omega}$ with probability
+The SA-PAP algorithm in \ref{alg:sa-pap-pseudo} will now be outlined. Line 2 initializes the SA algorithm by creating a
+vector of temperature values based on a temperature schedule $\Tau$, and initial temperature $\Tau_0$. Line 3 generates
+the initial candidate solution $\omega$, note that $CSG(\cdot)$ (candidate solution generator) is used to denote the specific
+candidate solution generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through
+each of the step in the temperature schedule $t_m \in t$. Line 5 resets the iteration count to 0. Line 6 specifies the
+inner loop that iterates $n_K$ times at a constant temperature, $t_k$. Line 7, perturbs the active solution $\omega$ to a
+neighboring candidate solution $\bar{\omega} = PS(\omega)$, where $PS(\cdot)$ (perturb schedule) is \ref{alg:perturb-schedule}. Line 8
+calculates the difference in the fitness of $\omega$ and $\bar{\omega}$. Lines 8-14 are similar to \ref{alg:sa-pseudo} where it
+updates $\omega$ with $\bar{\omega}$ if the candidate solution is more fit, or updates $\omega$ with $\bar{\omega}$ with probability
 $e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}$ if the candidate solution is less fit than the active solution. What makes these lines
 unique is that the active solution is only updated if the candidate is within the solution space. That it, it satisfies
 the constraints defined in \ref{eq:constraints}.

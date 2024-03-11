@@ -26,16 +26,15 @@ The test scenario was run over a time horizon of $T=24$ hours, with a total of $
 between $n_B = \A$ buses. Each BEB has a battery capacity of $\kappa_b =$ \batsize kWh battery that is required to stay above
 an SOC of $\nu_b =$ \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day with $\alpha
 =$ \fpeval{\acharge*100}% charge (\fpeval{\acharge * \batsize} kWh). Each bus is also assumed have a rate of discharge
-of $\Delta =$ 30 kW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
-simplicity an average rate is used. The penalty method employs a gain of $D = \Cgain$. A total of $n_C =$
-\fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are
-fast charging (\fasts kW). As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers,
-the value of $\epsilon_q$ in the objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,...,
-n_Q \}; \epsilon_q = 100q$. The SA algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 =
-\tempinit$ with $\theta = 0.996$, resulting in a total of $n_M = \tempcnt$ steps. The algorithm also assumes a total of $n_K
-= \localcnt$ iterations for the local search at a constant temperature. In total, that results in $758,500$
-configurations being searched. On average each local search took an average of $\quicklocal$ seconds to complete,
-resulting in a total runtime of src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
+of $\Delta =$ 30 kW. The penalty method employs a gain of $D = \Cgain$. A total of $n_C =$ \fpeval{\fast + \slow} chargers
+are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW). As
+previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
+objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q$. The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\beta_2 = 0.996$,
+resulting in a total of $n_M = \tempcnt$ steps. The algorithm also assumes a total of $n_K = \localcnt$ iterations for
+the local search at a constant temperature. In total, that results in $758,500$ configurations being searched. On
+average each constant temperature search took an average of $\quicklocal$ seconds to complete, resulting in a total
+runtime of src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
 
 As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heuristics to the generating functions can
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
@@ -48,9 +47,9 @@ charger, the algorithm begins by attempting to place the BEB in the charger queu
 placed in that queue, it then attempts to be placed in the next queue $q = n_B + 2$. This is done incrementally until
 all the queues have been exhausted. For this reason, this heuristic method is referred to as the exhaustive approach.
 Furthermore, the previously presented method shall be referred to as the quick approach. In the exhaustive approach, on
-average the local search took a total of $\exhaustivelocal$ seconds to complete, resulting in a total runtime of
-src_latex{\fpeval{\exhaustivelocal * \tempcnt}} seconds. The exhaustive generators were expected to be slightly slower
-due to its iterative approach.
+average the constant temperature search took a total of $\exhaustivelocal$ seconds to complete, resulting in a total
+runtime of src_latex{\fpeval{\exhaustivelocal * \tempcnt}} seconds. The exhaustive generators were expected to be
+slightly slower due to its iterative approach.
 
 One of the methods utilized to compare with the SA PAP is the MILP PAP. This framework is the original MILP
 implementation of the PAP derived from [cite:@qarebagh-2019-optim-sched]. The inputs to the system are the same as those

@@ -1,4 +1,4 @@
-% Created 2024-03-11 Mon 11:29
+% Created 2024-03-11 Mon 12:54
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -779,13 +779,13 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\I
 the initial charge time, \(u_i\), for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org7c27cc5}
+\label{sec:org4adfcb4}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the set that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org574b5fe}
+\label{sec:org05974bf}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -1350,22 +1350,22 @@ the rest of the decision variables may be derived. Let's begin by reviewing over
 \ref{seq:c0}-\ref{seq:c1} are employed to enable and disable \(\sigma_{ij}\) and \(\psi_{ij}\) and \ref{seq:c2}-\ref{seq:c4} ensure
 the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq:c8} is fully defined.
 
-Now let's change the focus over to the dynamic constraints. Similar to what was seen with the packing constraints, the
-battery dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after
-a given schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty
-method implemented in \ref{sec:objective-function} is set in place to allow the SOC to go below the specified threshold,
-\(\nu_{\Xi_i} \kappa_{\Xi_i}\), but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged
-toward a solution that does not activate the penalty method (i.e. is solution is truly feasible).
+Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
+dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after a given
+schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method
+implemented in \ref{sec:objective-function} is set in place to allow the SOC to go below the specified threshold, \(\nu_{\Xi_i}
+\kappa_{\Xi_i}\), but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
+solution that does not activate the penalty method (i.e. is solution is truly feasible).
 
-The SA-PAP algorithm will now be outlined. Line 2 initializes the SA algorithm by creating a vector of temperature
-values based on a temperature schedule \(\Tau\), and initial temperature \(\Tau_0\). Line 3 generates the initial candidate
-solution \(\omega\), note that \(CSG(\cdot)\) (candidate solution generator) is used to denote the specific candidate solution
-generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through each of the step
-in the temperature schedule \(t_m \in t\). Line 5 resets the iteration count to 0. Line 6 specifies the inner loop that
-iterates \(n_K\) times at a constant temperature, \(t_k\). Line 7, perturbs the active solution \(\omega\) to a neighboring
-candidate solution \(\bar{\omega} = PS(\omega)\), where \(PS(\cdot)\) (perturb schedule) is \ref{alg:perturb-schedule}. Line 8 calculates
-the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-14 are similar to \ref{alg:sa-pseudo} where it updates \(\omega\)
-with \(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability
+The SA-PAP algorithm in \ref{alg:sa-pap-pseudo} will now be outlined. Line 2 initializes the SA algorithm by creating a
+vector of temperature values based on a temperature schedule \(\Tau\), and initial temperature \(\Tau_0\). Line 3 generates
+the initial candidate solution \(\omega\), note that \(CSG(\cdot)\) (candidate solution generator) is used to denote the specific
+candidate solution generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through
+each of the step in the temperature schedule \(t_m \in t\). Line 5 resets the iteration count to 0. Line 6 specifies the
+inner loop that iterates \(n_K\) times at a constant temperature, \(t_k\). Line 7, perturbs the active solution \(\omega\) to a
+neighboring candidate solution \(\bar{\omega} = PS(\omega)\), where \(PS(\cdot)\) (perturb schedule) is \ref{alg:perturb-schedule}. Line 8
+calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-14 are similar to \ref{alg:sa-pseudo} where it
+updates \(\omega\) with \(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability
 \(e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}\) if the candidate solution is less fit than the active solution. What makes these lines
 unique is that the active solution is only updated if the candidate is within the solution space. That it, it satisfies
 the constraints defined in \ref{eq:constraints}.
@@ -1424,16 +1424,15 @@ The test scenario was run over a time horizon of \(T=24\) hours, with a total of
 between \(n_B = \A\) buses. Each BEB has a battery capacity of \(\kappa_b =\) \batsize kWh battery that is required to stay above
 an SOC of \(\nu_b =\) \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day with \(\alpha
 =\) \fpeval{\acharge*100}\% charge (\fpeval{\acharge * \batsize} kWh). Each bus is also assumed have a rate of discharge
-of \(\Delta =\) 30 kW. Note that there are many factors that play a role in the rate of discharge; however, for the sake of
-simplicity an average rate is used. The penalty method employs a gain of \(D = \Cgain\). A total of \(n_C =\)
-\fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are
-fast charging (\fasts kW). As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers,
-the value of \(\epsilon_q\) in the objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,...,
-n_Q \}; \epsilon_q = 100q\). The SA algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0 =
-\tempinit\) with \(\theta = 0.996\), resulting in a total of \(n_M = \tempcnt\) steps. The algorithm also assumes a total of \(n_K
-= \localcnt\) iterations for the local search at a constant temperature. In total, that results in \(758,500\)
-configurations being searched. On average each local search took an average of \(\quicklocal\) seconds to complete,
-resulting in a total runtime of \fpeval{\quicklocal * \tempcnt} seconds.
+of \(\Delta =\) 30 kW. The penalty method employs a gain of \(D = \Cgain\). A total of \(n_C =\) \fpeval{\fast + \slow} chargers
+are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW). As
+previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of \(\epsilon_q\) in the
+objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_b + 1, n_b + 2,..., n_Q \}; \epsilon_q = 100q\). The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0 = \tempinit\) with \(\beta_2 = 0.996\),
+resulting in a total of \(n_M = \tempcnt\) steps. The algorithm also assumes a total of \(n_K = \localcnt\) iterations for
+the local search at a constant temperature. In total, that results in \(758,500\) configurations being searched. On
+average each constant temperature search took an average of \(\quicklocal\) seconds to complete, resulting in a total
+runtime of \fpeval{\quicklocal * \tempcnt} seconds.
 
 As suggested by the works in \cite{Zhang_2010,Xinchao_2011}, applying heuristics to the generating functions can
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
@@ -1446,9 +1445,9 @@ charger, the algorithm begins by attempting to place the BEB in the charger queu
 placed in that queue, it then attempts to be placed in the next queue \(q = n_B + 2\). This is done incrementally until
 all the queues have been exhausted. For this reason, this heuristic method is referred to as the exhaustive approach.
 Furthermore, the previously presented method shall be referred to as the quick approach. In the exhaustive approach, on
-average the local search took a total of \(\exhaustivelocal\) seconds to complete, resulting in a total runtime of
-\fpeval{\exhaustivelocal * \tempcnt} seconds. The exhaustive generators were expected to be slightly slower
-due to its iterative approach.
+average the constant temperature search took a total of \(\exhaustivelocal\) seconds to complete, resulting in a total
+runtime of \fpeval{\exhaustivelocal * \tempcnt} seconds. The exhaustive generators were expected to be
+slightly slower due to its iterative approach.
 
 One of the methods utilized to compare with the SA PAP is the MILP PAP. This framework is the original MILP
 implementation of the PAP derived from \cite{qarebagh-2019-optim-sched}. The inputs to the system are the same as those
