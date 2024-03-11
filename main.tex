@@ -1,4 +1,4 @@
-% Created 2024-03-09 Sat 12:08
+% Created 2024-03-11 Mon 06:55
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -98,7 +98,7 @@
  pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
+ pdfcreator={Emacs 29.1 (Org mode 9.6.6)}, 
  pdflang={English}}
 \begin{document}
 
@@ -202,30 +202,33 @@ that follow the behavior described above. The model presented in this work optim
 consumption, as well as attempts to optimize the amount of chargers utilized.
 
 Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_V\) times. At said station, let there exist a pool of
-\(n_Q\) charging queues from which a visiting BEB may be assigned. Let \(\mathbb{Z}\) define the set of integers. The set of arrivals
-is denoted as \(\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}\). Each BEB is provided an identification number \(B = \{ 1, ..., n_B \} \subset \mathbb{Z}\).
-Each visit can be represented by the tuple: \(\visit\), in which the elements within the tuple denote the visit index, \(i
-\in I\), BEB identification number, \(b \in B\), arrival time to the station, \(a \in \mathbb{R}\), departure time from the station, \(e \in
-\mathbb{R}\), initial charge time, \(u \in \mathbb{R}\), final charge time, \(d \in \mathbb{R}\), the charger queue for the BEB to be placed into, \(q \in Q\),
-the SOC upon arrival, \(\eta \in \mathbb{R}\), and the index of the next visit for the currently visiting BEB, \(\xi \in I\). Let the ordered
-set of visits be denoted as \(\I\).
+\(n_Q\) charging queues from which a visiting BEB may be assigned. Let \(\mathbb{Z}\) define the set of integers. The pool of queues
+from which a BEB may be placed is \(\Qset = \{1, 2, ..., n_B, n_B+1, n_B+2, ..., n_B + n_Q\} \subset \mathbb{Z}\) where the first \(n_B\)
+queues are denoted as idle queues and next \(n_Q\) queues are chargers ordered from slow to fast. Furthermore, let the set
+of arrivals be denoted as \(\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}\). Each BEB is provided an identification number in the set \(B =
+\{ 1, ..., n_B \} \subset \mathbb{Z}\). Each visit can be represented by the tuple: \(\visit\), in which the elements within the tuple
+denote the visit index, \(i \in I\), BEB identification number, \(b \in B\), arrival time to the station, \(a \in \mathbb{R}\), departure
+time from the station, \(e \in \mathbb{R}\), time at which the BEB begins charging, \(u \in \mathbb{R}\), time at which the BEB ends from the
+charging, \(d \in \mathbb{R}\), the charger queue for the BEB to be placed into, \(q \in Q\), the SOC upon arrival, \(\eta \in \mathbb{R}\), and the
+index of the next visit for the currently visiting BEB, \(\xi \in I \cup \varnothing\). The null element, \(\varnothing\), is used
+to specify when a BEB has no future visits. Let the ordered set of visits be denoted as \(\I\) where the \(i^{\text{th}}\)
+visit is denoted is \(\I_i\) and a particular item from the tuple for visit \(i\) to be written as \(\cdot_i\). For example, the
+arrival time for visit \(i\) is written as \(a_i\).
 
-For each visit, a BEB must be placed in a single queue, \(q \in \Qset\). The charger \(q\) is assumed to be either a fast
-charger, slow charger, or no charger at all (denoted as an idle queue). A BEB is only allowed to be assigned to one
-queue per visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time
-the BEB is allowed to charge is dictated by the scheduled arrival time and required departure time, \([a_i, e_i]\).
-Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC must stay above 0\%.
-The battery dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80\% charge
+At each visit, the associated BEB is placed into a single queue corresponding to a particular charger. The charger is
+assumed to be either an idle queue, slow charger, or fast charger. A BEB is only allowed to be assigned to one queue per
+visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time the BEB
+is allowed to charge is dictated by the scheduled arrival time and required departure time, \([a_i, e_i]\). Partial
+charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC must stay above 0\%. The
+battery dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80\% charge
 \cite{li-2016-batter-elect}.
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired ``route'' that the BEB must perform after the
-visit. This route, as one would expect, causes the BEB to discharge by some certain amount. The estimation of the SOC
-lost during its route in it of itself poses a focus of research, which is not of this work. Thus, a simplified model of
-pre-calculating an average discharge is employed. The simplified model assumes a fixed discharge rate that is multiplied
-by the route duration. Let the discharge of the route for visit \(i\) be denoted as \(\Delta_i \in \mathbb{R}\). The charge supplied is
-encouraged to maintain the SOC of each BEB visit above a minimum battery percentage, \(\nu_b \in [0, 1]\). By this it is meant
-that the SOC of a BEB is allowed to go below \(\nu_b\kappa_b\); however, if it does, the system heavily punishes the fitness
-score of schedule.
+visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus is assumed to have
+a fixed discharge rate that is multiplied by the route duration. Let the discharge of the route for visit \(i\) be denoted
+as \(\Delta_i \in \mathbb{R}\). The charge supplied is encouraged to maintain the SOC of each BEB visit above a minimum battery
+percentage, \(\nu_b \in [0, 1]\). By ``encouraged'' it is meant that the SOC of a BEB is allowed to go below \(\nu_b\kappa_b\); however,
+if it does, the system heavily penalizes the system.
 
 \begin{figure}[ht!]
   \centering
@@ -278,46 +281,46 @@ score of schedule.
 The task of this paper shall be to define a method of scheduling the set of visits \(\I\) to fulfill the minimum charge
 requirements over the time horizon, \(\T\), while minimizing the cost, which can be decomposed into a utility cost and an
 assignment cost. The utility cost encapsulates the consumption and demand costs, and the assignment cost encapsulates
-the cost of assigning a BEB to a charger and a penalty method that punishes poor BEB assignment. An objective function
-is utilized to calculate this cost as a means of measuring the relative fitness of the results. Constraints are employed
-to ensure the validity of the prescribed schedule. Both the objective function and constraints are discussed in further
-detail in the proceeding section. An example output schedule is shown in \ref{fig:spacial-and-temporal-constr}.
+the cost of assigning a BEB to a charger and a cost that penalizes schedules for poorly assigning BEB. An objective
+function is utilized to calculate this cost as a means of measuring the relative fitness of the results. Constraints are
+employed to ensure the validity of the prescribed schedule. Both the objective function and constraints are discussed in
+further detail in the proceeding section. An example output schedule is shown in \ref{fig:spacial-and-temporal-constr}.
 \section{Optimization Problem}
 \label{sec:optimization-problem}
-This sections introduces the problem in the form of the objective function as well MILP constraints. The objective
+The problem outlined in this work is presented in the form of an objective function with MILP constraints. The objective
 function is required to allow relative comparisons between candidate solutions. In the context of this formulation, the
-objective function is broken down into four major components: consumption cost, demand cost, assignment cost, as well as
-a penalty for under-charging a bus. The constraints ensure that candidate solutions are in the feasible region. They are
-composed of a set of equations defined by decision and input variables. Decision variables are those which may be
-manipulated, and are chosen in an attempt to optimize the objective function. The input variables are predefined.
-
-The input and decision variables are introduced in \ref{sec:input-variables} and \ref{sec:decision-variables}. The
-objective function is introduced in \ref{sec:objective-function}. The constraints will then be introduced in
-\ref{sec:constraints}.
+MILP constraints ensure that candidate solutions are feasible. They are composed of a set of equations defined by input
+and decision variables. The input parameters are those that are assumed to be known. Decision variables are those which
+may be manipulated, and are chosen in an attempt to optimize the objective function. The objective function is broken
+down into four major components: consumption cost, demand cost, assignment cost, and under-charging cost (i.e. a penalty
+for meeting minimum charge requirements). The input and decision variables are introduced in \ref{sec:input-variables} and
+\ref{sec:decision-variables}. The objective function is introduced in \ref{sec:objective-function}. The constraints will then be
+introduced in \ref{sec:constraints}.
 
 \subsection{Variable Definitions}
 \label{sec:parameter-definitions}
 This section defines the input and decision variables used by the system. The input parameters are assumed to be fixed
 prior to optimizing the system. The decision variables are the values that the SA algorithm has the freedom to
-manipulate.
+manipulate. The variables to be introduced are summarized in \ref{tab:variables}.
 
 \subsubsection{Parameters}
 \label{sec:input-variables}
-This section introduces the parameters used in the SA algorithm. The variables to be introduced are summarized in
-\ref{tab:variables}. \(\Delta_i\) is the amount energy required to complete the bus route after visit \(i\). Because there is no route
-after the last visit, the power consumed after the final visit is zero. Let the set of final visits for all BEBs be
-denoted as \(\Isetfinal\), the discharge for the final visit of each BEB is defined as \(\Delta_{i \in \Isetfinal} = 0\). \(\alpha_b\) is
-the initial SOC percentage of bus \(b\) at the beginning of the working day. Let \(\Isetinit\) denote the set of initial
-visit indices for each BEB and let \(\Xi_i \in B\) denote the identification number of the BEB for visit \(i\). The initial SOC
-for bus \(\Xi_i\) can be represented as \(\eta_{i \in \Isetinit} = \alpha_{\Xi_i} \cdot \kappa_{\Xi_i}\) where \(\kappa_{\Xi_i}\) is the battery capacity for
-bus \(\Xi_i\). The rest of the values for \(\eta_i : i \in I \setminus \Isetinit\) are considered decision variables and will be further
-discussed in \ref{sec:decision-variables}. The notation \(t_h\) is used to denote a discrete time which is employed to
-calculate the demand cost. \(dt_h\) is the discrete time slice \(dt_h = t_h - t_{h-1}\). The cost for assigning a charger to
-queue \(q \in Q\) is defined by \(\epsilon_q\). \(\xi_i\) represents the next arrival index for bus \(b_i\). In other words, suppose the ID
-of each BEB is recorded in order of arrival. Further suppose that recorded list is \(\xi = \{ 2,1,3,2 \}\), using a starting
-index of 1, \(\xi_1 = 4\) as that is the next visit by bus 2, the same as the first visit index. The arrival and departure
-times of bus visit \(i\) to the station are denoted as \(a_i\) and \(e_i\), respectively. Lastly, \(r_q\) represents the power
-supplied from the charger in queue \(q \in Q\).
+The parameters utilized in this work are those that are known prior to optimization. \(\Delta_i\) is the amount energy required
+to complete the bus route after visit \(i\). There are no routes after the last visit for each BEB; thus; the energy
+consumed after the final visit is zero. Let the set of final visits for all BEBs be denoted as \(\Isetfinal\). That is,
+the cardinality of the set is \(\lvert \Isetfinal \rvert = n_B\) where the \(b^{\text{th}}\) item in \(\Isetfinal\) provides
+the index for the final visit of bus \(b\). The discharge for the final visit of each BEB is then defined as \(\forall i \in
+\Isetfinal; \Delta_{i} = 0\). The initial SOC percentage of bus \(b\) at the beginning of the working day is denoted as \(\alpha_b\).
+Let \(\Isetinit\) denote the set of initial visit indices for each BEB and let \(\Xi_i \in B\) denote the identification number
+of the BEB for visit \(i\). The initial SOC for bus \(\Xi_i\) can be represented as \(\forall i \in \Isetinit; \eta_{i} = \alpha_{\Xi_i}\kappa_{\Xi_i}\)
+where \(\kappa_{\Xi_i}\) is the battery capacity for bus \(\Xi_i\). The rest of the values for \(\eta_i : i \in I \setminus \Isetinit\) are
+considered decision variables and will be further discussed in \ref{sec:decision-variables}. The notation \(t_h\) is used to
+denote a discrete time that is employed to calculate the demand cost. \(dt_h\) is the discrete time step \(dt_h = t_h -
+t_{h-1}\). The cost for assigning a charger to queue \(q \in Q\) is defined by \(\epsilon_q\). \(\xi_i\) represents the next arrival index
+for bus \(b_i\). In other words, suppose the ID of each BEB is recorded in order of arrival. Further suppose that recorded
+list is \(\xi = \{ 2,1,3,2 \}\), using a starting index of 1, \(\xi_1 = 4\) as that is the next visit by bus 2. The arrival and
+departure times of bus visit \(i\) to the station are denoted as \(a_i\) and \(e_i\), respectively. Lastly, \(r_q\) represents
+the power supplied from the charger in queue \(q \in Q\).
 
 \begin{table}[htbp]
 \caption{\label{tab:variables}Table of variables used in the paper.}
@@ -558,12 +561,10 @@ To write the utility cost the consumption and \ref{eq:pd-dis} are added together
 \subsection{Constraints}
 \label{sec:constraints}
 Now that a method of calculating the fitness of a schedule has been established, a method for determining the
-feasibility of a schedule must be defined. The feasible space for schedules defines the space in which the input and
-decision variables describe a schedule that would keep the BEBs adequately charged throughout the working day while
-maintaining their route schedules. To ensure the selected decision variables fall within the feasible space, a set of
-constraints are applied to a given candidate solution. The constraints must ensure no overlap temporally or spatially,
-the BEB must receive enough charge to complete its next route, the BEB cannot be over-charged, and the BEB must depart
-on time. The aforementioned constraints are shown in \ref{eq:constraints}.
+feasibility of a schedule must be defined. To ensure the selected decision variables fall within the feasible space, a
+set of constraints are applied to a given candidate solution. The constraints must ensure no overlap temporally or
+spatially, the BEB must receive enough charge to complete its next route, the BEB cannot be over-charged, and the BEB
+must depart on time. The aforementioned constraints are shown in \ref{eq:constraints}.
 
 \begin{multicols}{2}
 \begin{subequations}
@@ -755,7 +756,7 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\S
 the initial visit \(u_i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orgc5b6e2c}
+\label{sec:org772584b}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the tuple that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\). In other words, \(\C\) defines the set of times when the chargers are not being utilized or are
@@ -774,7 +775,7 @@ B)' = A' \cup B'\). Using De Morgan's Law, the set of inactive periods can be wr
 \Jsetq\}\).
 
 \paragraph{Generator Output}
-\label{sec:orga1f1a34}
+\label{sec:orgb5d1b68}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -1715,5 +1716,5 @@ the SOC. Furthermore, ``fuzzifying'' the charge times is of interest to allow fl
 times for each BEB visit.
 
 \bibliographystyle{plain}
-\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
+\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref}
 \end{document}

@@ -214,12 +214,10 @@ To write the utility cost the consumption and [[eq:pd-dis]] are added together t
 :CUSTOM_ID: sec:constraints
 :END:
 Now that a method of calculating the fitness of a schedule has been established, a method for determining the
-feasibility of a schedule must be defined. The feasible space for schedules defines the space in which the input and
-decision variables describe a schedule that would keep the BEBs adequately charged throughout the working day while
-maintaining their route schedules. To ensure the selected decision variables fall within the feasible space, a set of
-constraints are applied to a given candidate solution. The constraints must ensure no overlap temporally or spatially,
-the BEB must receive enough charge to complete its next route, the BEB cannot be over-charged, and the BEB must depart
-on time. The aforementioned constraints are shown in \ref{eq:constraints}.
+feasibility of a schedule must be defined. To ensure the selected decision variables fall within the feasible space, a
+set of constraints are applied to a given candidate solution. The constraints must ensure no overlap temporally or
+spatially, the BEB must receive enough charge to complete its next route, the BEB cannot be over-charged, and the BEB
+must depart on time. The aforementioned constraints are shown in \ref{eq:constraints}.
 
 #+include: "eq/constraints.org"
 
