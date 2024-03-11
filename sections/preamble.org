@@ -96,7 +96,7 @@
 #+latex_header:\newcommand{\tempinit}{2000 }                                                   % Initial temperature
 #+latex_header:\newcommand{\tempcnt}{1517 }                                                    % Number of steps in temperature
 #+latex_header:\newcommand{\quicklocal}{0.45 }                                                 % Time to finish local quick
-#+latex_header:\newcommand{\exhaustivelocal}{0.5 }                                             % Time to finish local exhaustive
+#+latex_header:\newcommand{\heuristiclocal}{0.5 }                                             % Time to finish local heuristic
 
 #+latex_header:%%-------------------------------------------------------------------------------
 #+latex_header:%% Solve output

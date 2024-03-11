@@ -269,8 +269,8 @@ The objective of this generator is to assign each BEB to its idle queue provided
 this generator exists to initialize the system with a solution that is spatiotemporally feasible, but does not fall in
 the feasible space for the battery dynamics. The battery dynamics not being in the feasible space is addressed by the
 penalty method by allowing the infeasible battery SOCs to occur, but penalizing the system for doing so. Line 2 of
-\ref{alg:charge-schedule-generation} loops through each visit and Line 4 executes \ref{alg:wait} to assign each visit to
-their respective idle queues.
+\ref{alg:charge-schedule-generation} loops through each visit and Line 4 executes \ref{alg:new-visit} to place visit $i$
+at random queue with a random charge time.
 
 #+include: eq/charge-schedule-generation.org
 
@@ -278,6 +278,7 @@ their respective idle queues.
 :PROPERTIES:
 :CUSTOM_ID: sec:tweak-schedule
 :END:
+
 Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
 create candidate solutions. After each step of the cooling function, the active solution will be altered $n_k$ times by
 a random primitive generator. During these $n_k$ iterations the active solution is modified to create a neighboring
@@ -292,5 +293,21 @@ primitive generating functions, Line 4 selects a primitive generator. Line 5 exe
 the result.
 
 #+include: eq/tweak-schedule.org
+
+** Alternative Heuristic Implementation
+:PROPERTIES:
+:CUSTOM_ID: sec:heuristic-implementation
+:END:
+
+As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heuristics to the generating functions can
+manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
+minimizing charger utilization, a simple heuristic was applied to \ref{alg:new-visit} and \ref{alg:new-charger} in the
+method that they select new charging queues. Suppose rather than selecting a queue at random from $q \in Q$, the
+algorithms randomly select whether to place a BEB in a slow or fast charging queue. Once the charger type has been
+selected, the algorithm will then begin incrementally attempting to place the BEB in a queue of that type beginning from
+the smallest index of that charger type. For example, if a BEB has been selected to be placed in a queue with a slow
+charger, the algorithm begins by attempting to place the BEB in the charger queue $q = n_B + 1$. If it is unable to be
+placed in that queue, it then attempts to be placed in the next queue $q = n_B + 2$. This is done incrementally until
+all the queues have been exhausted. For this reason, this heuristic method is referred to as the exhaustive approach.
 
 #  LocalWords:  metaheuristic linearities BEBs BEB
