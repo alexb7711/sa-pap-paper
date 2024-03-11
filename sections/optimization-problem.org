@@ -107,9 +107,8 @@ charger $q$. Focusing on an individual charger, consider $\C_q'$ before a schedu
 \varnothing \}$. In other words, no buses have been assigned to be charged over some time period $[u_i, d_i]$. After the
 scheduling process is complete, $\C_q'$ will have a set of active periods of the form $\C_q' = \{[u_i, d_i]: i \in I\}$.
 
-TODO: REVISIT
-With a fully defined set $\C_q'$, its compliment can be found, $\C_q$. For the $i^{\text{th}}$ visit, let its inactive
-period be denoted as $\C_{i.q}$. To determine the inverse of $\C_q'$, begin by noting that $\C_q'$ is said to be
+With a fully defined set $\C_q'$, its compliment can be found, $\C_q$. Let the $j^{\text{th}}$ inactive period be for
+charger $q$ be denoted as $\C_{j.q}$. To determine the inverse of $\C_q'$, begin by noting that $\C_q'$ is said to be
 disjoint, $\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing$ (i.e. the sets share no common elements)
 [cite:@halmos-1974-naive-set-theor]. The inverse of a disjoint set can be found by the De Morgan Law: $(A \cap B)' = A' \cup
 B'$. Using De Morgan's Law, the set of inactive periods can be written as $\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}$.

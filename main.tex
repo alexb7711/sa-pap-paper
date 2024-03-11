@@ -1,4 +1,4 @@
-% Created 2024-03-11 Mon 13:25
+% Created 2024-03-11 Mon 14:10
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -129,9 +129,9 @@ and some major companies of the industry have also begun to enter the global mar
 2025 \cite{deng-2021-survey-elect}. Much focus has been placed on the engineering of individual BEBs, such as: battery
 type, brake regenerative charging, optimal battery charging, and battery degradation \cite{chen-2008-desig-grey,abdollahi-2016-optim-batter,kuhne-2010-elect,deng-2021-survey-elect}. The interest of route scheduling, charging
 fleets, and optimizing the infrastructure are problems of more recent interest and are therefore timely and increasingly
-relevant problems as EV/BEBs become more commonplace \cite{hoke-2014-accoun-lithium,sebastiani-2016-evaluat-elect,wei-2018-optim-spatio}. This paper presents a scheduling framework for a BEB fleet that utilize a set of fast and slow
-chargers. It considers linear battery dynamics, fixed bus schedules, and enforces a state-of-charge (SOC) threshold. The
-framework further takes into consideration energy consumed by the system as well as peak power use.
+relevant problems as EV/BEBs become more commonplace \cite{hoke-2014-accoun-lithium,sebastiani-2016-evaluat-elect,wei-2018-optim-spatio}. This paper presents a scheduling framework for a BEB fleet that allows for multiple charger
+types and partial charging. It considers linear battery dynamics, fixed bus schedules, and enforces a state-of-charge
+(SOC) threshold while taking into consideration energy consumed by the system as well as peak power use.
 
 Literature shows an interest in solving the problem of assigning BEBs to charging queues or optimizing their
 infrastructure \cite{wei-2018-optim-spatio,sebastiani-2016-evaluat-elect,hoke-2014-accoun-lithium,wang-2017-elect-vehic}. Two of the main problems that have been of recent interest are
@@ -180,8 +180,8 @@ To the best of our knowledge, there are two other works that schedule BEB fleets
 charger, partial charging, and accounting for consumption costs \cite{whitaker-2023-a-network}(MILP PAP). One of which
 utilizing non-linear battery dynamics and competition over chargers \cite{whitaker-2023-a-network}, and the other
 utilizing linear battery dynamics and minimizing the total charger count (MILP PAP). This paper expands on these
-previous works by introducing a simulated annealing (SA) framework that minimizes the total charger count, consumption
-costs, and peak power use (demand cost).
+previous works by introducing a simulated annealing (SA) framework that utilizes linear battery dynamics, minimizes the
+total charger count, consumption cost, and peak power use (demand cost).
 
 In what follows, the problem statement shall be provided in \ref{sec:problem-description}. \ref{sec:optimization-problem}
 introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,
@@ -443,9 +443,8 @@ charger \(q\). Focusing on an individual charger, consider \(\C_q'\) before a sc
 \varnothing \}\). In other words, no buses have been assigned to be charged over some time period \([u_i, d_i]\). After the
 scheduling process is complete, \(\C_q'\) will have a set of active periods of the form \(\C_q' = \{[u_i, d_i]: i \in I\}\).
 
-TODO: REVISIT
-With a fully defined set \(\C_q'\), its compliment can be found, \(\C_q\). For the \(i^{\text{th}}\) visit, let its inactive
-period be denoted as \(\C_{i.q}\). To determine the inverse of \(\C_q'\), begin by noting that \(\C_q'\) is said to be
+With a fully defined set \(\C_q'\), its compliment can be found, \(\C_q\). Let the \(j^{\text{th}}\) inactive period be for
+charger \(q\) be denoted as \(\C_{j.q}\). To determine the inverse of \(\C_q'\), begin by noting that \(\C_q'\) is said to be
 disjoint, \(\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing\) (i.e. the sets share no common elements)
 \cite{halmos-1974-naive-set-theor}. The inverse of a disjoint set can be found by the De Morgan Law: \((A \cap B)' = A' \cup
 B'\). Using De Morgan's Law, the set of inactive periods can be written as \(\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}\).
@@ -788,13 +787,13 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\I
 the initial charge time, \(u_i\), for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org8c6b798}
+\label{sec:org1949d2b}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the set that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:orga36ac4a}
+\label{sec:orgf177f29}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -865,7 +864,7 @@ original charger availability and null values for the charge times upon failure.
 
       \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, i, q, a, e$} $\not\in \varnothing$}
          {
-           \Return{($\_, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
+           \Return{($i, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
          }
 
          \Return{($\varnothing$)}\tcc*{Return nothing}
@@ -1091,8 +1090,10 @@ returns the updated set of charger availability.
     \KwOut{$\bar{\Sol}$}
 
     \Begin
-    { $\bar{\C} \leftarrow \C \setminus \C_{i.q_i}$\tcc*{Remove assignment of visit $i$ to charger $q_i$} \Return{$(\_,
-        \bar{\C})$}\tcc*{Return updated tuple} }
+    {
+      $\bar{\C} \leftarrow \C \setminus \C_{i.q_i}$\tcc*{Remove assignment of visit $i$ to charger $q_i$}
+      \Return{$(i, \I, \bar{\C})$}\tcc*{Return updated tuple}
+    }
   \end{algorithm}
 
 \paragraph{Slide visit}
@@ -1115,12 +1116,12 @@ information. If \texttt{findFreeTime} was unsuccessful, then the generator retur
 
     \Begin
     {
-      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $C \leftarrow \bar{C}_{i.q_i}$\tcc*{Get the time availability of the purged visit}
 
         \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
         {
-          \Return{($\_, (\I_{i.q_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
+          \Return{($i, \I, (\I_{i.q_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
         }
 
         \Return{($\varnothing$)}\tcc*{Return nothing}
@@ -1142,13 +1143,13 @@ the updated visit data. If \texttt{findFreetime} was unsuccessful, then the gene
 
     \Begin
     {
-      $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
 
-      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \_$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
+      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
       {
         \tcc{Return visit, note $u$ and $d$ are the original inital/final charge times.}
-        \Return{($\_, (q,\I_{i.u}, \I_{i.d}),\bar{\C}$)}
+        \Return{($i, \I, (q,\I_{i.u}, \I_{i.d}),\bar{\C}$)}
       }
 
       \Return{($\varnothing$)}\tcc*{Return nothing}
@@ -1171,10 +1172,11 @@ availability schedule of the wait queue for bus \(b\). Line 5 returns the update
     \SetKwFunction{Purge}{Purge}
 
     \Begin
-    { $(\_, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\tcc*{Update the charger availability
-        matrix for wait queue $\bar{\C}_{i.q_i}$} \Return{$(\_, (\I_{i.b}, \I_{i.a}, \I_{i.e}),
-        \bar{\C})$}\tcc*[f]{Return visit} }
+    {
+      $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.q_i}$}
+      \Return{$(i, \I, (\I_{i.b}, \I_{i.a}, \I_{i.e}), \bar{\C})$}\tcc*[f]{Return visit}
+    }
   \end{algorithm}
 
 \paragraph{New Window}
@@ -1230,8 +1232,8 @@ their respective idle queues.
 \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
     \LinesNumbered
     \TitleOfAlgo{Candidate Solution Generator}
-    \KwIn{$\I$, $\C$}
-    \KwOut{$\bar{\I}$, $\bar{\C}$}
+    \KwIn{$\Sol$}
+    \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{Wait}{Wait}
 
@@ -1240,9 +1242,9 @@ their respective idle queues.
         \tcc{Select an unscheduled BEB visit from a randomly indexed set of visits}
         \ForEach {$\I_i \in \I$}
         {
-            (\_, $\bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($\I_i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
+            ($i, \bar{\I}$, $\bar{\C}$) $\leftarrow$ \Wait{($\I_i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
         }
-            \Return{($\bar{\I}$, $\bar{\C}$)}
+            \Return{($0, \bar{\I}$, $\bar{\C}$)}
     }
   \end{algorithm}
 
@@ -1266,8 +1268,8 @@ the result.
 
     \LinesNumbered
     \TitleOfAlgo{Perturb Schedule}
-    \KwIn{$\I$, $\C$}
-    \KwOut{$\bar{\I}$, $\bar{\C}$}
+    \KwIn{$\Sol$}
+    \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{PGF}{PGF}
 
@@ -1278,7 +1280,7 @@ the result.
         $y \leftarrow [y_1, y_2, ...]$\tcc*{Define the weight of each primitive generator}
         $PGF \leftarrow\; \W^y_{[1,n_G]}$\tcc*{Select one of the generator functions}
         $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($\_, \bar{\I}$, $\bar{\C}$)}
+        \Return{($0, \bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 \section{Optimization Algorithm}
