@@ -60,6 +60,7 @@
 #+latex_header: \newcommand{\I}{\mathbb{I}}                 % Set of visit tuples
 #+latex_header: \newcommand{\C}{\mathbb{C}}                 % Charger availability information
 #+latex_header: \newcommand{\U}{\mathcal{U}}                % Uniform distribution
+#+latex_header: \newcommand{\W}{\mathcal{W}}                % Weighted distribution
 #+latex_header: \newcommand{\Sol}{\mathbb{S}}               % A shorthand for visit tuple
 #+latex_header: \newcommand{\M}{\mathbb{M}}                 % A shorthand for the metadata
 #+latex_header: \newcommand{\Hd}{\mathbb{H}}                % Set of discrete times

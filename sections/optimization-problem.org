@@ -100,6 +100,25 @@ That is, for every visit, if the start charge time of visit $j$ is greater than 
 $\sigma_{ij}$ is active ($\sigma_{ij} = 1$). Similarly, if the queue for visit $j$ is of a greater index than visit $i$, then
 $\psi_{ij}$ is active ($\psi_{ij} = 1$). These variables will be further elaborated on in [[#sec:constraints]].
 
+The variable $\C$ is the set that describes the availability for all chargers $q \in \Qset$. In other words, $\C$ defines
+the set of times when the chargers are not being utilized or are "inactive". To derive $\C$, consider its complement,
+$\C'$, which is the set of "active" time periods for each charger. Let $\C_q' \subset \C'$ describes the active times for
+charger $q$. Focusing on an individual charger, consider $\C_q'$ before a schedule has been imposed upon it, $\C_q' = \{
+\varnothing \}$. In other words, no buses have been assigned to be charged over some time period $[u_i, d_i]$. After the
+scheduling process is complete, $\C_q'$ will have a set of active periods of the form $\C_q' = \{[u_i, d_i]: i \in I\}$.
+
+TODO: REVISIT
+With a fully defined set $\C_q'$, its compliment can be found, $\C_q$. For the $i^{\text{th}}$ visit, let its inactive
+period be denoted as $\C_{i.q}$. To determine the inverse of $\C_q'$, begin by noting that $\C_q'$ is said to be
+disjoint, $\C_q' \bigcap \{[u_j, d_j] : j \in \Jsetq\} = \varnothing$ (i.e. the sets share no common elements)
+[cite:@halmos-1974-naive-set-theor]. The inverse of a disjoint set can be found by the De Morgan Law: $(A \cap B)' = A' \cup
+B'$. Using De Morgan's Law, the set of inactive periods can be written as $\C_q \equiv \bigcup \{[u_j, d_j]': j \in \Jsetq\}$.
+Because of this disjoint property, it is simple to iteratively construct $\C$. As an example, consider charger $q$ at
+the beginning of the working day. The charger has no assignments, thus $\C_q = \{[0, \T]\}$. Furthermore, suppose a BEB
+was to assigned to charger $q$ for the duration $[u_i, d_i]$ such that $0 < u_i < d_i, < \T$, $\C_q$ would then be
+written as $\C_q = \{[0, u_i], [d_i, \T]\}$. Further assignments can then be made within either time frame $[0, u_i]$ or
+$[d_i, \T]$.
+
 ** Objective Function
 :PROPERTIES:
 :CUSTOM_ID: sec:objective-function
