@@ -1,4 +1,4 @@
-% Created 2024-03-11 Mon 11:10
+% Created 2024-03-11 Mon 11:29
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -779,13 +779,13 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\I
 the initial charge time, \(u_i\), for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:orgfbd6baa}
+\label{sec:org7c27cc5}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the set that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org9c65ef4}
+\label{sec:org574b5fe}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -1247,9 +1247,10 @@ candidate solution. This candidate solution will then be compared against the ac
 schedule. The method that will be employed generate a neighboring solution is as follows: pick a visit, pick a primitive
 generator, and execute said primitive generator once. Furthermore, the primitives are not desired to be picked at random
 with a uniform distribution. That is, a weighted distribution is desired. Let \(\W^y_{[\cdot]}\) denote a random selection
-with a weighted distribution \(y\). Thus, \ref{alg:perturb-schedule} is as follows: Line 2 selects a visit at random with
-a weighted distribution. Line 3 extracts the visit index. Letting \(n_G\) denote the number of primitive generating
-functions, Line 4 selects a primitive generator. Line 5 executes the primitive, and Line 6 returns the result.
+with a distribution specified by a weight vector \(y \in \mathbb{R}\). Thus, \ref{alg:perturb-schedule} is as follows: Line 2 selects
+a visit at random with a weighted distribution. Line 3 extracts the visit index. Letting \(n_G\) denote the number of
+primitive generating functions, Line 4 selects a primitive generator. Line 5 executes the primitive, and Line 6 returns
+the result.
 
 \begin{algorithm}[H]
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
@@ -1279,11 +1280,10 @@ PAP algorithm.
 
 \subsection{Simulated Annealing Pseudo Code}
 \label{sec:simulated-annealing-pseudo-code}
-Let \(\omega\) and \(\bar{\omega}\) denote the active solution and
-the candidate solution, respectively. Let \(\Tau\) be the temperature function and \(\Tau_0\) the initial temperature.
-Furthermore, let \(t\) be defined as the vector of temperatures defined by \(t = \Tau(\Tau_0)\), and let \(t_m\) be defined as
-being an element of \(t\), \(t_m \in t\). Let \(n_K\) be the repetition counter, it defines the number of iterations to execute
-exploit a solution at a constant temperature \(t_m\).
+Let \(\omega\) and \(\bar{\omega}\) denote the active solution and the candidate solution, respectively. Let \(\Tau\) be the temperature
+function and \(\Tau_0\) the initial temperature. Furthermore, let \(t\) be defined as the vector of temperatures defined by
+\(t = \Tau(\Tau_0)\), and let \(t_m\) be defined as being an element of \(t\), \(t_m \in t\). Let \(n_K\) be the repetition counter,
+it defines the number of iterations to execute exploit a solution at a constant temperature \(t_m\).
 
 Recall the objective of the SA algorithm is to iteratively create a neighboring candidate solution from the active
 solution. The fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is
@@ -1292,14 +1292,14 @@ probability that is a function of the difference in the objective function value
 process is iteratively done until the temperature function reaches its minimum value. With the high level summary in
 mind, the SA pseudocode is to be presented \cite{henderson-1989-theor-pract}.
 
-The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm an active solution,
-\(\omega\), and temperature schedule, \(t\), respectively. The outer loop on Line 3 iterates through all the temperature values
-in \(t\). After each iteration of the outer loop, the temperature is decreased as specified by the selected temperature
-function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates \(n_K\) times at a
-constant temperature, \(t_k\). Line 6, perturbs the active solution \(\omega\) to a neighboring candidate solution \(\bar{\omega} =
-N(\omega)\). Line 7 then calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-13 updates \(\omega\) with \(\bar{\omega}\)
-if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\omega , \bar{\omega}}}{t_m}}\)
-if the candidate solution is less fit than the active solution. Line 14 updates the repetition counter.
+The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm the temperature
+schedule, \(t\), and active solution, \(\omega\), respectively. The outer loop on Line 3 iterates through all the temperature
+values in \(t\). After each iteration of the outer loop, the temperature is decreased as specified by the selected
+temperature function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates \(n_K\)
+times at a constant temperature, \(t_k\). Line 6, perturbs the active solution \(\omega\) to a neighboring candidate solution
+\(\bar{\omega} = N(\omega)\). Line 7 then calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-13 updates \(\omega\) with
+\(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\omega ,
+\bar{\omega}}}{t_m}}\) if the candidate solution is less fit than the active solution. Line 14 updates the repetition counter.
 
 \begin{algorithm}[H]
 \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
@@ -1313,15 +1313,15 @@ if the candidate solution is less fit than the active solution. Line 14 updates 
 
     \Begin
     {
-        $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
-        $t \leftarrow$ \Temp{$\Tau_0$}
+        $t \leftarrow$ \Temp{$\Tau_0$}\;
+        $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
 
         \ForEach{$t_m \in t$}
         {
           $k \leftarrow 0$ \tcc*{Initialize repetition counter}
 
-          \While{$k \le n_K$}
+          \ForEach{$k \in \{0, 1, ..., n_K$}
           {
             $\bar{\omega} \leftarrow $ \Pert{($\I$, $\C$)}\tcc*{Perturb the solution}
             $\Omega_{\bar{\omega},\omega} \rightarrow$ \Obj{$\bar{\omega}$} - \Obj{$\omega$}\tcc*{Calculate the difference of fitness scores}
@@ -1329,8 +1329,6 @@ if the candidate solution is less fit than the active solution. Line 14 updates 
             \tcc{Compare and update current solution}
             \If{$\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
             \If{$\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{-\Omega_{\bar{\omega},\omega}}{t_m}}$}
-
-            $k \leftarrow k+1$\tcc*{Increment the reptition counter}
           }
         }
     }
@@ -1397,15 +1395,13 @@ the constraints defined in \ref{eq:constraints}.
          $k \leftarrow 0$\tcc*{Initialize repetition counter}
 
         \tcc{For each step in the repitition schedule}
-        \While{$k \le n_K$}
+        \ForEach{$t_m \in t$}
         {
           $\bar{\omega} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
           $\Omega_{\bar{\omega},\omega} = $ \Obj{$\bar{\omega}$}  - \Obj{$\omega$} \tcc*{Calculate the difference of fitness scores}
 
           \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
           \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{\Omega_{\omega, \bar{\omega}}}{t_k}}$}
-
-          $k \leftarrow k+1$\tcc*{Increment the reptition counter}
         } % For k
       }   % For t_k \in t
 
