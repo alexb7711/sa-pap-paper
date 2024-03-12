@@ -1,4 +1,4 @@
-% Created 2024-03-11 Mon 15:12
+% Created 2024-03-12 Tue 08:07
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -360,6 +360,8 @@ Direct Decision Variables &  & Direct Decision Variables & \\[0pt]
 Indirect Decision Variables &  & Indirect Decision Variables & \\[0pt]
 \(\eta_i\) & Charge for the bus upon arrival visit \(i\) & \(s_i\) & Amount of time spent on charger for visit \(i\)\\[0pt]
 \(\sigma_{ij}\) & Binary variable determining temporal ordering of vehicles \(i\) and \(j\) & \(\psi_{ij}\) & Binary variable determining spatial ordering of vehicles \(i\) and \(j\)\\[0pt]
+\(p_{d}\) & Demand cost of the schedule & \(\phi_i\) & Penalty method for visit \(i\)\\[0pt]
+\(\C\) & Set of available charging times &  & \\[0pt]
 \hline
 \end{tabularx}
 \end{table}
@@ -787,13 +789,13 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\I
 the initial charge time, \(u_i\), for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org8176382}
+\label{sec:org9d02fd8}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the set that describes the set of visits, and \(\C\) is the set that describes the availability for
 all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org9978645}
+\label{sec:orgd61930b}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -1120,10 +1122,11 @@ information. If \texttt{findFreeTime} was unsuccessful, then the generator retur
       $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
       $C \leftarrow \bar{C}_{i.q_i}$\tcc*{Get the time availability of the purged visit}
 
-        \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
-        {
-          \Return{($i, \I, (\I_{i.q_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
-        }
+      \tcc[f]{If there is time available in $C$}
+      \If{($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
+      {
+        \Return{($i, \I, (\I_{i.q_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
+      }
 
         \Return{($\varnothing$)}\tcc*{Return nothing}
     }
@@ -1222,12 +1225,10 @@ described and returns either a new charge schedule or a modified charge schedule
 
 \paragraph{Charge Schedule Generation}
 \label{sec:charge-schedule-generation}
-The objective of this generator is to assign each BEB to its idle queue provided a schedule of routes. Specifically,
-this generator exists to initialize the system with a solution that is spatiotemporally feasible, but does not fall in
-the feasible space for the battery dynamics. The battery dynamics not being in the feasible space is addressed by the
-penalty method by allowing the infeasible battery SOCs to occur, but penalizing the system for doing so. Line 2 of
-\ref{alg:charge-schedule-generation} loops through each visit and Line 4 executes \ref{alg:new-visit} to a random queue
-with a random charge time.
+The objective of \ref{alg:charge-schedule-generation} is to assign each BEB to a random charge queue and charge time.
+Specifically, this generator exists to initialize the system with a solution in a greedy manner. Line 2 of
+\ref{alg:charge-schedule-generation} loops through each visit and Line 4 executes \ref{alg:new-visit} to place visit \(i\)
+at random queue with a random charge time.
 
 \begin{algorithm}[H]
 \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
