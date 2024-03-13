@@ -4,8 +4,8 @@
 
     \LinesNumbered
     \TitleOfAlgo{Perturb Schedule}
-    \KwIn{$\I$, $\C$}
-    \KwOut{$\bar{\I}$, $\bar{\C}$}
+    \KwIn{$\Sol$}
+    \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{PGF}{PGF}
 
@@ -13,9 +13,10 @@
     {
         $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
-        $PGF \leftarrow\; \U_{[1,n_G]}$\tcc*{Select one of the generator functions}
+        $y \leftarrow [y_1, y_2, ...]$\tcc*{Define the weight of each primitive generator}
+        $PGF \leftarrow\; \W^y_{[1,n_G]}$\tcc*{Select one of the generator functions}
         $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($\_, \bar{\I}$, $\bar{\C}$)}
+        \Return{($0, \bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 #+end_export

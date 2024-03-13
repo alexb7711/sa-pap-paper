@@ -1,0 +1,39 @@
+\documentclass[float=false, crop=true]{standalone}
+
+\usepackage
+{
+    pgfplots,                                                                   % Plot in LaTeX
+    pgfplotstable,
+    xfp,
+}
+\usetikzlibrary{automata, positioning, arrows.meta}                             % Tikz macros
+
+\begin{document}
+
+\pgfplotstableread[col sep = comma]{data/sa-quick-power-usage.csv}\powerdatasaquick
+\pgfplotstableread[col sep = comma]{data/sa-exhaustive-power-usage.csv}\powerdatasaexhaustive
+
+\begin{tikzpicture}
+\begin{axis}[title={Power Usage},
+    scale only axis,
+    height=0.325\paperheight, width=0.75\paperwidth,
+    grid=both,
+    minor y tick num= 4,
+    xlabel={Time [hr]}, ylabel={Power Usage [kw]},
+    xmin=4, xmax=24, ymin=0,
+    legend style={nodes={scale=0.75, transform shape}},
+    legend pos = north east]
+
+    % SA Quick ----------
+    \addplot[green!80!black, fill=green, fill opacity=0.5, no markers]
+             table[x=time, y=power] {\powerdatasaquick};
+    \addlegendentry{SA Quick}
+
+    % SA Exhaustive ----------
+    \addplot[gray!80!black, fill=gray, fill opacity=0.5, no markers]
+             table[x=time, y=power] {\powerdatasaexhaustive};
+    \addlegendentry{SA Exhaustive}
+\end{axis}
+\end{tikzpicture}%
+
+\end{document}
