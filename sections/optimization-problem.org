@@ -25,22 +25,22 @@ manipulate. The variables to be introduced are summarized in [[tab:variables]].
 :CUSTOM_ID: sec:input-variables
 :END:
 
-The parameters utilized in this work are those that are known prior to optimization. $\Delta_i$ is the amount energy required
-to complete the bus route after visit $i$. There are no routes after the last visit for each BEB; thus; the energy
-consumed after the final visit is zero. Let the set of final visits for all BEBs be denoted as $\Isetfinal$. That is,
-the cardinality of the set is $\lvert \Isetfinal \rvert = n_B$ where the $b^{\text{th}}$ item in $\Isetfinal$ provides
-the index for the final visit of bus $b$. The discharge for the final visit of each BEB is then defined as $\forall i \in
-\Isetfinal; \Delta_{i} = 0$. The initial SOC percentage of bus $b$ at the beginning of the working day is denoted as $\alpha_b$.
-Let $\Isetinit$ denote the set of initial visit indices for each BEB and let $\Xi_i \in B$ denote the identification number
-of the BEB for visit $i$. The initial SOC for bus $\Xi_i$ can be represented as $\forall i \in \Isetinit; \eta_{i} = \alpha_{\Xi_i}\kappa_{\Xi_i}$
-where $\kappa_{\Xi_i}$ is the battery capacity for bus $\Xi_i$. The rest of the values for $\eta_i : i \in I \setminus \Isetinit$ are
-considered decision variables and will be further discussed in [[#sec:decision-variables]]. The notation $t_h$ is used to
-denote a discrete time that is employed to calculate the demand cost. $dt_h$ is the discrete time step $dt_h = t_h -
-t_{h-1}$. The cost for assigning a charger to queue $q \in Q$ is defined by $\epsilon_q$. $\xi_i$ represents the next arrival index
-for bus $b_i$. In other words, suppose the ID of each BEB is recorded in order of arrival. Further suppose that recorded
-list is $\xi = \{ 2,1,3,2 \}$, using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. The arrival and
-departure times of bus visit $i$ to the station are denoted as $a_i$ and $e_i$, respectively. Lastly, $r_q$ represents
-the power supplied from the charger in queue $q \in Q$.
+The parameters utilized in this work are those that are known prior to optimization. The amount energy required to
+complete the bus route after visit $i$ is denoted as $\Delta_i$. There are no routes after the last visit for each BEB; thus;
+the energy consumed after the final visit is zero. Let the set of final visits for all BEBs be denoted as $\Isetfinal$.
+That is, the cardinality of the set is $\lvert \Isetfinal \rvert = n_B$ where $i \in \Isetfinal \subset \I$ specifies the index
+for the final visit of bus. The discharge for the final visit of each BEB is then defined as $\forall i \in \Isetfinal; \Delta_{i} =
+0$. The initial SOC percentage of bus $b$ at the beginning of the working day is denoted as $\alpha_b$. Let $\Isetinit$
+denote the set of initial visit indices for each BEB and let $\Xi_i \in B$ denote the identification number of the BEB for
+visit $i$. The initial SOC for bus $\Xi_i$ can be represented as $\forall i \in \Isetinit; \eta_{i} = \alpha_{\Xi_i}\kappa_{\Xi_i}$ where $\kappa_{\Xi_i}$
+is the battery capacity for bus $\Xi_i$. The rest of the values for $\eta_i : i \in I \setminus \Isetinit$ are considered decision
+variables and will be further discussed in [[#sec:decision-variables]]. The notation $t_h$ is used to denote a discrete time
+that is employed to calculate the demand cost. $dt_h$ is the discrete time step $dt_h = t_h - t_{h-1}$. The cost for
+assigning a charger to queue $q \in Q$ is defined by $\epsilon_q$. $\xi_i$ represents the next arrival index for bus $b_i$. In
+other words, suppose the ID of each BEB is recorded in order of arrival. Further suppose that recorded list is $\xi = \{
+2,1,3,2 \}$, using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. The arrival and departure times
+of bus visit $i$ to the station are denoted as $a_i$ and $e_i$, respectively. Lastly, $r_q$ represents the power
+supplied from the charger in queue $q \in Q$.
 
 #+include: "tab/variables.org"
 
@@ -50,7 +50,7 @@ the power supplied from the charger in queue $q \in Q$.
 :END:
 Decision variables are those chosen by the optimizer. The variables will be broken into two sections: direct and slack
 variables. Direct decision variables are those that the system manipulates directly, and slack variables are those that
-are functions of the direct, (i.e. slack variables).
+are functions of the direct.
 
 **** Direct Decision Variables
 :PROPERTIES:
@@ -124,7 +124,8 @@ $[d_i, \T]$.
 :END:
 The objective function of this work aims to minimize the total "cost" of utilizing a given charge schedule. Let $J$
 represent the objective function. The objective function for this problem has four main considerations: charger
-assignment, consumption cost, demand cost, and penalty for an insufficient initial SOC.
+assignment, consumption cost, demand cost, and penalty for an insufficient initial SOC. Each of which will be discussed
+in turn in the subsequent sections.
 
 *** Assignment Cost
 :PROPERTIES:
@@ -185,9 +186,10 @@ utilized, $s_i$.
 :END:
 
 Another means of reducing the cost of a charge schedule is reducing the peak power use of a charge schedule. Peak power
-consumption is denoted by the term demand cost. The demand cost quantifies the amount of power being used over a given
-period of time and increases the cost if too much power is utilized within said period. Let the average power used over
-an arbitrary interval, $T_p$, be represented by
+consumption is denoted by the term "demand cost". The demand cost quantifies the amount of power being used over a given
+period of time and increases the cost if too much power is utilized within said period. The demand cost is useful in
+avoiding large power consumption during "peak hours" (i.e. times of the day that are more costly to consume
+electricity). Let the average power used over an arbitrary interval, $T_p$, be represented by
 
 #+name: eq:p
 \begin{equation}
@@ -214,16 +216,17 @@ Hence, [[eq:pdem]] defines a cost beginning with a value of $p_{fix}$ from which
 p_{fix}$. To discritize $p_d$, let $h \in \{ 1, 2, ..., n_H \} \subset \mathcal{Z}$ and $n_H = \frac{T}{T_p}$. Furthermore, let $p$ define
 the vector of discrete power consumption and let $p_h \in p$ be the discrete power demand at time step $h$. For
 conciseness of notation we will abuse $t_h$ to denote the time in discrete form (as opposed to $t$ being continuous),
-let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2, ..., n_H \}$. The charger speed, $r_{q_i}$, and the initial and final
-charge times, $u_i$ and $d_i$, respectively, are known. Thus, the corresponding discrete indices of $h \in \Hset$ for the
-range $[u_i, d_i]$ can be determined by first calculating the total number of steps in the range $n_h = \frac{d_i -
-u_i}{dt}$. Once the number of steps are known, the consumed power, $r_{vi}$ can be added to the correct indices in $p$.
+let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2, ..., n_H \}$. Thus, the corresponding discrete indices of $h \in \Hset$
+for the range $[u_i, d_i]$ can be determined by first calculating the total number of steps in the range $n_h =
+\frac{d_i - u_i}{dt}$. Once the number of steps are known, the consumed power, $r_{vi}$ can be added to the correct
+indices in $p$.
 
-Line 2 of \ref{alg:calc-p} defines the time over which the average power will be calculated. Line 3 initializes a
-vector, $p$, with $n_H$ elements populated with zeros. The vector $p$ is used to store the power consumption for each
-discrete step over the time horizon $\T$. Line 5 calculates the number of elements in the charge time $s_i$. Line 6
-calculates the index of $p$ for all $n_h$ steps and iterates through each index. Line 7 adds the power consumed by
-charging $q_i$ for the $h^{\text{th}}$ step.
+The steps provided above are outlined to calculate the power consumption vector, $p$ is outlined in \ref{alg:calc-p}.
+Line 2 defines the time over which the average power will be calculated. Line 3 initializes a vector, $p$, with $n_H$
+elements populated with zeros. The vector $p$ is used to store the power consumption for each discrete step over the
+time horizon $\T$. Line 5 calculates the number of elements in the charge time $s_i$. Line 6 calculates the index of $p$
+for all $n_h$ steps and iterates through each index. Line 7 adds the power consumed by charging $q_i$ for the
+$h^{\text{th}}$ step.
 
 #+include: "eq/calc-p.org"
 
@@ -248,11 +251,12 @@ where $T_p \le h \le n_H$. Similarly to before, the maximum $p_{T_p}[h]$ value i
 :END:
 Now that a method of calculating the fitness of a schedule has been established, a method for determining the
 feasibility of a schedule must be defined. The feasible space for schedules defines the space in which the input and
-decision variables describe a schedule that would keep the BEBs adequately charged throughout the working day while
-maintaining their route schedules. To ensure the selected decision variables fall within the feasible space, a set of
-constraints are applied to a given candidate solution. The constraints must ensure no overlap temporally or spatially,
-the BEB must receive enough charge to complete its next route, the BEB cannot be over-charged, and the BEB must depart
-on time. The aforementioned constraints are shown in \ref{eq:constraints}.
+decision variables describe a schedule that assign BEBs in such a way that there are no spatiotemporal overlaps and
+ensures the BEBs are adequately charged throughout the working day while maintaining their route schedules. To ensure
+the selected decision variables fall within the feasible space, a set of constraints are applied to a given candidate
+solution. The constraints must ensure no overlap temporally or spatially, the BEB must receive enough charge to complete
+its next route, the BEB cannot be over-charged, and the BEB must depart on time. The aforementioned constraints are
+shown in the following:
 
 #+include: "eq/constraints.org"
 

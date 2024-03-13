@@ -33,8 +33,8 @@ types and partial charging. It considers linear battery dynamics, fixed bus sche
 Literature shows an interest in solving the problem of assigning BEBs to charging queues or optimizing their
 infrastructure [cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect;
 @hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. Two of the main problems that have been of recent interest are
-solving the problems of route scheduling and charging fleets as well as determining the infrastructure upon which they
-rely. Additionally, the prospect of solving both problems simultaneously has received much attention
+solving the problems of route scheduling, charging fleets, and determining the infrastructure upon which they rely.
+Additionally, the prospect of solving both problems simultaneously has received much attention
 [cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect; @hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. These
 problems vary by including assignment of buses to routes [cite:@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim;
 @tang-2019-robus-sched; @li-2014-trans-bus], determining whether a set of existing combustion based buses should be
@@ -62,22 +62,24 @@ existing buses that should be replaced by a BEB [cite:@zhou-2020-bi-objec; @duan
 @rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim]. Other works introduce a directed graph approach to model the flow
 of BEBs [cite:@whitaker-2023-a-network;@liu-2020-batter-elect], where this concept was expanded to simultaneously
 accounting for multiple charger types, partial charging, non-linear battery charge profiles
-[cite:@whitaker-2023-a-network]. The directed graph approach provides an easy method of modeling the scheduling by
-discretizing the time horizon into a sequence of nodes for each charger. The nodes represent the chargers availability
-and can have a maximum of one bus at a time. The buses can flow into a node to be charged and then later can exit
-allowing a new bus to enter future nodes. Another method similar to the directed graph that fits the modeling of the BEB
-charging scenario is the Position Allocation Problem (PAP) [cite:@qarebagh-2019-optim-sched]. The PAP is derived from
-the Berth Allocation Problem (BAP) which solves the problem of scheduling a set of vessels to be berthed and serviced.
-The model inputs a set of vessels arrival and service times and outputs a schedule that defines the selected berth and
-the time over which it is serviced. The PAP utilizes this model and redefines its inputs to EV arrival times and outputs
-queues for the EVs to be charged. While the visits remain as discrete events, the time that the BEB is on the charger is
-modeled as continuous, similar to [cite:@frojan-2015-contin-berth; @qarebagh-2019-optim-sched;@zhou-2020-collab-optim].
-Due to the close relationship between the BAP and PAP, BAP literature may be used for the PAP. The literature shows
-methods of handling multiple quays (sets of chargers) to handle general berthing scenarios
-[cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy]. Heuristic procedures for quicker solve times have also
-been introduced [cite:@imai-2001-dynam-berth]. Methods of defining static (full time horizon) and dynamic (rolling-time
-horizon) models have been created for daily and real-time solutions, respectively, and even fuzzy set theory has been
-applied to allow for more flexible schedules
+[cite:@whitaker-2023-a-network]. The directed graph approach provides a simple method of modeling the scheduling by
+discretizing the time horizon into a sequence of nodes for each charger. The nodes represent discrete steps in time in
+which BEBs may be assigned to be charged. BEBs may be assigned to sequential time steps of a singular charger. Once it
+has completed its charge, the BEB is then transitioned out of the charge queue creating an opening for another BEB to
+receive charge.
+
+Another method similar to the directed graph that fits the modeling of the BEB charging scenario is the Position
+Allocation Problem (PAP) [cite:@qarebagh-2019-optim-sched]. The PAP is derived from the Berth Allocation Problem (BAP)
+which solves the problem of scheduling a set of vessels to be berthed and serviced. The model inputs a set of vessels
+arrival and service times and outputs a schedule that defines the selected berth and the time over which it is serviced.
+The PAP utilizes this model and redefines its inputs to EV arrival times and outputs queues for the EVs to be charged.
+While the visits remain as discrete events, the time that the BEB is on the charger is modeled as continuous, similar to
+[cite:@frojan-2015-contin-berth; @qarebagh-2019-optim-sched;@zhou-2020-collab-optim]. Due to the close relationship
+between the BAP and PAP, BAP literature may be used for the PAP. The literature shows methods of handling multiple quays
+(sets of chargers) to handle general berthing scenarios [cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy].
+Heuristic procedures for quicker solve times have also been introduced [cite:@imai-2001-dynam-berth]. Methods of
+defining static (full time horizon) and dynamic (rolling-time horizon) models have been created for daily and real-time
+solutions, respectively, and even fuzzy set theory has been applied to allow for more flexible schedules
 [cite:@bello-2019-fuzzy-activ;@dai-2008-suppl-chain-analy;@buhrkal-2011-model-discr;@frojan-2015-contin-berth].
 
 To the best of our knowledge, there are two other works that schedule BEB fleets while allowing multiple charger types,

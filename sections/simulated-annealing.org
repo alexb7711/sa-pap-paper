@@ -85,12 +85,12 @@ determine if the active solution is to be replaced, an acceptance criteria is de
 more fit than active solution (fitness being dictated by the objective function) is always accepted as the new active
 solution. In an effort to encourage exploration, inferior candidate solutions have a probability of being accepted as
 the active solution. The probability of accepting an inferior candidate solution is described by the function
-$\exp(-\frac{J(x) - J(\bar{x})}{t_m})$ where $J(\cdot)$ is the objective functions described in [[#sec:objective-function]],
-$t_m$ is current temperature, $x$ is the current solution, and $\bar{x}$ is the new candidate solution. The probability
-of acceptance is a function of the current temperature and the difference of the active solution and a new candidate
-solution. Formally, let $\Delta E \equiv J(x) - J(\bar{x})$ and let $f(\cdot)$ be the function that describes the probability of
-accepting a candidate solution $\bar{x}$. The probability of accepting a candidate solution is thus of the form
-[cite:@keller-2019-multi-objec]
+$\exp(-\frac{J(\I) - J(\bar{\I})}{t_m})$ where $J(\cdot)$ is the objective functions described in [[#sec:objective-function]],
+$t_m$ is current temperature, $\I$ is the current solution, and $\bar{\I}$ is the new candidate solution. The
+probability of acceptance is a function of the current temperature and the difference of the active solution and a new
+candidate solution. Formally, let $\Delta E \equiv J(\I) - J(\bar{\I})$ and let $f(\cdot)$ be the function that describes the
+probability of accepting a candidate solution $\bar{\I}$. The probability of accepting a candidate solution is thus of
+the form [cite:@keller-2019-multi-objec]
 
 #+name: eq:candaccept
 \begin{equation}
@@ -107,11 +107,12 @@ f(x,\bar{x},t_m) =
 :END:
 Generation mechanisms are used to create a neighboring candidate solution [cite:@gendreau-2018-handb-metah]. That is,
 the generating function creates a solution that can be reached in a single iteration from the active solution. In the
-case of the problem statement made in [[#sec:problem-description]], six primitive generation mechanism shall be used: new
-visit, slide visit, new charger, new window, wait, and purge. The purpose of each of these generators is to assign new
-visits to a charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from
-one charger to another with the same charge schedule, move a bus to its idle queue, and remove a charger from the set
-of charger availability's. Each generator will be discussed in more detail in [[#sec:generators]].
+case of the problem statement made in [[#sec:problem-description]], five primitive generation mechanism shall be used: new
+visit, slide visit, new charger, new window, wait. The purpose of each of these generators is to assign new visits to a
+charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from one charger
+to another with the same charge schedule, move a bus to its idle queue. A helper function, purge, is also introduced.
+This function simply removes a charger from the set available charge times. Each generator will be discussed in more
+detail in [[#sec:generators]].
 
 These generation mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
 an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate solution and alter
@@ -125,8 +126,7 @@ inputs and outputs must be defined.
 :END:
 This section discusses in detail the expected inputs and outputs of each generator. The input consists of the bus visit
 index of interest, the current state of visits, $\I$, and the current state of the charger availability, $\C$. The
-availability of each charger, $\C$, is iteratively constructed throughout the SA process. The output of each generator
-affects the tuple (or a subset of the tuple) of decision variables $(q_i, u_i, d_i)$ and the charger availability $\C$.
+output of each generator affects a subset $\I$ and the charger availability $\C$.
 
 In the development of the algorithms, dot notation is to be introduced to extract variables from tuples. For example,
 suppose the arrival time is desired to be extracted from visit $i$. Given $\I$, the notation that describes extracting
@@ -134,8 +134,8 @@ the initial charge time, $u_i$, for visit $i$ is written as $u_i \equiv \I_{i.u}
 
 **** Generator Input
 Each generator accepts an input of the tuple of the form $\Sol \equiv (i, \I, \C)$ where $i$ is the visit index being
-manipulated, $\I$ is the set that describes the set of visits, and $\C$ is the set that describes the availability for
-all chargers $q \in \Qset$.
+manipulated, $\I$ is the set of visits, and $\C$ is the set that describes the availability for all chargers $q \in
+\Qset$.
 
 **** Generator Output
 The output of the generating functions is the same as the input, $\Sol$, but with changes applied to it by a generator.
@@ -278,17 +278,17 @@ at random queue with a random charge time.
 :END:
 
 Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
-create candidate solutions. After each step of the cooling function, the active solution will be altered $n_k$ times by
-a random primitive generator. During these $n_k$ iterations the active solution is modified to create a neighboring
+create candidate solutions. After each step of the cooling function, the active solution will be altered $n_K$ times by
+a random primitive generator. During these $n_K$ iterations the active solution is modified to create a neighboring
 candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
 [[#sec:acceptance]]. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
 schedule. The method that will be employed generate a neighboring solution is as follows: pick a visit, pick a primitive
 generator, and execute said primitive generator once. Furthermore, the primitives are not desired to be picked at random
-with a uniform distribution. That is, a weighted distribution is desired. Let $\W^y_{[\cdot]}$ denote a random selection
+with a uniform distribution. That is, a weighted distribution is required. Let $\W^y_{[\cdot]}$ denote a random selection
 with a distribution specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: Line 2 selects
-a visit at random with a weighted distribution. Line 3 extracts the visit index. Letting $n_G$ denote the number of
-primitive generating functions, Line 4 selects a primitive generator. Line 5 executes the primitive, and Line 6 returns
-the result.
+a visit at random with a uniform distribution. Line 3 extracts the visit index and Line 4 creates a vector of weights
+associated with a primitive generator. Letting $n_G$ denote the number of primitive generating functions, Line 5 selects
+a primitive generator with a weighted distribution. Line 6 executes the primitive, and Line 7 returns the result.
 
 #+include: eq/tweak-schedule.org
 
@@ -301,11 +301,11 @@ As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heurist
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
 minimizing charger utilization, a simple heuristic was applied to \ref{alg:new-visit} and \ref{alg:new-charger} in the
 method that they select new charging queues. Suppose rather than selecting a queue at random from $q \in Q$, the
-algorithms randomly select whether to place a BEB in a slow or fast charging queue. Once the charger type has been
-selected, the algorithm will then begin incrementally attempting to place the BEB in a queue of that type beginning from
-the smallest index of that charger type. For example, if a BEB has been selected to be placed in a queue with a slow
-charger, the algorithm begins by attempting to place the BEB in the charger queue $q = n_B + 1$. If it is unable to be
-placed in that queue, it then attempts to be placed in the next queue $q = n_B + 2$. This is done incrementally until
-all the queues have been exhausted. For this reason, this heuristic method is referred to as the exhaustive approach.
+algorithms randomly select whether to place a BEB in a slow or fast charging queue with a weighted distribution favoring
+slow chargers. Once the charger type has been selected, the algorithm will then begin incrementally attempting to place
+the BEB in a queue of that type beginning from the smallest index of that charger type. For example, if a BEB has been
+selected to be placed in a queue with a slow charger, the algorithm begins by attempting to place the BEB in the charger
+queue $q = n_B + 1$. If it is unable to be placed in that queue, it then attempts to be placed in the next queue $q =
+n_B + 2$. This is done incrementally until all the queues have been exhausted.
 
 #  LocalWords:  metaheuristic linearities BEBs BEB
