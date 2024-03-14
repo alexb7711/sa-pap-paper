@@ -59,6 +59,6 @@ assignment cost. The utility cost encapsulates the consumption and demand costs,
 the cost of assigning a BEB to a charger and a cost that penalizes schedules for poorly assigning BEB. An objective
 function is utilized to calculate this cost as a means of measuring the relative fitness of the results. Constraints are
 employed to ensure the validity of the prescribed schedule. Both the objective function and constraints are discussed in
-further detail in the proceeding section. An example output schedule is shown in [[fig:spacial-and-temporal-constr]].
+further detail in the proceeding section. An example output schedule is shown in \ref{fig:spacial-and-temporal-constr}.
 
 #  LocalWords: BEBs BEB BEB's
