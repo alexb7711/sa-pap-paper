@@ -61,13 +61,13 @@ this principle by plotting the geometric schedule using varying values of $\beta
 #+begin_src latex
   \begin{figure}[t!]
     \begin{subfigure}[t]{0.5\textwidth}
-      \centering \includegraphics[width=\textwidth]{sections/img/cool_func.png}
+      \centering \includegraphics[width=\textwidth]{img/cool_func.png}
       \caption{Geometric, linear, and exponential cooling schedules.}
       \label{fig:cool}
     \end{subfigure}
     ~
     \begin{subfigure}[t]{0.5\textwidth}
-      \centering \includegraphics[width=\textwidth]{sections/img/geometric.png}
+      \centering \includegraphics[width=\textwidth]{img/geometric.png}
       \caption{Geometric cooling schedule utilizing various value of $\beta_1$.}
       \label{fig:geometric}
     \end{subfigure}
@@ -192,7 +192,7 @@ Line 26 returns tuple of the updated charger availability and the initial and fi
 original charger availability and null values for the charge times upon failure.
 
 #+include: eq/new-visit.org
-#+include: img/find-free.org
+#+include: ../img/find-free.org
 #+include: eq/find-free.org
 
 **** Purge
