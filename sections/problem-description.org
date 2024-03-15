@@ -51,7 +51,7 @@ as $\Delta_i \in \mathbb{R}$. The charge supplied is encouraged to maintain the 
 percentage, $\nu_b \in [0, 1]$. By "encouraged" it is meant that the SOC of a BEB is allowed to go below $\nu_b\kappa_b$; however,
 if it does, the system heavily penalizes the system.
 
-#+include: img/spacial-temporal-constr.org
+#+include: ../img/spacial-temporal-constr.org
 
 The task of this paper shall be to define a method of scheduling the set of visits $\I$ to fulfill the minimum charge
 requirements over the time horizon, $\T$, while minimizing the cost, which can be decomposed into a utility cost and an

@@ -84,7 +84,7 @@ proportional to the difference of the SOC and the threshold squared.
 
 #+begin_src latex
   \begin{figure}[htpb]
-    \centering \includegraphics{sections/img/overlap}
+    \centering \includegraphics{img/overlap}
     \caption{Examples of different methods of overlapping. Space overlap: $q_{k_1} > q_{i} + 1 \therefore \psi_{ik_{1}} = 1$.
       Time overlap $u_{k_2} < u_{j} + s_j \therefore \sigma_{k_{2}j} = 0$. Similarly, $\sigma_{k_3 i} = 0$.}
     \label{fig:overlap}
