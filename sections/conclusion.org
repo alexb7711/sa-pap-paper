@@ -20,29 +20,29 @@ the demand cost. The consumption cost is the total accumulated energy of the sch
 by the peak 15 (peak power consumption).
 
 An example of the SA PAP algorithm was then presented and compared the MILP PAP and Qin-Modified techniques. The SA PAP
-was run utilizing two different neighborhood searching techniques named the quick and exhaustive techniques,
-respectively. The quick SA's objective was to randomly search a wide neighborhood while the exhaustive technique was
+was run utilizing two different neighborhood searching techniques named the quick and heuristic techniques,
+respectively. The quick SA's objective was to randomly search a wide neighborhood while the heuristic technique was
 designed to incrementally search a neighborhood by randomly selecting a fast or slow charging queue and then stepping
-through the queues one at a time. The quick and exhaustive have comparable run times at src_latex{\fpeval{\quicklocal *
-\tempcnt}} seconds and src_latex{\fpeval{\exhaustivelocal * \tempcnt}} seconds, respectively. The Qin-Modified and MILP
-PAP utilized the fewest amount of chargers. The exhaustive SA technique generated a solution resembling that of the MILP
+through the queues one at a time. The quick and heuristic have comparable run times at src_latex{\fpeval{\quicklocal *
+\tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds, respectively. The Qin-Modified and MILP
+PAP utilized the fewest amount of chargers. The heuristic SA technique generated a solution resembling that of the MILP
 and Qin-Modified, but was unable to minimize the charger count as efficiently. The quick SA utilized all the chargers
 available.
 
 Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold. Both techniques had the SOC fall to
-about 50 kW; however, the quick technique fell to the 50 kW mark during the time horizon while the exhaustive only reach
+about 50 kW; however, the quick technique fell to the 50 kW mark during the time horizon while the heuristic only reach
 the 50 kW mark at the end of the working day. The Qin-Modified had the SOC of three BEBs fall to 0% SOC.
 src_latex{\textcolor{blue}{The MILP PAP, on the other hand, has a constraint requiring the SOC to stay above an SOC of
 25\% which was reflected in schedule.}}
 
-The power and energy consumption of each of the models was then compared. The peak power usage of the exhaustive SA,
+The power and energy consumption of each of the models was then compared. The peak power usage of the heuristic SA,
 Qin-Modified, and MILP PAP had comparable peaks in power consumption; whereas the quick SA had the largest peak. The
-power consumption of the exhaustive SA was similar to that of the Qin-Modified which were both less than the MILP PAP.
+power consumption of the heuristic SA was similar to that of the Qin-Modified which were both less than the MILP PAP.
 As for the accumulated energy consumption, the MILP PAP performed the worst. src_latex{\textcolor{blue}{This is
 accounted for by a constraint that requires the SOC of each BEB to be above a 70\% SOC.}} The schedule that consumed the
-least amount of energy is the exhaustive SA. The total range of energy consumption was about $0.4 \cdot 10^4$ kWh.
+least amount of energy is the heuristic SA. The total range of energy consumption was about $0.4 \cdot 10^4$ kWh.
 
-Further fields of interest are to investigate the performance of the quick and exhaustive SA approaches utilizing a denser
+Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a denser
 set of routes to schedule. It is also of interest to incorporate non-linear battery dynamics to more accurately model
 the SOC. Furthermore, "fuzzifying" the charge times is of interest to allow flexibility in the initial and final charge
 times for each BEB visit.

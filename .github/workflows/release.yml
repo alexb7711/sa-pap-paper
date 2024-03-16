@@ -23,7 +23,7 @@ jobs:
     - name: PlantUML
       uses: holowinski/plantuml-github-action@main
       with:
-        args: -v -tpng "sections/img/*.pml"
+        args: -v -tpng "img/*.pml"
     - name: Build PDF
       run: make pipeline
     - uses: ncipollo/release-action@v1

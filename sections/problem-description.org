@@ -6,54 +6,59 @@ This section introduces and defines the problem to be addressed by this work. A 
 followed by a mathematical interpretation. The scope of this work will also be provided as well as a high level
 introduction to the individual problems that will be addressed in order to achieve the proposed goal.
 
-Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. Suppose that an individual BEB
-from said fleet begins and completes an individual route at the same station from which it also receives its charge.
-During each route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied during its visit
-must be enough that it sustains the BEB's SOC at an appropriate level such that it may complete its next route. The
-charge may be supplied from any single charger given a set of chargers at the station. Each time the BEB arrives at the
-station, let that be denoted as an "arrival". Once the BEB has awaited its predetermined time (whether it has received a
-charge or not), and departs from the station, let that be denoted as a "visit". Generalizing this to all BEBs, each BEB
-will have a set of prescribed routes from which their SOC is depleted by some amount. Once their respective routes are
-completed, each BEB arrives at the station to receive a charge that is sufficient to complete the next route. Each BEB
-may have multiple visits to the station throughout their working day. This paper describes a method to optimize the
-assignment of each visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above. The
-model presented in this work optimizes over power and energy consumption, as well as attempts to optimize the amount of
-chargers utilized.
+Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. An individual BEB from said
+fleet begins and completes an individual route at the same station from which it also receives its charge. During each
+route, the BEB's State of Charge (SOC) depletes by a certain amount. The charge supplied during its visit must be enough
+to sustain the BEB's SOC at an appropriate level so that it may complete its next route. The charge may be supplied from
+any single charger given a set of chargers at the station. Let the term "arrival" describe the time at which a BEB
+reaches the station. Furthermore, let the term "visit" denote sequence of a BEB having awaited its predetermined time
+(whether it has received a charge or not) and departed from the station.
+
+Generalizing this to all BEBs, each BEB will have a set of prescribed routes from which their SOC is depleted by some
+amount. Once one of their respective routes are completed, each BEB arrives at the station to receive a charge that is
+sufficient to complete the next route. Each BEB may have multiple visits to the station throughout their working day.
+This paper describes a method to optimize the assignment of each visit to a charger given a schedule for a fleet of BEBs
+that follow the behavior described above. The model presented in this work optimizes over peak power usage and energy
+consumption, as well as attempts to optimize the amount of chargers utilized.
 
 Consider a fleet of $n_B$ BEBs that collectively visit a station $n_V$ times. At said station, let there exist a pool of
-$n_Q$ charging queues from which a visiting BEB may be assigned. Let $\mathbb{Z}$ define the set of integers. The set of arrivals
-is denoted as $\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number $B = \{ 1, ..., n_B \} \subset \mathbb{Z}$.
-Each visit can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i
-\in I$, BEB identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in
-\mathbb{R}$, initial charge time, $u \in \mathbb{R}$, final charge time, $d \in \mathbb{R}$, the charger queue for the BEB to be placed into, $q \in Q$,
-the SOC upon arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the currently visiting BEB, $\xi \in I$. Let the ordered
-set of visits be denoted as $\I$.
+$n_Q$ charging queues from which a visiting BEB may be assigned. Let $\mathbb{Z}$ define the set of integers. The pool of queues
+from which a BEB may be placed is $\Qset = \{1, 2, ..., n_B, n_B+1, n_B+2, ..., n_B + n_Q\} \subset \mathbb{Z}$ where the first $n_B$
+queues are denoted as idle queues. The term idle queues is meant to signify queues that provides no charge to the BEB.
+The next $n_Q$ queues are chargers ordered from slow to fast. Furthermore, let the set of arrivals be denoted as $\Iset
+= \{ 1, ... n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number in the set $B = \{ 1, ..., n_B \} \subset \mathbb{Z}$. Each
+visit can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i \in I$,
+BEB identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in \mathbb{R}$, time
+at which the BEB begins charging, $u \in \mathbb{R}$, time at which the BEB ends from the charging, $d \in \mathbb{R}$, the charger queue for
+the BEB to be placed into, $q \in Q$, the SOC upon arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the currently
+visiting BEB, $\xi \in I \cup \varnothing$. The null element, $\varnothing$, is used to specify when a BEB has no future
+visits. Let the ordered set of visits be denoted as $\I$ where the $i^{\text{th}}$ visit is denoted is $\I_i$.
+Furthermore, let a particular item from the tuple for visit $i$ to be written as $\cdot_i$. For example, the arrival time
+for visit $i$ is written as $a_i$.
 
-For each visit, a BEB must be placed in a single queue, $q \in \Qset$. The charger $q$ is assumed to be either a fast
-charger, slow charger, or no charger at all (denoted as an idle queue). A BEB is only allowed to be assigned to one
-queue per visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time
-the BEB is allowed to charge is dictated by the scheduled arrival time and required departure time, $[a_i, e_i]$.
-Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC must stay above 0%.
-The battery dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80% charge
+At each visit, the associated BEB is placed into a single queue corresponding to a particular charger. The charger is
+assumed to be either an idle queue, slow charger, or fast charger. A BEB is only allowed to be assigned to one queue per
+visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time the BEB
+is allowed to charge is dictated by the scheduled arrival time and required departure time, $[a_i, e_i]$. Partial
+charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC must stay above 0%. The
+battery dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80% charge
 [cite:@li-2016-batter-elect].
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired "route" that the BEB must perform after the
-visit. This route, as one would expect, causes the BEB to discharge by some certain amount. The estimation of the SOC
-lost during its route in it of itself poses a focus of research, which is not of this work. Thus, a simplified model of
-pre-calculating an average discharge is employed. The simplified model assumes a fixed discharge rate that is multiplied
-by the route duration. Let the discharge of the route for visit $i$ be denoted as $\Delta_i \in \mathbb{R}$. The charge supplied is
-encouraged to maintain the SOC of each BEB visit above a minimum battery percentage, $\nu_b \in [0, 1]$. By this it is meant
-that the SOC of a BEB is allowed to go below $\nu_b\kappa_b$; however, if it does, the system heavily punishes the fitness
-score of schedule.
+visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus is assumed to have
+a fixed discharge rate that is multiplied by the route duration. Let the discharge of the route for visit $i$ be denoted
+as $\Delta_i \in \mathbb{R}$. The charge supplied is encouraged to maintain the SOC of each BEB visit above a minimum battery
+percentage, $\nu_b \in [0, 1]$. By "encouraged" it is meant that the SOC of a BEB is allowed to go below $\nu_b\kappa_b$; however,
+if it does, the system heavily penalizes the system.
 
-#+include: img/spacial-temporal-constr.org
+#+include: ../img/spacial-temporal-constr.org
 
 The task of this paper shall be to define a method of scheduling the set of visits $\I$ to fulfill the minimum charge
 requirements over the time horizon, $\T$, while minimizing the cost, which can be decomposed into a utility cost and an
 assignment cost. The utility cost encapsulates the consumption and demand costs, and the assignment cost encapsulates
-the cost of assigning a BEB to a charger and a penalty method that punishes poor BEB assignment. An objective function
-is utilized to calculate this cost as a means of measuring the relative fitness of the results. Constraints are employed
-to ensure the validity of the prescribed schedule. Both the objective function and constraints are discussed in further
-detail in the proceeding section. An example output schedule is shown in [[fig:spacial-and-temporal-constr]].
+the cost of assigning a BEB to a charger and a cost that penalizes schedules for poorly assigning BEB. An objective
+function is utilized to calculate this cost as a means of measuring the relative fitness of the results. Constraints are
+employed to ensure the validity of the prescribed schedule. Both the objective function and constraints are discussed in
+further detail in the proceeding section. An example output schedule is shown in \ref{fig:spacial-and-temporal-constr}.
 
 #  LocalWords: BEBs BEB BEB's

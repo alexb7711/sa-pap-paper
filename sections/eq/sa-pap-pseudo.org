@@ -24,15 +24,13 @@
            $k \leftarrow 0$\tcc*{Initialize repetition counter}
 
           \tcc{For each step in the repitition schedule}
-          \While{$k \le n_K$}
+          \ForEach{$t_m \in t$}
           {
             $\bar{\omega} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
             $\Omega_{\bar{\omega},\omega} = $ \Obj{$\bar{\omega}$}  - \Obj{$\omega$} \tcc*{Calculate the difference of fitness scores}
 
             \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
             \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{\Omega_{\omega, \bar{\omega}}}{t_k}}$}
-
-            $k \leftarrow k+1$\tcc*{Increment the reptition counter}
           } % For k
         }   % For t_k \in t
 
