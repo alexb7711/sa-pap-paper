@@ -15,9 +15,9 @@ assigning a BEB to an idle queue (a queue that provides no charge) has no cost. 
 a charge queue, ordered first by slow then fast chargers, is scaled by a constant gain factor multiplied by the queue
 index. The penalty method was implemented to keep the SOC of each BEB above a specified charge threshold. If the initial
 SOC of a BEB upon an arrival to the station is below the threshold, a large penalty is applied to the objective that is
-proportional to the difference of the BEB SOC and the threshold. The utility cost consists of the consumption cost and
-the demand cost. The consumption cost is the total accumulated energy of the schedule and the demand cost is described
-by the peak 15 (peak power consumption).
+proportional to the difference of the BEB SOC and the threshold squared. The utility cost consists of the consumption
+cost and the demand cost. The consumption cost is the total accumulated energy of the schedule and the demand cost is
+described by the peak-15 (peak power consumption).
 
 An example of the SA PAP algorithm was then presented and compared the MILP PAP and Qin-Modified techniques. The SA PAP
 was run utilizing two different neighborhood searching techniques named the quick and heuristic techniques,
@@ -25,22 +25,14 @@ respectively. The quick SA's objective was to randomly search a wide neighborhoo
 designed to incrementally search a neighborhood by randomly selecting a fast or slow charging queue and then stepping
 through the queues one at a time. The quick and heuristic have comparable run times at src_latex{\fpeval{\quicklocal *
 \tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds, respectively. The Qin-Modified and MILP
-PAP utilized the fewest amount of chargers. The heuristic SA technique generated a solution resembling that of the MILP
-and Qin-Modified, but was unable to minimize the charger count as efficiently. The quick SA utilized all the chargers
-available.
+PAP utilized the fewest amount of chargers. The heuristic SA technique generated a solution approximating that of the
+MILP and Qin-Modified, but was unable to minimize the charger count as efficiently. The quick SA utilized all the
+chargers available (i.e. was unable to minimize the charger count).
 
-Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold. Both techniques had the SOC fall to
-about 50 kW; however, the quick technique fell to the 50 kW mark during the time horizon while the heuristic only reach
-the 50 kW mark at the end of the working day. The Qin-Modified had the SOC of three BEBs fall to 0% SOC.
-src_latex{\textcolor{blue}{The MILP PAP, on the other hand, has a constraint requiring the SOC to stay above an SOC of
-25\% which was reflected in schedule.}}
-
-The power and energy consumption of each of the models was then compared. The peak power usage of the heuristic SA,
-Qin-Modified, and MILP PAP had comparable peaks in power consumption; whereas the quick SA had the largest peak. The
-power consumption of the heuristic SA was similar to that of the Qin-Modified which were both less than the MILP PAP.
-As for the accumulated energy consumption, the MILP PAP performed the worst. src_latex{\textcolor{blue}{This is
-accounted for by a constraint that requires the SOC of each BEB to be above a 70\% SOC.}} The schedule that consumed the
-least amount of energy is the heuristic SA. The total range of energy consumption was about $0.4 \cdot 10^4$ kWh.
+Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to about 50 kW for
+the quick and 10 for the heuristic. The Qin-Modified had the SOC of three BEBs fall to 0% SOC. The schedule that
+consumed the least amount of energy is the MILP PAP (4256.16 kW) with the heuristic SA coming in second (5785.76 kW).
+The difference between the two being about src_latex{\fpeval{5785.76 - 4256.16}} kWh.
 
 Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a denser
 set of routes to schedule. It is also of interest to incorporate non-linear battery dynamics to more accurately model
