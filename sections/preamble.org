@@ -79,7 +79,7 @@
 #+latex_header:% Experiment parameters
 #+latex_header:\newcommand{\A}{35 }                                                            % Number of buses
 #+latex_header:\newcommand{\N}{338 }                                                           % Number of visits
-#+latex_header:\newcommand{\Cgain}{9000}                                                       % Gain applied to penalty method
+#+latex_header:\newcommand{\Cgain}{5000}                                                       % Gain applied to penalty method
 #+latex_header:\newcommand{\acharge}{0.9}                                                      % BOD charge percentage
 #+latex_header:\newcommand{\bcharge}{0.7 }                                                     % EOD charge percentage
 #+latex_header:\newcommand{\mincharge}{25\% }                                                  % Min visit charge percent
@@ -93,10 +93,10 @@
 #+latex_header:\newcommand{\contvars}{7,511 }
 #+latex_header:\newcommand{\intvars}{328,282 }
 #+latex_header:\newcommand{\localcnt}{500 }                                                    % Number of local search iterations
-#+latex_header:\newcommand{\tempinit}{2000 }                                                   % Initial temperature
-#+latex_header:\newcommand{\tempcnt}{1517 }                                                    % Number of steps in temperature
-#+latex_header:\newcommand{\quicklocal}{0.45 }                                                 % Time to finish local quick
-#+latex_header:\newcommand{\heuristiclocal}{0.5 }                                             % Time to finish local heuristic
+#+latex_header:\newcommand{\tempinit}{9000 }                                                   % Initial temperature
+#+latex_header:\newcommand{\tempcnt}{9101 }                                                    % Number of steps in temperature
+#+latex_header:\newcommand{\quicklocal}{0.25 }                                                % Time to finish local quick
+#+latex_header:\newcommand{\heuristiclocal}{0.4 }                                             % Time to finish local heuristic
 
 #+latex_header:%%-------------------------------------------------------------------------------
 #+latex_header:%% Solve output
