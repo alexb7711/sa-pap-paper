@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+    \scriptsize
     \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
     \LinesNumbered
     \TitleOfAlgo{SA PAP}

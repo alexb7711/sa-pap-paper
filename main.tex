@@ -1,4 +1,4 @@
-% Created 2024-03-18 Mon 13:18
+% Created 2024-03-20 Wed 12:32
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -99,7 +99,7 @@
  pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
+ pdfcreator={Emacs 29.2 (Org mode 9.6.15)},
  pdflang={English}}
 \begin{document}
 
@@ -559,6 +559,7 @@ for all \(n_h\) steps and iterates through each index. Line 7 adds the power con
 \(h^{\text{th}}\) step.
 
 \begin{algorithm}[H]
+  \scriptsize
   \caption{Calculate vector of power cosumption, $p$, by discretizing a charge time frame, $[u_i, d_i]$, into $n_h$ steps and calculating the appropriate index $h \in \{1,2,...,n_H\}$.} \label{alg:calc-p}
   \LinesNumbered
   \TitleOfAlgo{Calculate $p$}
@@ -799,13 +800,13 @@ suppose the arrival time is desired to be extracted from visit \(i\). Given \(\I
 the initial charge time, \(u_i\), for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{Generator Input}
-\label{sec:org6a2c575}
+\label{sec:org5c8f5a6}
 Each generator accepts an input of the tuple of the form \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being
 manipulated, \(\I\) is the set of visits, and \(\C\) is the set that describes the availability for all chargers \(q \in
 \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org1fa17d3}
+\label{sec:org8618512}
 The output of the generating functions is the same as the input, \(\Sol\), but with changes applied to it by a generator.
 Let a modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 Although not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and
@@ -856,6 +857,7 @@ Line 26 returns tuple of the updated charger availability and the initial and fi
 original charger availability and null values for the charge times upon failure.
 
 \begin{algorithm}[H]
+  \scriptsize
   \caption{New visit algorithm}
   \label{alg:new-visit}
   \LinesNumbered
@@ -1038,6 +1040,7 @@ original charger availability and null values for the charge times upon failure.
 \label{fig:find-free}
 \end{figure}
 \begin{algorithm}[H]
+\scriptsize
 \caption{Find free time algorithm checks whether the BEB time at the station, $[a_i, e_i]$ fits within the charger availability $[L,C_U]$. If it does, a random charge time slice is returned, otherwise the null value is returned.}
 \label{alg:find-free-time}
     \LinesNumbered
@@ -1096,6 +1099,7 @@ Line 2 from \ref{alg:purge} updates \(\C\) with the set of visits excluding visi
 returns the updated set of charger availability.
 
 \begin{algorithm}[H]
+  \scriptsize
   \caption{Purge algorithm} \label{alg:purge}
     \LinesNumbered
     \TitleOfAlgo{Purge}
@@ -1119,6 +1123,7 @@ opened up by purging visit \(i\). Line 4 sets the new charge time frame, \([u_i,
 information. If \texttt{findFreeTime} was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
+  \scriptsize
   \caption{Slide Visit Algorithm} \label{alg:slide-visit}
   \LinesNumbered
   \TitleOfAlgo{Slide Visit}
@@ -1150,6 +1155,7 @@ charger queue index, \(q\). Line 4 checks if there is an available time slice \(
 the updated visit data. If \texttt{findFreetime} was unsuccessful, then the generator returns a tuple of null values.
 
 \begin{algorithm}[H]
+  \scriptsize
   \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}
   \KwOut{$\bar{\Sol}$}
 
@@ -1177,6 +1183,7 @@ Line 2 from \ref{alg:wait} purges the visit from the charger availability set. L
 availability schedule of the wait queue for bus \(b\). Line 5 returns the updated visit.
 
 \begin{algorithm}[H]
+\scriptsize
 \caption{Wait algorithm} \label{alg:wait}
     \LinesNumbered
     \TitleOfAlgo{Wait}
@@ -1203,6 +1210,7 @@ producing \(\bar{\bar{\Sol}}\). Line 4 assigns and returns the updated visit. Li
 of \ref{alg:new-visit}.
 
 \begin{algorithm}[H]
+  \scriptsize
   \caption{New window algorithm} \label{alg:new-window}
   \LinesNumbered
   \TitleOfAlgo{New Window}
@@ -1241,6 +1249,7 @@ Specifically, this generator exists to initialize the system with a solution in 
 at random queue with a random charge time.
 
 \begin{algorithm}[H]
+\scriptsize
 \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
     \LinesNumbered
     \TitleOfAlgo{Candidate Solution Generator}
@@ -1276,6 +1285,7 @@ associated with a primitive generator. Letting \(n_G\) denote the number of prim
 a primitive generator with a weighted distribution. Line 6 executes the primitive, and Line 7 returns the result.
 
 \begin{algorithm}[H]
+\scriptsize
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
 
     \LinesNumbered
@@ -1338,17 +1348,18 @@ times at a constant temperature, \(t_k\). Line 6, perturbs the active solution \
 \bar{\omega}}}{t_m}}\) if the candidate solution is less fit than the active solution. Line 14 updates the repetition counter.
 
 \begin{algorithm}[H]
+\scriptsize
 \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
-    \LinesNumbered
-    \TitleOfAlgo{SA Pseudo-Code}
+\LinesNumbered
+\TitleOfAlgo{SA Pseudo-Code}
 
-    \SetKwFunction{Obj}{J}
-    \SetKwFunction{New}{N}
-    \SetKwFunction{Pert}{P}
-    \SetKwFunction{Temp}{$\Tau$}
+\SetKwFunction{Obj}{J}
+\SetKwFunction{New}{N}
+\SetKwFunction{Pert}{P}
+\SetKwFunction{Temp}{$\Tau$}
 
-    \Begin
-    {
+\Begin
+  {
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}\;
         $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
@@ -1367,7 +1378,7 @@ times at a constant temperature, \(t_k\). Line 6, perturbs the active solution \
             \If{$\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{-\Omega_{\bar{\omega},\omega}}{t_m}}$}
           }
         }
-    }
+  }
 \end{algorithm}
 
 \subsection{SA PAP Pseudo Code}
@@ -1407,6 +1418,7 @@ unique is that the active solution is only updated if the candidate is within th
 the constraints defined in \ref{eq:constraints}.
 
 \begin{algorithm}[H]
+  \scriptsize
   \caption{Simulated annealing approach to the position allocation problem} \label{alg:sa-pap}
   \LinesNumbered
   \TitleOfAlgo{SA PAP}

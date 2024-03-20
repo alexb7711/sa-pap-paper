@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+    \scriptsize
     \caption{Slide Visit Algorithm} \label{alg:slide-visit}
     \LinesNumbered
     \TitleOfAlgo{Slide Visit}

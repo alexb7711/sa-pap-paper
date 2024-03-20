@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+    \scriptsize
     \caption{New visit algorithm}
     \label{alg:new-visit}
     \LinesNumbered

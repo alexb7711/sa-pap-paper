@@ -1,16 +1,17 @@
 #+begin_src latex
   \begin{algorithm}[H]
+  \scriptsize
   \caption{Pseudo-code for SA} \label{alg:sa-pseudo}
-      \LinesNumbered
-      \TitleOfAlgo{SA Pseudo-Code}
+  \LinesNumbered
+  \TitleOfAlgo{SA Pseudo-Code}
 
-      \SetKwFunction{Obj}{J}
-      \SetKwFunction{New}{N}
-      \SetKwFunction{Pert}{P}
-      \SetKwFunction{Temp}{$\Tau$}
+  \SetKwFunction{Obj}{J}
+  \SetKwFunction{New}{N}
+  \SetKwFunction{Pert}{P}
+  \SetKwFunction{Temp}{$\Tau$}
 
-      \Begin
-      {
+  \Begin
+    {
           \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
           $t \leftarrow$ \Temp{$\Tau_0$}\;
           $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
@@ -29,6 +30,6 @@
               \If{$\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{-\Omega_{\bar{\omega},\omega}}{t_m}}$}
             }
           }
-      }
+    }
   \end{algorithm}
 #+end_src

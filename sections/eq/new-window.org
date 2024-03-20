@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+    \scriptsize
     \caption{New window algorithm} \label{alg:new-window}
     \LinesNumbered
     \TitleOfAlgo{New Window}
