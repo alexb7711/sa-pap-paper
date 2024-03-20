@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+    \scriptsize
     \caption{Purge algorithm} \label{alg:purge}
       \LinesNumbered
       \TitleOfAlgo{Purge}

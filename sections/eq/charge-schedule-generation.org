@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+  \scriptsize
   \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
       \LinesNumbered
       \TitleOfAlgo{Candidate Solution Generator}

@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+    \scriptsize
     \caption{New Charger Algorithm} \label{alg:new-charger} \LinesNumbered \TitleOfAlgo{New Charger} \KwIn{$\Sol$}
     \KwOut{$\bar{\Sol}$}
 

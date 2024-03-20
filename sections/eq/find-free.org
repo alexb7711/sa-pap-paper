@@ -1,5 +1,6 @@
 #+begin_src latex
   \begin{algorithm}[H]
+  \scriptsize
   \caption{Find free time algorithm checks whether the BEB time at the station, $[a_i, e_i]$ fits within the charger availability $[L,C_U]$. If it does, a random charge time slice is returned, otherwise the null value is returned.}
   \label{alg:find-free-time}
       \LinesNumbered
