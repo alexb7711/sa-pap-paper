@@ -1,6 +1,6 @@
 #+name: fig:find-free
 #+begin_export latex
-\begin{figure}
+\begin{figure}[!h]
 \centering
 \begin{subfigure}{\textwidth}
     \centering
