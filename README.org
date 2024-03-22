@@ -18,8 +18,8 @@ are in the solution space.
 :PROPERTIES:
 :CUSTOM_ID: sec:peer-reviews
 :END:
-If you are veiwing this to review the latest revision from the =main= branch, then it is *highly* recommended that you
-run =go-task pipeline= to generate a PDF with the version embedded in the PDF (see [[*Building the Paper][Building the Paper]]).
+If you are viewing this to review the latest revision from the =main= branch, then it is *highly* recommended that you
+run =make pipeline= to generate a PDF with the version embedded in the PDF (see [[*Building the Paper][Building the Paper]]).
 
 ** Releases
 :PROPERTIES:
@@ -39,5 +39,4 @@ file is regenerated every time the PDF is generated, the =LaTeX= file /should/ b
 
 With that being said. The required programs are a full instalation of =LaTeX= as well as [[https://mg.readthedocs.io/latexmk.html][latexmk]] and =pdflatex=.
 
-It is recommended to have [[https://taskfile.dev/][task]] installed to automate the build process. Type =go-task -l= or =task -l= depending on your
-install of task.
+It is recommended to have [[https://www.gnu.org/software/make/][GNU Make]] installed to automate the build process. Type =make help= for a list of commands.
