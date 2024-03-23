@@ -1,4 +1,4 @@
-% Created 2024-03-23 Sat 14:34
+% Created 2024-03-23 Sat 14:38
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -759,12 +759,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org0527c38}
+\label{sec:org23161a3}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:orgd3d501a}
+\label{sec:org30c3554}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -1030,7 +1030,8 @@ slow chargers. Once the charger type has been selected, the algorithm will then 
 the BEB in a queue of that type beginning from the smallest index of that charger type. For example, if a BEB has been
 selected to be placed in a queue with a slow charger, the algorithm begins by attempting to place the BEB in the charger
 queue \(q = n_B + 1\). If it is unable to be placed in that queue, it then attempts to be placed in the next queue \(q =
-n_B + 2\). This is done incrementally until all the queues have been exhausted.
+n_B + 2\). This is done incrementally until all the queues have been exhausted. That is, at the expense of an additional
+up-front computation cost, the heuristic will attempt to pack the visit optimally in the spacial sense.
 \section{Optimization Algorithm}
 \label{sec:optimization-algorithm}
 This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
