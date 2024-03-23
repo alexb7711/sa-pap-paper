@@ -1,4 +1,4 @@
-% Created 2024-03-23 Sat 14:38
+% Created 2024-03-23 Sat 15:20
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -759,12 +759,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org23161a3}
+\label{sec:org8a22b1c}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org30c3554}
+\label{sec:org6ed831e}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -1034,74 +1034,11 @@ n_B + 2\). This is done incrementally until all the queues have been exhausted. 
 up-front computation cost, the heuristic will attempt to pack the visit optimally in the spacial sense.
 \section{Optimization Algorithm}
 \label{sec:optimization-algorithm}
-This section combines the generation algorithms and the optimization problem into a single algorithm. It begins with an
-introduction and discussion of a general SA algorithm which will be used to springboard into the construction of the SA
-PAP algorithm.
-
-\subsection{Simulated Annealing Pseudo Code}
-\label{sec:simulated-annealing-pseudo-code}
-Let \(\omega\) and \(\bar{\omega}\) denote the active solution and the candidate solution, respectively. Let \(\Tau\) be the temperature
-function and \(\Tau_0\) the initial temperature. Furthermore, let \(t\) be defined as the vector of temperatures defined by
-\(t = \Tau(\Tau_0)\), and let \(t_m\) be defined as being an element of \(t\), \(t_m \in t\). Let \(n_K\) be the repetition counter,
-it defines the number of iterations to execute exploit a solution at a constant temperature \(t_m\).
-
-Recall the objective of the SA algorithm is to iteratively create a neighboring candidate solution from the active
-solution. The fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is
-always taken as the active solution. If it is not, then it may be selected as the new candidate solution with some
-probability that is a function of the difference in the objective function values and the current temperature. This
-process is iteratively done until the temperature function reaches its minimum value. With the high level summary in
-mind, the SA pseudocode is to be presented \cite{henderson-1989-theor-pract}.
-
-The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm the temperature
-schedule, \(t\), and active solution, \(\omega\), respectively. The outer loop on Line 3 iterates through all the temperature
-values in \(t\). After each iteration of the outer loop, the temperature is decreased as specified by the selected
-temperature function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates \(n_K\)
-times at a constant temperature, \(t_k\). Line 6, perturbs the active solution \(\omega\) to a neighboring candidate solution
-\(\bar{\omega} = N(\omega)\). Line 7 then calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-13 updates \(\omega\) with
-\(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability \(e^{\frac{-\Delta_{\omega ,
-\bar{\omega}}}{t_m}}\) if the candidate solution is less fit than the active solution. Line 14 updates the repetition counter.
-
-\begin{algorithm}[H]
-\scriptsize
-\caption{Pseudo-code for SA} \label{alg:sa-pseudo}
-\LinesNumbered
-\TitleOfAlgo{SA Pseudo-Code}
-
-\SetKwFunction{Obj}{J}
-\SetKwFunction{New}{N}
-\SetKwFunction{Pert}{P}
-\SetKwFunction{Temp}{$\Tau$}
-
-\Begin
-  {
-        \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
-        $t \leftarrow$ \Temp{$\Tau_0$}\;
-        $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
-
-        \ForEach{$t_m \in t$}
-        {
-          $k \leftarrow 0$ \tcc*{Initialize repetition counter}
-
-          \ForEach{$k \in \{0, 1, ..., n_K$}
-          {
-            $\bar{\omega} \leftarrow $ \Pert{($\I$, $\C$)}\tcc*{Perturb the solution}
-            $\Omega_{\bar{\omega},\omega} \rightarrow$ \Obj{$\bar{\omega}$} - \Obj{$\omega$}\tcc*{Calculate the difference of fitness scores}
-
-            \tcc{Compare and update current solution}
-            \If{$\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
-            \If{$\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{-\Omega_{\bar{\omega},\omega}}{t_m}}$}
-          }
-        }
-  }
-\end{algorithm}
-
-\subsection{SA PAP Pseudo Code}
-\label{sec:sa-pap-pseudo-code}
-Now that the general SA algorithm has been outlined, the objective is now to outline SA-PAP (\ref{alg:sa-pap}). While
-the SA PAP generally is written almost identically to that of the general SA algorithm, the general SA assumes that the
-generated candidate solutions are in the solution space of the problem, \(\omega \in S\) where \(S\) is the solution space.
-Initialization and the perturbation of a schedule must be verified to ensure that the generated schedule is in the
-solution space. Therefore, the objective function and constraints introduced in \ref{sec:constraints} and
+This section combines the generation algorithms and the optimization problem into a single algorithm (\ref{alg:sa-pap}).
+While the SA PAP generally is written almost identically to that of the general SA algorithm, the general SA assumes
+that the generated candidate solutions are in the solution space of the problem, \(\omega \in S\) where \(S\) is the solution
+space. Initialization and the perturbation of a schedule must be verified to ensure that the generated schedule is in
+the solution space. Therefore, the objective function and constraints introduced in \ref{sec:constraints} and
 \ref{sec:objective-function}, respectively, must be employed to verify that the output of
 \ref{alg:charge-schedule-generation} is in the feasible space, \(S\).
 
@@ -1118,18 +1055,12 @@ implemented in \ref{sec:objective-function} is set in place to allow the SOC to 
 \kappa_{\Xi_i}\), but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
 solution that does not activate the penalty method (i.e. is solution is truly feasible).
 
-The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. Line 2 initializes the SA algorithm by creating a vector
-of temperature values based on a temperature schedule \(\Tau\), and initial temperature \(\Tau_0\). Line 3 generates the
-initial candidate solution \(\omega\), note that \(CSG(\cdot)\) (candidate solution generator) is used to denote the specific
-candidate solution generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through
-each of the step in the temperature schedule \(t_m \in t\). Line 5 resets the iteration count to 0. Line 6 specifies the
-inner loop that iterates \(n_K\) times at a constant temperature, \(t_k\). Line 7, perturbs the active solution \(\omega\) to a
-neighboring candidate solution \(\bar{\omega} = PS(\omega)\), where \(PS(\cdot)\) (perturb schedule) is \ref{alg:perturb-schedule}. Line 8
-calculates the difference in the fitness of \(\omega\) and \(\bar{\omega}\). Lines 8-14 are similar to \ref{alg:sa-pseudo} where it
-updates \(\omega\) with \(\bar{\omega}\) if the candidate solution is more fit, or updates \(\omega\) with \(\bar{\omega}\) with probability
-\(e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}\) if the candidate solution is less fit than the active solution. What makes these lines
-unique is that the active solution is only updated if the candidate is within the solution space. That it, it satisfies
-the constraints defined in \ref{eq:constraints}.
+The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. The algorithm begins be creating a temperature schedule
+and creating an initial solution. The algorithm then begins to iterate through the temperature schedule (outer loop).
+For each iteration of the outer loop, an inner loop is executed \(n_K\) times. During this inner loop, the solution is
+modified by a generating function to create a candidate solution. The candidate is solution is then compared with the
+active solution, and updated according to the acceptance criteria. These actions are performed until the temperature
+function is exhausted.
 
 \begin{algorithm}[H]
   \scriptsize
@@ -1149,25 +1080,23 @@ the constraints defined in \ref{eq:constraints}.
       \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
       $t \leftarrow$ \Temp{$\Tau_0$}
 
-      $\omega \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
+      $\Sol \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
 
       \tcc{For each item in the temperature vector}
       \ForEach{$t_k \in t$}
        {
-         $k \leftarrow 0$\tcc*{Initialize repetition counter}
-
-        \tcc{For each step in the repitition schedule}
-        \ForEach{$t_m \in t$}
+        \tcc{For each step in the constant temperature repitition counter}
+        \ForEach{$k \in \{0, 1, ..., n_K\}$}
         {
-          $\bar{\omega} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
-          $\Omega_{\bar{\omega},\omega} = $ \Obj{$\bar{\omega}$}  - \Obj{$\omega$} \tcc*{Calculate the difference of fitness scores}
+          $\bar{\Sol} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
+          $\Delta E = $ \Obj{$\bar{\Sol}_{\I}$}  - \Obj{$\Sol_{\I}$} \tcc*{Calculate the difference of fitness scores}
 
-          \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
-          \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{\Omega_{\omega, \bar{\omega}}}{t_k}}$}
+          \If{$\bar{\I} \in S$ and $\Delta E < 0$}{$\Sol \leftarrow \bar{\Sol}$}
+          \If{$\bar{\I} \in S$ and $\Delta E \ge 0$}{$\Sol \leftarrow \bar{\Sol}$ with probability $e^{\frac{\Delta E}{t_k}}$}
         } % For k
       }   % For t_k \in t
 
-      \Return{($\bar{\I}$ , $\bar{\C}$)}
+      \Return{($\I$ , $\bar{\C}$)}
     } % Begin
 \end{algorithm}
 

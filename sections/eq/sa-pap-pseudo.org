@@ -17,25 +17,23 @@
         \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}
 
-        $\omega \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
+        $\Sol \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
 
         \tcc{For each item in the temperature vector}
         \ForEach{$t_k \in t$}
          {
-           $k \leftarrow 0$\tcc*{Initialize repetition counter}
-
-          \tcc{For each step in the repitition schedule}
-          \ForEach{$t_m \in t$}
+          \tcc{For each step in the constant temperature repitition counter}
+          \ForEach{$k \in \{0, 1, ..., n_K\}$}
           {
-            $\bar{\omega} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
-            $\Omega_{\bar{\omega},\omega} = $ \Obj{$\bar{\omega}$}  - \Obj{$\omega$} \tcc*{Calculate the difference of fitness scores}
+            $\bar{\Sol} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
+            $\Delta E = $ \Obj{$\bar{\Sol}_{\I}$}  - \Obj{$\Sol_{\I}$} \tcc*{Calculate the difference of fitness scores}
 
-            \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} \le 0$}{$\omega \leftarrow \bar{\omega}$}
-            \If{$\bar{\I} \in S$ and $\Omega_{\bar{\omega},\omega} > 0$}{$\omega \leftarrow \bar{\omega}$ with probability $e^{\frac{\Omega_{\omega, \bar{\omega}}}{t_k}}$}
+            \If{$\bar{\I} \in S$ and $\Delta E < 0$}{$\Sol \leftarrow \bar{\Sol}$}
+            \If{$\bar{\I} \in S$ and $\Delta E \ge 0$}{$\Sol \leftarrow \bar{\Sol}$ with probability $e^{\frac{\Delta E}{t_k}}$}
           } % For k
         }   % For t_k \in t
 
-        \Return{($\bar{\I}$ , $\bar{\C}$)}
+        \Return{($\I$ , $\bar{\C}$)}
       } % Begin
   \end{algorithm}
 #+end_src
