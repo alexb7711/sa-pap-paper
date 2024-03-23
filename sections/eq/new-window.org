@@ -8,11 +8,11 @@
     \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{NewVisit}{NewVisit}
-    \SetKwFunction{Purge}{Purge}
+    \SetKwFunction{Wait}{Wait}
 
     \Begin
     {
-      $\bar{\Sol} \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $\bar{\Sol} \leftarrow$\Wait{$\Sol$}\tcc*{Assign visit to its respective idle queue}
       \If(\tcc*[f]{Add visit $i$ back in randomly})
          {
            $\bar{\bar{\Sol}} \leftarrow$ \NewVisit{$\bar{\Sol}$} $\not\in \varnothing$
