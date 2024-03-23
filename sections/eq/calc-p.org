@@ -9,7 +9,7 @@
 
     \Begin
       {
-        $dt \leftarrow T_p$\tcc*{Creat time step of one minute}
+        $dt \leftarrow \frac{\T}{n_H}$\tcc*{Calculate the step size}
         $p \leftarrow [0.0; n_H]$\tcc*{Allocate an $n_H \times 1$ vector filled with zeros}
 
         \tcc{For each visit}
