@@ -331,7 +331,7 @@ slow chargers. Once the charger type has been selected, the algorithm will then 
 the BEB in a queue of that type beginning from the smallest index of that charger type. For example, if a BEB has been
 selected to be placed in a queue with a slow charger, the algorithm begins by attempting to place the BEB in the charger
 queue $q = n_B + 1$. If it is unable to be placed in that queue, it then attempts to be placed in the next queue $q =
-n_B + 2$. This is done incrementally until all the queues have been exhausted. That is, at the expense of an additional
-up-front computation cost, the heuristic will attempt to pack the visit optimally in the spacial sense.
+n_B + 2$. This is done incrementally until all the queues have been exhausted. At the expense of an additional up-front
+computation cost, the heuristic will attempt to pack the visit optimally in the spacial sense.
 
 #  LocalWords:  metaheuristic linearities BEBs BEB
