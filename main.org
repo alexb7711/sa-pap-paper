@@ -18,6 +18,7 @@
 #+include: sections/simulated-annealing.org
 #+include: sections/optimization-algorithm.org
 #+include: sections/example.org
+#+include: sections/figures.org :minlevel 1 :only-contents t
 #+include: sections/conclusion.org
 
 # ======================================================================================================================
