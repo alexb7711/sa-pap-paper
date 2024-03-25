@@ -54,8 +54,6 @@ departure times of bus visit $i$ to the station are denoted as $a_i$ and $e_i$, 
 to denote a discrete time that is employed to calculate the demand cost. $dt_h$ is the discrete time step $dt_h = t_h -
 t_{h-1}$.
 
-#+include: "tab/variables.org"
-
 *** Decision Variables
 :PROPERTIES:
 :CUSTOM_ID: sec:decision-variables

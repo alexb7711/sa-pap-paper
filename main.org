@@ -14,6 +14,7 @@
 
 #+include: sections/introduction.org
 #+include: sections/problem-description.org
+#+include: sections/tab/variables.org
 #+include: sections/optimization-problem.org
 #+include: sections/simulated-annealing.org
 #+include: sections/optimization-algorithm.org

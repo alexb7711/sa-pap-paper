@@ -1,4 +1,4 @@
-% Created 2024-03-25 Mon 11:50
+% Created 2024-03-25 Mon 14:29
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -282,6 +282,40 @@ battery percentage, \(\nu_b \in [0, 1]\).
   \caption{The representation of the queue-time space. The x and y-axis represent time and space, respectively. Along the y-axis, the dashed lines represent discrete queuing locations. The shaded rectangles represent schedules BEBs to be charged. The height of each shaded rectangle represents the space taken on the queue and the width being the time to service said BEB. The vertical dashed lines are associated with vessel D and represent the arrival time, initial charge time, charge completion time, and departure time. Note that the arrival time may be before the initial charge time and the completion time may before the departure time.}
   \label{fig:spacial-and-temporal-constr}
 \end{figure}
+
+\begin{table}[htbp]
+\caption{\label{tab:variables}Table of variables used in the paper.}
+\centering
+\begin{tabularx}{\textwidth}{L{0.3} L{1.2} L{0.3} L{1.2}}
+\textbf{Variable} & \textbf{Description} & \textbf{Variable} & \textbf{Description}\\[0pt]
+\hline
+Constants &  & Constants & \\[0pt]
+\(D\) & Penalty method gain factor & \(n_B\) & Number of buses in use\\[0pt]
+\(\T\) & Time horizon & \(n_K\) & Number of iterations in the repetition schedule\\[0pt]
+\(n_M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(n_Q\) & Number of chargers\\[0pt]
+\(n_V\) & Total number of visits & \(n_h\) & Number of discrete steps in time horizon\\[0pt]
+\hline
+Input variables &  & Input Variables & \\[0pt]
+\(\Delta_i\) & Discharge of visit over after visit \(i\) & \(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
+\(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for each BEB\\[0pt]
+\(\rho_i\) & Duration for route after visit \(i\) & \(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
+\(a_i\) & Arrival time of visit \(i\) & \(\Xi_i\) & ID for bus visit \(i\)\\[0pt]
+\(t_h\) & Discrete step in time horizon & \(dt_h\) & Discrete time slice in time horizon \(dt_h = t_h - t_{h-1}\)\\[0pt]
+\(k\) & Local search iteration \(k\) & \(e_i\) & Time bus visit \(i\) must exit the station\\[0pt]
+\(r_q\) & Charge rate of charger \(q\) & \(t_m\) & Element of the temperature vector created by temperature function, \(t_m \in t\)\\[0pt]
+\(\nu_b\) & Minimum charge percentage allowed for each BEB &  & \\[0pt]
+\hline
+Direct Decision Variables &  & Direct Decision Variables & \\[0pt]
+\(u_i\) & Initial charge time for visit \(i\) & \(d_i\) & Final charge time for charger for visit \(i\)\\[0pt]
+\(q_i\) & Assigned queue for visit \(i\) &  & \\[0pt]
+Indirect Decision Variables &  & Indirect Decision Variables & \\[0pt]
+\(\eta_i\) & Charge for the bus upon arrival visit \(i\) & \(s_i\) & Amount of time spent on charger for visit \(i\)\\[0pt]
+\(\sigma_{ij}\) & Binary variable determining temporal ordering of vehicles \(i\) and \(j\) & \(\psi_{ij}\) & Binary variable determining spatial ordering of vehicles \(i\) and \(j\)\\[0pt]
+\(p_{d}\) & Demand cost of the schedule & \(\phi_i\) & Penalty method for visit \(i\)\\[0pt]
+\(\C\) & Set of available charging times &  & \\[0pt]
+\hline
+\end{tabularx}
+\end{table}
 \section{Optimization Problem}
 \label{sec:optimization-problem}
 The problem outlined in this work is presented in the form of an objective function with MILP constraints. The MILP
@@ -324,40 +358,6 @@ The cost for assigning a charger to queue \(q \in Q\) is defined by \(\epsilon_q
 departure times of bus visit \(i\) to the station are denoted as \(a_i\) and \(e_i\), respectively. The notation \(t_h\) is used
 to denote a discrete time that is employed to calculate the demand cost. \(dt_h\) is the discrete time step \(dt_h = t_h -
 t_{h-1}\).
-
-\begin{table}[htbp]
-\caption{\label{tab:variables}Table of variables used in the paper.}
-\centering
-\begin{tabularx}{\textwidth}{L{0.3} L{1.2} L{0.3} L{1.2}}
-\textbf{Variable} & \textbf{Description} & \textbf{Variable} & \textbf{Description}\\[0pt]
-\hline
-Constants &  & Constants & \\[0pt]
-\(D\) & Penalty method gain factor & \(n_B\) & Number of buses in use\\[0pt]
-\(\T\) & Time horizon & \(n_K\) & Number of iterations in the repetition schedule\\[0pt]
-\(n_M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(n_Q\) & Number of chargers\\[0pt]
-\(n_V\) & Total number of visits & \(n_h\) & Number of discrete steps in time horizon\\[0pt]
-\hline
-Input variables &  & Input Variables & \\[0pt]
-\(\Delta_i\) & Discharge of visit over after visit \(i\) & \(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
-\(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for each BEB\\[0pt]
-\(\rho_i\) & Duration for route after visit \(i\) & \(\xi_i\) & The next index bus \(b\) will arrive\\[0pt]
-\(a_i\) & Arrival time of visit \(i\) & \(\Xi_i\) & ID for bus visit \(i\)\\[0pt]
-\(t_h\) & Discrete step in time horizon & \(dt_h\) & Discrete time slice in time horizon \(dt_h = t_h - t_{h-1}\)\\[0pt]
-\(k\) & Local search iteration \(k\) & \(e_i\) & Time bus visit \(i\) must exit the station\\[0pt]
-\(r_q\) & Charge rate of charger \(q\) & \(t_m\) & Element of the temperature vector created by temperature function, \(t_m \in t\)\\[0pt]
-\(\nu_b\) & Minimum charge percentage allowed for each BEB &  & \\[0pt]
-\hline
-Direct Decision Variables &  & Direct Decision Variables & \\[0pt]
-\(u_i\) & Initial charge time for visit \(i\) & \(d_i\) & Final charge time for charger for visit \(i\)\\[0pt]
-\(q_i\) & Assigned queue for visit \(i\) &  & \\[0pt]
-Indirect Decision Variables &  & Indirect Decision Variables & \\[0pt]
-\(\eta_i\) & Charge for the bus upon arrival visit \(i\) & \(s_i\) & Amount of time spent on charger for visit \(i\)\\[0pt]
-\(\sigma_{ij}\) & Binary variable determining temporal ordering of vehicles \(i\) and \(j\) & \(\psi_{ij}\) & Binary variable determining spatial ordering of vehicles \(i\) and \(j\)\\[0pt]
-\(p_{d}\) & Demand cost of the schedule & \(\phi_i\) & Penalty method for visit \(i\)\\[0pt]
-\(\C\) & Set of available charging times &  & \\[0pt]
-\hline
-\end{tabularx}
-\end{table}
 
 \subsubsection{Decision Variables}
 \label{sec:decision-variables}
@@ -756,12 +756,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org35486c1}
+\label{sec:org089dc7a}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org19ea79f}
+\label{sec:org709f61c}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -1270,7 +1270,7 @@ technique is: 10198.799 kWh, 6303.1704 kWh, 5785.76 kWh, and 4797.746 kWh. The h
 than the MILP PAP.
 
 \section{Figure Captions}
-\label{sec:orgf97c7ba}
+\label{sec:org36053fd}
 
 \begin{figure}
   \centering
