@@ -153,7 +153,3 @@ The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. T
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the MILP PAP. The respective energy consumption for each
 technique is: 10198.799 kWh, 6303.1704 kWh, 5785.76 kWh, and 4797.746 kWh. The heuristic SA consuming about 988 kWh more
 than the MILP PAP.
-
-* Footnotes
-
-[fn:2] Remove when new data is applied.
