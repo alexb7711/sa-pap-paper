@@ -17,76 +17,59 @@ introduce new challenges such as larger upfront costs, and potentially several h
 [cite:@xylia-2018-role-charg;@li-2016-batter-elect]. Furthermore, the problem is exacerbated by the constraints of the
 transit schedule to which the fleet must adhere, the limited amount of chargers available, and the adverse affects in
 the health of the battery due to fast charging [cite:@lutsey-2019-updat-elect]. This work presents a scheduling
-framework for a BEB fleet that allows for multiple charger types and partial charging. It considers linear battery
-dynamics, fixed bus schedules, enforces a state-of-charge (SOC) threshold, and takes into consideration the total energy
-consumed by the schedule as well as peak power use.
+framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple
+charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak
+power use.
 
 Literature shows an interest in solving the problem of assigning BEBs to charging queues or optimizing their
 infrastructure [cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect;
-@hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. Two of the main problems that have been of recent interest are
-solving the problems of route scheduling, charging fleets, and determining the infrastructure upon which they rely.
-Additionally, the prospect of solving both problems simultaneously has received much attention
-[cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect; @hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. These
-problems vary by including assignment of buses to routes [cite:@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim;
-@tang-2019-robus-sched; @li-2014-trans-bus], determining whether a set of existing combustion based buses should be
-replaced with BEBs [cite:@zhou-2020-bi-objec; @duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet;
-@zhou-2020-collab-optim], and accounting for uncertainties [cite:@bie-2021-optim-elect; @duan-2021-refor-mixed;
-@tang-2019-robus-sched;@ursavas-2016-optim-polic]. These problems add additional complexities that warrant
-simplifications due to computational complexities. One other source, as far as the reseach for this work has shown,
-describes a method of producing a BEB charge schedule wih a high fidelity while accounting for multiple charger times as
-well as being able to minimize over the total charger count [cite:@whitaker-2023-a-network]. This work aims to focus on
-day-to-day requirements which require a higher fidelity charging and scheduling models to more accurately estimate the
-monetary cost of charging. Specifically, the framework to be presented creates a charging schedule for a fixed set of
-bus routes while minimizing the total number of chargers required and minimizing the monetary cost of charging the BEBs
-by minimizing the demand and consumption costs.
+@hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. Additionally, the prospect of solving both problems simultaneously
+has received much attention [cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect;
+@hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. These problems vary by including assignment of buses to routes
+[cite:@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim; @tang-2019-robus-sched; @li-2014-trans-bus], determining
+whether a set of existing combustion based buses should be replaced with BEBs [cite:@zhou-2020-bi-objec;
+@duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim], and accounting for uncertainties
+[cite:@bie-2021-optim-elect; @duan-2021-refor-mixed; @tang-2019-robus-sched;@ursavas-2016-optim-polic]. These problems
+add additional complexities that warrant simplifications for the sake of computation. Two modes of simplification are
+often found: only utilizing fast chargers during planning [cite:@li-2014-trans-bus; @li-2014-trans-bus;
+@wang-2017-optim-rechar] or simplification of the charging models are made by assuming full charge
+[cite:@zhou-2020-bi-objec; @qarebagh-2019-optim-sched; @wei-2018-optim-spatio].
 
-Some works assume that the charge received is proportional to the time spent on the charger
-[cite:@liu-2020-batter-elect;@yang-2018-charg-sched]. While the linear battery dynamics is a valid assumption when the
-battery SOC is below 80% [cite:@liu-2020-batter-elect], non-linear battery dynamics can be implemented to more
-accurately model the charge curve. A common way to model the non-linear battery dynamics is utilizing Constant Voltage
-(CV), Constant Current (CC), and Constant Current Constant Voltage (CCCV) [cite:@abdollahi-2016-optim-batter;
-@chen-2008-desig-grey]. It has also been suggested that the dynamics can be modeled as a piecewise function containing a
-linear and non-linear component from which the CV and CC models construct the linear and non-linear parts, respectively
-[cite:@zhang-2021-optim-elect;@abdollahi-2016-optim-batter]. Others have modeled the battery dynamics as a discrete
-first order dynamics model [cite:@whitaker-2023-a-network]. The first-order differential system, when provided a step
-input, approximates the non-linear relationship between time and SOC [cite:@whitaker-2023-a-network]. While the
-framework presented in this work may implement the non-linear battery dynamics model, linear battery dynamics are chosen
-to allow comparisons between other solution methods.
+Modeling the battery charge dynamics well is pertinent to this work as it directly affects the quality of the produced
+schedule. Furthermore, an inaccurate model and may have detrimental affects to the health of the battery if it is
+over-charged, under-charged, or forced to perform "deep" deep cycles [cite:@zhou-2020-bi-objec;
+@millner-2010-model-lithium; @edge-2021-lithium]. While the charge profile for batteries are inherently non-linear, some
+works have assumed a proportional charge increase as linear battery dynamics remain a valid assumption when the battery
+SOC is below 80% [cite:@liu-2020-batter-elect]. Furthermore, other works have suggested that charging a battery nearly
+to capacity is detrimental to the health and can significantly reduce the total charge cycles a battery may undergo
+[cite:@edge-2021-lithium; @millner-2010-model-lithium]. Thus, this work assumes that a linear model is sufficiently
+accurate to produce an operationally valid schedule while maintaining battery health.
 
 Works concerning charge planning often use a version of the vehicle scheduling problem [cite:@tang-2019-robus-sched;
 @li-2014-trans-bus; @he-2020-optim-charg]. Variants of this problem address infrastructure as well as determining
 existing buses that should be replaced by a BEB [cite:@zhou-2020-bi-objec; @duan-2021-refor-mixed;
-@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim]. Other works introduce a directed graph approach to model the flow
-of BEBs [cite:@whitaker-2023-a-network;@liu-2020-batter-elect], where this concept was expanded to simultaneously
-accounting for multiple charger types, partial charging, non-linear battery charge profiles
-[cite:@whitaker-2023-a-network]. The directed graph approach provides a simple method of modeling the scheduling by
-discretizing the time horizon into a sequence of nodes for each charger. The nodes represent discrete steps in time in
-which BEBs may be assigned to be charged. BEBs may be assigned to sequential time steps of a singular charger. Once it
-has completed its charge, the BEB is then transitioned out of the charge queue creating an opening for another BEB to
-receive charge. This work bases its implementation on what is known as the Position allocation problem
-[cite:@qarebagh-2019-optim-sched].
-
-The PAP is derived from the Berth Allocation Problem (BAP) which solves the problem of scheduling a set of vessels to be
-berthed and serviced. The model inputs a set of vessels arrival and service times and outputs a schedule that defines
-the selected berth and the time over which it is serviced. The PAP utilizes this model and redefines its inputs to EV
-arrival times and outputs queues for the EVs to be charged. While the visits remain as discrete events, the time that
-the BEB is on the charger is modeled as continuous, similar to [cite:@frojan-2015-contin-berth;
-@qarebagh-2019-optim-sched;@zhou-2020-collab-optim]. Due to the close relationship between the BAP and PAP, BAP
-literature may be used for the PAP. The literature shows methods of handling multiple quays (sets of chargers) to handle
-general berthing scenarios [cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy]. Heuristic procedures for
-quicker solve times have also been introduced [cite:@imai-2001-dynam-berth]. Methods of defining static (full time
-horizon) and dynamic (rolling-time horizon) models have been created for daily and real-time solutions, respectively,
-and even fuzzy set theory has been applied to allow for more flexible schedules
+@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim]. This work bases its implementation on what is known as the Position
+allocation problem [cite:@qarebagh-2019-optim-sched]. The PAP is derived from the Berth Allocation Problem (BAP) which
+solves the problem of scheduling a set of vessels to be berthed and serviced. The model inputs a set of vessels arrival
+and service times and outputs a schedule that defines the selected berth and the time over which it is serviced. The PAP
+utilizes this model and redefines its inputs to EV arrival times and outputs queues for the EVs to be charged. While the
+visits remain as discrete events, the time that the BEB is on the charger is modeled as continuous, similar to
+[cite:@frojan-2015-contin-berth; @qarebagh-2019-optim-sched;@zhou-2020-collab-optim]. Due to the close relationship
+between the BAP and PAP, BAP literature may be used for the PAP. The literature shows methods of handling multiple quays
+(sets of chargers) to handle general berthing scenarios [cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy].
+Heuristic procedures for quicker solve times have also been introduced [cite:@imai-2001-dynam-berth]. Methods of
+defining static (full time horizon) and dynamic (rolling-time horizon) models have been created for daily and real-time
+solutions, respectively, and even fuzzy set theory has been applied to allow for more flexible schedules
 [cite:@bello-2019-fuzzy-activ;@dai-2008-suppl-chain-analy;@buhrkal-2011-model-discr;@frojan-2015-contin-berth]. This
 work utilizes an extension of the PAP as the basis of determining the feasible space of candidate solutions.
 
 To the best of our knowledge, there is one other work that schedule BEB fleets while allowing multiple charger types,
-charger, partial charging, and accounting for consumption costs [cite:@whitaker-2023-a-network]. This particular work
-presented an optimization framework that assumed a fixed schedule, utilized non-linear battery dynamics, partial
-charging, considers limited charger availability, consumption cost, and allows for multiple charger types
-[cite:@whitaker-2023-a-network]. This paper expands on these previous works by introducing a simulated annealing (SA)
-framework that accounts for partial charging, minimizes total charger count, multiple charger types, consumption cost,
-and demand cost.
+charger, partial charging, and accounting for consumption costs [cite:@whitaker-2023-a-network]. The work in
+[cite:@whitaker-2023-a-network] presents an optimization framework that assumed a fixed schedule, utilized non-linear
+battery dynamics, partial charging, considers limited charger availability, consumption cost, and allows for multiple
+charger types [cite:@whitaker-2023-a-network]. This paper expands on these previous works by introducing a simulated
+annealing (SA) framework that accounts for partial charging, minimizes total charger count, allows for multiple charger
+types, minimizes consumption cost, and minimizes demand cost.
 
 In what follows, the problem statement shall be provided in [[#sec:problem-description]]. [[#sec:optimization-problem]]
 introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,

@@ -51,7 +51,7 @@ The cost for assigning a charger to queue $q \in Q$ is defined by $\epsilon_q$. 
 $b_i$. In other words, suppose the ID of each BEB is recorded in order of arrival. Further suppose that recorded list is
 $\xi = \{ 2,1,3,2 \}$, using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. The arrival and
 departure times of bus visit $i$ to the station are denoted as $a_i$ and $e_i$, respectively. The notation $t_h$ is used
-to denote a discrete time that is employed to calculate the demand cost. $dt_h$ is the discrete time step $dt_h = t_h -
+to denote a discrete time that is employed to calculate the demand cost. $dt$ is the discrete time step $dt = t_h -
 t_{h-1}$.
 
 *** Decision Variables
@@ -234,15 +234,19 @@ p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 Hence, [[eq:pdem]] defines a cost beginning with a value of $p_{fix}$ from which it may only increase if $p_{15}(t) >
 p_{fix}$.
 
-Although the charge times for each BEB is continuous, due to the discrete nature of visits it is simpler to determine a
+Although the charge times for each BEB are continuous, due to the discrete nature of visits it is simpler to determine a
 vector of discrete power consumption over the time horizon from which the average power demand cost may be derived. To
 discritize $p_d$, let $h \in \{ 1, 2, ..., n_H \} \subset \mathcal{Z}$ where $n_H$ is the total number of steps. Furthermore, let $p$
-define the vector of discrete power consumption over some time interval and let $p_h \in p$ be the discrete power demand
-at time step $h$. For conciseness of notation $t_h$ will be abused to denote the time in discrete form (as opposed to
-$t$ being continuous), let $dt_h = t_h - t_{h-1}$, and $\Hset = \{ 1, 2, ..., n_H \}$. Thus, for a given visit $i$, the
-corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be determined by first calculating the
-total number of steps, $n_h = \frac{d_i - u_i}{dt}$. Once the number of steps is known, the consumed power, $r_{vi}$ can
-be added to the correct indices in $p$.
+define the vector of discrete power demand over the time horizon and let $p_h \in p$ be the demand over time step $h$. For
+conciseness of notation $t_h$ will be abused to denote the time in discrete form (as opposed to $t$ being continuous)
+and let $dt = t_h - t_{h-1}$. Each entry $p_h \in p$ is found by taking the summation of $r_{v_i}$ for all the chargers
+active during the time interval $[t_h, t_h + dt]$. Thus, having an estimate of the demand over each step, the average
+demand can be calculated by taking an average of the Riemann sum over each $T_p$ interval as follows:
+
+#+begin_comment
+Thus, for a given visit $i$, the corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be
+determined by first calculating the total number of steps, $n_h = \frac{d_i - u_i}{dt}$. Once the number of steps is
+known, the consumed power, $r_{vi}$ can be added to the correct indices in $p$.
 
 To derive $p$, a vector of discrete power consumption over the time horizon, utilizing scheduled visits is outlined in
 \ref{alg:calc-p}. In other words, the objective of \ref{alg:calc-p} to calculate a vector, $p$, that defines the power
@@ -252,10 +256,8 @@ the power consumption for each discrete step over the time horizon $\T$. Line 5 
 charge time $s_i$. Line 6 calculates the index of $p$ for all $n_h$ steps and iterates through each index. Line 7 adds
 the power consumed by charging $q_i$ for the $h^{\text{th}}$ step.
 
-#+include: "eq/calc-p.org"
-
-With the consumed power calculated for each time step, the average power consumption for each interval in the time
-horizon can be written as follows:
+,#+include: "eq/calc-p.org"
+#+end_comment
 
 \begin{equation}
 p_{T_p}[h] = \frac{1}{T_p} \sum_{h-\frac{T_p}{dt}+1}^h p_h,
@@ -266,7 +268,7 @@ where $T_p \le h \le n_H$. Similarly to before, the maximum $p_{T_p}[h]$ value i
 
 #+name: eq:pd-dis
 \begin{equation}
-  p_d = \max(p_{fix}, p_{max})z\text{.}
+  p_d = \max(p_{fix}, p_{max})\text{.}
 \end{equation}
 
 To conclude this section, the objective function is to written in its entirety:
