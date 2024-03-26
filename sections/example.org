@@ -28,14 +28,14 @@ an SOC of $\nu_b =$ \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus i
 of $\Delta =$ 30 kW. The penalty method employs a gain of $D = \Cgain$. A total of $n_C =$ \fpeval{\fast + \slow} chargers
 are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW). As
 previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
-objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in Q \setminus B; \epsilon_q = 100q$. The SA algorithm utilizes the
-geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\beta_2 = 0.999$, resulting in a total of
-$n_M = \tempcnt$ steps. The demand cost is taken over fifteen minute intervals. Thus let the demand cost be denoted as
-the peak-15 with the associated symbol $p_{15}$. A weight vector of $[3, 3, 2, 1]$ was used to influence the
-distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm
-also assumes a total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total, that
-results in src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant temperature
-search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
+objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q$. The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\beta_2 = 0.999$,
+resulting in a total of $n_M = \tempcnt$ steps. The demand cost is taken over fifteen minute intervals. Thus let the
+demand cost be denoted as the peak-15 with the associated symbol $p_{15}$. A weight vector of $[3, 3, 2, 1]$ was used to
+influence the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The
+algorithm also assumes a total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total,
+that results in src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant
+temperature search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
 src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
 
 [[#sec:heuristic-implementation]] introduced the idea of an alternative heuristic implementation for the SA algorithm. To
@@ -122,9 +122,13 @@ an SOC of 25% while the quick and heuristic SA approaches heavily penalize a sch
 25% SOC threshold. The MILP PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge})
 while both SA approaches were not. The SOC of the quick SA approach dropped to a minimum of 29.9 kWh and the heuristic
 had a minimum SOC of 6.3 kWh as shown in \ref{tab:charge}. The Qin model allowed the SOC of three BEBs to reach an SOC
-of 0% as shown in \ref{subfig:qin-charge}. The Qin-Modified strategy was able to keep the mean SOC the highest followed
-by the quick SA, heuristic SA, and then the MILP. This measure is useful when viewing with \ref{fig:power} and
-\ref{fig:energy-usage}.
+of 0% as shown in \ref{subfig:qin-charge}. The Qin-Modified strategy, being a purely reactive model, is unable to
+"sense" whether a set of routes has a particularly taxing route within time horizon. As such, and in the case of the
+example scenario, the BEBs that reached charges of 0% began with a sequence of short routes, much like the other BEBs.
+However, rather than continuing this trend, these sets of routes had one or two longer routes which the Qin-Modified
+algorithm was unable to account for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest
+followed by the quick SA, heuristic SA, and then the MILP, most likely due to the high low, medium, and high thresholds
+applied to the algorithm. This measure is useful when viewing with \ref{fig:power} and \ref{fig:energy-usage}.
 
 #+include: tab/charge.org
 

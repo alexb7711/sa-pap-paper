@@ -1,4 +1,4 @@
-% Created 2024-03-25 Mon 14:29
+% Created 2024-03-26 Tue 11:04
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -206,7 +206,7 @@ visit to a charger given a schedule for a fleet of BEBs that follow the behavior
 this work optimizes over peak power usage and energy consumption, as well as attempts to optimize the amount of chargers
 utilized.
 
-Consider a fleet of \(n_B\) BEBs that collectively visit a station \(n_V\) times. At said station, let there exist a pool of
+Given a fleet of \(n_B\) BEBs that collectively visit a station \(n_V\) times. At said station, let there exist a pool of
 \(n_Q\) charging queues from which a visiting BEB may be assigned. Let \(\mathbb{Z}\) define the set of integers. The pool of queues
 from which a BEB may be placed is \(\Qset \subset \mathbb{Z}\) is defined by letting the first \(n_B\) queues be denoted as idle queues
 followed by slow and then fast chargers. The term idle queues is meant to signify queues that provide no charge to the
@@ -756,12 +756,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org089dc7a}
+\label{sec:orgeb34606}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org709f61c}
+\label{sec:org1c0e7ad}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -773,7 +773,8 @@ This section describes and outlines the different generator types. Recall that t
 queues are added that provide no power to the BEB. Because of this, the set of queues is fully defined where \(Q\) is the
 ordered set of idle queues, slow queues, then fast queue. The use case for the idle queues are for when a bus is not to
 be placed on a charger. Rather, it will be placed in the queue, \(q \in B\), which satisfies the previously defined spatial
-constraints while allowing the bus to be ``set aside''. The charge queues are denoted by \(q \in Q \setminus B\).
+constraints while allowing the bus to be ``set aside''. The charge queues are denoted by \(q \in \{1, ..., n_B , n_B + 1,
+..., n_Q\}\).
 
 In the development of the algorithms, the dot notation is to be introduced to extract variables from tuples. For
 example, suppose the arrival time is desired to be extracted from visit \(i\). Given \(\I\), the notation that describes
@@ -782,12 +783,12 @@ extracting the initial charge time for visit \(i\) is written as \(u_i \equiv \I
 \paragraph{New visit}
 \label{sec:new-visit}
 The new visit generator defined in \ref{alg:new-visit} describes the process of moving a BEB, \(b \in B\), from a waiting
-queue, \(q \in B\), to a charging queue, \(q_i \in Q \setminus B\), within its arrival/departure time \([a, e]\). Let \(\U_{\{\cdot\}}\)
-indicate that an element is selected randomly with a uniform distribution from the set \(\{\cdot\}\). For example, \(\U_{[a,
-e]}\) indicates that a value will be selected between \(a\) and \(e\) with a uniform distribution. \ref{alg:new-visit} begins
-by extracting variables. Lines 6 and 7 randomly select a charging queue and available time frame with a uniform
-distribution, respectively. Line 8 attempts to assign the visit the time frame found in Line 7, if it succeeds, the
-updated visit is returned. Otherwise, the null value is returned.
+queue, \(q \in B\), to a charging queue, \(q_i \in \{n_B + 1, ..., n_Q\}\), within its arrival/departure time \([a, e]\). Let
+\(\U_{\{\cdot\}}\) indicate that an element is selected randomly with a uniform distribution from the set \(\{\cdot\}\). For
+example, \(\U_{[a, e]}\) indicates that a value will be selected between \(a\) and \(e\) with a uniform distribution.
+\ref{alg:new-visit} begins by extracting variables. Lines 6 and 7 randomly select a charging queue and available time
+frame with a uniform distribution, respectively. Line 8 attempts to assign the visit the time frame found in Line 7, if
+it succeeds, the updated visit is returned. Otherwise, the null value is returned.
 
 The function \texttt{findFreeTime} is the algorithm that determines whether a visit's time at the station \([a, e]\) can be placed
 in the time availability of charger \(q\). Let the available time for charger \(q\) for visit \(i\) be denoted as \(C \equiv
@@ -1114,14 +1115,14 @@ an SOC of \(\nu_b =\) \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus
 of \(\Delta =\) 30 kW. The penalty method employs a gain of \(D = \Cgain\). A total of \(n_C =\) \fpeval{\fast + \slow} chargers
 are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW). As
 previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of \(\epsilon_q\) in the
-objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in Q \setminus B; \epsilon_q = 100q\). The SA algorithm utilizes the
-geometric cooling schedule with an initial temperature of \(T_0 = \tempinit\) with \(\beta_2 = 0.999\), resulting in a total of
-\(n_M = \tempcnt\) steps. The demand cost is taken over fifteen minute intervals. Thus let the demand cost be denoted as
-the peak-15 with the associated symbol \(p_{15}\). A weight vector of \([3, 3, 2, 1]\) was used to influence the
-distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm
-also assumes a total of \(n_K = \localcnt\) iterations for the local search at a constant temperature. In total, that
-results in \fpeval{\localcnt * \tempcnt} configurations being searched. On average each constant temperature
-search took an average of \(\quicklocal\) seconds to complete, resulting in a total runtime of
+objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q\). The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0 = \tempinit\) with \(\beta_2 = 0.999\),
+resulting in a total of \(n_M = \tempcnt\) steps. The demand cost is taken over fifteen minute intervals. Thus let the
+demand cost be denoted as the peak-15 with the associated symbol \(p_{15}\). A weight vector of \([3, 3, 2, 1]\) was used to
+influence the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The
+algorithm also assumes a total of \(n_K = \localcnt\) iterations for the local search at a constant temperature. In total,
+that results in \fpeval{\localcnt * \tempcnt} configurations being searched. On average each constant
+temperature search took an average of \(\quicklocal\) seconds to complete, resulting in a total runtime of
 \fpeval{\quicklocal * \tempcnt} seconds.
 
 \ref{sec:heuristic-implementation} introduced the idea of an alternative heuristic implementation for the SA algorithm. To
@@ -1218,9 +1219,13 @@ an SOC of 25\% while the quick and heuristic SA approaches heavily penalize a sc
 25\% SOC threshold. The MILP PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge})
 while both SA approaches were not. The SOC of the quick SA approach dropped to a minimum of 29.9 kWh and the heuristic
 had a minimum SOC of 6.3 kWh as shown in \ref{tab:charge}. The Qin model allowed the SOC of three BEBs to reach an SOC
-of 0\% as shown in \ref{subfig:qin-charge}. The Qin-Modified strategy was able to keep the mean SOC the highest followed
-by the quick SA, heuristic SA, and then the MILP. This measure is useful when viewing with \ref{fig:power} and
-\ref{fig:energy-usage}.
+of 0\% as shown in \ref{subfig:qin-charge}. The Qin-Modified strategy, being a purely reactive model, is unable to
+``sense'' whether a set of routes has a particularly taxing route within time horizon. As such, and in the case of the
+example scenario, the BEBs that reached charges of 0\% began with a sequence of short routes, much like the other BEBs.
+However, rather than continuing this trend, these sets of routes had one or two longer routes which the Qin-Modified
+algorithm was unable to account for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest
+followed by the quick SA, heuristic SA, and then the MILP, most likely due to the high low, medium, and high thresholds
+applied to the algorithm. This measure is useful when viewing with \ref{fig:power} and \ref{fig:energy-usage}.
 
 \begin{table}[htbp]
 \caption{\label{tab:charge}Table of mean, min, and max SOC for each charging schedule.}
@@ -1270,7 +1275,7 @@ technique is: 10198.799 kWh, 6303.1704 kWh, 5785.76 kWh, and 4797.746 kWh. The h
 than the MILP PAP.
 
 \section{Figure Captions}
-\label{sec:org36053fd}
+\label{sec:orgba54964}
 
 \begin{figure}
   \centering

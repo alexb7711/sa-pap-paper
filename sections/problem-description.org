@@ -14,7 +14,7 @@ visit to a charger given a schedule for a fleet of BEBs that follow the behavior
 this work optimizes over peak power usage and energy consumption, as well as attempts to optimize the amount of chargers
 utilized.
 
-Consider a fleet of $n_B$ BEBs that collectively visit a station $n_V$ times. At said station, let there exist a pool of
+Given a fleet of $n_B$ BEBs that collectively visit a station $n_V$ times. At said station, let there exist a pool of
 $n_Q$ charging queues from which a visiting BEB may be assigned. Let $\mathbb{Z}$ define the set of integers. The pool of queues
 from which a BEB may be placed is $\Qset \subset \mathbb{Z}$ is defined by letting the first $n_B$ queues be denoted as idle queues
 followed by slow and then fast chargers. The term idle queues is meant to signify queues that provide no charge to the
