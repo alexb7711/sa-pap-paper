@@ -1,4 +1,7 @@
-* Figure Captions
+* SA PAP Figures
+:PROPERTIES:
+:CUSTOM_ID: sec:sa-pap-figures
+:END:
 
 # --------------------------------------------------------------------------------
 # Charge schedule
