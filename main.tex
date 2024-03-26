@@ -1,4 +1,4 @@
-% Created 2024-03-26 Tue 15:24
+% Created 2024-03-26 Tue 15:39
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt,a4paper,final]{article}
 \usepackage[a4paper, total={7in, 10in}]{geometry}
@@ -29,6 +29,7 @@
 \usepackage[stable]{footmisc}               % Allow footnotes in section headers
 \usepackage{hyperref}                       % Cool clean hyperlinks
 \setlength\parindent{0pt}                   % No indent for paragraphs
+\usepackage{xfp}                             % No trailing zeros
 \lstset{language=Rust, style=boxed}
 \usetikzlibrary{arrows.meta}                % Arrows for tikz
 \renewcommand*{\sectionautorefname}{Section}
@@ -700,12 +701,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org2a3c085}
+\label{sec:org6b94aa0}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:orge24da4f}
+\label{sec:org53f7055}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in

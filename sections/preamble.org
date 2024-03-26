@@ -18,6 +18,7 @@
 #+latex_header: \usepackage[stable]{footmisc}               % Allow footnotes in section headers
 #+latex_header: \usepackage{hyperref}                       % Cool clean hyperlinks
 #+latex_header: \setlength\parindent{0pt}                   % No indent for paragraphs
+#+latex_header:\usepackage{xfp}                             % No trailing zeros
 
 #+latex_header: \lstset{language=Rust, style=boxed}
 
