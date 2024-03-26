@@ -23,20 +23,20 @@ each of planning strategies. The results are also analyzed and discussed.
 
 The test scenario was run over a time horizon of $T=24$ hours, with a total of $n_V = \N$ visits to the station shared
 between $n_B = \A$ buses. Each BEB has a battery capacity of $\kappa_b =$ \batsize kWh battery that is required to stay above
-an SOC of $\nu_b =$ \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working day with $\alpha
-=$ \fpeval{\acharge*100}% charge (\fpeval{\acharge * \batsize} kWh). Each bus is also assumed have a rate of discharge
-of $\Delta =$ 30 kW. The penalty method employs a gain of $D = \Cgain$. A total of $n_C =$ \fpeval{\fast + \slow} chargers
-are utilized where \slow of the chargers are slow charging (\slows kW) and \fast are fast charging (\fasts kW). As
-previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
-objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q$. The SA
-algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\beta_2 = 0.999$,
-resulting in a total of $n_M = \tempcnt$ steps. The demand cost is taken over fifteen minute intervals. Thus let the
-demand cost be denoted as the peak-15 with the associated symbol $p_{15}$. A weight vector of $[3, 3, 2, 1]$ was used to
-influence the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The
-algorithm also assumes a total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total,
-that results in src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant
-temperature search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
-src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
+an SOC of $\nu_b =$ \mincharge (src_latex{\fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to begin the working
+day with $\alpha =$ src_latex{\fpeval{\acharge*100}}% charge (src_latex{\fpeval{\acharge * \batsize}} kWh). Each bus is also
+assumed have a rate of discharge of $\Delta =$ 30 kW. The penalty method employs a gain of $D = \Cgain$. A total of $n_C =$
+src_latex{\fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers are slow charging (\slows kW) and
+\fast are fast charging (\fasts kW). As previously introduced, to encourage the SA PAP to utilize the fewest number of
+chargers, the value of $\epsilon_q$ in the objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B +
+2, ..., n_Q\}; \epsilon_q = 100q$. The SA algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0
+= \tempinit$ with $\beta_2 = 0.999$, resulting in a total of $n_M = \tempcnt$ steps. The demand cost is taken over fifteen
+minute intervals. Thus let the demand cost be denoted as the peak-15 with the associated symbol $p_{15}$. A weight
+vector of $[3, 3, 2, 1]$ was used to influence the distribution of selecting the new charger, new window, wait, and
+slide visit primitives, respectively. The algorithm also assumes a total of $n_K = \localcnt$ iterations for the local
+search at a constant temperature. In total, that results in src_latex{\fpeval{\localcnt * \tempcnt}} configurations
+being searched. On average each constant temperature search took an average of $\quicklocal$ seconds to complete,
+resulting in a total runtime of src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
 
 [[#sec:heuristic-implementation]] introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in [[#sec:generation-mechanisms]], let this implementation
