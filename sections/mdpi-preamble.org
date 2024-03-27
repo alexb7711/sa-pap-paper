@@ -67,37 +67,37 @@
 #+latex_header:
 #+latex_header: %=================================================================
 #+latex_header: % Full title of the paper (Capitalized)
-#+latex_header: \Title{Title}
+#+latex_header: \Title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
 #+latex_header:
 #+latex_header: % MDPI internal command: Title for citation in the left column
-#+latex_header: \TitleCitation{Title}
+#+latex_header: \TitleCitation{Bus Charging Schedule Simulated Annealing with MILP Constraints}
 #+latex_header:
 #+latex_header: % Author Orchid ID: enter ID or remove command
-#+latex_header: \newcommand{\orcidauthorA}{0000-0000-0000-000X} % Add \orcidA{} behind the author's name
+#+latex_header: %\newcommand{\orcidauthorA}{0000-0000-0000-000X} % Add \orcidA{} behind the author's name
 #+latex_header: %\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
 #+latex_header:
 #+latex_header: % Authors, for the paper (add full first names)
-#+latex_header: \Author{Firstname Lastname $^{1,\dagger,\ddagger}$\orcidA{}, Firstname Lastname $^{2,\ddagger}$ and Firstname Lastname $^{2,}$*}
+#+latex_header: \Author{Alexander Brown$^{1,\dagger,}$* and Greg Droge$^{2,\ddagger}$}
 #+latex_header:
 #+latex_header: %\longauthorlist{yes}
 #+latex_header:
 #+latex_header: % MDPI internal command: Authors, for metadata in PDF
-#+latex_header: \AuthorNames{Firstname Lastname, Firstname Lastname and Firstname Lastname}
+#+latex_header: \AuthorNames{Alexander Brown and Greg Droge}
 #+latex_header:
 #+latex_header: % MDPI internal command: Authors, for citation in the left column
-#+latex_header: \AuthorCitation{Lastname, F.; Lastname, F.; Lastname, F.}
+#+latex_header: \AuthorCitation{Brown, A.; Droge G.}
 #+latex_header: % If this is a Chicago style journal: Lastname, Firstname, Firstname Lastname, and Firstname Lastname.
 #+latex_header:
 #+latex_header: % Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
 #+latex_header: \address{%
-#+latex_header: $^{1}$ \quad Affiliation 1; e-mail@e-mail.com\\
-#+latex_header: $^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
+#+latex_header: $^{1}$ \quad Utah State University; a01704744@usu.edu\\
+#+latex_header: $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 #+latex_header:
 #+latex_header: % Contact information of the corresponding author
-#+latex_header: \corres{Correspondence: e-mail@e-mail.com; Tel.: (optional; include country code; if there are multiple corresponding authors, add author initials) +xx-xxxx-xxx-xxxx (F.L.)}
+#+latex_header: \corres{Correspondence: a01704744@usu.edu}
 #+latex_header:
 #+latex_header: % Current address and/or shared authorship
-#+latex_header: \firstnote{Current address: Affiliation.}  % Current address should not be the same as any items in the Affiliation section.
+#+latex_header: \firstnote{Current address: 102 Old Main Hl, Logan, UT 84322-0102.}  % Current address should not be the same as any items in the Affiliation section.
 #+latex_header: \secondnote{These authors contributed equally to this work.}
 #+latex_header: % The commands \thirdnote{} till \eighthnote{} are available for further notes
 #+latex_header:
