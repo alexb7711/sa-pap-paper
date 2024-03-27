@@ -1,0 +1,152 @@
+#+LATEX_CLASS: mdpi
+#+option: author:nil date:nil title:nil email:nil
+
+#+latex_header: %--------------------
+#+latex_header: % Class Options:
+#+latex_header: %--------------------
+#+latex_header: %----------
+#+latex_header: % journal
+#+latex_header: %----------
+#+latex_header: % Choose between the following MDPI journals:
+#+latex_header: % acoustics, actuators, addictions, admsci, adolescents, aerobiology, aerospace, agriculture, agriengineering, agrochemicals, agronomy, ai, air, algorithms, allergies, alloys, analytica, analytics, anatomia, animals, antibiotics, antibodies, antioxidants, applbiosci, appliedchem, appliedmath, applmech, applmicrobiol, applnano, applsci, aquacj, architecture, arm, arthropoda, arts, asc, asi, astronomy, atmosphere, atoms, audiolres, automation, axioms, bacteria, batteries, bdcc, behavsci, beverages, biochem, bioengineering, biologics, biology, biomass, biomechanics, biomed, biomedicines, biomedinformatics, biomimetics, biomolecules, biophysica, biosensors, biotech, birds, bloods, blsf, brainsci, breath, buildings, businesses, cancers, carbon, cardiogenetics, catalysts, cells, ceramics, challenges, chemengineering, chemistry, chemosensors, chemproc, children, chips, cimb, civileng, cleantechnol, climate, clinpract, clockssleep, cmd, coasts, coatings, colloids, colorants, commodities, compounds, computation, computers, condensedmatter, conservation, constrmater, cosmetics, covid, crops, cryptography, crystals, csmf, ctn, curroncol, cyber, dairy, data, ddc, dentistry, dermato, dermatopathology, designs, devices, diabetology, diagnostics, dietetics, digital, disabilities, diseases, diversity, dna, drones, dynamics, earth, ebj, ecologies, econometrics, economies, education, ejihpe, electricity, electrochem, electronicmat, electronics, encyclopedia, endocrines, energies, eng, engproc, entomology, entropy, environments, environsciproc, epidemiologia, epigenomes, est, fermentation, fibers, fintech, fire, fishes, fluids, foods, forecasting, forensicsci, forests, foundations, fractalfract, fuels, future, futureinternet, futurepharmacol, futurephys, futuretransp, galaxies, games, gases, gastroent, gastrointestdisord, gels, genealogy, genes, geographies, geohazards, geomatics, geosciences, geotechnics, geriatrics, grasses, gucdd, hazardousmatters, healthcare, hearts, hemato, hematolrep, heritage, higheredu, highthroughput, histories, horticulturae, hospitals, humanities, humans, hydrobiology, hydrogen, hydrology, hygiene, idr, ijerph, ijfs, ijgi, ijms, ijns, ijpb, ijtm, ijtpp, ime, immuno, informatics, information, infrastructures, inorganics, insects, instruments, inventions, iot, j, jal, jcdd, jcm, jcp, jcs, jcto, jdb, jeta, jfb, jfmk, jimaging, jintelligence, jlpea, jmmp, jmp, jmse, jne, jnt, jof, joitmc, jor, journalmedia, jox, jpm, jrfm, jsan, jtaer, jvd, jzbg, kidneydial, kinasesphosphatases, knowledge, land, languages, laws, life, liquids, literature, livers, logics, logistics, lubricants, lymphatics, machines, macromol, magnetism, magnetochemistry, make, marinedrugs, materials, materproc, mathematics, mca, measurements, medicina, medicines, medsci, membranes, merits, metabolites, metals, meteorology, methane, metrology, micro, microarrays, microbiolres, micromachines, microorganisms, microplastics, minerals, mining, modelling, molbank, molecules, mps, msf, mti, muscles, nanoenergyadv, nanomanufacturing,\gdef\@continuouspages{yes}} nanomaterials, ncrna, ndt, network, neuroglia, neurolint, neurosci, nitrogen, notspecified, %%nri, nursrep, nutraceuticals, nutrients, obesities, oceans, ohbm, onco, %oncopathology, optics, oral, organics, organoids, osteology, oxygen, parasites, parasitologia, particles, pathogens, pathophysiology, pediatrrep, pharmaceuticals, pharmaceutics, pharmacoepidemiology,\gdef\@ISSN{2813-0618}\gdef\@continuous pharmacy, philosophies, photochem, photonics, phycology, physchem, physics, physiologia, plants, plasma, platforms, pollutants, polymers, polysaccharides, poultry, powders, preprints, proceedings, processes, prosthesis, proteomes, psf, psych, psychiatryint, psychoactives, publications, quantumrep, quaternary, qubs, radiation, reactions, receptors, recycling, regeneration, religions, remotesensing, reports, reprodmed, resources, rheumato, risks, robotics, ruminants, safety, sci, scipharm, sclerosis, seeds, sensors, separations, sexes, signals, sinusitis, skins, smartcities, sna, societies, socsci, software, soilsystems, solar, solids, spectroscj, sports, standards, stats, std, stresses, surfaces, surgeries, suschem, sustainability, symmetry, synbio, systems, targets, taxonomy, technologies, telecom, test, textiles, thalassrep, thermo, tomography, tourismhosp, toxics, toxins, transplantology, transportation, traumacare, traumas, tropicalmed, universe, urbansci, uro, vaccines, vehicles, venereology, vetsci, vibration, virtualworlds, viruses, vision, waste, water, wem, wevj, wind, women, world, youth, zoonoticdis
+#+latex_header: % For posting an early version of this manuscript as a preprint, you may use "preprints" as the journal. Changing "submit" to "accept" before posting will remove line numbers.
+#+latex_header:
+#+latex_header: %---------
+#+latex_header: % article
+#+latex_header: %---------
+#+latex_header: % The default type of manuscript is "article", but can be replaced by:
+#+latex_header: % abstract, addendum, article, book, bookreview, briefreport, casereport, comment, commentary, communication, conferenceproceedings, correction, conferencereport, entry, expressionofconcern, extendedabstract, datadescriptor, editorial, essay, erratum, hypothesis, interestingimage, obituary, opinion, projectreport, reply, retraction, review, perspective, protocol, shortnote, studyprotocol, systematicreview, supfile, technicalnote, viewpoint, guidelines, registeredreport, tutorial
+#+latex_header: % supfile = supplementary materials
+#+latex_header:
+#+latex_header: %----------
+#+latex_header: % submit
+#+latex_header: %----------
+#+latex_header: % The class option "submit" will be changed to "accept" by the Editorial Office when the paper is accepted. This will only make changes to the frontpage (e.g., the logo of the journal will get visible), the headings, and the copyright information. Also, line numbering will be removed. Journal info and pagination for accepted papers will also be assigned by the Editorial Office.
+#+latex_header:
+#+latex_header: %------------------
+#+latex_header: % moreauthors
+#+latex_header: %------------------
+#+latex_header: % If there is only one author the class option oneauthor should be used. Otherwise use the class option moreauthors.
+#+latex_header:
+#+latex_header: %---------
+#+latex_header: % pdftex
+#+latex_header: %---------
+#+latex_header: % The option pdftex is for use with pdfLaTeX. Remove "pdftex" for (1) compiling with LaTeX & dvi2pdf (if eps figures are used) or for (2) compiling with XeLaTeX.
+#+latex_header:
+#+latex_header: %=================================================================
+#+latex_header: % MDPI internal commands - do not modify
+#+latex_header: \firstpage{1}
+#+latex_header: \makeatletter
+#+latex_header: \setcounter{page}{\@firstpage}
+#+latex_header: \makeatother
+#+latex_header: \pubvolume{1}
+#+latex_header: \issuenum{1}
+#+latex_header: \articlenumber{0}
+#+latex_header: \pubyear{2024}
+#+latex_header: \copyrightyear{2024}
+#+latex_header: %\externaleditor{Academic Editor: Firstname Lastname}
+#+latex_header: \datereceived{ }
+#+latex_header: \daterevised{ } % Comment out if no revised date
+#+latex_header: \dateaccepted{ }
+#+latex_header: \datepublished{ }
+#+latex_header: %\datecorrected{} % For corrected papers: "Corrected: XXX" date in the original paper.
+#+latex_header: %\dateretracted{} % For corrected papers: "Retracted: XXX" date in the original paper.
+#+latex_header: \hreflink{https://doi.org/} % If needed use \linebreak
+#+latex_header: %\doinum{}
+#+latex_header: %\pdfoutput=1 % Uncommented for upload to arXiv.org
+#+latex_header: %\CorrStatement{yes}  % For updates
+#+latex_header:
+#+latex_header:
+#+latex_header: %=================================================================
+#+latex_header: % Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, float, amsmath, amssymb, lineno, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, tabto, xcolor, colortbl, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, array, tabularx, pbox, ragged2e, tocloft, marginnote, marginfix, enotez, amsthm, natbib, hyperref, cleveref, scrextend, url, geometry, newfloat, caption, draftwatermark, seqsplit
+#+latex_header: % cleveref: load \crefname definitions after \begin{document}
+#+latex_header:
+#+latex_header: %=================================================================
+#+latex_header: % Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
+#+latex_header: %% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
+#+latex_header:
+#+latex_header: %=================================================================
+#+latex_header: % Full title of the paper (Capitalized)
+#+latex_header: \Title{A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging}
+#+latex_header:
+#+latex_header: % MDPI internal command: Title for citation in the left column
+#+latex_header: \TitleCitation{A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging}
+#+latex_header:
+#+latex_header: % Author Orchid ID: enter ID or remove command
+#+latex_header: %\newcommand{\orcidauthorA}{0000-0000-0000-000X} % Add \orcidA{} behind the author's name
+#+latex_header: %\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
+#+latex_header:
+#+latex_header: % Authors, for the paper (add full first names)
+#+latex_header: \Author{Alexander Brown$^{1,\dagger,}$* and Greg Droge$^{2,\dagger,\ddagger}$}
+#+latex_header:
+#+latex_header: %\longauthorlist{yes}
+#+latex_header:
+#+latex_header: % MDPI internal command: Authors, for metadata in PDF
+#+latex_header: \AuthorNames{Alexander Brown and Greg Droge}
+#+latex_header:
+#+latex_header: % MDPI internal command: Authors, for citation in the left column
+#+latex_header: \AuthorCitation{Brown, A.; Droge G.}
+#+latex_header: % If this is a Chicago style journal: Lastname, Firstname, Firstname Lastname, and Firstname Lastname.
+#+latex_header:
+#+latex_header: % Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+#+latex_header: \address{%
+#+latex_header: $^{1}$ \quad Utah State University; a01704744@usu.edu\\
+#+latex_header: $^{2}$ \quad Utah State University; greg.droge@usu.edu}
+#+latex_header:
+#+latex_header: % Contact information of the corresponding author
+#+latex_header: \corres{Correspondence: a01704744@usu.edu}
+#+latex_header:
+#+latex_header: % Current address and/or shared authorship
+#+latex_header: \firstnote{Current address: 102 Old Main Hl, Logan, UT 84322-0102.}  % Current address should not be the same as any items in the Affiliation section.
+#+latex_header: \secondnote{These authors contributed equally to this work.}
+#+latex_header: % The commands \thirdnote{} till \eighthnote{} are available for further notes
+#+latex_header:
+#+latex_header: %\simplesumm{} % Simple summary
+#+latex_header:
+#+latex_header: %\conference{} % An extended version of a conference paper
+#+latex_header:
+#+latex_header: % The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
+#+latex_header: %\PACS{J0101}
+#+latex_header: %\MSC{}
+#+latex_header: %\JEL{}
+#+latex_header:
+#+latex_header: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#+latex_header: % Only for the journal Diversity
+#+latex_header: %\LSID{\url{http://}}
+#+latex_header:
+#+latex_header: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#+latex_header: % Only for the journal Applied Sciences
+#+latex_header: %\featuredapplication{Authors are encouraged to provide a concise description of the specific application or a potential application of the work. This section is not mandatory.}
+#+latex_header: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#+latex_header:
+#+latex_header: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#+latex_header: % Only for the journal Data
+#+latex_header: %\dataset{DOI number or link to the deposited data set if the data set is published separately. If the data set shall be published as a supplement to this paper, this field will be filled by the journal editors. In this case, please submit the data set as a supplement.}
+#+latex_header: %\datasetlicense{License under which the data set is made available (CC0, CC-BY, CC-BY-SA, CC-BY-NC, etc.)}
+#+latex_header:
+#+latex_header: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#+latex_header: % Only for the journal Toxins
+#+latex_header: %\keycontribution{The breakthroughs or highlights of the manuscript. Authors can write one or two sentences to describe the most important part of the paper.}
+#+latex_header:
+#+latex_header: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#+latex_header: % Only for the journal Encyclopedia
+#+latex_header: %\encyclopediadef{For entry manuscripts only: please provide a brief overview of the entry title instead of an abstract.}
+#+latex_header:
+#+latex_header: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#+latex_header: % Only for the journal Advances in Respiratory Medicine
+#+latex_header: %\addhighlights{yes}
+#+latex_header: %\renewcommand{\addhighlights}{%
+#+latex_header:
+#+latex_header: %\noindent This is an obligatory section in “Advances in Respiratory Medicine”, whose goal is to increase the discoverability and readability of the article via search engines and other scholars. Highlights should not be a copy of the abstract, but a simple text allowing the reader to quickly and simplified find out what the article is about and what can be cited from it. Each of these parts should be devoted up to 2~bullet points.\vspace{3pt}\\
+#+latex_header: %\textbf{What are the main findings?}
+#+latex_header: % \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+#+latex_header: % \item First bullet.
+#+latex_header: % \item Second bullet.
+#+latex_header: % \end{itemize}\vspace{3pt}
+#+latex_header: %\textbf{What is the implication of the main finding?}
+#+latex_header: % \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+#+latex_header: % \item First bullet.
+#+latex_header: % \item Second bullet.
+#+latex_header: % \end{itemize}
+#+latex_header: %}
+#+latex_header:
