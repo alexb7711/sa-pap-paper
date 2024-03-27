@@ -1,4 +1,4 @@
-% Created 2024-03-27 Wed 14:45
+% Created 2024-03-27 Wed 15:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -826,12 +826,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org14103bc}
+\label{sec:orgd1e291d}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org49759be}
+\label{sec:org1cab320}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -1271,14 +1271,14 @@ minimized given the same schedule.
 \begin{table}[htbp]
 \caption{\label{tab:charge-count}Table of mean and max instantaneous charger usage throughout the time horizon. The schedule row indicates the number of queues required by each schedule.}
 \centering
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|ll|ll|ll|ll|}
 \hline
- & \multicolumn{2}{l|}{MILP} & \multicolumn{2}{l|}{Qin-Modified} & \multicolumn{2}{l|}{Heuristic} & \multicolumn{2}{l|}{Quick} \\
+ & MILP &  & Qin-Modified &  & Heuristic &  & Quick & \\[0pt]
 \hline
- & Slow & Fast & Slow & Fast & Slow & Fast & Slow & Fast \\
-Mean & 1.877 & 0.133 & 0.788 & 0.441 & 1.8 & 0.159 & 1.494 & 0.234 \\
-Max & 4 & 2 & 2 & 1 & 7 & 2 & 6 & 2 \\
-Schedule & 4 & 3 & 2 & 1 & 9 & 4 & 15 & 15 \\
+ & Slow & Fast & Slow & Fast & Slow & Fast & Slow & Fast\\[0pt]
+Mean & 1.877 & 0.133 & 0.788 & 0.441 & 1.8 & 0.159 & 1.494 & 0.234\\[0pt]
+Max & 4 & 2 & 2 & 1 & 7 & 2 & 6 & 2\\[0pt]
+Schedule & 4 & 3 & 2 & 1 & 9 & 4 & 15 & 15\\[0pt]
 \hline
 \end{tabular}
 \end{table}
@@ -1298,15 +1298,15 @@ followed by the quick SA, heuristic SA, and then the MILP, most likely due to th
 applied to the algorithm. This measure is useful when viewing with \ref{fig:power} and \ref{fig:energy-usage}.
 
 \begin{table}[htbp]
-\caption{\label{tab:charge}Table of mean, min, and max SOC for each charging schedule.}
+\caption{\label{tab:charge}Table of mean, min, and max SOC (kWh) for each charging schedule.}
 \centering
-\begin{tabular}{|l|l|l|l|l|}
+\begin{tabular}{|l|cccc|}
 \hline
- & MILP & Qin-Modifid & Heuristic & Quick \\
+ & MILP & Qin-Modifid & Heuristic & Quick\\[0pt]
 \hline
-Mean & 179.580229533742 & 292.615759538128 & 189.525113828846 & 216.523166855178 \\
-Min & 96.9999999999463 & 0 & 6.3432083 & 29.862568 \\
-Max & 388 & 368.6 & 388 & 388 \\
+Mean & 179.580229533742 & 292.615759538128 & 189.525113828846 & 216.523166855178\\[0pt]
+Min & 96.9999999999463 & 0 & 6.3432083 & 29.862568\\[0pt]
+Max & 388 & 368.6 & 388 & 388\\[0pt]
 \hline
 \end{tabular}
 \end{table}
@@ -1329,12 +1329,12 @@ duration as previously discussed. This measure directly correlates into the ener
 \begin{table}[htbp]
 \caption{\label{tab:power}Table of mean and max power demand for each charging schedule.}
 \centering
-\begin{tabular}{|l|l|l|l|l|}
+\begin{tabular}{|l|cccc|}
 \hline
- & MILP & QM & Heuristic & Quick \\
+ & MILP & QM & Heuristic & Quick\\[0pt]
 \hline
-Mean & 177.34 & 424.95 & 198.84105 & 257.9823 \\
-Max & 1910 & 970 & 1911.9 & 1911.9 \\
+Mean & 177.34 & 424.95 & 198.84105 & 257.9823\\[0pt]
+Max & 1910 & 970 & 1911.9 & 1911.9\\[0pt]
 \hline
 \end{tabular}
 \end{table}
