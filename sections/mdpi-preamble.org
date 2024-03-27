@@ -77,7 +77,7 @@
 #+latex_header: %\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
 #+latex_header:
 #+latex_header: % Authors, for the paper (add full first names)
-#+latex_header: \Author{Alexander Brown$^{1,\dagger,}$* and Greg Droge$^{2,\ddagger}$}
+#+latex_header: \Author{Alexander Brown$^{1,\dagger,}$* and Greg Droge$^{2,\dagger,\ddagger}$}
 #+latex_header:
 #+latex_header: %\longauthorlist{yes}
 #+latex_header:
@@ -104,12 +104,6 @@
 #+latex_header: %\simplesumm{} % Simple summary
 #+latex_header:
 #+latex_header: %\conference{} % An extended version of a conference paper
-#+latex_header:
-#+latex_header: % Abstract (Do not insert blank lines, i.e. \\)
-#+latex_header: \abstract{A single paragraph of about 200 words maximum. For research articles, abstracts should give a pertinent overview of the work. We strongly encourage authors to use the following style of structured abstracts, but without headings: (1) Background: place the question addressed in a broad context and highlight the purpose of the study; (2) Methods: describe briefly the main methods or treatments applied; (3) Results: summarize the article's main findings; (4) Conclusions: indicate the main conclusions or interpretations. The abstract should be an objective representation of the article, it must not contain results which are not presented and substantiated in the main text and should not exaggerate the main conclusions.}
-#+latex_header:
-#+latex_header: % Keywords
-#+latex_header: \keyword{keyword 1; keyword 2; keyword 3 (List three to ten pertinent keywords specific to the article; yet reasonably common within the subject discipline.)}
 #+latex_header:
 #+latex_header: % The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
 #+latex_header: %\PACS{J0101}
