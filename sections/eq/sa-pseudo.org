@@ -18,9 +18,7 @@
 
           \ForEach{$t_m \in t$}
           {
-            $k \leftarrow 0$ \tcc*{Initialize repetition counter}
-
-            \ForEach{$k \in \{0, 1, ..., n_K$}
+            \ForEach{$k \in \{0, 1, ..., n_K\}$}
             {
               $\bar{\omega} \leftarrow $ \Pert{($\I$, $\C$)}\tcc*{Perturb the solution}
               $\Omega_{\bar{\omega},\omega} \rightarrow$ \Obj{$\bar{\omega}$} - \Obj{$\omega$}\tcc*{Calculate the difference of fitness scores}
