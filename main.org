@@ -27,9 +27,14 @@
 #+include: sections/example.org
 #+include: sections/sa-pap-figures.org::#sec:sa-pap-figures :only-contents t
 #+include: sections/conclusion.org
+#+include: sections/post-paper.org
 
 # ======================================================================================================================
 # Bibliography
 
-#+cite_export: bibtex chicago2
+#+latex:\begin{adjustwidth}{-\extralength}{0cm}
+#+latex:\reftitle{References}
+#+cite_export: bibtex
 #+print_bibliography:
+#+latex:\PublishersNote{}
+#+latex:\end{adjustwidth}
