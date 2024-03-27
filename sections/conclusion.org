@@ -9,34 +9,26 @@ description was provided outlining the scenario in which this model is designed 
 introduced by describing the components of the objective function and outlining the MILP constraints utilized to ensure
 candidate solutions are in the solution space.
 
-The objective function derived in this work is composed of two main pieces: the assignment cost and the utility cost.
-The assignment cost consists of the cost of assigning a BEB to a particular queue and a penalty function. The cost of
-assigning a BEB to an idle queue (a queue that provides no charge) has no cost. However, the cost of assigning a BEB to
-a charge queue, ordered first by slow then fast chargers, is scaled by a constant gain factor multiplied by the queue
-index. The penalty method was implemented to keep the SOC of each BEB above a specified charge threshold. If the initial
-SOC of a BEB upon an arrival to the station is below the threshold, a large penalty is applied to the objective that is
-proportional to the difference of the BEB SOC and the threshold squared. The utility cost consists of the consumption
-cost and the demand cost. The consumption cost is the total accumulated energy of the schedule and the demand cost is
-described by the peak-15 (peak power consumption).
-
-An example of the SA PAP algorithm was then presented and compared the MILP PAP and Qin-Modified techniques. The SA PAP
-was run utilizing two different neighborhood searching techniques named the quick and heuristic techniques,
+An example of the SA PAP algorithm was presented and compared against the MILP PAP and Qin-Modified techniques. The SA
+PAP was run utilizing two different neighborhood searching techniques named the quick and heuristic techniques,
 respectively. The quick SA's objective was to randomly search a wide neighborhood while the heuristic technique was
 designed to incrementally search a neighborhood by randomly selecting a fast or slow charging queue and then stepping
 through the queues one at a time. The quick and heuristic have comparable run times at src_latex{\fpeval{\quicklocal *
-\tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds, respectively. The Qin-Modified and MILP
-PAP utilized the fewest amount of chargers. The heuristic SA technique generated a solution approximating that of the
-MILP and Qin-Modified, but was unable to minimize the charger count as efficiently. The quick SA utilized all the
-chargers available (i.e. was unable to minimize the charger count).
+\tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds, respectively, but yielded vastly
+different results. The Qin-Modified utilized the fewest amount of chargers followed by the MILP, heuristic SA, then the
+quick SA. The assignment cost applied to the objective function had no effect on the results of the quick SA; however,
+the heuristic SA was more effective in minimizing the total chargers required. Furthermore, the heuristic SA technique
+generated a solution approximating that of the MILP, but was unable to minimize the charger count as efficiently. The
+quick SA utilized all the chargers available (i.e. was unable to minimize the charger count).
 
 Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to 6.34 kWh for the
 heuristic SA and 29.8 kWh. The Qin-Modified had the SOC of three BEBs fall to 0% SOC. The schedule that consumed the
 least amount of energy is the MILP PAP (4797.75 kW) with the heuristic SA coming in second (5785.76 kW). The difference
 between the two being about src_latex{\fpeval{5785.76 - 4797.75}} kWh. The peak demands between the heuristic SA, quick
 SA, and the MILP were very similar. The MILP had a peak demand of 1910 kW and the quick and heuristic SA had demand
-peaks of 1911.9 kW. The Qin-Modified strategy was the most successful in minimizing the charger use followed by the
-MILP, heuristic SA, and quick SA. Overall, the most effective schedule was the MILP; however the heuristic SA was able
-to produce a schedule of a similar caliber to that of the MILP.
+peaks of 1911.9 kW. Overall, the most effective schedule was the MILP; however as SA has no guarantee of optimality, the
+heuristic SA was able to generate a schedule that was "in the ballpark" of that of the MILP while further taking the
+demand cost into consideration.
 
 Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a denser
 set of routes to schedule. It is also of interest to incorporate non-linear battery dynamics to more accurately model
