@@ -1,25 +1,164 @@
-% Created 2024-03-26 Tue 15:39
+% Created 2024-03-27 Wed 13:14
 % Intended LaTeX compiler: pdflatex
-\documentclass[11pt,a4paper,final]{article}
-\usepackage[a4paper, total={7in, 10in}]{geometry}
-\usepackage{booktabs}
-\usepackage{subcaption}
-\usepackage{graphicx}
-\usepackage{tikz}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{graphicx}
-\usepackage{longtable}
-\usepackage{wrapfig}
-\usepackage{rotating}
-\usepackage[normalem]{ulem}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{capt-of}
-\usepackage{hyperref}
+\documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
+
+%--------------------
+% Class Options:
+%--------------------
+%----------
+% journal
+%----------
+% Choose between the following MDPI journals:
+% acoustics, actuators, addictions, admsci, adolescents, aerobiology, aerospace, agriculture, agriengineering, agrochemicals, agronomy, ai, air, algorithms, allergies, alloys, analytica, analytics, anatomia, animals, antibiotics, antibodies, antioxidants, applbiosci, appliedchem, appliedmath, applmech, applmicrobiol, applnano, applsci, aquacj, architecture, arm, arthropoda, arts, asc, asi, astronomy, atmosphere, atoms, audiolres, automation, axioms, bacteria, batteries, bdcc, behavsci, beverages, biochem, bioengineering, biologics, biology, biomass, biomechanics, biomed, biomedicines, biomedinformatics, biomimetics, biomolecules, biophysica, biosensors, biotech, birds, bloods, blsf, brainsci, breath, buildings, businesses, cancers, carbon, cardiogenetics, catalysts, cells, ceramics, challenges, chemengineering, chemistry, chemosensors, chemproc, children, chips, cimb, civileng, cleantechnol, climate, clinpract, clockssleep, cmd, coasts, coatings, colloids, colorants, commodities, compounds, computation, computers, condensedmatter, conservation, constrmater, cosmetics, covid, crops, cryptography, crystals, csmf, ctn, curroncol, cyber, dairy, data, ddc, dentistry, dermato, dermatopathology, designs, devices, diabetology, diagnostics, dietetics, digital, disabilities, diseases, diversity, dna, drones, dynamics, earth, ebj, ecologies, econometrics, economies, education, ejihpe, electricity, electrochem, electronicmat, electronics, encyclopedia, endocrines, energies, eng, engproc, entomology, entropy, environments, environsciproc, epidemiologia, epigenomes, est, fermentation, fibers, fintech, fire, fishes, fluids, foods, forecasting, forensicsci, forests, foundations, fractalfract, fuels, future, futureinternet, futurepharmacol, futurephys, futuretransp, galaxies, games, gases, gastroent, gastrointestdisord, gels, genealogy, genes, geographies, geohazards, geomatics, geosciences, geotechnics, geriatrics, grasses, gucdd, hazardousmatters, healthcare, hearts, hemato, hematolrep, heritage, higheredu, highthroughput, histories, horticulturae, hospitals, humanities, humans, hydrobiology, hydrogen, hydrology, hygiene, idr, ijerph, ijfs, ijgi, ijms, ijns, ijpb, ijtm, ijtpp, ime, immuno, informatics, information, infrastructures, inorganics, insects, instruments, inventions, iot, j, jal, jcdd, jcm, jcp, jcs, jcto, jdb, jeta, jfb, jfmk, jimaging, jintelligence, jlpea, jmmp, jmp, jmse, jne, jnt, jof, joitmc, jor, journalmedia, jox, jpm, jrfm, jsan, jtaer, jvd, jzbg, kidneydial, kinasesphosphatases, knowledge, land, languages, laws, life, liquids, literature, livers, logics, logistics, lubricants, lymphatics, machines, macromol, magnetism, magnetochemistry, make, marinedrugs, materials, materproc, mathematics, mca, measurements, medicina, medicines, medsci, membranes, merits, metabolites, metals, meteorology, methane, metrology, micro, microarrays, microbiolres, micromachines, microorganisms, microplastics, minerals, mining, modelling, molbank, molecules, mps, msf, mti, muscles, nanoenergyadv, nanomanufacturing,\gdef\@continuouspages{yes}} nanomaterials, ncrna, ndt, network, neuroglia, neurolint, neurosci, nitrogen, notspecified, %%nri, nursrep, nutraceuticals, nutrients, obesities, oceans, ohbm, onco, %oncopathology, optics, oral, organics, organoids, osteology, oxygen, parasites, parasitologia, particles, pathogens, pathophysiology, pediatrrep, pharmaceuticals, pharmaceutics, pharmacoepidemiology,\gdef\@ISSN{2813-0618}\gdef\@continuous pharmacy, philosophies, photochem, photonics, phycology, physchem, physics, physiologia, plants, plasma, platforms, pollutants, polymers, polysaccharides, poultry, powders, preprints, proceedings, processes, prosthesis, proteomes, psf, psych, psychiatryint, psychoactives, publications, quantumrep, quaternary, qubs, radiation, reactions, receptors, recycling, regeneration, religions, remotesensing, reports, reprodmed, resources, rheumato, risks, robotics, ruminants, safety, sci, scipharm, sclerosis, seeds, sensors, separations, sexes, signals, sinusitis, skins, smartcities, sna, societies, socsci, software, soilsystems, solar, solids, spectroscj, sports, standards, stats, std, stresses, surfaces, surgeries, suschem, sustainability, symmetry, synbio, systems, targets, taxonomy, technologies, telecom, test, textiles, thalassrep, thermo, tomography, tourismhosp, toxics, toxins, transplantology, transportation, traumacare, traumas, tropicalmed, universe, urbansci, uro, vaccines, vehicles, venereology, vetsci, vibration, virtualworlds, viruses, vision, waste, water, wem, wevj, wind, women, world, youth, zoonoticdis
+% For posting an early version of this manuscript as a preprint, you may use "preprints" as the journal. Changing "submit" to "accept" before posting will remove line numbers.
+
+%---------
+% article
+%---------
+% The default type of manuscript is "article", but can be replaced by:
+% abstract, addendum, article, book, bookreview, briefreport, casereport, comment, commentary, communication, conferenceproceedings, correction, conferencereport, entry, expressionofconcern, extendedabstract, datadescriptor, editorial, essay, erratum, hypothesis, interestingimage, obituary, opinion, projectreport, reply, retraction, review, perspective, protocol, shortnote, studyprotocol, systematicreview, supfile, technicalnote, viewpoint, guidelines, registeredreport, tutorial
+% supfile = supplementary materials
+
+%----------
+% submit
+%----------
+% The class option "submit" will be changed to "accept" by the Editorial Office when the paper is accepted. This will only make changes to the frontpage (e.g., the logo of the journal will get visible), the headings, and the copyright information. Also, line numbering will be removed. Journal info and pagination for accepted papers will also be assigned by the Editorial Office.
+
+%------------------
+% moreauthors
+%------------------
+% If there is only one author the class option oneauthor should be used. Otherwise use the class option moreauthors.
+
+%---------
+% pdftex
+%---------
+% The option pdftex is for use with pdfLaTeX. Remove "pdftex" for (1) compiling with LaTeX & dvi2pdf (if eps figures are used) or for (2) compiling with XeLaTeX.
+
+%=================================================================
+% MDPI internal commands - do not modify
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2024}
+\copyrightyear{2024}
+%\externaleditor{Academic Editor: Firstname Lastname}
+\datereceived{ }
+\daterevised{ } % Comment out if no revised date
+\dateaccepted{ }
+\datepublished{ }
+%\datecorrected{} % For corrected papers: "Corrected: XXX" date in the original paper.
+%\dateretracted{} % For corrected papers: "Retracted: XXX" date in the original paper.
+\hreflink{https://doi.org/} % If needed use \linebreak
+%\doinum{}
+%\pdfoutput=1 % Uncommented for upload to arXiv.org
+%\CorrStatement{yes}  % For updates
+
+
+%=================================================================
+% Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, float, amsmath, amssymb, lineno, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, tabto, xcolor, colortbl, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, array, tabularx, pbox, ragged2e, tocloft, marginnote, marginfix, enotez, amsthm, natbib, hyperref, cleveref, scrextend, url, geometry, newfloat, caption, draftwatermark, seqsplit
+% cleveref: load \crefname definitions after \begin{document}
+
+%=================================================================
+% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
+%% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
+
+%=================================================================
+% Full title of the paper (Capitalized)
+\Title{Title}
+
+% MDPI internal command: Title for citation in the left column
+\TitleCitation{Title}
+
+% Author Orchid ID: enter ID or remove command
+\newcommand{\orcidauthorA}{0000-0000-0000-000X} % Add \orcidA{} behind the author's name
+%\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
+
+% Authors, for the paper (add full first names)
+\Author{Firstname Lastname $^{1,\dagger,\ddagger}$\orcidA{}, Firstname Lastname $^{2,\ddagger}$ and Firstname Lastname $^{2,}$*}
+
+%\longauthorlist{yes}
+
+% MDPI internal command: Authors, for metadata in PDF
+\AuthorNames{Firstname Lastname, Firstname Lastname and Firstname Lastname}
+
+% MDPI internal command: Authors, for citation in the left column
+\AuthorCitation{Lastname, F.; Lastname, F.; Lastname, F.}
+% If this is a Chicago style journal: Lastname, Firstname, Firstname Lastname, and Firstname Lastname.
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address{%
+$^{1}$ \quad Affiliation 1; e-mail@e-mail.com\\
+$^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
+
+% Contact information of the corresponding author
+\corres{Correspondence: e-mail@e-mail.com; Tel.: (optional; include country code; if there are multiple corresponding authors, add author initials) +xx-xxxx-xxx-xxxx (F.L.)}
+
+% Current address and/or shared authorship
+\firstnote{Current address: Affiliation.}  % Current address should not be the same as any items in the Affiliation section.
+\secondnote{These authors contributed equally to this work.}
+% The commands \thirdnote{} till \eighthnote{} are available for further notes
+
+%\simplesumm{} % Simple summary
+
+%\conference{} % An extended version of a conference paper
+
+% Abstract (Do not insert blank lines, i.e. \\)
+\abstract{A single paragraph of about 200 words maximum. For research articles, abstracts should give a pertinent overview of the work. We strongly encourage authors to use the following style of structured abstracts, but without headings: (1) Background: place the question addressed in a broad context and highlight the purpose of the study; (2) Methods: describe briefly the main methods or treatments applied; (3) Results: summarize the article's main findings; (4) Conclusions: indicate the main conclusions or interpretations. The abstract should be an objective representation of the article, it must not contain results which are not presented and substantiated in the main text and should not exaggerate the main conclusions.}
+
+% Keywords
+\keyword{keyword 1; keyword 2; keyword 3 (List three to ten pertinent keywords specific to the article; yet reasonably common within the subject discipline.)}
+
+% The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
+%\PACS{J0101}
+%\MSC{}
+%\JEL{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Diversity
+%\LSID{\url{http://}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Applied Sciences
+%\featuredapplication{Authors are encouraged to provide a concise description of the specific application or a potential application of the work. This section is not mandatory.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Data
+%\dataset{DOI number or link to the deposited data set if the data set is published separately. If the data set shall be published as a supplement to this paper, this field will be filled by the journal editors. In this case, please submit the data set as a supplement.}
+%\datasetlicense{License under which the data set is made available (CC0, CC-BY, CC-BY-SA, CC-BY-NC, etc.)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Toxins
+%\keycontribution{The breakthroughs or highlights of the manuscript. Authors can write one or two sentences to describe the most important part of the paper.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Encyclopedia
+%\encyclopediadef{For entry manuscripts only: please provide a brief overview of the entry title instead of an abstract.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Advances in Respiratory Medicine
+%\addhighlights{yes}
+%\renewcommand{\addhighlights}{%
+
+%\noindent This is an obligatory section in “Advances in Respiratory Medicine”, whose goal is to increase the discoverability and readability of the article via search engines and other scholars. Highlights should not be a copy of the abstract, but a simple text allowing the reader to quickly and simplified find out what the article is about and what can be cited from it. Each of these parts should be devoted up to 2~bullet points.\vspace{3pt}\\
+%\textbf{What are the main findings?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}\vspace{3pt}
+%\textbf{What is the implication of the main finding?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}
+%}
+
 \usepackage{subcaption}                     % Subfigures
 \usepackage[ruled]{algorithm2e}             % Algorithms
-\usepackage{xcolor}                         % Color time
 \usepackage{listings}                       % Code in LaTeX
 \usepackage{listings-rust}                  % Code in LaTeX
 \usepackage{amsfonts}                       % Cool math fonts
@@ -27,16 +166,10 @@
 \usepackage{multicol}                       % Add capability to make columns
 \usepackage{soul}                           % Highlight text
 \usepackage[stable]{footmisc}               % Allow footnotes in section headers
-\usepackage{hyperref}                       % Cool clean hyperlinks
 \setlength\parindent{0pt}                   % No indent for paragraphs
 \usepackage{xfp}                             % No trailing zeros
 \lstset{language=Rust, style=boxed}
 \usetikzlibrary{arrows.meta}                % Arrows for tikz
-\renewcommand*{\sectionautorefname}{Section}
-\renewcommand*{\subsectionautorefname}{Section}
-\renewcommand*{\subsubsectionautorefname}{Section}
-\renewcommand*{\paragraphautorefname}{Section}
-\renewcommand*{\algorithmautorefname}{Algorithm}
 \newcommand{\Or}{\textbf{ or }}
 \renewcommand*{\And}{\textbf{ and }}
 \newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}%
@@ -95,13 +228,6 @@
 \author{Alexander Brown}
 \date{\today}
 \title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
-\hypersetup{
- pdfauthor={Alexander Brown},
- pdftitle={Bus Charging Schedule Simulated Annealing with MILP Constraints},
- pdfkeywords={},
- pdfsubject={},
- pdfcreator={Emacs 29.3 (Org mode 9.6.15)}, 
- pdflang={English}}
 \begin{document}
 
 \maketitle
@@ -115,58 +241,65 @@
 \label{sec:introduction}
 Public transportation systems are a critical component urban areas. An increased awareness and concern of environmental
 impacts of petroleum based public transportation has driven an effort to reduce the pollutant footprint
-\cite{de-2014-simul-elect,xylia-2018-role-charg,guida-2017-zeeus-repor-europ,li-2016-batter-elect}. Particularly,
+(De Filippo, Giovanni and Marano, Vincenzo and Sioshansi, Ramteen, 2014, Xylia, Maria and Silveira, Semida, 2018, Guida, U and Abdulah, A, 2017, Li, Jing-Quan, 2016). Particularly,
 the electrification of public bus transportation via battery power, i.e., battery electric buses (BEBs), has received
-significant attention \cite{li-2016-batter-elect}. Although the technology provides benefits beyond reduction in
+significant attention (Li, Jing-Quan, 2016). Although the technology provides benefits beyond reduction in
 emissions, such as lower driving costs, lower maintenance costs, and reduced vehicle noise, battery powered systems
 introduce new challenges such as larger upfront costs, and potentially several hours long ``refueling'' periods
-\cite{xylia-2018-role-charg,li-2016-batter-elect}. Furthermore, the problem is exacerbated by the constraints of the
+(Xylia, Maria and Silveira, Semida, 2018, Li, Jing-Quan, 2016). Furthermore, the problem is exacerbated by the constraints of the
 transit schedule to which the fleet must adhere, the limited amount of chargers available, and the adverse affects in
-the health of the battery due to fast charging \cite{lutsey-2019-updat-elect}. This work presents a scheduling
+the health of the battery due to fast charging (Lutsey, Nic and Nicholas, Michael, 2019). This work presents a scheduling
 framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple
 charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak
 power use.
 
 Literature shows an interest in solving the problem of assigning BEBs to charging queues or optimizing their
-infrastructure \cite{wei-2018-optim-spatio,sebastiani-2016-evaluat-elect,hoke-2014-accoun-lithium,wang-2017-elect-vehic}. Additionally, the prospect of solving both problems simultaneously
-has received much attention \cite{wei-2018-optim-spatio,sebastiani-2016-evaluat-elect,hoke-2014-accoun-lithium,wang-2017-elect-vehic}. These problems vary by including assignment of buses to routes
-\cite{rinaldi-2020-mixed-fleet,zhou-2020-collab-optim,tang-2019-robus-sched,li-2014-trans-bus}, determining
-whether a set of existing combustion based buses should be replaced with BEBs \cite{zhou-2020-bi-objec,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,zhou-2020-collab-optim}, and accounting for uncertainties
-\cite{bie-2021-optim-elect,duan-2021-refor-mixed,tang-2019-robus-sched,ursavas-2016-optim-polic}. These problems
+infrastructure (Wei, Ran and Liu, Xiaoyue and Ou, Yi and Fayyaz, S Kiavash, 2018, Sebastiani, Mariana Teixeira and L{\"u}ders, Ricardo and Fonseca, Keiko VerÃ´nica Ono, 2016, 
+Hoke, Anderson and Brissette, Alexander and Smith, Kandler and Pratt, Annabelle and Maksimovic, Dragan, 2014, Wang, Xiumin and Yuen, Chau and Hassan, Naveed Ul and An, Ning and Wu, Weiwei, 2017). Additionally, the prospect of solving both problems simultaneously
+has received much attention (Wei, Ran and Liu, Xiaoyue and Ou, Yi and Fayyaz, S Kiavash, 2018, Sebastiani, Mariana Teixeira and L{\"u}ders, Ricardo and Fonseca, Keiko VerÃ´nica Ono, 2016, 
+Hoke, Anderson and Brissette, Alexander and Smith, Kandler and Pratt, Annabelle and Maksimovic, Dragan, 2014, Wang, Xiumin and Yuen, Chau and Hassan, Naveed Ul and An, Ning and Wu, Weiwei, 2017). These problems vary by including assignment of buses to routes
+(Rinaldi, Marco and Picarelli, Erika and D'Ariano, Andrea and Viti, Francesco, 2020,  Zhou, Guang-Jing and Xie, Dong-Fan and Zhao, Xiao-Mei and Lu, Chaoru, 2020,  Tang, Xindi and Lin, Xi and He, Fang, 2019,  Li, Jing-Quan, 2014), determining
+whether a set of existing combustion based buses should be replaced with BEBs (Zhou, Yirong and Liu, Xiaoyue Cathy and Wei, Ran and Golub, Aaron, 2020, 
+Duan, Mengyuan and Qi, Geqi and Guan, Wei and Lu, Chaoru and Gong, Congcong, 2021,  Rinaldi, Marco and Picarelli, Erika and D'Ariano, Andrea and Viti, Francesco, 2020,  Zhou, Guang-Jing and Xie, Dong-Fan and Zhao, Xiao-Mei and Lu, Chaoru, 2020), and accounting for uncertainties
+(Bie, Yiming and Ji, Jinhua and Wang, Xiangyu and Qu, Xiaobo, 2021,  Duan, Mengyuan and Qi, Geqi and Guan, Wei and Lu, Chaoru and Gong, Congcong, 2021,  Tang, Xindi and Lin, Xi and He, Fang, 2019, Evrim Ursavas and Stuart X. Zhu, 2016). These problems
 add additional complexities that warrant simplifications for the sake of computation. Two modes of simplification are
-often found: only utilizing fast chargers during planning \cite{li-2014-trans-bus,li-2014-trans-bus,wang-2017-optim-rechar} or simplification of the charging models are made by assuming full charge
-\cite{zhou-2020-bi-objec,qarebagh-2019-optim-sched,wei-2018-optim-spatio}.
+often found: only utilizing fast chargers during planning (Li, Jing-Quan, 2014,  Li, Jing-Quan, 2014, 
+Yusheng Wang and Yongxi Huang and Jiuping Xu and Nicole Barclay, 2017) or simplification of the charging models are made by assuming full charge
+(Zhou, Yirong and Liu, Xiaoyue Cathy and Wei, Ran and Golub, Aaron, 2020,  Qarebagh, Ahad Javandoust and Sabahi, Farnaz and Nazarpour, Dariush, 2019,  Wei, Ran and Liu, Xiaoyue and Ou, Yi and Fayyaz, S Kiavash, 2018).
 
 Modeling the battery charge dynamics well is pertinent to this work as it directly affects the quality of the produced
 schedule. Furthermore, an inaccurate model and may have detrimental affects to the health of the battery if it is
-over-charged, under-charged, or forced to perform ``deep'' deep cycles \cite{zhou-2020-bi-objec,millner-2010-model-lithium,edge-2021-lithium}. While the charge profile for batteries are inherently non-linear, some
+over-charged, under-charged, or forced to perform ``deep'' deep cycles (Zhou, Yirong and Liu, Xiaoyue Cathy and Wei, Ran and Golub, Aaron, 2020, 
+Millner, Alan, 2010,  Edge, Jacqueline S. and O’Kane, Simon and Prosser, Ryan and Kirkaldy, Niall D. and Patel, Anisha N. and Hales, Alastair and Ghosh, Abir and Ai, Weilong and Chen, Jingyi and Yang, Jiang and Li, Shen and Pang, Mei-Chin and Bravo Diaz, Laura and Tomaszewska, Anna and Marzook, M. Waseem and Radhakrishnan, Karthik N. and Wang, Huizhi and Patel, Yatish and Wu, Billy and Offer, Gregory J., 2021). While the charge profile for batteries are inherently non-linear, some
 works have assumed a proportional charge increase as linear battery dynamics remain a valid assumption when the battery
-SOC is below 80\% \cite{liu-2020-batter-elect}. Furthermore, other works have suggested that charging a battery nearly
+SOC is below 80\% (Tao Liu and Avishai {(Avi) Ceder}, 2020). Furthermore, other works have suggested that charging a battery nearly
 to capacity is detrimental to the health and can significantly reduce the total charge cycles a battery may undergo
-\cite{edge-2021-lithium,millner-2010-model-lithium}. Thus, this work assumes that a linear model is sufficiently
+(Edge, Jacqueline S. and O’Kane, Simon and Prosser, Ryan and Kirkaldy, Niall D. and Patel, Anisha N. and Hales, Alastair and Ghosh, Abir and Ai, Weilong and Chen, Jingyi and Yang, Jiang and Li, Shen and Pang, Mei-Chin and Bravo Diaz, Laura and Tomaszewska, Anna and Marzook, M. Waseem and Radhakrishnan, Karthik N. and Wang, Huizhi and Patel, Yatish and Wu, Billy and Offer, Gregory J., 2021,  Millner, Alan, 2010). Thus, this work assumes that a linear model is sufficiently
 accurate to produce an operationally valid schedule while maintaining battery health.
 
-Works concerning charge planning often use a version of the vehicle scheduling problem \cite{tang-2019-robus-sched,li-2014-trans-bus,he-2020-optim-charg}. Variants of this problem address infrastructure as well as determining
-existing buses that should be replaced by a BEB \cite{zhou-2020-bi-objec,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,zhou-2020-collab-optim}. This work bases its implementation on what is known as the Position
-allocation problem \cite{qarebagh-2019-optim-sched}. The PAP is derived from the Berth Allocation Problem (BAP) which
+Works concerning charge planning often use a version of the vehicle scheduling problem (Tang, Xindi and Lin, Xi and He, Fang, 2019, 
+Li, Jing-Quan, 2014,  He, Yi and Liu, Zhaocai and Song, Ziqi, 2020). Variants of this problem address infrastructure as well as determining
+existing buses that should be replaced by a BEB (Zhou, Yirong and Liu, Xiaoyue Cathy and Wei, Ran and Golub, Aaron, 2020,  Duan, Mengyuan and Qi, Geqi and Guan, Wei and Lu, Chaoru and Gong, Congcong, 2021, 
+Rinaldi, Marco and Picarelli, Erika and D'Ariano, Andrea and Viti, Francesco, 2020,  Zhou, Guang-Jing and Xie, Dong-Fan and Zhao, Xiao-Mei and Lu, Chaoru, 2020). This work bases its implementation on what is known as the Position
+allocation problem (Qarebagh, Ahad Javandoust and Sabahi, Farnaz and Nazarpour, Dariush, 2019). The PAP is derived from the Berth Allocation Problem (BAP) which
 solves the problem of scheduling a set of vessels to be berthed and serviced. The model inputs a set of vessels arrival
 and service times and outputs a schedule that defines the selected berth and the time over which it is serviced. The PAP
 utilizes this model and redefines its inputs to EV arrival times and outputs queues for the EVs to be charged. While the
 visits remain as discrete events, the time that the BEB is on the charger is modeled as continuous, similar to
-\cite{frojan-2015-contin-berth,qarebagh-2019-optim-sched,zhou-2020-collab-optim}. Due to the close relationship
+(Pablo Frojan and Juan Francisco Correcher and Ramon Alvarez-Valdes and Gerasimos Koulouris and Jose Manuel Tamarit, 2015,  Qarebagh, Ahad Javandoust and Sabahi, Farnaz and Nazarpour, Dariush, 2019, Zhou, Guang-Jing and Xie, Dong-Fan and Zhao, Xiao-Mei and Lu, Chaoru, 2020). Due to the close relationship
 between the BAP and PAP, BAP literature may be used for the PAP. The literature shows methods of handling multiple quays
-(sets of chargers) to handle general berthing scenarios \cite{frojan-2015-contin-berth,dai-2008-suppl-chain-analy}.
-Heuristic procedures for quicker solve times have also been introduced \cite{imai-2001-dynam-berth}. Methods of
+(sets of chargers) to handle general berthing scenarios (Pablo Frojan and Juan Francisco Correcher and Ramon Alvarez-Valdes and Gerasimos Koulouris and Jose Manuel Tamarit, 2015, Jam Dai and Wuqin Lin and Rajeeva Moorthy and Chung-Piaw Teo, 2008).
+Heuristic procedures for quicker solve times have also been introduced (Akio Imai and Etsuko Nishimura and Stratos Papadimitriou, 2001). Methods of
 defining static (full time horizon) and dynamic (rolling-time horizon) models have been created for daily and real-time
 solutions, respectively, and even fuzzy set theory has been applied to allow for more flexible schedules
-\cite{bello-2019-fuzzy-activ,dai-2008-suppl-chain-analy,buhrkal-2011-model-discr,frojan-2015-contin-berth}. This
+(Marilyn Bello and Gonzalo N{\'a}poles and Ivett Fuentes and Isel Grau and Rafael Falcon and Rafael Bello and Koen Vanhoof, 2019, Jam Dai and Wuqin Lin and Rajeeva Moorthy and Chung-Piaw Teo, 2008, Katja Buhrkal and Sara Zuglian and Stefan Ropke and Jesper Larsen and Richard Lusby, 2011, Pablo Frojan and Juan Francisco Correcher and Ramon Alvarez-Valdes and Gerasimos Koulouris and Jose Manuel Tamarit, 2015). This
 work utilizes an extension of the PAP as the basis of determining the feasible space of candidate solutions.
 
 To the best of our knowledge, there is one other work that schedule BEB fleets while allowing multiple charger types,
-charger, partial charging, and accounting for consumption costs \cite{whitaker-2023-a-network}. The work in
-\cite{whitaker-2023-a-network} presents an optimization framework that assumed a fixed schedule, utilized non-linear
+charger, partial charging, and accounting for consumption costs (Whitaker, Justin and Droge, Greg and Hansen, Matthew and Mortensen, Daniel and Gunther, Jacob, 2023). The work in
+(Whitaker, Justin and Droge, Greg and Hansen, Matthew and Mortensen, Daniel and Gunther, Jacob, 2023) presents an optimization framework that assumed a fixed schedule, utilized non-linear
 battery dynamics, partial charging, considers limited charger availability, consumption cost, and allows for multiple
-charger types \cite{whitaker-2023-a-network}. This paper expands on these previous works by introducing a simulated
+charger types (Whitaker, Justin and Droge, Greg and Hansen, Matthew and Mortensen, Daniel and Gunther, Jacob, 2023). This paper expands on these previous works by introducing a simulated
 annealing (SA) framework that accounts for partial charging, minimizes total charger count, allows for multiple charger
 types, minimizes consumption cost, and minimizes demand cost.
 
@@ -212,8 +345,8 @@ visit; however, there may be multiple BEBs charging simultaneously across differ
 is allowed to charge during visit \(i\) is dictated by the scheduled arrival time and required departure time, \([a_i,
 e_i]\). Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC must stay above
 0\%. The battery dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80\% charge
-\cite{liu-2020-batter-elect}. Note that charging beyond the 80\% SOC threshold is undesirable due to battery health
-concerns as higher SOC with deep cycles accelerates degradation \cite{edge-2021-lithium,millner-2010-model-lithium}.
+(Tao Liu and Avishai {(Avi) Ceder}, 2020). Note that charging beyond the 80\% SOC threshold is undesirable due to battery health
+concerns as higher SOC with deep cycles accelerates degradation (Edge, Jacqueline S. and O’Kane, Simon and Prosser, Ryan and Kirkaldy, Niall D. and Patel, Anisha N. and Hales, Alastair and Ghosh, Abir and Ai, Weilong and Chen, Jingyi and Yang, Jiang and Li, Shen and Pang, Mei-Chin and Bravo Diaz, Laura and Tomaszewska, Anna and Marzook, M. Waseem and Radhakrishnan, Karthik N. and Wang, Huizhi and Patel, Yatish and Wu, Billy and Offer, Gregory J., 2021, Millner, Alan, 2010).
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired ``route'' that the BEB must perform after the
 visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus is assumed to have
@@ -608,25 +741,25 @@ the bus exits the station and all must be less than the time horizon).
 \section{Simulated Annealing}
 \label{sec:simulated-annealing}
 SA is a well-studied local search metaheuristic used to solve various optimization problems
-\cite{gendreau-2018-handb-metah,press-1992-numer-recip}. A metaheuristic is a high-level problem-independent algorithm
+(Gendreau, Michel and Potvin, Jean-Yves, 2018, {William H. Press} and Flannery, Brian P and Teukolsky, Saul A and Vetterling, William T, 1992). A metaheuristic is a high-level problem-independent algorithm
 framework that provides a set of guidelines or strategies to develop heuristic optimization algorithms
-\cite{radosavljevic-2018-metah-optim}. That is, metaheuristic strategies provides guidelines for implementation;
+(Radosavljevic, Jordan, 2018). That is, metaheuristic strategies provides guidelines for implementation;
 however, each problem must tailor its implementation to meet its particular needs.
 
 SA is an exploitation oriented, single-solution based metaheuristic. In addition to the advantages of simplicity, both
-theoretically and in its implementation \cite{gendreau-2018-handb-metah,radosavljevic-2018-metah-optim}. SA is also of
+theoretically and in its implementation (Gendreau, Michel and Potvin, Jean-Yves, 2018, Radosavljevic, Jordan, 2018). SA is also of
 considerable interest for global optimization over regions containing several local and global minima due to inherent
-non-linearities of the objective function \cite{gendreau-2018-handb-metah}. This model is named after its analogized
+non-linearities of the objective function (Gendreau, Michel and Potvin, Jean-Yves, 2018). This model is named after its analogized
 process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most regular
 possible crystal lattice configuration (i.e. its minimum lattice energy state)
-\cite{henderson-1989-theor-pract,press-1992-numer-recip}. SA establishes a connection between this thermodynamic
+(Darrall Henderson and Sheldon H. Jacobson and Alan W. Johnson, 1989, {William H. Press} and Flannery, Brian P and Teukolsky, Saul A and Vetterling, William T, 1992). SA establishes a connection between this thermodynamic
 process and the search for global optima in optimization problems.
 
 There are three key components to SA: cooling schedule (temperature function), acceptance criteria, and generation
-mechanisms \cite{keller-2019-multi-objec,press-1992-numer-recip}. The temperature function describes the speed at
+mechanisms (Andre A. Keller, 2019, {William H. Press} and Flannery, Brian P and Teukolsky, Saul A and Vetterling, William T, 1992). The temperature function describes the speed at
 which the system is ``cooled'' over each iteration. The term ``system'' refers to a general instance of SA. The generation
 mechanisms provide a means of modifying the system by some singular discrete change that is within the neighborhood of
-the previous solution \cite{gendreau-2018-handb-metah}. The acceptance criteria is a function of the system temperature
+the previous solution (Gendreau, Michel and Potvin, Jean-Yves, 2018). The acceptance criteria is a function of the system temperature
 that makes the decision whether the system will accept an inferior solution in favor of exploring the solution space.
 Finally, the constant temperature iteration count is the number of steps taken to try to exploit a solution at a
 constant temperature. Each of these mechanisms are elaborated in the subsequent sections.
@@ -636,9 +769,9 @@ constant temperature. Each of these mechanisms are elaborated in the subsequent 
 The temperature function models a ``rate of cooling'' for the SA process. Initially, when the temperature is high, SA
 encourages exploration. As the process begins to ``cools down'' (in accordance to the cooling schedule), it begins to
 encourage local exploitation of the solution (rather than exploration)
-\cite{rutenbar-1989-simul-anneal-algor,henderson-1989-theor-pract}. There are three common basic types of cooling
+(R.A. Rutenbar, 1989, Darrall Henderson and Sheldon H. Jacobson and Alan W. Johnson, 1989). There are three common basic types of cooling
 equations: linear, geometric, and exponential. Geometric cooling schedules are most widely used in practice
-\cite{keller-2019-multi-objec}. As such, it will also be employed by this work. It is defined by the difference
+(Andre A. Keller, 2019). As such, it will also be employed by this work. It is defined by the difference
 equation
 
 \begin{equation}
@@ -667,7 +800,7 @@ solution is described by the function \(\exp(-\frac{J(\I) - J(\bar{\I})}{t_m})\)
 (\ref{sec:objective-function}), \(t_m\) is current temperature, \(\I\) is the current solution, and \(\bar{\I}\) is the new
 candidate solution. Formally, let \(\Delta E \equiv J(\I) - J(\bar{\I})\) and let \(f(\cdot)\) be the function that describes the
 probability of accepting a candidate solution \(\bar{\I}\). The probability of accepting a candidate solution is thus of
-the form \cite{keller-2019-multi-objec}
+the form (Andre A. Keller, 2019)
 
 \begin{equation}
 \label{eq:candaccept}
@@ -680,7 +813,7 @@ f(\I,\bar{\I},t_m) =
 
 \subsection{Neighbor Generators and Wrappers}
 \label{sec:generation-mechanisms}
-Generation mechanisms are used to create a neighboring candidate solution \cite{gendreau-2018-handb-metah}. That is,
+Generation mechanisms are used to create a neighboring candidate solution (Gendreau, Michel and Potvin, Jean-Yves, 2018). That is,
 the generating function creates a solution that can be reached in a single iteration from the active solution. In the
 case of the problem statement made in \ref{sec:problem-description}, five primitive generation mechanism are used: new visit,
 slide visit, new charger, new window, wait. The purpose of each of these generators is to assign new visits to a
@@ -701,12 +834,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org6b94aa0}
+\label{sec:org10464d2}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org53f7055}
+\label{sec:org1468b26}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -964,7 +1097,7 @@ executed, and the results are returned.
 
 \subsection{Alternative Heuristic Implementation}
 \label{sec:heuristic-implementation}
-As suggested by the works in \cite{Zhang_2010,Xinchao_2011}, applying heuristics to the generating functions can
+As suggested by the works in (Zhang, Defu and Liu, Yongkai and M’Hallah, Rym and Leung, Stephen C.H., 2010,  Xinchao, Zhao, 2011), applying heuristics to the generating functions can
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
 minimizing charger utilization, a simple heuristic was applied to \ref{alg:new-visit} and \ref{alg:new-charger} in the
 method that they select new charging queues. Suppose rather than selecting a queue at random from \(q \in Q\), the
@@ -1080,14 +1213,14 @@ a total runtime of \fpeval{\heuristiclocal * \tempcnt} seconds. The heuristic ge
 slightly slower due to its iterative approach.
 
 One of the methods utilized to compare with the SA PAP is the MILP PAP. This framework is the original MILP
-implementation of the PAP derived from \cite{qarebagh-2019-optim-sched}. The inputs to the system are the same as those
+implementation of the PAP derived from (Qarebagh, Ahad Javandoust and Sabahi, Farnaz and Nazarpour, Dariush, 2019). The inputs to the system are the same as those
 discussed above. The MILP PAP does not implement the peak-15 in its objective function. In an attempt to compare the
 solution of the MILP with the SA output more directly, a similar solve time of 3600 seconds. The MILP was executed
-utilizing the Gurobi MILP solver \cite{gurobi-2021-gurob-optim}.
+utilizing the Gurobi MILP solver ({Gurobi Optimization, LLC}, 2021).
 
 Another heuristic-based optimization strategy, referred to as Qin-Modified, is also employed as a means of comparison
 with the results of the SA PAP. The Qin-Modified algorithm is a based on the threshold strategy of
-\cite{qin-2016-numer-analy}. The algorithm has been modified slightly to accommodate the case of multiple charger types
+(Nan Qin and Azwirman Gusrialdi and R. {Paul Brooker} and Ali T-Raissi, 2016). The algorithm has been modified slightly to accommodate the case of multiple charger types
 without a heuristic search for the best charger type. The heuristic is based on a set of rules that revolve around the
 initial charge of the bus at visit \(i\). There are three different thresholds, low (85\%), medium (90\%), and high (95\%).
 Buses below the low threshold are prioritized to fast chargers then are allowed to utilize slow chargers if no fast
@@ -1410,7 +1543,4 @@ Further fields of interest are to investigate the performance of the quick and h
 set of routes to schedule. It is also of interest to incorporate non-linear battery dynamics to more accurately model
 the SOC. Furthermore, ``fuzzifying'' the charge times is of interest to allow flexibility in the initial and final charge
 times for each BEB visit.
-
-\bibliographystyle{plain}
-\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref}
 \end{document}

@@ -5,10 +5,8 @@
 
 # =========================================================================================================================
 # LaTeX packages
-#+LATEX_CLASS: article
 #+latex_header: \usepackage{subcaption}                     % Subfigures
 #+latex_header: \usepackage[ruled]{algorithm2e}             % Algorithms
-#+latex_header: \usepackage{xcolor}                         % Color time
 #+latex_header: \usepackage{listings}                       % Code in LaTeX
 #+latex_header: \usepackage{listings-rust}                  % Code in LaTeX
 #+latex_header: \usepackage{amsfonts}                       % Cool math fonts
@@ -16,7 +14,6 @@
 #+latex_header: \usepackage{multicol}                       % Add capability to make columns
 #+latex_header: \usepackage{soul}                           % Highlight text
 #+latex_header: \usepackage[stable]{footmisc}               % Allow footnotes in section headers
-#+latex_header: \usepackage{hyperref}                       % Cool clean hyperlinks
 #+latex_header: \setlength\parindent{0pt}                   % No indent for paragraphs
 #+latex_header:\usepackage{xfp}                             % No trailing zeros
 
@@ -26,11 +23,11 @@
 
 # =========================================================================================================================
 # `autoref' formatting
-#+latex_header: \renewcommand*{\sectionautorefname}{Section}
-#+latex_header: \renewcommand*{\subsectionautorefname}{Section}
-#+latex_header: \renewcommand*{\subsubsectionautorefname}{Section}
-#+latex_header: \renewcommand*{\paragraphautorefname}{Section}
-#+latex_header: \renewcommand*{\algorithmautorefname}{Algorithm}
+# +latex_header: \renewcommand*{\sectionautorefname}{Section}
+# +latex_header: \renewcommand*{\subsectionautorefname}{Section}
+# +latex_header: \renewcommand*{\subsubsectionautorefname}{Section}
+# +latex_header: \renewcommand*{\paragraphautorefname}{Section}
+# +latex_header: \renewcommand*{\algorithmautorefname}{Algorithm}
 
 # =========================================================================================================================
 # Custom `Algoritm2e' commands

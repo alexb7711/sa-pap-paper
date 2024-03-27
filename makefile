@@ -112,5 +112,6 @@ precheck: ## Ensures all the required software is installed
 ##------------------------------------------------------------------------------
 #
 %.pdf: %.eps ## Convert eps file to PDF
+	@echo $<
 	@epspdf -v>/dev/null 2>&1 && epspdf $< || eps2pdf $<
-	@mv $< $(basename $<)-eps-converted-to.pdf
+	mv $(basename $<).pdf $(basename $<)-eps-converted-to.pdf
