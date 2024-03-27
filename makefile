@@ -20,6 +20,8 @@ DOC_SRC         = main.tex
 TARGET          = sa-pap.pdf
 ALL             = $(shell find . -type f -name "*.org")
 FIGURES_TEX     = $(wildcard $(IMG)/*tex)
+FIGURES_EPS     = $(wildcard Definitions/*eps)
+EPS_TO_PDF      = $(patsubst %.eps, %.pdf, $(FIGURES_EPS))
 FIGURES_PDF     = $(patsubst %.tex, %.pdf, $(FIGURES_TEX))
 
 ##==============================================================================
@@ -51,7 +53,7 @@ emacs: images $(ALL)
 
 ##------------------------------------------------------------------------------
 #
-images: $(FIGURES_PDF) ## Generate all the images for the project
+images: $(FIGURES_PDF) $(EPS_TO_PDF) ## Generate all the images for the project
 
 ##------------------------------------------------------------------------------
 # Resources:
@@ -103,3 +105,12 @@ help:  ## Auto-generated help menu
 #
 precheck: ## Ensures all the required software is installed
 	@$(SHELL) -e $(SCRIPTS)/check-packages
+	@epspdf -v>/dev/null 2>&1 || ep2pdf -v>/dev/null 2>&1 && \
+	echo "EPS converter installed!" ||                       \
+	(echo "Warning: no EPS converter installed"; exit 1)
+
+##------------------------------------------------------------------------------
+#
+%.pdf: %.eps ## Convert eps file to PDF
+	@epspdf -v>/dev/null 2>&1 && epspdf $< || eps2pdf $<
+	@mv $< $(basename $<)-eps-converted-to.pdf
