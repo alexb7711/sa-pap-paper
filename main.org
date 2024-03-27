@@ -1,4 +1,4 @@
-#+TITLE: Bus Charging Schedule Simulated Annealing with MILP Constraints
+#+TITLE: A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging
 #+DATE: \today
 #+AUTHOR: Alexander Brown
 #+EMAIL: A01704744@usu.edu

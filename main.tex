@@ -1,4 +1,4 @@
-% Created 2024-03-27 Wed 14:36
+% Created 2024-03-27 Wed 14:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -68,10 +68,10 @@
 
 %=================================================================
 % Full title of the paper (Capitalized)
-\Title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
+\Title{A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging}
 
 % MDPI internal command: Title for citation in the left column
-\TitleCitation{Bus Charging Schedule Simulated Annealing with MILP Constraints}
+\TitleCitation{A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging}
 
 % Author Orchid ID: enter ID or remove command
 %\newcommand{\orcidauthorA}{0000-0000-0000-000X} % Add \orcidA{} behind the author's name
@@ -226,7 +226,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \keyword{Battery Electric Bus (BEB), Charge Scheduling, Simulated Annealing, Position Allocation Problem (PAP), Mixed Integer Linear Program (MILP)}
 \author{Alexander Brown}
 \date{\today}
-\title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
+\title{A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging}
 \begin{document}
 
 \maketitle
@@ -826,12 +826,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orga651ce7}
+\label{sec:org14103bc}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org7221a80}
+\label{sec:org49759be}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in

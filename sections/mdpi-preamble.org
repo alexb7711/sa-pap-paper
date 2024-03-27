@@ -67,10 +67,10 @@
 #+latex_header:
 #+latex_header: %=================================================================
 #+latex_header: % Full title of the paper (Capitalized)
-#+latex_header: \Title{Bus Charging Schedule Simulated Annealing with MILP Constraints}
+#+latex_header: \Title{A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging}
 #+latex_header:
 #+latex_header: % MDPI internal command: Title for citation in the left column
-#+latex_header: \TitleCitation{Bus Charging Schedule Simulated Annealing with MILP Constraints}
+#+latex_header: \TitleCitation{A Simulated Annealing Approach to the Scheduling of Battery-Electric Bus Charging}
 #+latex_header:
 #+latex_header: % Author Orchid ID: enter ID or remove command
 #+latex_header: %\newcommand{\orcidauthorA}{0000-0000-0000-000X} % Add \orcidA{} behind the author's name
