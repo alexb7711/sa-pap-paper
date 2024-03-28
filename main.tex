@@ -1,4 +1,4 @@
-% Created 2024-03-27 Wed 16:58
+% Created 2024-03-28 Thu 15:15
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -220,7 +220,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 %% Solve output
 \newcommand{\timeran}{4.2 }                                                    % Time ran for MILP [s]
 % Abstract (Do not insert blank lines, i.e. \\)
-\abstract{With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use is developed. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled form the Utah Transit Authority (UTA) and comparing the results two other models: the MILP PAP and the Qin-Modified. The results presented show that the "heuristic" approach was able to generate a solution comparable to that of the MILP PAP over a similar execution times.}
+\abstract{With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use is developed. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled form the Utah Transit Authority (UTA) and comparing the results two other models: the MILP PAP and the Qin-Modified. The results presented show that the "heuristic" approach was able to generate a solution comparable to that of the MILP PAP over similar execution times.}
 
 % Keywords
 \keyword{Battery Electric Bus (BEB), Charge Scheduling, Simulated Annealing, Position Allocation Problem (PAP), Mixed Integer Linear Program (MILP)}
@@ -826,12 +826,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org421d443}
+\label{sec:org6c19b03}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:orgfe02fdb}
+\label{sec:org78a39c5}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
