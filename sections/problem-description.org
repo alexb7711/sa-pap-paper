@@ -43,6 +43,4 @@ visit. This route, as one would expect, causes the BEB to discharge by some cert
 a fixed discharge. Let the discharge of the route for visit $i$ be denoted as $\Delta_i \in \mathbb{R}$. Each bus has a desired minimum
 battery percentage, $\nu_b \in [0, 1]$.
 
-#+include: ../img/spacial-temporal-constr.org
-
 #  LocalWords: BEBs BEB BEB's

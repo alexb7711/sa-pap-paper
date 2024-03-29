@@ -1,4 +1,4 @@
-% Created 2024-03-29 Fri 10:06
+% Created 2024-03-29 Fri 11:59
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -344,54 +344,6 @@ Each BEB arrival, except for the last arrival for each BEB, has a paired ``route
 visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus is assumed to have
 a fixed discharge. Let the discharge of the route for visit \(i\) be denoted as \(\Delta_i \in \mathbb{R}\). Each bus has a desired minimum
 battery percentage, \(\nu_b \in [0, 1]\).
-
-\begin{figure}[ht!]
-  \centering
-  \scalebox{0.5}{
-  \centerline{
-    \begin{tikzpicture}
-      % Variables
-      \def \arrx   {2.0}
-      \def \initx  {3.5}
-      \def \endx   {8.5}
-      \def \depx   {10.0}
-      \def \yshift {5}
-
-      % Axis
-      \draw [thick,<->] (0,15) node[above]{Queues} -- (0,0) -- (15,0) node[right]{Time};
-
-      % Rectangles
-      \node[rectangle, draw, fill=gray, minimum width=4cm, minimum height = 3cm] at (3,12) {A};
-      \node[rectangle, draw, fill=gray, minimum width=3cm, minimum height = 3cm] at (9,12) {B};
-      \node[rectangle, draw, fill=gray, minimum width=5cm, minimum height = 3cm] at (6,7) {D};
-      \node[rectangle, draw, fill=gray, minimum width=6cm, minimum height = 3cm] at (12,2) {C};
-
-      % X-axis labels
-      \node [below,align=center] at (\arrx,0) {\scriptsize Arrival     \\ \scriptsize Time \\ $a_D$};
-      \node [below, align=center] at (\initx,0) {\scriptsize Charge    \\ \scriptsize Initiation  \\ $u_D$};
-      \node [below, align=center] at (\endx,0) {\scriptsize Charge     \\ \scriptsize End \\ $d_D$};
-      \node [below, align=center] at (\depx,0) {\scriptsize Departure  \\ \scriptsize Time \\ $e_D$};
-
-      % Y-axis labels
-      \node[rotate=90] at (-1, 2.25) {Queue 1};
-      \node[rotate=90] at (-1, 7.25) {Queue 2};
-      \node[rotate=90] at (-1, 12.25) {Queue 3};
-
-      % Vertical lines
-      \draw[dashed] (\arrx,\yshift)--(\arrx,0);
-      \draw[dashed] (\initx,\yshift)--(\initx,0);
-      \draw[dashed] (\endx,\yshift)--(\endx,0);
-      \draw[dashed] (\depx,\yshift)--(\depx,0);
-
-      % Horizontal lines
-      \draw[dotted] (0, 4.5) -- (15, 4.5);
-      \draw[dotted] (0, 9.5) -- (15, 9.5);
-
-    \end{tikzpicture}
-  }}
-  \caption{The representation of the queue-time space. The x and y-axis represent time and space, respectively. Along the y-axis, the dashed lines represent discrete queuing locations. The shaded rectangles represent schedules BEBs to be charged. The height of each shaded rectangle represents the space taken on the queue and the width being the time to service said BEB. The vertical dashed lines are associated with vessel D and represent the arrival time, initial charge time, charge completion time, and departure time. Note that the arrival time may be before the initial charge time and the completion time may before the departure time.}
-  \label{fig:spacial-and-temporal-constr}
-\end{figure}
 
 \begin{table}[htbp]
 \caption{\label{tab:variables}Table of variables used in the paper.}
@@ -826,12 +778,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org890e85a}
+\label{sec:org502f31e}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org8f81df4}
+\label{sec:orgf43ad3e}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
