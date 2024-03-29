@@ -11,11 +11,12 @@ however, each problem must tailor its implementation to meet its particular need
 SA is an exploitation oriented, single-solution based metaheuristic. In addition to the advantages of simplicity, both
 theoretically and in its implementation [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. SA is also of
 considerable interest for global optimization over regions containing several local and global minima due to inherent
-non-linearities of the objective function [cite:@gendreau-2018-handb-metah]. This model is named after its analogized
-process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most regular
-possible crystal lattice configuration (i.e. its minimum lattice energy state)
-[cite:@henderson-1989-theor-pract;@press-1992-numer-recip]. SA establishes a connection between this thermodynamic
-process and the search for global optima in optimization problems.
+non-linearities of the objective function [cite:@gendreau-2018-handb-metah]. Note that because SA is a metaheuristic
+strategy, there is no guarantee of optimality, its objective is to yield a result that is "good enough"
+[cite:@radosavljevic-2018-metah-optim]. This model is named after its analogized process where a crystalline solid is
+heated then allowed to cool at a slow rate until it achieves its most regular possible crystal lattice configuration
+(i.e. its minimum lattice energy state) [cite:@henderson-1989-theor-pract;@press-1992-numer-recip]. SA establishes a
+connection between this thermodynamic process and the search for global optima in optimization problems.
 
 There are three key components to SA: cooling schedule (temperature function), acceptance criteria, and generation
 mechanisms [cite:@keller-2019-multi-objec;@press-1992-numer-recip]. The temperature function describes the speed at

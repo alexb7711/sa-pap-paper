@@ -1,4 +1,4 @@
-% Created 2024-03-29 Fri 12:09
+% Created 2024-03-29 Fri 16:16
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -693,11 +693,12 @@ however, each problem must tailor its implementation to meet its particular need
 SA is an exploitation oriented, single-solution based metaheuristic. In addition to the advantages of simplicity, both
 theoretically and in its implementation \cite{gendreau-2018-handb-metah,radosavljevic-2018-metah-optim}. SA is also of
 considerable interest for global optimization over regions containing several local and global minima due to inherent
-non-linearities of the objective function \cite{gendreau-2018-handb-metah}. This model is named after its analogized
-process where a crystalline solid is heated then allowed to cool at a slow rate until it achieves its most regular
-possible crystal lattice configuration (i.e. its minimum lattice energy state)
-\cite{henderson-1989-theor-pract,press-1992-numer-recip}. SA establishes a connection between this thermodynamic
-process and the search for global optima in optimization problems.
+non-linearities of the objective function \cite{gendreau-2018-handb-metah}. Note that because SA is a metaheuristic
+strategy, there is no guarantee of optimality, its objective is to yield a result that is ``good enough''
+\cite{radosavljevic-2018-metah-optim}. This model is named after its analogized process where a crystalline solid is
+heated then allowed to cool at a slow rate until it achieves its most regular possible crystal lattice configuration
+(i.e. its minimum lattice energy state) \cite{henderson-1989-theor-pract,press-1992-numer-recip}. SA establishes a
+connection between this thermodynamic process and the search for global optima in optimization problems.
 
 There are three key components to SA: cooling schedule (temperature function), acceptance criteria, and generation
 mechanisms \cite{keller-2019-multi-objec,press-1992-numer-recip}. The temperature function describes the speed at
@@ -778,12 +779,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orgf853fd6}
+\label{sec:orge14bf06}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org0f5a424}
+\label{sec:org2af0345}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
