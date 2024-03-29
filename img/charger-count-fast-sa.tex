@@ -13,7 +13,7 @@
 \begin{document}
 
 \pgfplotstableread[col sep= comma]{data/sa-quick-charge-cnt.csv}\usagedatasaquick
-\pgfplotstableread[col sep= comma]{data/sa-exhaustive-charge-cnt.csv}\usagedatasaexhaustive
+\pgfplotstableread[col sep= comma]{data/sa-heuristic-charge-cnt.csv}\usagedatasaheuristic
 
 \begin{tikzpicture}
   \begin{axis}[title={Fast Charger Usage},
@@ -26,8 +26,8 @@
       legend style={nodes={scale=0.75, transform shape}}]
     \addplot[green!80!black, fill=green, fill opacity=0.25, no markers] table[x=visit, y=fast] {\usagedatasaquick};
     \addlegendentry{SA Slow}
-    \addplot[gray!80!black, fill=gray, fill opacity=0.25, no markers] table[x=visit, y=fast] {\usagedatasaexhaustive};
-    \addlegendentry{SA Exhaustive}
+    \addplot[gray!80!black, fill=gray, fill opacity=0.25, no markers] table[x=visit, y=fast] {\usagedatasaheuristic};
+    \addlegendentry{SA Heuristic}
   \end{axis}
 \end{tikzpicture}
 

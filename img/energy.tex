@@ -13,7 +13,7 @@
 
 \pgfplotstableread[col sep = comma]{data/qm-acc-energy-usage.csv}\accenergydataquin
 \pgfplotstableread[col sep = comma]{data/sa-quick-acc-energy-usage.csv}\accenergydatasaquick
-\pgfplotstableread[col sep = comma]{data/sa-exhaustive-acc-energy-usage.csv}\accenergydatasaexhaustive
+\pgfplotstableread[col sep = comma]{data/sa-heuristic-acc-energy-usage.csv}\accenergydatasaheuristic
 \pgfplotstableread[col sep = comma]{data/milp-acc-energy-usage.csv}\accenergydatamilp
 
 \begin{tikzpicture}
@@ -39,10 +39,10 @@
              table[x=time, y=power] {\accenergydatasaquick};
     \addlegendentry{SA Quick}
 
-    % SA Exhaustive ----------
+    % SA Heuristic ----------
     \addplot[gray!100!black, no markers]
-             table[x=time, y=power] {\accenergydatasaexhaustive};
-    \addlegendentry{SA Exhaustive}
+             table[x=time, y=power] {\accenergydatasaheuristic};
+    \addlegendentry{SA Heuristic}
 \end{axis}
 \end{tikzpicture}
 
