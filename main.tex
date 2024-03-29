@@ -1,4 +1,4 @@
-% Created 2024-03-29 Fri 11:59
+% Created 2024-03-29 Fri 12:04
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -778,12 +778,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org502f31e}
+\label{sec:org40989ac}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:orgf43ad3e}
+\label{sec:org751603e}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -1384,7 +1384,7 @@ than the MILP PAP.
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/charge-quinn}
-    \caption{Bus charges for the Qin Modified charging schedule. The charging scheme of the Qin charger is more predictable during the working day.}
+    \caption{Bus charges for the Qin Modified charging schedule.}
     \label{subfig:qin-charge}
   \end{subfigure}
   \hfill
@@ -1393,7 +1393,7 @@ than the MILP PAP.
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/charge-milp}
-    \caption{The bus charges for the MILP PAP charging schedule. The MILP model allows for guarantees of minimum/maximum changes during the working day as well as charges at the end of the day.}
+    \caption{The bus charges for the MILP PAP charging schedule.}
     \label{subfig:milp-charge}
   \end{subfigure}
   \hfill
@@ -1405,7 +1405,7 @@ than the MILP PAP.
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/charge-sa-quick}
-    \caption{The bus charges for the SA PAP charging schedule. The SA model allows for guarantees of minimum/maximum changes during the working day as well as charges at the end of the day.}
+    \caption{The bus charges for the quick SA PAP charging schedule.}
     \label{subfig:sa-quick-charge}
   \end{subfigure}
   \hfill
@@ -1414,7 +1414,7 @@ than the MILP PAP.
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/charge-sa-heuristic}
-    \caption{The bus charges for the SA PAP charging schedule. The SA model allows for guarantees of minimum/maximum changes during the working day as well as charges at the end of the day.}
+    \caption{The bus charges for the heuristic SA PAP charging schedule.}
     \label{subfig:sa-heuristic-charge}
   \end{subfigure}
   \caption{}
@@ -1425,7 +1425,7 @@ than the MILP PAP.
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/power-milp-qin}
-    \caption{Amount of power consumed by Qin-Modified and MILP schedule over the time horizon.}
+    \caption{Amount of power consumed by Qin-Modified and MILP schedules over the time horizon.}
     \label{fig:power-usage-milp-qin}
   \end{subfigure}
 
@@ -1434,7 +1434,7 @@ than the MILP PAP.
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/power-sa}
-    \caption{Amount of power consumed by Qin-Modified and MILP schedule over the time horizon.}
+    \caption{Amount of power consumed by quick and heuristic SA schedules over the time horizon.}
     \label{fig:power-usage-sa}
   \end{subfigure}
   \caption{}
@@ -1443,7 +1443,7 @@ than the MILP PAP.
 
 \begin{figure}[htpb]
 \centering \includegraphics[width=\textwidth]{img/energy}
-    \caption{Total accumulated energy consumed by the Qin-Modified and MILP schedule throughout the time horizon.}
+    \caption{Total accumulated energy consumed by the Qin-Modified, MILP, quick and heuristic SA schedules throughout the time horizon.}
     \label{fig:energy-usage}
 \end{figure}
 
