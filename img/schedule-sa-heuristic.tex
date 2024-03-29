@@ -10,12 +10,12 @@
 
 \begin{document}
 
-\pgfplotstableread[col sep= comma]{data/sa-exhaustive-schedule.csv}\scheduledatamilp
+\pgfplotstableread[col sep= comma]{data/sa-heuristic-schedule.csv}\scheduledatamilp
 
 \begin{tikzpicture}
 \pgfplotstablegetcolsof{\scheduledatamilp}
 \pgfmathtruncatemacro\NumCols{\pgfplotsretval/3 - 1}
-\begin{axis}[title={SA Exhaustive Schedule},
+\begin{axis}[title={SA Heuristic Schedule},
       scale only axis,
       height=0.325\paperheight, width=0.75\paperwidth,
       grid=both,
