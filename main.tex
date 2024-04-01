@@ -1,4 +1,4 @@
-% Created 2024-03-29 Fri 16:16
+% Created 2024-04-01 Mon 10:27
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -779,12 +779,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orge14bf06}
+\label{sec:orgcfdd375}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org2af0345}
+\label{sec:org6ae83ce}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
@@ -1294,8 +1294,8 @@ Max & 1910 & 970 & 1911.9 & 1911.9\\[0pt]
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the MILP PAP. The respective energy consumption for each
-technique is: 10198.799 kWh, 6303.1704 kWh, 5785.76 kWh, and 4797.746 kWh. The heuristic SA consuming about 988 kWh more
-than the MILP PAP.
+technique is: 10198.799 kWh, 6303.1704 kWh, 4797.746 kWh, and 4256.746 kWh. The heuristic SA consuming about 988 kWh
+more than the MILP PAP.
 
 \begin{figure}
   \centering
@@ -1469,8 +1469,8 @@ quick SA utilized all the chargers available (i.e. was unable to minimize the ch
 
 Both of the SA techniques were unable to keep the SOC above the 25\% SOC threshold with SOC falling to 6.34 kWh for the
 heuristic SA and 29.8 kWh. The Qin-Modified had the SOC of three BEBs fall to 0\% SOC. The schedule that consumed the
-least amount of energy is the MILP PAP (4797.75 kW) with the heuristic SA coming in second (5785.76 kW). The difference
-between the two being about \fpeval{5785.76 - 4797.75} kWh. The peak demands between the heuristic SA, quick
+least amount of energy is the MILP PAP (4256.16 kW) with the heuristic SA coming in second (4797.75 kW). The difference
+between the two being about \fpeval{4797.746 - 4256.16} kWh. The peak demands between the heuristic SA, quick
 SA, and the MILP were very similar. The MILP had a peak demand of 1910 kW and the quick and heuristic SA had demand
 peaks of 1911.9 kW. Overall, the most effective schedule was the MILP; however as SA has no guarantee of optimality, the
 heuristic SA was able to generate a schedule that was ``in the ballpark'' of that of the MILP while further taking the
