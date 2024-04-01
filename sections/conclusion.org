@@ -23,8 +23,8 @@ quick SA utilized all the chargers available (i.e. was unable to minimize the ch
 
 Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to 6.34 kWh for the
 heuristic SA and 29.8 kWh. The Qin-Modified had the SOC of three BEBs fall to 0% SOC. The schedule that consumed the
-least amount of energy is the MILP PAP (4797.75 kW) with the heuristic SA coming in second (5785.76 kW). The difference
-between the two being about src_latex{\fpeval{5785.76 - 4797.75}} kWh. The peak demands between the heuristic SA, quick
+least amount of energy is the MILP PAP (4256.16 kW) with the heuristic SA coming in second (4797.75 kW). The difference
+between the two being about src_latex{\fpeval{4797.746 - 4256.16}} kWh. The peak demands between the heuristic SA, quick
 SA, and the MILP were very similar. The MILP had a peak demand of 1910 kW and the quick and heuristic SA had demand
 peaks of 1911.9 kW. Overall, the most effective schedule was the MILP; however as SA has no guarantee of optimality, the
 heuristic SA was able to generate a schedule that was "in the ballpark" of that of the MILP while further taking the
