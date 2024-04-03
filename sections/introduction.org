@@ -71,7 +71,7 @@ charger types [cite:@whitaker-2023-a-network]. This paper expands on these previ
 annealing (SA) framework that accounts for partial charging, minimizes total charger count, allows for multiple charger
 types, minimizes consumption cost, and minimizes demand cost.
 
-In what follows, the problem statement shall be provided in [[#sec:problem-description]]. [[#sec:optimization-problem]]
+In what follows, the problem statement shall be provided in [[#sec:problem-description]]. [[#sec:sa-optimization-problem]]
 introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,
 objective function and constraints. In [[#sec:simulated-annealing]], the concept and theory of SA is introduced. In
 particular the algorithms and methods utilized for the SA implementation for this work are discussed.

@@ -105,7 +105,7 @@ help:  ## Auto-generated help menu
 #
 precheck: ## Ensures all the required software is installed
 	@$(SHELL) -e $(SCRIPTS)/check-packages
-	@epspdf -v>/dev/null 2>&1 || ep2pdf -v>/dev/null 2>&1 && \
+	@epspdf -v>/dev/null 2>&1 || epstopdf -v>/dev/null 2>&1 && \
 	echo "EPS converter installed!" ||                       \
 	(echo "Warning: no EPS converter installed"; exit 1)
 
@@ -113,5 +113,5 @@ precheck: ## Ensures all the required software is installed
 #
 %.pdf: %.eps ## Convert eps file to PDF
 	@echo $<
-	@epspdf -v>/dev/null 2>&1 && epspdf $< || eps2pdf $<
+	@epspdf -v>/dev/null 2>&1 && epspdf $< || epstopdf $<
 	mv $(basename $<).pdf $(basename $<)-eps-converted-to.pdf

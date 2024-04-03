@@ -1,7 +1,7 @@
 # https://emacs.stackexchange.com/questions/14688/how-do-i-insert-resizebox-code-in-org-mode-tables-when-exporting-to-latex/48005#48005
 # https://en.wikibooks.org/wiki/LaTeX/Tables#The_tabularx_package
 
-#+name: tab:variables
+#+name: tab:sa-variables
 #+caption: Table of variables used in the paper.
 #+ATTR_LATEX: :environment tabularx :width \textwidth :align L{0.3} L{1.2} L{0.3} L{1.2}
 | *Variable*                    | *Description*                                                                          | *Variable*                    | *Description*                                                                  |

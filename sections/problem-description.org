@@ -5,42 +5,38 @@
 Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. An individual BEB from said
 fleet begins and completes an individual route at the same station from which it also receives its charge. During each
 route, the BEB's State of Charge (SOC) is depleted by a certain amount. The charge supplied during its visit must be
-enough to sustain the BEB's SOC at an appropriate level so that it may complete its next route. The charge may be
-supplied from any single charger given a set of chargers at the station. Let the term "arrival" describe the time at
-which a BEB reaches the station. Furthermore, let the term "visit" denote a BEB having arrived, awaited its
-predetermined time (whether it has received a charge or not), and departed from the station. Each BEB may have multiple
-visits to the station throughout their working day. This paper describes a method to optimize the assignment of each
-visit to a charger given a schedule for a fleet of BEBs that follow the behavior described above. The model presented in
-this work optimizes over peak power usage and energy consumption, as well as attempts to optimize the amount of chargers
-utilized.
+enough to sustain the BEB's SOC at an appropriate level so that it may complete its next route. Provided there is a set
+of chargers at the station, the bus may be placed in any single queue to receive its charge. Let the term "arrival"
+describe the time at which a BEB reaches the station. Furthermore, let the term "visit" denote a BEB having arrived,
+awaited its predetermined time (whether it has received a charge or not), and departed from the station. Each BEB is
+allowed to have multiple visits throughout the working day.
 
-Given a fleet of $n_B$ BEBs that collectively visit a station $n_V$ times. At said station, let there exist a pool of
-$n_Q$ charging queues from which a visiting BEB may be assigned. Let $\mathbb{Z}$ define the set of integers. The pool of queues
-from which a BEB may be placed is $\Qset \subset \mathbb{Z}$ is defined by letting the first $n_B$ queues be denoted as idle queues
-followed by slow and then fast chargers. The term idle queues is meant to signify queues that provide no charge to the
-BEB. The next $n_Q$ queues are chargers ordered from slow to fast. Furthermore, let the set of arrivals be denoted as
-$\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}$. Each BEB is provided an identification number in the set $B = \{ 1, ..., n_B \} \subset \mathbb{Z}$.
-Each visit can be represented by the tuple: $\visit$, in which the elements within the tuple denote the visit index, $i
-\in I$, BEB identification number, $b \in B$, arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in
-\mathbb{R}$, time at which the BEB begins charging, $u \in \mathbb{R}$, time at which the BEB ends charging, $d \in \mathbb{R}$, the charger queue for
-the BEB to be placed into, $q \in Q$, the SOC upon arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the currently
-visiting BEB, $\xi \in I \cup \varnothing$. The null element, $\varnothing$, is used to specify when a BEB has no future
-visits. Let the ordered set of visits be denoted as $\I$ where the $i^{\text{th}}$ visit is denoted is $\I_i$.
-Furthermore, let a particular item from the tuple for visit $i$ to be written as $\cdot_i$. For example, the arrival time
-for visit $i$ is written as $a_i$.
+Because each bus may visit the station more than once, let the previously considered fleet contains $n_B$ BEBs that
+collectively visit a station $n_V$ times. At said station, let there exist a pool of $n_Q$ charging queues from which a
+visiting BEB may be assigned. Upon arrival to the station, a bus is admitted to one of the $n_Q$ queues for charging.
+Each queue represents a charger that supplies the bus with a charge at a particular rate or allows the bus to sit idle
+when no charging is required (i.e., a charge rate of zero). The set of possible queue indices is denoted as $Q \in
+\{1,...,n_Q\} \subset \mathbb{Z}$, where $\mathbb{Z}$ is the set of integers. It is assumed that charger $q \in Q$ has an associated charge rate,
+denoted as $r_q$. Let the set of arrivals be written as $\Iset = \{ 1, ... n_V \} \subset \mathbb{Z}$, and let each BEB be prescribed
+an identification number from the set $B = \{ 1, ..., n_B \} \subset \mathbb{Z}$. As such, each visit can be represented by the tuple:
+$\visit$, in which the elements within the tuple denote the visit index, $i \in I$, BEB identification number, $b \in B$,
+arrival time to the station, $a \in \mathbb{R}$, departure time from the station, $e \in \mathbb{R}$, time at which the BEB begins charging,
+$u \in \mathbb{R}$, time at which the BEB ends charging, $d \in \mathbb{R}$, the charger queue for the BEB to be placed into, $q \in Q$, the SOC
+upon arrival, $\eta \in \mathbb{R}$, and the index of the next visit for the currently visiting BEB, $\xi \in I \cup \varnothing$. The null
+element, $\varnothing$, is used to specify when a BEB has no future visits. Let the set of visits be denoted as $\I$
+where the $i^{\text{th}}$ visit is denoted is $\I_i$. Furthermore, let a particular item from the tuple for visit $i$ to
+be written as $\cdot_i$. For example, the arrival time for visit $i$ is written as $a_i$.
 
-At each visit, the associated BEB is placed into a single queue corresponding to a particular charger. The charger is
-assumed to be either an idle queue, slow charger, or fast charger. A BEB is only allowed to be assigned to one queue per
-visit; however, there may be multiple BEBs charging simultaneously across different queues. The amount of time the BEB
-is allowed to charge during visit $i$ is dictated by the scheduled arrival time and required departure time, $[a_i,
-e_i]$. Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and the SOC must stay above
-0%. The battery dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80% charge
-[cite:@liu-2020-batter-elect]. Note that charging beyond the 80% SOC threshold is undesirable due to battery health
-concerns as higher SOC with deep cycles accelerates degradation [cite:@edge-2021-lithium;@millner-2010-model-lithium].
+The amount of time the BEB is allowed to charge during visit $i$ is dictated by the scheduled arrival time and required
+departure time, $[a_i, e_i]$. Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and
+the SOC must stay above 0%. The battery dynamics in this work is modeled as linear, which remains accurate up to about
+an SOC of 80% charge [cite:@liu-2020-batter-elect]. Note that charging beyond the 80% SOC threshold is undesirable due
+to battery health concerns as higher SOC with deep cycles accelerates degradation
+[cite:@edge-2021-lithium;@millner-2010-model-lithium].
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired "route" that the BEB must perform after the
-visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus is assumed to have
-a fixed discharge. Let the discharge of the route for visit $i$ be denoted as $\Delta_i \in \mathbb{R}$. Each bus has a desired minimum
-battery percentage, $\nu_b \in [0, 1]$.
+visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus route is assumed to
+have a fixed discharge. Let the discharge of the route for visit $i$ be denoted as $\Delta_i \in \mathbb{R}$. Each bus has a desired
+minimum battery percentage, $\nu_b \in [0, 1]$.
 
 #  LocalWords: BEBs BEB BEB's

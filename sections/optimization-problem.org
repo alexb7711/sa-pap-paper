@@ -1,62 +1,68 @@
 * Optimization Problem
 :PROPERTIES:
-:CUSTOM_ID: sec:optimization-problem
+:CUSTOM_ID: sec:sa-optimization-problem
 :END:
-The problem outlined in this work is presented in the form of an objective function with MILP constraints. The MILP
-constraints ensure that candidate solutions are operationally feasible. The optimization variables are introduced in
-[[#sec:parameter-definitions]]. The objective function is broken down into four major components: consumption cost, demand
-cost, assignment cost, and under-charging cost (i.e. a penalty for not meeting minimum charge requirements). The
-constraints will then be introduced in [[#sec:constraints]]. The objective function is introduced in
-[[#sec:objective-function]].
+
+The objective of this work is to present a framework that optimizes the assignment of $n_V$ BEB visits to a set of $n_Q$
+charging queues provided a fleet of $n_A$ BEBs with fixed route schedules. Particularly, the framework aims to minimize
+over peak power usage, energy consumption, and the total amount of chargers utilized while maintaining the SOC of each
+BEB above a minimum SOC threshold.
+
+The optimization problem outlined in this work is presented in form of an objective function with constraints. The
+constraints ensure that candidate solutions are operationally feasible. The variables of optimization are to be
+introduced in [[#sec:sa-parameter-definitions]] followed by a discussion of the constraints in [[#sec:sa-constraints]]. The
+objective function is employed to allow relative comparisons between candidate solutions and is introduced in
+[[#sec:sa-objective-function]].
 
 ** Variable Definitions
 :PROPERTIES:
-:CUSTOM_ID: sec:parameter-definitions
+:CUSTOM_ID: sec:sa-parameter-definitions
 :END:
 This section defines the input and decision variables used by the system. The input parameters are assumed to be fixed
 prior to optimizing the system. The decision variables are the values that the SA algorithm has the freedom to
-manipulate. The variables to be introduced are summarized in [[tab:variables]].
+manipulate. The variables to be introduced are summarized in [[tab:sa-variables]].
 
 *** Input Parameters
 :PROPERTIES:
-:CUSTOM_ID: sec:input-variables
+:CUSTOM_ID: sec:sa-input-variables
 :END:
 
 The parameters are assumed to be known prior to optimization. They will be presented in two sections: battery dynamics
 parameters then packing and discretization parameters. The Battery dynamic parameters are those associated with the SOC
-of the BEB, the packing and discretization parameters are those that are associated with BEB placement and the method of
-discretizing the system.
+of the BEB, the packing and discretization parameters are those that are associated with visit placement and the method
+of discretizing the time horizon.
 
 **** Battery Dynamic Parameters
 :PROPERTIES:
-:CUSTOM_ID: sec:battery-dynamic-parameters
+:CUSTOM_ID: sec:sa-battery-dynamic-parameters
 :END:
 
-The amount energy required to complete the bus route after visit $i$ is denoted as $\Delta_i$. There are no routes after the
-last visit for each BEB; thus; the energy consumed after the final visit is zero. Let the set of final visits for all
-BEBs be denoted as $\Isetfinal$. That is, the cardinality of the set is $\lvert \Isetfinal \rvert = n_B$ where $i \in
-\Isetfinal \subset \Iset$ specifies the index for the final visit of bus. The discharge for the final visit of each BEB is
-then defined as $\Delta_{i} = 0; \forall i \in \Isetfinal$. The initial SOC percentage of bus $b$ at the beginning of the working day
-is denoted as $\alpha_b$. Let $\Isetinit$ denote the set of initial visit indices for each BEB and let $\Xi_i \in B$ denote the
-identification number of the BEB for visit $i$. The initial SOC for bus $\Xi_i$ can be represented as $\eta_{i} =
-\alpha_{\Xi_i}\kappa_{\Xi_i}; \forall i \in \Isetinit \subset \Iset$ where $\kappa_{\Xi_i}$ is the battery capacity for bus $\Xi_i$. Lastly, $r_q$ represents
-the power supplied from the charger in queue $q \in Q$.
+It is assumed that each BEB begins the working day with an initial SOC percentage of $\alpha_b$. Let the set of initial
+visits by each BEB be denoted as $\Isetinit$ where $\Isetinit \subset \Iset$ and the cardinality of the set is $\lvert
+\Isetinit \rvert = n_B$. The initial SOC for bus $\Xi_i$ can be represented as $\eta_{i} = \alpha_{\Xi_i}\kappa_{\Xi_i}; \forall i \in \Isetinit \subset
+\Iset$ where $\kappa_{\Xi_i}$ is the battery capacity for bus $\Xi_i$. Each visit, with the exception of the final visit for each
+BEB, is paired with a route that has an associated amount energy required to complete. Let the amount of energy required
+to complete route $i$ be denoted as $\Delta_i$. As alluded to earlier, there are no routes after the last visit for each BEB.
+Thus, similarly to the set of initial visits, let the set of final visits for all BEBs be denoted as $\Isetfinal$. The
+discharge for the final visit of each BEB is then defined as $\Delta_{i} = 0; \forall i \in \Isetfinal$. After each arrival, the BEB
+is assigned to a charging queue. Let $r_q$ represent the power supplied from the charger in queue $q \in Q$.
+
 
 **** Packing and Discretization Parameters
 :PROPERTIES:
-:CUSTOM_ID: sec:packing-and-discretization-paramaters
+:CUSTOM_ID: sec:sa-packing-and-discretization-paramaters
 :END:
 
 The cost for assigning a charger to queue $q \in Q$ is defined by $\epsilon_q$. $\xi_i$ represents the next arrival index for bus
-$b_i$. In other words, suppose the ID of each BEB is recorded in order of arrival. Further suppose that recorded list is
-$\xi = \{ 2,1,3,2 \}$, using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. The arrival and
-departure times of bus visit $i$ to the station are denoted as $a_i$ and $e_i$, respectively. The notation $t_h$ is used
-to denote a discrete time that is employed to calculate the demand cost. $dt$ is the discrete time step $dt = t_h -
+$b_i$. As an example, suppose the ID of each BEB is recorded in order of arrival. Further suppose that $\xi = \{ 2,1,3,2
+\}$, using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. The arrival and departure times of bus
+visit $i$ to the station are denoted as $a_i$ and $e_i$, respectively. The notation $t_h$ is used to denote a discrete
+time that is employed to assist in the calculation of the demand cost. $dt$ is the discrete time step $dt = t_h -
 t_{h-1}$.
 
 *** Decision Variables
 :PROPERTIES:
-:CUSTOM_ID: sec:decision-variables
+:CUSTOM_ID: sec:sa-decision-variables
 :END:
 Decision variables are those chosen by the optimizer. The variables will be broken into two sections: direct and slack
 variables. Direct decision variables are those that the system manipulates directly, and slack variables are those that
@@ -64,7 +70,7 @@ are functions of the direct.
 
 **** Direct Decision Variables
 :PROPERTIES:
-:CUSTOM_ID: sec:direct-decision-variables
+:CUSTOM_ID: sec:sa-direct-decision-variables
 :END:
 The first two variables are $u_i$ and $d_i \; \forall i \in \Iset$. They represent the initial and final charging times. These
 values must remain within range of the arrival and departure times, $[a_i, e_i]$, for visit $i$. The last direct
@@ -72,7 +78,7 @@ decision variable is the queue that bus visit $i$ can be placed in to charge, $q
 
 **** Slack Variables
 :PROPERTIES:
-:CUSTOM_ID: sec:slack-decision-variables
+:CUSTOM_ID: sec:sa-slack-decision-variables
 :END:
 Let the initial SOC for a visit be written as $\eta_i$, where $i \in \Iset \setminus \Iset_0$. The initial charge for visit $i$ forms
 the foundation from which the SOC of the next visit, $\eta_{\xi_i}$, is calculated. The charge for bus $i$'s next visit is
@@ -87,10 +93,9 @@ minus the discharge accumulated over route $i$, i.e.
 The variables $\sigma_{ij}$ and $\psi_{ij}$ are used to indicate whether a visit pair $(i, j)$ overlap the same space, as show
 in \ref{fig:overlap}. These spatiotemporal variables uphold the following relationships:
 
-#+include: eq/bus-spat-temp.org
-
 That is, for every visit, $\sigma_{ij} = 1 \implies$ the start charge time of visit $j$ is greater than the end charge time
-of visit $i$. Similarly, $\psi_{ij} = 1 \implies$ the queue for visit $j$ is of a greater index than visit $i$.
+of visit $i$. Similarly, $\psi_{ij} = 1 \implies$ the queue for visit $j$ is of a greater index than visit $i$. A value of
+zero for either of these variables conveys no information.
 
 The variable $\C$ is the set that describes the availability for all chargers. That is, $\C$ is a set of $n_Q$ sets that
 contain available charger times for each queue $q \in Q$. Let a set of available charge times for queue $q$ be defined as
@@ -118,8 +123,9 @@ $[d_i, \T]$.
 
 ** Objective Function
 :PROPERTIES:
-:CUSTOM_ID: sec:objective-function
+:CUSTOM_ID: sec:sa-objective-function
 :END:
+
 This work aims to minimize the total "cost" of utilizing a given charge schedule. Let $J(\I)$ represent the objective
 function. The objective function for this problem has four main considerations: charger assignment, consumption cost,
 demand cost, and penalty for an insufficient initial SOC. Each of which will be discussed in turn in the subsequent
@@ -127,7 +133,7 @@ sections.
 
 *** Assignment Cost
 :PROPERTIES:
-:CUSTOM_ID: sec:assignment-cost
+:CUSTOM_ID: sec:sa-assignment-cost
 :END:
 
 The assignment cost represents the costs of assigning a bus to a particular queue. This is done as a method of
@@ -149,7 +155,7 @@ shown described is what is applied in this work.
 
 *** Penalty Method
 :PROPERTIES:
-:CUSTOM_ID: sec:penalty-method
+:CUSTOM_ID: sec:sa-penalty-method
 :END:
 
 A penalty method is to be implemented in the objective function that is enabled when the $\eta_i$ falls below a defined
@@ -179,7 +185,7 @@ heavily influences the outcome of the objective function. Therefore, the penalty
 
 *** Consumption Cost
 :PROPERTIES:
-:CUSTOM_ID: sec:consumpction-cost
+:CUSTOM_ID: sec:sa-consumpction-cost
 :END:
 
 In most cases, energy companies rely on a volumetric rate as a method of track customer electricity consumption (i.e.
@@ -198,7 +204,7 @@ utilized, $s_i$.
 
 *** Demand Cost
 :PROPERTIES:
-:CUSTOM_ID: sec:demand-cost
+:CUSTOM_ID: sec:sa-demand-cost
 :END:
 
 Historically for large industrial customers, energy companies often further rely on a demand cost in conjunction with a
@@ -280,7 +286,7 @@ To conclude this section, the objective function is to written in its entirety:
 
 ** Constraints
 :PROPERTIES:
-:CUSTOM_ID: sec:constraints
+:CUSTOM_ID: sec:sa-constraints
 :END:
 
 While the objectives are used to compare solutions, constraints are introduced to ensure that the solutions are

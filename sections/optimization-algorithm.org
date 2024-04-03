@@ -37,8 +37,8 @@ This section combines the generation algorithms and the optimization problem int
 While the SA PAP generally is written almost identically to that of the general SA algorithm, the general SA assumes
 that the generated candidate solutions are in the solution space of the problem, $\omega \in S$ where $S$ is the solution
 space. Initialization and the perturbation of a schedule must be verified to ensure that the generated schedule is in
-the solution space. Therefore, the objective function and constraints introduced in [[#sec:constraints]] and
-[[#sec:objective-function]], respectively, must be employed to verify that the output of
+the solution space. Therefore, the objective function and constraints introduced in [[#sec:sa-constraints]] and
+[[#sec:sa-objective-function]], respectively, must be employed to verify that the output of
 \ref{alg:charge-schedule-generation} is in the feasible space, $S$.
 
 As previously stated, the generating functions directly influence the values of the assigned charge queue, charge
@@ -50,7 +50,7 @@ the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq
 Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
 dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after a given
 schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method
-implemented in [[#sec:objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{\Xi_i}
+implemented in [[#sec:sa-objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{\Xi_i}
 \kappa_{\Xi_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
 solution that does not activate the penalty method (i.e. is solution is truly feasible).
 
