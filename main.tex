@@ -1,4 +1,4 @@
-% Created 2024-04-03 Wed 14:28
+% Created 2024-04-03 Wed 14:49
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -412,15 +412,15 @@ Thus, similarly to the set of initial visits, let the set of final visits for al
 discharge for the final visit of each BEB is then defined as \(\Delta_{i} = 0; \forall i \in \Isetfinal\). After each arrival, the BEB
 is assigned to a charging queue. Let \(r_q\) represent the power supplied from the charger in queue \(q \in Q\).
 
-
 \paragraph{Packing and Discretization Parameters}
 \label{sec:sa-packing-and-discretization-paramaters}
-The cost for assigning a charger to queue \(q \in Q\) is defined by \(\epsilon_q\). \(\xi_i\) represents the next arrival index for bus
-\(b_i\). As an example, suppose the ID of each BEB is recorded in order of arrival. Further suppose that \(\xi = \{ 2,1,3,2
-\}\), using a starting index of 1, \(\xi_1 = 4\) as that is the next visit by bus 2. The arrival and departure times of bus
-visit \(i\) to the station are denoted as \(a_i\) and \(e_i\), respectively. The notation \(t_h\) is used to denote a discrete
-time that is employed to assist in the calculation of the demand cost. \(dt\) is the discrete time step \(dt = t_h -
-t_{h-1}\).
+Let the bus ID of visit \(i\) be represented by \(\Xi_i\). Furthermore, let \(\xi_i\) represent the next arrival index for bus
+\(b_i\). As an example, suppose the ID of each BEB is recorded in order of arrival. Further suppose that \(\Xi = \{ 2,1,3,2
+\}\), using a starting index of 1, \(\xi_1 = 4\) as that is the next visit by bus 2. Each visit is prescribed arrival and
+departure times, \(a_i\) and \(e_i\), respectively. During the time frame \([a_i, e_i]\), the BEB may be assigned to a queue
+to be charged. An associated cost is employed when a visit is assigned to a charging queue \(q \in Q\). Let the assignment
+cost be represented by \(\epsilon_q\). Lastly, the time horizon is to be discretized to assist in computing the peak demand cost,
+let \(t_h\) denote a discrete time step. \(dt\) is the discrete time step \(dt = t_h - t_{h-1}\).
 
 \subsubsection{Decision Variables}
 \label{sec:sa-decision-variables}
@@ -762,12 +762,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:orgf5c5d80}
+\label{sec:org9f4ba9a}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org7cc76e5}
+\label{sec:org79b4ab8}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
