@@ -1,4 +1,4 @@
-% Created 2024-04-03 Wed 14:49
+% Created 2024-04-03 Wed 15:27
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -436,6 +436,13 @@ decision variable is the queue that bus visit \(i\) can be placed in to charge, 
 
 \paragraph{Slack Variables}
 \label{sec:sa-slack-decision-variables}
+\begin{figure}[htpb]
+  \centering \includegraphics{img/overlap}
+  \caption{Examples of different methods of overlapping. Space overlap: $q_{k_1} > q_{i} + 1 \therefore \psi_{ik_{1}} = 1$.
+    Time overlap $u_{k_2} < u_{j} + s_j \therefore \sigma_{k_{2}j} = 0$. Similarly, $\sigma_{k_3 i} = 0$.}
+  \label{fig:overlap}
+\end{figure}
+
 Let the initial SOC for a visit be written as \(\eta_i\), where \(i \in \Iset \setminus \Iset_0\). The initial charge for visit \(i\) forms
 the foundation from which the SOC of the next visit, \(\eta_{\xi_i}\), is calculated. The charge for bus \(i\)'s next visit is
 equal to the initial charge for visit \(i\) plus the charge added to it by charger \(q_i\) over duration \(s_i = d_i - u_i\)
@@ -474,41 +481,34 @@ minimizing the total utilized chargers. The assignment cost is written as
 \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i}\text{.}
 \end{equation}
 
-This cost is effectively the cost on the choice of \(q\). Recalling the form of \(Q\), particularly the ordering in which
-the set was defined. Taking \(\epsilon\) to be constructed using the same ordering (idle, slow, then fast charging queues), let
-the first \(n_B\) queues have no cost. Furthermore, let the next \(n_Q\) charging queues be of the form \([P, 2P, ...,
-n_QP]\). Concatenating these vectors yields \(\epsilon = [[0; n_B], [P, 2P, ..., Pn_Q]]\), where \([0; n_B]\) is used to denote a
-vector populated with zeros of length \(n_B\). In words, this form accrues no cost when assigning a BEB to an idle queue
-while still minimizing charger count and encouraging the use of slow chargers over fast. Thus, the larger the index of
-\(q\), the larger the cost. The \(\epsilon\) vector described above is one of many forms that the vector may take; however, form
-shown described is what is applied in this work.
+This cost is effectively the cost on the choice the choice of selecting queue \(q_i\). In the \ref{sec:sa-example}, a
+particular choice for the assignment cost is made to encourage the use of slow chargers over fast for the sake of
+battery health. The charger queue indices are ordered such that the first \(n_B\) queues correspond to idle queues. This
+allows BEBs to simultaneously sit idle if needed. All \(n_B\) idle queues have assignment costs of zero to denote that
+there is no cost when not charging. The next group of chargers is assumed to be the slow chargers subsequently followed
+by the fast. Let the set of \(n_Q\) slow and fast charging queues be of the form \([P, 2P, ..., n_QP]\). Concatenating these
+vectors yields \(\epsilon = [[0; n_B], [P, 2P, ..., Pn_Q]]\), where \([0; n_B]\) is used to denote a vector populated with zeros of
+length \(n_B\).
 
 \subsubsection{Penalty Method}
 \label{sec:sa-penalty-method}
-A penalty method is to be implemented in the objective function that is enabled when the \(\eta_i\) falls below a defined
-threshold. Let the piecewise function that enables/disables the penalty method be of the form
+A penalty method is to be implemented to provide a soft constraint on the lower bound of the charge. Let the piecewise
+function that enables/disables the penalty method be of the form
 
 \begin{equation}
 \label{eq:penalty}
   \phi(x) =
   \begin{cases}
     0   & x \ge 0 \\
-    x^2 & x < 0\\
+    x^2 & x < 0\text{.}
   \end{cases}
 \end{equation}
 
-Furthermore, letting \(x = \eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}\), where \(\nu_{\Xi_i} \kappa_{\Xi_i}\) is the minimum charge threshold, applies a penalty
-proportional to the difference of the SOC and the threshold squared.
-
-\begin{figure}[htpb]
-  \centering \includegraphics{img/overlap}
-  \caption{Examples of different methods of overlapping. Space overlap: $q_{k_1} > q_{i} + 1 \therefore \psi_{ik_{1}} = 1$.
-    Time overlap $u_{k_2} < u_{j} + s_j \therefore \sigma_{k_{2}j} = 0$. Similarly, $\sigma_{k_3 i} = 0$.}
-  \label{fig:overlap}
-\end{figure}
-
-Using the form of \ref{eq:penalty} with and added scalar, \(D\), is employed so that the cost of deviating from the threshold
-heavily influences the outcome of the objective function. Therefore, the penalty method is written as
+Furthermore, letting \(x = \eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}\), where \(\nu_{\Xi_i} \kappa_{\Xi_i}\) is the minimum charge threshold, applies a
+penalty proportional to the difference of the SOC and the threshold squared. Using the form of \ref{eq:penalty} with and added
+scalar, \(D\), is employed so that the cost of deviating from the threshold heavily influences the outcome of the
+objective function. Particularly, this method is employed as a means of guaranteeing enough charge for each BEB to
+complete its next route. Therefore, the penalty method is written as
 
 \begin{equation}
 \label{eq:penalty-method}
@@ -517,11 +517,9 @@ heavily influences the outcome of the objective function. Therefore, the penalty
 
 \subsubsection{Consumption Cost}
 \label{sec:sa-consumpction-cost}
-In most cases, energy companies rely on a volumetric rate as a method of track customer electricity consumption (i.e.
-total electricity consumed over a billing period). As such, a method of reducing the total energy consumed by the system
-is desired. The energy total energy consumed by a charge schedule is defied by what is known as the consumption cost.
-The consumption cost is the summation of all the energy being used over all the active periods for each charger in the
-time horizon. This is represented by the summation
+In most cases, utility companies have a portion of the cost related to the total electricity consumed over a billing
+period, referred to herein as the consumption cost. The consumption cost is the summation of all the energy being used
+over all the active periods for each charger in the time horizon. This is represented by the summation
 
 \begin{equation}
 \label{eq:consumption-cost}
@@ -533,11 +531,9 @@ utilized, \(s_i\).
 
 \subsubsection{Demand Cost}
 \label{sec:sa-demand-cost}
-Historically for large industrial customers, energy companies often further rely on a demand cost in conjunction with a
-consumption cost for billing. The consumption cost is an important metric as it measures how much power a customer may
-require over billing period. Energy companies, having to potentially meet large peaks in demand, offset that cost to the
-customer. Thus, when a demand and consumption costs are imposed, not only is the total energy reduction desirable, but
-also how much power is consumed at a given moment.
+Utility companies often charge a ``demand cost'' in an effort to reduce peak demand usage. A particular example of peak
+demand is the fifteen minute average energy usage employed by Rocky Mountain Power Schedule 8
+\cite{rocky-mountain-power}.
 
 A method of calculating the demand charge is done by calculating the average power consumption over a given period of
 time. Let the average power used over an arbitrary interval, \(T_p\), be represented by
@@ -547,8 +543,8 @@ time. Let the average power used over an arbitrary interval, \(T_p\), be represe
 p_{T_p}(t) = \frac{1}{T_p} \int_{t-T_p}^{t} p(\tau) d\tau\text{.}
 \end{equation}
 
-Energy companies take the largest peak when calculating the demand cost. Therefore, let the cost of the peak power
-consumption be dictated by the maximum average power:
+The largest fifteen minute average power usage is used as the demand cost for the billing period. Therefore, let the
+cost of the peak power consumption be dictated by the maximum average power:
 
 \begin{equation}
 \label{eq:pmax}
@@ -562,9 +558,6 @@ begins to increase. Let this fixed threshold be defined as \(p_{fix}\), the dema
 \label{eq:pdem}
 p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 \end{equation}
-
-Hence, \ref{eq:pdem} defines a cost beginning with a value of \(p_{fix}\) from which it may only increase if \(p_{15}(t) >
-p_{fix}\).
 
 Although the charge times for each BEB are continuous, due to the discrete nature of visits it is simpler to determine a
 vector of discrete power consumption over the time horizon from which the average power demand cost may be derived. To
@@ -762,12 +755,12 @@ current state of visits, \(\I\), and the current state of the charger availabili
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org9f4ba9a}
+\label{sec:org99a18ca}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org79b4ab8}
+\label{sec:orgc23d9e2}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
