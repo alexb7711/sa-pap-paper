@@ -1,4 +1,4 @@
-% Created 2024-04-03 Wed 14:11
+% Created 2024-04-03 Wed 14:28
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -237,7 +237,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \SetCommentSty{mycommfont}                  % Set the comment color
 
 \section{Introduction}
-\label{sec:introduction}
+\label{sec:sa-introduction}
 Public transportation systems are a critical component urban areas. An increased awareness and concern of environmental
 impacts of petroleum based public transportation has driven an effort to reduce the pollutant footprint
 \cite{de-2014-simul-elect,xylia-2018-role-charg,guida-2017-zeeus-repor-europ,li-2016-batter-elect}. Particularly,
@@ -295,15 +295,15 @@ charger types \cite{whitaker-2023-a-network}. This paper expands on these previo
 annealing (SA) framework that accounts for partial charging, minimizes total charger count, allows for multiple charger
 types, minimizes consumption cost, and minimizes demand cost.
 
-In what follows, the problem statement shall be provided in \ref{sec:problem-description}. \ref{sec:sa-optimization-problem}
+In what follows, the problem statement shall be provided in \ref{sec:sa-problem-description}. \ref{sec:sa-optimization-problem}
 introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,
-objective function and constraints. In \ref{sec:simulated-annealing}, the concept and theory of SA is introduced. In
+objective function and constraints. In \ref{sec:sa-simulated-annealing}, the concept and theory of SA is introduced. In
 particular the algorithms and methods utilized for the SA implementation for this work are discussed.
-\ref{sec:optimization-algorithm} outlines a generic SA algorithm, and then combines the previous sections to introduce the
-particular implementation for the SA-PAP. In \ref{sec:example}, an example problem is provided to demonstrate the capability
+\ref{sec:sa-optimization-algorithm} outlines a generic SA algorithm, and then combines the previous sections to introduce the
+particular implementation for the SA-PAP. In \ref{sec:sa-example}, an example problem is provided to demonstrate the capability
 of the work provided in this paper. The results will be presented and discussed.
 \section{Problem Description}
-\label{sec:problem-description}
+\label{sec:sa-problem-description}
 Consider a fleet of BEBs scheduled to perform a set of prescribed routes on a given day. An individual BEB from said
 fleet begins and completes an individual route at the same station from which it also receives its charge. During each
 route, the BEB's State of Charge (SOC) is depleted by a certain amount. The charge supplied during its visit must be
@@ -666,7 +666,7 @@ bus \(b_i\). \ref{seq:c7} ensures that the bus is not being over-charged. \ref{s
 (i.e. the arrival time is less than the initial charge which is less than the detach time which is less than the time
 the bus exits the station and all must be less than the time horizon).
 \section{Simulated Annealing}
-\label{sec:simulated-annealing}
+\label{sec:sa-simulated-annealing}
 SA is a well-studied local search metaheuristic used to solve various optimization problems
 \cite{gendreau-2018-handb-metah,press-1992-numer-recip}. A metaheuristic is a high-level problem-independent algorithm
 framework that provides a set of guidelines or strategies to develop heuristic optimization algorithms
@@ -718,7 +718,7 @@ values of \(\beta\).
 \end{figure}
 
 \subsection{Acceptance Criteria}
-\label{sec:acceptance}
+\label{sec:sa-acceptance}
 In SA, the algorithm stores a candidate solution that is continuously compared to newly generated solutions. Let the
 stored solution be referred to as the ``active solution''. During each iteration, a new candidate solution is generated
 and compared to the active solution to determine if the new solution should replace the active solution. To determine if
@@ -740,41 +740,41 @@ f(\I,\bar{\I},t_m) =
 \end{equation}
 
 \subsection{Neighbor Generators and Wrappers}
-\label{sec:generation-mechanisms}
+\label{sec:sa-generation-mechanisms}
 Generation mechanisms are used to create a neighboring candidate solution \cite{gendreau-2018-handb-metah}. That is,
 the generating function creates a solution that can be reached in a single iteration from the active solution. In the
-case of the problem statement made in \ref{sec:problem-description}, five primitive generation mechanism are used: new visit,
+case of the problem statement made in \ref{sec:sa-problem-description}, five primitive generation mechanism are used: new visit,
 slide visit, new charger, new window, wait. The purpose of each of these generators is to assign new visits to a
 charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from one charger
 to another with the same charge schedule, move a bus to its idle queue. Each generator will be discussed in more detail
-in \ref{sec:generators}.
+in \ref{sec:sa-generators}.
 
 These generation mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
 an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate solution and alter
 it slightly in an attempt to step toward a global or local minimum. The wrapper functions will be discussed in
-\ref{sec:generator-wrappers}. However, prior to discussing the primitives and wrapper generating functions, their respective
+\ref{sec:sa-generator-wrappers}. However, prior to discussing the primitives and wrapper generating functions, their respective
 inputs and outputs must be defined.
 
 \subsubsection{Generator Input/Output}
-\label{sec:generator-input-output}
+\label{sec:sa-generator-input-output}
 This section discusses inputs and outputs of each generator. The input consists of the bus visit index of interest, the
 current state of visits, \(\I\), and the current state of the charger availability, \(\C\). The output of each generator
 affects a subset of \(\I\) and the updated charger availability \(\C\).
 
 \paragraph{Generator Input}
-\label{sec:org501f694}
+\label{sec:orgf5c5d80}
 Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
 visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\).
 
 \paragraph{Generator Output}
-\label{sec:org8cbd69f}
+\label{sec:org7cc76e5}
 The output of the generating functions is the same as the input, but with changes applied to it by a generator. Let a
 modified variable be denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\). Although
 not all the variables in \(\Sol\) are modified, it is written in this manner for the sake of consistency and simplicity in
 bookkeeping.
 
 \subsubsection{Generators}
-\label{sec:generators}
+\label{sec:sa-generators}
 This section describes and outlines the different generator types. Recall that to satisfy constraints, \(n_B\) extra idle
 queues are added that provide no power to the BEB. Because of this, the set of queues is fully defined where \(Q\) is the
 ordered set of idle queues, slow queues, then fast queue. The use case for the idle queues are for when a bus is not to
@@ -787,7 +787,7 @@ example, suppose the arrival time is desired to be extracted from visit \(i\). G
 extracting the initial charge time for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{New visit}
-\label{sec:new-visit}
+\label{sec:sa-new-visit}
 The new visit generator defined in \ref{alg:new-visit} describes the process of moving a BEB, \(b \in B\), from a waiting
 queue, \(q \in B\), to a charging queue, \(q_i \in \{n_B + 1, ..., n_Q\}\), within its arrival/departure time \([a, e]\). Let
 \(\U_{\{\cdot\}}\) indicate that an element is selected randomly with a uniform distribution from the set \(\{\cdot\}\). For
@@ -896,7 +896,7 @@ the new queue.
   \end{algorithm}
 
 \paragraph{Wait}
-\label{sec:wait}
+\label{sec:sa-wait}
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, \(q_i \in B\). \ref{alg:wait}
 begins by purging the visit from the charger availability set, the visit is then assigned to its idle queue for the
 duration of its time at the station.
@@ -920,7 +920,7 @@ duration of its time at the station.
   \end{algorithm}
 
 \paragraph{New Window}
-\label{sec:new-window}
+\label{sec:sa-new-window}
 New window, as shown in \ref{alg:new-window}, is a combination of \ref{alg:new-visit} (new visit) and \ref{alg:wait}
 (wait). By this it is meant that visit \(i\) is placed in its wait queue then added back in as if it were a new visit.
 This implies that the BEB may be assigned to a different queue and a new charge time slice. \ref{alg:new-window} begins
@@ -954,13 +954,13 @@ executed. If that succeeds, return the updated tuple, otherwise return the null 
 \end{algorithm}
 
 \subsubsection{Generator Wrappers}
-\label{sec:generator-wrappers}
+\label{sec:sa-generator-wrappers}
 This section covers the algorithms utilized to select and execute different generation processes. The generator wrappers
 are the methods immediately called by the SA algorithm. Each wrapper utilizes the primitive generators previously
 described and returns either a new charge schedule or a modified charge schedule.
 
 \paragraph{Charge Schedule Generation}
-\label{sec:charge-schedule-generation}
+\label{sec:sa-charge-schedule-generation}
 The objective of \ref{alg:charge-schedule-generation} is to assign each visit to a random charge queue and charge time.
 Specifically, this generator exists to initialize the system with a solution in a greedy manner.
 \ref{alg:charge-schedule-generation} loops through each visit and executes \ref{alg:new-visit} to place visit \(i\) at
@@ -988,12 +988,12 @@ random queue with a random charge time.
   \end{algorithm}
 
 \paragraph{Perturb Schedule}
-\label{sec:tweak-schedule}
+\label{sec:sa-tweak-schedule}
 Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
 create candidate solutions. After each step of the cooling function, the active solution will be altered \(n_K\) times by
 a random primitive generator. During these \(n_K\) iterations the active solution is modified to create a neighboring
 candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
-\ref{sec:acceptance}. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
+\ref{sec:sa-acceptance}. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
 schedule. The method that will be employed generate a neighboring solution is as follows: pick a visit, pick a primitive
 generator, and execute said primitive generator once. Let \(\W^y_{[\cdot]}\) denote a random selection with a distribution
 specified by a weight vector \(y \in \mathbb{R}\). Thus, \ref{alg:perturb-schedule} is as follows: select a visit with a uniform
@@ -1024,7 +1024,7 @@ executed, and the results are returned.
 \end{algorithm}
 
 \subsection{Alternative Heuristic Implementation}
-\label{sec:heuristic-implementation}
+\label{sec:sa-heuristic-implementation}
 As suggested by the works in \cite{Zhang_2010,Xinchao_2011}, applying heuristics to the generating functions can
 manipulate the searched neighborhoods in a way that may assist the SA algorithm with convergence. As a test to assist in
 minimizing charger utilization, a simple heuristic was applied to \ref{alg:new-visit} and \ref{alg:new-charger} in the
@@ -1037,7 +1037,7 @@ queue \(q = n_B + 1\). If it is unable to be placed in that queue, it then attem
 n_B + 2\). This is done incrementally until all the queues have been exhausted. At the expense of an additional up-front
 computation cost, the heuristic will attempt to pack the visit optimally in the spacial sense.
 \section{Optimization Algorithm}
-\label{sec:optimization-algorithm}
+\label{sec:sa-optimization-algorithm}
 This section combines the generation algorithms and the optimization problem into a single algorithm (\ref{alg:sa-pap}).
 While the SA PAP generally is written almost identically to that of the general SA algorithm, the general SA assumes
 that the generated candidate solutions are in the solution space of the problem, \(\omega \in S\) where \(S\) is the solution
@@ -1105,15 +1105,15 @@ function is exhausted.
 \end{algorithm}
 
 \section{Example}
-\label{sec:example}
+\label{sec:sa-example}
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
-\ref{sec:beb-scenario} a description of the example scenario is presented followed by a brief introduction of the original
+\ref{sec:sa-beb-scenario} a description of the example scenario is presented followed by a brief introduction of the original
 MILP PAP. An alternative heuristic based planning strategy called Qin-Modified, and a heuristic modification to the SA
-PAP are also used as comparisons to the SA PAP technique presented in this work. \ref{sec:results} presents the results for
+PAP are also used as comparisons to the SA PAP technique presented in this work. \ref{sec:sa-results} presents the results for
 each of planning strategies. The results are also analyzed and discussed.
 
 \subsection{BEB Scenario}
-\label{sec:beb-scenario}
+\label{sec:sa-beb-scenario}
 The test scenario was run over a time horizon of \(T=24\) hours, with a total of \(n_V = \N\) visits to the station shared
 between \(n_B = \A\) buses. Each BEB has a battery capacity of \(\kappa_b =\) \batsize kWh battery that is required to stay above
 an SOC of \(\nu_b =\) \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin the working
@@ -1131,8 +1131,8 @@ search at a constant temperature. In total, that results in \fpeval{\localcnt * 
 being searched. On average each constant temperature search took an average of \(\quicklocal\) seconds to complete,
 resulting in a total runtime of \fpeval{\quicklocal * \tempcnt} seconds.
 
-\ref{sec:heuristic-implementation} introduced the idea of an alternative heuristic implementation for the SA algorithm. To
-distinguish the heuristic implementation from the method derived in \ref{sec:generation-mechanisms}, let this implementation
+\ref{sec:sa-heuristic-implementation} introduced the idea of an alternative heuristic implementation for the SA algorithm. To
+distinguish the heuristic implementation from the method derived in \ref{sec:sa-generation-mechanisms}, let this implementation
 be referred to as ``heuristic'' implementation and the previous as the ``quick'' implementation. Using the same weights for
 selecting randomly selecting the primitive generators, the heuristic approach further implemented a weighted
 distribution vector of \([3, 1]\) to decide whether to select a slow or fast charger, respectively. In the heuristic
@@ -1161,7 +1161,7 @@ on a machine equipped with an AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95
 
 
 \subsection{Results}
-\label{sec:results}
+\label{sec:sa-results}
 The schedules generated by each of the methods is presented in \ref{fig:schedule}. Rows 0-14 represent slow charging
 queues and rows 15-29 represent fast charging queues. The symbols represent the initial charge times, and the horizontal
 line with the vertical tick signifies the region of time the charger is active. A qualitative comparison between the
@@ -1432,7 +1432,7 @@ more than the MILP PAP.
 \end{figure}
 
 \section{Conclusion}
-\label{sec:conclusion}
+\label{sec:sa-conclusion}
 This work developed an SA implementation derived from the works of the MILP PAP. The model is designed to reduce the
 total number of utilized chargers, minimize the peak energy consumption and the total energy consumed. The problem
 description was provided outlining the scenario in which this model is designed for. The optimization problem was then

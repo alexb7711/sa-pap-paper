@@ -1,6 +1,6 @@
 * Simulated Annealing
 :PROPERTIES:
-:CUSTOM_ID: sec:simulated-annealing
+:CUSTOM_ID: sec:sa-simulated-annealing
 :END:
 SA is a well-studied local search metaheuristic used to solve various optimization problems
 [cite:@gendreau-2018-handb-metah;@press-1992-numer-recip]. A metaheuristic is a high-level problem-independent algorithm
@@ -58,7 +58,7 @@ values of $\beta$.
 
 ** Acceptance Criteria
 :PROPERTIES:
-:CUSTOM_ID: sec:acceptance
+:CUSTOM_ID: sec:sa-acceptance
 :END:
 In SA, the algorithm stores a candidate solution that is continuously compared to newly generated solutions. Let the
 stored solution be referred to as the "active solution". During each iteration, a new candidate solution is generated
@@ -82,25 +82,25 @@ f(\I,\bar{\I},t_m) =
 
 ** Neighbor Generators and Wrappers
 :PROPERTIES:
-:CUSTOM_ID: sec:generation-mechanisms
+:CUSTOM_ID: sec:sa-generation-mechanisms
 :END:
 Generation mechanisms are used to create a neighboring candidate solution [cite:@gendreau-2018-handb-metah]. That is,
 the generating function creates a solution that can be reached in a single iteration from the active solution. In the
-case of the problem statement made in [[#sec:problem-description]], five primitive generation mechanism are used: new visit,
+case of the problem statement made in [[#sec:sa-problem-description]], five primitive generation mechanism are used: new visit,
 slide visit, new charger, new window, wait. The purpose of each of these generators is to assign new visits to a
 charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from one charger
 to another with the same charge schedule, move a bus to its idle queue. Each generator will be discussed in more detail
-in [[#sec:generators]].
+in [[#sec:sa-generators]].
 
 These generation mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
 an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate solution and alter
 it slightly in an attempt to step toward a global or local minimum. The wrapper functions will be discussed in
-[[#sec:generator-wrappers]]. However, prior to discussing the primitives and wrapper generating functions, their respective
+[[#sec:sa-generator-wrappers]]. However, prior to discussing the primitives and wrapper generating functions, their respective
 inputs and outputs must be defined.
 
 *** Generator Input/Output
 :PROPERTIES:
-:CUSTOM_ID: sec:generator-input-output
+:CUSTOM_ID: sec:sa-generator-input-output
 :END:
 This section discusses inputs and outputs of each generator. The input consists of the bus visit index of interest, the
 current state of visits, $\I$, and the current state of the charger availability, $\C$. The output of each generator
@@ -118,7 +118,7 @@ bookkeeping.
 
 *** Generators
 :PROPERTIES:
-:CUSTOM_ID: sec:generators
+:CUSTOM_ID: sec:sa-generators
 :END:
 This section describes and outlines the different generator types. Recall that to satisfy constraints, $n_B$ extra idle
 queues are added that provide no power to the BEB. Because of this, the set of queues is fully defined where $Q$ is the
@@ -133,7 +133,7 @@ extracting the initial charge time for visit $i$ is written as $u_i \equiv \I_{i
 
 **** New visit
 :PROPERTIES:
-:CUSTOM_ID: sec:new-visit
+:CUSTOM_ID: sec:sa-new-visit
 :END:
 The new visit generator defined in \ref{alg:new-visit} describes the process of moving a BEB, $b \in B$, from a waiting
 queue, $q \in B$, to a charging queue, $q_i \in \{n_B + 1, ..., n_Q\}$, within its arrival/departure time $[a, e]$. Let
@@ -188,7 +188,7 @@ original charger availability and null values for the charge times upon failure.
 
 **** Purge :noexport:
 :PROPERTIES:
-:CUSTOM_ID: sec:purge
+:CUSTOM_ID: sec:sa-purge
 :END:
 The purge procedure simply removes an assigned charge time from the set $\C$. This function, while not a generator,
 exists so that other primitives may place the visit back into the schedule without creating duplicate entries in $\C$.
@@ -236,7 +236,7 @@ the updated visit data. If =findFreetime= was unsuccessful, then the generator r
 
 **** Wait
 :PROPERTIES:
-:CUSTOM_ID: sec:wait
+:CUSTOM_ID: sec:sa-wait
 :END:
 The wait generator simply removes a bus from a charger queue and places it in its idle queue, $q_i \in B$. \ref{alg:wait}
 begins by purging the visit from the charger availability set, the visit is then assigned to its idle queue for the
@@ -251,7 +251,7 @@ availability schedule of the wait queue for bus $b$. Line 5 returns the updated 
 
 **** New Window
 :PROPERTIES:
-:CUSTOM_ID: sec:new-window
+:CUSTOM_ID: sec:sa-new-window
 :END:
 New window, as shown in \ref{alg:new-window}, is a combination of \ref{alg:new-visit} (new visit) and \ref{alg:wait}
 (wait). By this it is meant that visit $i$ is placed in its wait queue then added back in as if it were a new visit.
@@ -270,7 +270,7 @@ of \ref{alg:new-visit}.
 
 *** Generator Wrappers
 :PROPERTIES:
-:CUSTOM_ID: sec:generator-wrappers
+:CUSTOM_ID: sec:sa-generator-wrappers
 :END:
 This section covers the algorithms utilized to select and execute different generation processes. The generator wrappers
 are the methods immediately called by the SA algorithm. Each wrapper utilizes the primitive generators previously
@@ -278,7 +278,7 @@ described and returns either a new charge schedule or a modified charge schedule
 
 **** Charge Schedule Generation
 :PROPERTIES:
-:CUSTOM_ID: sec:charge-schedule-generation
+:CUSTOM_ID: sec:sa-charge-schedule-generation
 :END:
 The objective of \ref{alg:charge-schedule-generation} is to assign each visit to a random charge queue and charge time.
 Specifically, this generator exists to initialize the system with a solution in a greedy manner.
@@ -295,14 +295,14 @@ at random queue with a random charge time.
 
 **** Perturb Schedule
 :PROPERTIES:
-:CUSTOM_ID: sec:tweak-schedule
+:CUSTOM_ID: sec:sa-tweak-schedule
 :END:
 
 Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
 create candidate solutions. After each step of the cooling function, the active solution will be altered $n_K$ times by
 a random primitive generator. During these $n_K$ iterations the active solution is modified to create a neighboring
 candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
-[[#sec:acceptance]]. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
+[[#sec:sa-acceptance]]. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
 schedule. The method that will be employed generate a neighboring solution is as follows: pick a visit, pick a primitive
 generator, and execute said primitive generator once. Let $\W^y_{[\cdot]}$ denote a random selection with a distribution
 specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: select a visit with a uniform
@@ -321,7 +321,7 @@ a primitive generator with a weighted distribution. Line 6 executes the primitiv
 
 ** Alternative Heuristic Implementation
 :PROPERTIES:
-:CUSTOM_ID: sec:heuristic-implementation
+:CUSTOM_ID: sec:sa-heuristic-implementation
 :END:
 
 As suggested by the works in [cite:@Zhang_2010; @Xinchao_2011], applying heuristics to the generating functions can
