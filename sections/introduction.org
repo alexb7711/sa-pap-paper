@@ -3,24 +3,69 @@
 :CUSTOM_ID: sec:sa-introduction
 :END:
 
+With an ever increasing interest in the electrification of vehicles in the push for greener transportation, many
+organizations and companies have been looking to adopt the electrification of fleet of vehicles [cite:@khan-2022-inves].
+This transition is also stemming into the electrification of public bus transportation via battery power, i.e., battery
+electric buses (BEBs) [cite:@li-2016-batter-elect;@guida-2017-zeeus-repor-europ]. In particular, agencies such as the
+Utah Transit Authority (UTA), have directed focus in replacing their fleets with BEBs. With all the benefits that are
+associated with BEBs, new challenges are introduced that must be addressed prior to their migration into mainstream
+utilization. The energy storage capacity of BEBs is typically significantly less than their combustion counterparts
+while also have significantly longer refueling periods [cite:@xylia-2018-role-charg;@li-2016-batter-elect]. This is
+further complicated due to the care that must be taken in prolonging the lifespan of the battery
+[cite:@lutsey-2019-updat-elect;@edge-2021-lithium; @millner-2010-model-lithium]. As a further complication, BEB
+refueling is no longer a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to
+charging for the total energy consumed over a pay period, further introduce a demand cost. The demand cost is based on
+the peak power drawn during the pay period, and can significantly impact the overall monetary cost of maintaining the
+BEBs. Due to these factors, the charging schedules for the BEBs significantly impacts the overall cost of utilizing the
+fleet. This work introduces a scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional
+battery dynamics model, accounts for multiple charger types, allows partial charging, and attempts to minimize the
+monetary cost by considering the total energy consumed by the schedule as well as peak power use.
+
+Works concerning charge planning often use a version of the vehicle scheduling problem [cite:@zhang-2021-optim-elect;
+@duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet; @tang-2019-robus-sched; @li-2014-trans-bus; @he-2020-optim-charg].
+Many of these works introduce a simplifying assumptions for the sake of computation. For example, some approaches only
+consider fast charges during planing [cite:@zhou-2020-collab-optim; @li-2014-trans-bus; @wang-2017-optim-rechar;
+@sebastiani-2016-evaluat-elect; @wei-2018-optim-spatio]. Approaches that consider more than one charger type typically
+isolate the specific charger types in different locations [cite:@tang-2019-robus-sched; @he-2020-optim-charg]. Others
+have assume that BEBs always charge to full capacity [cite:@duan-2021-refor-mixed; @zhang-2021-optim-elect;
+@zhou-2020-bi-objec; @wang-2017-elect-vehic], partial charging utilizing a linear battery dynamics model
+[cite:@wei-2018-optim-spatio; @he-2020-optim-charg; @mortensen-2023-cost-minim], or non-linear battery dynamics with
+partial charging [cite:@whitaker-2023-a-network; @zhang-2021-optim-elect; @qin-2016-numer-analy; @jahic-2019-preem;
+@frendo-2021-open-sourc].
+
+The selected model for the battery charge dynamics, although pertinent to this work as it directly affects the quality
+of the produced schedule, does degrade the considerations of battery health. Battery health begins to be of concern if
+it is over-charged, under-charged, or forced to perform "deep" cycles [cite:@zhou-2020-bi-objec;
+@millner-2010-model-lithium; @edge-2021-lithium]. Furthermore, other works have suggested that charging a battery nearly
+to capacity is detrimental to the health and can significantly reduce the total charge cycles a battery may undergo
+[cite:@edge-2021-lithium; @millner-2010-model-lithium]. While the charge profile for batteries are inherently
+non-linear, some works have assumed a proportional charge increase as linear battery dynamics remain a valid assumption
+when the battery SOC is below 80% [cite:@liu-2020-batter-elect]. Thus, while linear dynamics may lack the fidelity of
+accuracy above 80%, it is able to accurately estimate the SOC within a range that will guarantee battery health. Thus,
+this work assumes that a linear model is sufficiently accurate to produce an operationally valid schedule while
+maintaining battery health.
+
+Nearly all the literature reviewed considered consumption costs [cite:@jahic-2019-preem; @frendo-2021-open-sourc;
+@qin-2016-numer-analy; @zhou-2020-bi-objec; @duan-2021-refor-mixed; @mortensen-2023-cost-minim; @zhou-2020-collab-optim;
+@rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim], while fewer consider demand costs [cite:@jahic-2019-preem;
+@frendo-2021-open-sourc; @qin-2016-numer-analy; @mortensen-2023-cost-minim; @he-2020-optim-charg].
+
+This work bases its implementation on what is known as the Position allocation problem
+[cite:@qarebagh-2019-optim-sched]. The PAP is derived from the Berth Allocation Problem (BAP) which solves the problem
+of scheduling a set of vessels to be berthed and serviced. In respect to the state of the art provided, this work aims
+to expand on these previous works by introducing a simulated annealing (SA) framework that accounts for partial
+charging, minimizes total charger count, allows for multiple charger types, minimizes consumption cost, and minimizes
+demand cost.
+
+In what follows, the problem statement shall be provided in [[#sec:sa-problem-description]]. [[#sec:sa-optimization-problem]]
+introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,
+objective function and constraints. In [[#sec:sa-simulated-annealing]], the concept and theory of SA is introduced. In
+particular the algorithms and methods utilized for the SA implementation for this work are discussed.
+[[#sec:sa-optimization-algorithm]] outlines a generic SA algorithm, and then combines the previous sections to introduce the
+particular implementation for the SA-PAP. In [[#sec:sa-example]], an example problem is provided to demonstrate the capability
+of the work provided in this paper. The results will be presented and discussed.
+
 #+begin_comment
-TODO: Add notes about work using heuristic searches for SA
-#+end_comment
-
-Public transportation systems are a critical component urban areas. An increased awareness and concern of environmental
-impacts of petroleum based public transportation has driven an effort to reduce the pollutant footprint
-[cite:@de-2014-simul-elect;@xylia-2018-role-charg;@guida-2017-zeeus-repor-europ;@li-2016-batter-elect]. Particularly,
-the electrification of public bus transportation via battery power, i.e., battery electric buses (BEBs), has received
-significant attention [cite:@li-2016-batter-elect]. Although the technology provides benefits beyond reduction in
-emissions, such as lower driving costs, lower maintenance costs, and reduced vehicle noise, battery powered systems
-introduce new challenges such as larger upfront costs, and potentially several hours long "refueling" periods
-[cite:@xylia-2018-role-charg;@li-2016-batter-elect]. Furthermore, the problem is exacerbated by the constraints of the
-transit schedule to which the fleet must adhere, the limited amount of chargers available, and the adverse affects in
-the health of the battery due to fast charging [cite:@lutsey-2019-updat-elect]. This work presents a scheduling
-framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple
-charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak
-power use.
-
 Literature shows an interest in solving the problem of assigning BEBs to charging queues or optimizing their
 infrastructure [cite:@wei-2018-optim-spatio;@sebastiani-2016-evaluat-elect;
 @hoke-2014-accoun-lithium;@wang-2017-elect-vehic]. Additionally, the prospect of solving both problems simultaneously
@@ -78,3 +123,4 @@ particular the algorithms and methods utilized for the SA implementation for thi
 [[#sec:sa-optimization-algorithm]] outlines a generic SA algorithm, and then combines the previous sections to introduce the
 particular implementation for the SA-PAP. In [[#sec:sa-example]], an example problem is provided to demonstrate the capability
 of the work provided in this paper. The results will be presented and discussed.
+#+end_comment
