@@ -40,7 +40,7 @@
   hold off;
 
   ## Legend
-  l = legend({'\beta = 0.995', '\beta = 0.99', '\beta = 0.95', '\beta = 0.9'});
+  l = legend({'0.995', '0.99', '0.95', '0.9'});
   set(l, "fontsize", 20);
 
   ## Configure Plot
