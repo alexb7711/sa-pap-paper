@@ -21,7 +21,7 @@ TARGET          = sa-pap.pdf
 ALL             = $(shell find . -type f -name "*.org")
 FIGURES_TEX     = $(wildcard $(IMG)/*tex)
 FIGURES_EPS     = $(wildcard Definitions/*eps)
-EPS_TO_PDF      = $(patsubst %.eps, %.pdf, $(FIGURES_EPS))
+EPS_TO_PDF      = $(patsubst %.eps, %-eps-converted-to.pdf, $(FIGURES_EPS))
 FIGURES_PDF     = $(patsubst %.tex, %.pdf, $(FIGURES_TEX))
 
 ##==============================================================================

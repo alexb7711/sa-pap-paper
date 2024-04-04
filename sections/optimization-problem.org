@@ -195,11 +195,13 @@ over all the active periods for each charger in the time horizon. This is repres
 
 #+name: eq:consumption-cost
 \begin{equation}
-\sum_{i=1}^{n_V} r_{q_i}s_i\text{.}
+z_c \sum_{i=1}^{n_V} r_{q_i}s_i\text{.}
 \end{equation}
 
-That is, the charge rate, $r_{q_i}$, for the active charger, $q_i$, is multiplied by the time that the charger will be
-utilized, $s_i$.
+A scaling $z_c$ is applied as utility companies have a monetary conversion rate. While that may remain the case in
+[[eq:consumption-cost]], $z_c$ may also be used simply as a weight for the consumption cost. Within the summation, the
+charge rate, $r_{q_i}$, for the active charger, $q_i$, is multiplied by the time that the charger will be utilized,
+$s_i$.
 
 *** Demand Cost
 :PROPERTIES:
@@ -234,14 +236,16 @@ begins to increase. Let this fixed threshold be defined as $p_{fix}$, the demand
 p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 \end{equation}
 
-Although the charge times for each BEB are continuous, due to the discrete nature of visits it is simpler to determine a
-vector of discrete power consumption over the time horizon from which the average power demand cost may be derived. To
-discritize $p_d$, let $h \in \{ 1, 2, ..., n_H \} \subset \mathcal{Z}$ where $n_H$ is the total number of steps. Furthermore, let $p$
-define the vector of discrete power demand over the time horizon and let $p_h \in p$ be the demand over time step $h$. For
-conciseness of notation $t_h$ will be abused to denote the time in discrete form (as opposed to $t$ being continuous)
-and let $dt = t_h - t_{h-1}$. Each entry $p_h \in p$ is found by taking the summation of $r_{v_i}$ for all the chargers
-active during the time interval $[t_h, t_h + dt]$. Thus, having an estimate of the demand over each step, the average
-demand can be calculated by taking an average of the Riemann sum over each $T_p$ interval as follows:
+Thus, \ref{eq:pdem} defines the continuous form of maximum average demand cost found during a pay period. Although the
+charge times for each BEB are continuous, due to the discrete nature of visits it difficult to determine the total
+amount of power being consumed at a given time directly. As such, it is simpler to determine a vector of discrete power
+consumption over the time horizon from which the average power demand may be derived. To discritize $p_d$, let $h \in \{
+1, 2, ..., n_H \} \subset \mathcal{Z}$ where $n_H$ is the total number of steps. Furthermore, let $p$ define the vector of discrete
+power demand over the time horizon and let $p_h \in p$ be the demand over time step $h$. For conciseness of notation $t_h$
+will be abused to denote the time in discrete form (as opposed to $t$ being continuous) and let $dt = t_h - t_{h-1}$.
+Each entry $p_h \in p$ is found by taking the summation of $r_{v_i}$ for all the chargers active during the time interval
+$[t_h, t_h + dt]$. Thus, having an estimate of the demand over each step, the average demand can be calculated by taking
+an average of the Riemann sum over each $T_p$ interval as follows:
 
 #+begin_comment
 Thus, for a given visit $i$, the corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be
@@ -271,11 +275,12 @@ where $T_p \le h \le n_H$. Similarly to before, the maximum $p_{T_p}[h]$ value i
   p_d = \max(p_{fix}, p_{max})\text{.}
 \end{equation}
 
-To conclude this section, the objective function is to written in its entirety:
+Similarly to the consumption cost, a scaling $z_d$ is applied. Again, this may be a monetary conversion or simply just a
+gain. Thus, the objective function written in its entirety is
 
 #+name: eq:objective-function
 \begin{equation}
-  J(\I) = p_d + \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i} + D \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) + r_{q_i}s_i\text{.}
+  J(\I) = z_d p_d + z_c \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i} + D \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) + r_{q_i}s_i\text{.}
 \end{equation}
 
 ** Constraints
@@ -293,23 +298,24 @@ These constraints are represented as follows:
 
 # Org mode is a little silly and does not take normal referencing syntax. This note is for future reference.
 
-Constraints \ref{seq:c0}-\ref{seq:c4} are the "queuing constraints". They prevent overlap both spatially and temporally
-as shown in \ref{fig:overlap}. The y-axis represents the possible queues for a bus visit to be placed into, and the
-x-axis represents the time that can be reserved for each visit. The shaded rectangles represent time that has been
-scheduled in the horizontal direction, and the queue allocated for each bus visit in the vertical direction. In other
-words, the set of constraints \ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
+\ref{seq:c0}-\ref{seq:c4} are denoted as "queuing constraints". They prevent overlap both spatially and temporally as
+shown in \ref{fig:overlap}. The y-axis represents the possible queues for a bus visit to be placed into, and the x-axis
+represents the time that can be reserved for each visit. The shaded rectangles represent time that has been scheduled in
+the horizontal direction, and the queue allocated for each bus visit in the vertical direction. In other words, the set
+of constraints \ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
 
 Constraint \ref{seq:c0} states that the starting charge time for BEB $u_j$ must begin after the previous BEB departs,
-$d_i$. The constraint utilizes big-M notation to activate or deactivate the constraint. A value of $\sigma_{ij} = 1 \implies$
-bus $i$ has detached from the charger before bus $j$ has begun charging. If $\sigma_{ij} = 0$, then the constraint is of the
-form $\T + d_i > u_j$ rendering the constraint "inactive" because $u_j$ cannot be larger than $\T + d_i$. Similarly, for
-\ref{seq:c1}, $\psi_{ij}$ determines whether the vehicles are charging in the same queue. A value of $\psi_{ij} = 1 \implies$
-BEB $i$ is in a queue index that is less than BEB $j$. If $\psi_{ij} = 0$ then the constraint is deactivated. Constraints
-\ref{seq:c2} - \ref{seq:c4} enforce spatial and temporal ordering between each queue/vehicle pair. \ref{seq:c2} and
-\ref{seq:c3} ensure that BEB $i$ is not placed before and after $j$ spatially, temporally, or both because that is
-impossible. \ref{seq:c4} ensures that BEB $i$ and $j$ do not have scheduling conflicts spatially or temporally.
+$d_i$. A value of $\sigma_{ij} = 1 \implies$ bus $i$ has detached from the charger before bus $j$ has begun charging. If
+$\sigma_{ij} = 0$, then the constraint is of the form $\T + d_i > u_j$ rendering the constraint "inactive". Similarly, for
+\ref{seq:c1}, $\psi_{ij}$ determines spacial positioning of BEB $i$ and $j$ relative to one another. A value of $\psi_{ij} = 1
+\implies$ BEB $i$ is in a queue index that is less than BEB $j$. If $\psi_{ij} = 0$ then the constraint is deactivated.
+Constraints \ref{seq:c2} - \ref{seq:c4} enforce spatial and temporal ordering between each queue/vehicle pair.
+\ref{seq:c2} and \ref{seq:c3} ensure that BEB $i$ is not placed before and after $j$ spatially, temporally, or both
+because that is impossible. \ref{seq:c4} enforces at least one of the spatial or temporal relationships between each
+visit is active. This ensures there are no scheduling conflicts (i.e. either charging sessions are ordered temporally or
+are in different queues).
 
- \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
+\ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
 bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} ensures the continuity of the times
 (i.e. the arrival time is less than the initial charge which is less than the detach time which is less than the time
 the bus exits the station and all must be less than the time horizon).
