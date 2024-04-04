@@ -2,38 +2,33 @@
 :PROPERTIES:
 :CUSTOM_ID: sec:sa-simulated-annealing
 :END:
+
 SA is a well-studied local search metaheuristic used to solve various optimization problems
-[cite:@gendreau-2018-handb-metah;@press-1992-numer-recip]. A metaheuristic is a high-level problem-independent algorithm
-framework that provides a set of guidelines or strategies to develop heuristic optimization algorithms
-[cite:@radosavljevic-2018-metah-optim]. That is, metaheuristic strategies provides guidelines for implementation;
-however, each problem must tailor its implementation to meet its particular needs.
+[cite:@gendreau-2018-handb-metah;@press-1992-numer-recip]. The algorithm is often applied to problems that contain many
+local solutions as it employs a stochastic approach that explores the solution space for an approximate global optimum.
+This model is named after its analogized process where a crystalline solid is heated then allowed to cool at a slow rate
+until it achieves its most regular possible crystal lattice configuration (i.e. lowest energy state)
+[cite:@henderson-1989-theor-pract;@press-1992-numer-recip]. SA establishes a connection between the thermodynamic
+process and the search for global optimum in optimization problems. Within the SA process there are three key components:
+cooling schedule, acceptance criteria, and generation mechanisms
+[cite:@keller-2019-multi-objec;@press-1992-numer-recip].
 
-SA is an exploitation oriented, single-solution based metaheuristic. In addition to the advantages of simplicity, both
-theoretically and in its implementation [cite:@gendreau-2018-handb-metah;@radosavljevic-2018-metah-optim]. SA is also of
-considerable interest for global optimization over regions containing several local and global minima due to inherent
-non-linearities of the objective function [cite:@gendreau-2018-handb-metah]. Note that because SA is a metaheuristic
-strategy, there is no guarantee of optimality, its objective is to yield a result that is "good enough"
-[cite:@radosavljevic-2018-metah-optim]. This model is named after its analogized process where a crystalline solid is
-heated then allowed to cool at a slow rate until it achieves its most regular possible crystal lattice configuration
-(i.e. its minimum lattice energy state) [cite:@henderson-1989-theor-pract;@press-1992-numer-recip]. SA establishes a
-connection between this thermodynamic process and the search for global optima in optimization problems.
-
-There are three key components to SA: cooling schedule (temperature function), acceptance criteria, and generation
-mechanisms [cite:@keller-2019-multi-objec;@press-1992-numer-recip]. The temperature function describes the speed at
-which the system is "cooled" over each iteration. The term "system" refers to a general instance of SA. The generation
-mechanisms provide a means of modifying the system by some singular discrete change that is within the neighborhood of
-the previous solution [cite:@gendreau-2018-handb-metah]. The acceptance criteria is a function of the system temperature
-that makes the decision whether the system will accept an inferior solution in favor of exploring the solution space.
-Finally, the constant temperature iteration count is the number of steps taken to try to exploit a solution at a
-constant temperature. Each of these mechanisms are elaborated in the subsequent sections.
+The cooling function describes the speed at which the figurative temperature is decreased in a controlled manner over
+time. Throughout the SA process, many "candidate" solutions are generated and compared to an "active" solution. The
+method by which the solutions are accepted is determined by the acceptance criteria. The acceptance criteria is a
+function of the system temperature that makes the decision whether the system will accept an inferior solution in favor
+of exploring the solution space. The means by which candidate solutions are generated is via the generation mechanisms.
+These generators modify the system by some singular discrete change that is within the neighborhood of the previous
+solution [cite:@gendreau-2018-handb-metah]. Each of these components are elaborated in the subsequent sections.
 
 ** Cooling Equation
 :PROPERTIES:
 :CUSTOM_ID: cooling-equation-experimental
 :END:
-The temperature function models a "rate of cooling" for the SA process. Initially, when the temperature is high, SA
-encourages exploration. As the process begins to "cools down" (in accordance to the cooling schedule), it begins to
-encourage local exploitation of the solution (rather than exploration)
+
+The cooling equation models the rate at which the temperature decreases over time in the SA process. Initially, when the
+temperature is high, SA encourages exploration. As the process begins to "cools down" (in accordance to the cooling
+schedule), it begins to encourage local exploitation of the solution (rather than exploration)
 [cite:@rutenbar-1989-simul-anneal-algor;@henderson-1989-theor-pract]. There are three common basic types of cooling
 equations: linear, geometric, and exponential. Geometric cooling schedules are most widely used in practice
 [cite:@keller-2019-multi-objec]. As such, it will also be employed by this work. It is defined by the difference
@@ -44,9 +39,10 @@ equation
   t_m = \beta t_{m-1}\text{.}
   \end{equation}
 
-The value of $\beta$ may vary anywhere between the range $[0,1)$. The further $\beta$ is from 1, the quicker the function
-converges to zero. \ref{fig:geometric} demonstrates this principle by plotting the geometric schedule using varying
-values of $\beta$.
+In [[eq:cool]], $\beta$ controls the cooling rate. Typical values of $\beta$ are within the range $[0.8, 0.99]$
+[cite:@henderson-1989-theor-pract]. \ref{fig:geometric} demonstrates this principle by plotting the geometric schedule
+using varying values of $\beta$. The variable $t_m$ represents the temperature at the $m^{text{th}}$ step of the temperature
+function. The total amount of steps $M$ is dictated by the initial temperature and $\beta$.
 
 #+begin_src latex
   \begin{figure}[t!]
