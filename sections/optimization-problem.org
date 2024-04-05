@@ -1,62 +1,68 @@
 * Optimization Problem
 :PROPERTIES:
-:CUSTOM_ID: sec:optimization-problem
+:CUSTOM_ID: sec:sa-optimization-problem
 :END:
-The problem outlined in this work is presented in the form of an objective function with MILP constraints. The MILP
-constraints ensure that candidate solutions are operationally feasible. The optimization variables are introduced in
-[[#sec:parameter-definitions]]. The objective function is broken down into four major components: consumption cost, demand
-cost, assignment cost, and under-charging cost (i.e. a penalty for not meeting minimum charge requirements). The
-constraints will then be introduced in [[#sec:constraints]]. The objective function is introduced in
-[[#sec:objective-function]].
+
+The objective of this work is to present a framework that optimizes the assignment of $n_V$ BEB visits to a set of $n_Q$
+charging queues provided a fleet of $n_A$ BEBs with fixed route schedules. Particularly, the framework aims to minimize
+over peak power usage, energy consumption, and the total amount of chargers utilized while maintaining the SOC of each
+BEB above a minimum SOC threshold.
+
+The optimization problem outlined in this work is presented in form of an objective function with constraints. The
+constraints ensure that candidate solutions are operationally feasible. The variables of optimization are to be
+introduced in [[#sec:sa-parameter-definitions]] followed by a discussion of the constraints in [[#sec:sa-constraints]]. The
+objective function is employed to allow relative comparisons between candidate solutions and is introduced in
+[[#sec:sa-objective-function]].
 
 ** Variable Definitions
 :PROPERTIES:
-:CUSTOM_ID: sec:parameter-definitions
+:CUSTOM_ID: sec:sa-parameter-definitions
 :END:
-This section defines the input and decision variables used by the system. The input parameters are assumed to be fixed
+This section defines the input and decision variables used in this work. The input parameters are assumed to be fixed
 prior to optimizing the system. The decision variables are the values that the SA algorithm has the freedom to
-manipulate. The variables to be introduced are summarized in [[tab:variables]].
+manipulate. The variables to be introduced are summarized in [[tab:sa-variables]].
 
 *** Input Parameters
 :PROPERTIES:
-:CUSTOM_ID: sec:input-variables
+:CUSTOM_ID: sec:sa-input-variables
 :END:
 
-The parameters are assumed to be known prior to optimization. They will be presented in two sections: battery dynamics
-parameters then packing and discretization parameters. The Battery dynamic parameters are those associated with the SOC
-of the BEB, the packing and discretization parameters are those that are associated with BEB placement and the method of
-discretizing the system.
-
-**** Battery Dynamic Parameters
-:PROPERTIES:
-:CUSTOM_ID: sec:battery-dynamic-parameters
-:END:
-
-The amount energy required to complete the bus route after visit $i$ is denoted as $\Delta_i$. There are no routes after the
-last visit for each BEB; thus; the energy consumed after the final visit is zero. Let the set of final visits for all
-BEBs be denoted as $\Isetfinal$. That is, the cardinality of the set is $\lvert \Isetfinal \rvert = n_B$ where $i \in
-\Isetfinal \subset \Iset$ specifies the index for the final visit of bus. The discharge for the final visit of each BEB is
-then defined as $\Delta_{i} = 0; \forall i \in \Isetfinal$. The initial SOC percentage of bus $b$ at the beginning of the working day
-is denoted as $\alpha_b$. Let $\Isetinit$ denote the set of initial visit indices for each BEB and let $\Xi_i \in B$ denote the
-identification number of the BEB for visit $i$. The initial SOC for bus $\Xi_i$ can be represented as $\eta_{i} =
-\alpha_{\Xi_i}\kappa_{\Xi_i}; \forall i \in \Isetinit \subset \Iset$ where $\kappa_{\Xi_i}$ is the battery capacity for bus $\Xi_i$. Lastly, $r_q$ represents
-the power supplied from the charger in queue $q \in Q$.
+The parameters are assumed to be known prior to optimization. They will be presented in two sections: battery dynamic
+parameters then packing and discretization parameters. The packing and discretization parameters are those that are
+associated with visit placement and the method of discretizing the time horizon and the battery dynamic parameters are
+those associated with the SOC of the BEB.
 
 **** Packing and Discretization Parameters
 :PROPERTIES:
-:CUSTOM_ID: sec:packing-and-discretization-paramaters
+:CUSTOM_ID: sec:sa-packing-and-discretization-paramaters
 :END:
 
-The cost for assigning a charger to queue $q \in Q$ is defined by $\epsilon_q$. $\xi_i$ represents the next arrival index for bus
-$b_i$. In other words, suppose the ID of each BEB is recorded in order of arrival. Further suppose that recorded list is
-$\xi = \{ 2,1,3,2 \}$, using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. The arrival and
-departure times of bus visit $i$ to the station are denoted as $a_i$ and $e_i$, respectively. The notation $t_h$ is used
-to denote a discrete time that is employed to calculate the demand cost. $dt$ is the discrete time step $dt = t_h -
-t_{h-1}$.
+Let the bus ID of visit $i$ be represented by $\Xi_i$. Furthermore, let $\xi_i$ represent the next arrival index for bus
+$b_i$. As an example, suppose the ID of each BEB is recorded in order of arrival. Further suppose that $\Xi = \{ 2,1,3,2
+\}$, using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. Each visit is prescribed arrival and
+departure times, $a_i$ and $e_i$, respectively. During the time frame $[a_i, e_i]$, the BEB may be assigned to a queue
+to be charged. An associated cost is employed when a visit is assigned to a charging queue. Let the assignment cost be
+represented by $\epsilon_q$. Lastly, the time horizon is to be discretized to assist in computing the peak demand cost, let
+$t_h$ denote a discrete time step, and let $dt$ denote the discrete time step $dt = t_h - t_{h-1}$.
+
+**** Battery Dynamic Parameters
+:PROPERTIES:
+:CUSTOM_ID: sec:sa-battery-dynamic-parameters
+:END:
+
+It is assumed that each BEB begins the working day with an initial SOC percentage of $\alpha_b$. Let the set of initial
+visits by each BEB be denoted as $\Isetinit$ where $\Isetinit \subset \Iset$ and the cardinality of the set is $\lvert
+\Isetinit \rvert = n_B$. The initial SOC for bus $\Xi_i$ can be represented as $\eta_{i} = \alpha_{\Xi_i}\kappa_{\Xi_i}; \forall i \in \Isetinit$
+where $\kappa_{\Xi_i}$ is the battery capacity for bus $\Xi_i$. Each visit, with the exception of the final visit for each BEB,
+is paired with a route that has an associated amount energy required to complete. Let the amount of energy required to
+complete route $i$ be denoted as $\Delta_i$. As alluded to earlier, there are no routes after the last visit for each BEB.
+Thus, similarly to the set of initial visits, let the set of final visits for all BEBs be denoted as $\Isetfinal$. The
+discharge for the final visit of each BEB is then defined as $\Delta_{i} = 0; \forall i \in \Isetfinal$. After each arrival, the BEB
+is assigned to a charging queue. Let $r_q$ represent the power supplied from the charger in queue $q \in Q$.
 
 *** Decision Variables
 :PROPERTIES:
-:CUSTOM_ID: sec:decision-variables
+:CUSTOM_ID: sec:sa-decision-variables
 :END:
 Decision variables are those chosen by the optimizer. The variables will be broken into two sections: direct and slack
 variables. Direct decision variables are those that the system manipulates directly, and slack variables are those that
@@ -64,33 +70,42 @@ are functions of the direct.
 
 **** Direct Decision Variables
 :PROPERTIES:
-:CUSTOM_ID: sec:direct-decision-variables
+:CUSTOM_ID: sec:sa-direct-decision-variables
 :END:
-The first two variables are $u_i$ and $d_i \; \forall i \in \Iset$. They represent the initial and final charging times. These
-values must remain within range of the arrival and departure times, $[a_i, e_i]$, for visit $i$. The last direct
-decision variable is the queue that bus visit $i$ can be placed in to charge, $q_i \in \Qset$.
+
+After a BEB arrives to the station, it is assigned an initial and final charging time, denoted as $u_i$ and $d_i$,
+respectfully. These values must remain within range of the arrival and departure times, $[a_i, e_i]$, for visit $i$.
+Along with the assigned charge times, the bus is also assigned a charging queue, $q_i \in \Qset$.
 
 **** Slack Variables
 :PROPERTIES:
-:CUSTOM_ID: sec:slack-decision-variables
+:CUSTOM_ID: sec:sa-slack-decision-variables
 :END:
+
 Let the initial SOC for a visit be written as $\eta_i$, where $i \in \Iset \setminus \Iset_0$. The initial charge for visit $i$ forms
 the foundation from which the SOC of the next visit, $\eta_{\xi_i}$, is calculated. The charge for bus $i$'s next visit is
 equal to the initial charge for visit $i$ plus the charge added to it by charger $q_i$ over duration $s_i = d_i - u_i$
-minus the discharge accumulated over route $i$, i.e.
+minus the discharge accumulated over route $i$,
 
 #+name: eq:bat-chain
 \begin{equation}
   \eta_{\xi_i} = \eta_i + r_{q_i}s_i - \Delta_i\text{.}
 \end{equation}
 
+#+begin_src latex
+  \begin{figure}[htpb]
+    \centering \includegraphics{img/overlap}
+    \caption{Examples of different methods of overlapping. Space overlap: $q_{k_1} > q_{i} + 1 \therefore \psi_{ik_{1}} = 1$.
+      Time overlap $u_{k_2} < u_{j} + s_j \therefore \sigma_{k_{2}j} = 0$. Similarly, $\sigma_{k_3 i} = 0$.}
+    \label{fig:overlap}
+  \end{figure}
+#+end_src
+
 The variables $\sigma_{ij}$ and $\psi_{ij}$ are used to indicate whether a visit pair $(i, j)$ overlap the same space, as show
-in \ref{fig:overlap}. These spatiotemporal variables uphold the following relationships:
-
-#+include: eq/bus-spat-temp.org
-
-That is, for every visit, $\sigma_{ij} = 1 \implies$ the start charge time of visit $j$ is greater than the end charge time
-of visit $i$. Similarly, $\psi_{ij} = 1 \implies$ the queue for visit $j$ is of a greater index than visit $i$.
+in \ref{fig:overlap}. These spatiotemporal variables uphold the following relationships: for every visit, $\sigma_{ij} = 1
+\implies$ the start charge time of visit $j$ is greater than the end charge time of visit $i$. Similarly, $\psi_{ij} = 1
+\implies$ the queue for visit $j$ is of a greater index than visit $i$. A value of zero for either of these variables
+conveys no information.
 
 The variable $\C$ is the set that describes the availability for all chargers. That is, $\C$ is a set of $n_Q$ sets that
 contain available charger times for each queue $q \in Q$. Let a set of available charge times for queue $q$ be defined as
@@ -118,16 +133,17 @@ $[d_i, \T]$.
 
 ** Objective Function
 :PROPERTIES:
-:CUSTOM_ID: sec:objective-function
+:CUSTOM_ID: sec:sa-objective-function
 :END:
+
 This work aims to minimize the total "cost" of utilizing a given charge schedule. Let $J(\I)$ represent the objective
 function. The objective function for this problem has four main considerations: charger assignment, consumption cost,
-demand cost, and penalty for an insufficient initial SOC. Each of which will be discussed in turn in the subsequent
-sections.
+demand cost, and penalty for an insufficient initial SOC. Each of which will be discussed in turn throughout the
+subsequent sections.
 
 *** Assignment Cost
 :PROPERTIES:
-:CUSTOM_ID: sec:assignment-cost
+:CUSTOM_ID: sec:sa-assignment-cost
 :END:
 
 The assignment cost represents the costs of assigning a bus to a particular queue. This is done as a method of
@@ -138,39 +154,29 @@ minimizing the total utilized chargers. The assignment cost is written as
 \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i}\text{.}
 \end{equation}
 
-This cost is effectively the cost on the choice of $q$. Recalling the form of $Q$, particularly the ordering in which
-the set was defined. Taking $\epsilon$ to be constructed using the same ordering (idle, slow, then fast charging queues), let
-the first $n_B$ queues have no cost. Furthermore, let the next $n_Q$ charging queues be of the form $[P, 2P, ...,
-n_QP]$. Concatenating these vectors yields $\epsilon = [[0; n_B], [P, 2P, ..., Pn_Q]]$, where $[0; n_B]$ is used to denote a
-vector populated with zeros of length $n_B$. In words, this form accrues no cost when assigning a BEB to an idle queue
-while still minimizing charger count and encouraging the use of slow chargers over fast. Thus, the larger the index of
-$q$, the larger the cost. The $\epsilon$ vector described above is one of many forms that the vector may take; however, form
-shown described is what is applied in this work.
+This is effectively the cost of selecting queue $q_i$. In the [[#sec:sa-example]], a particular choice for the assignment
+cost is made to encourage the use of slow chargers over fast for the sake of battery health. The charger queue indices
+are ordered such that the first $n_B$ queues correspond to idle queues. This allows BEBs to simultaneously sit idle if
+needed. All $n_B$ idle queues have assignment costs of zero to denote that there is no cost when not charging. The next
+group of chargers is assumed to be the slow chargers subsequently followed by the fast. Let the set of $n_Q$ slow and
+fast charging queues be of the form $[P, 2P, ..., n_QP]$. Concatenating these vectors yields $\epsilon = [[0; n_B], [P, 2P,
+..., Pn_Q]]$, where $[0; n_B]$ is used to denote a vector populated with zeros of length $n_B$.
 
 *** Penalty Method
 :PROPERTIES:
-:CUSTOM_ID: sec:penalty-method
+:CUSTOM_ID: sec:sa-penalty-method
 :END:
 
-A penalty method is to be implemented in the objective function that is enabled when the $\eta_i$ falls below a defined
-threshold. Let the piecewise function that enables/disables the penalty method be of the form
+A penalty method is to be implemented to provide a soft constraint on the lower bound of the charge. Let the piecewise
+function that enables/disables the penalty method be of the form
 
 #+include: eq/penalty.org
 
-Furthermore, letting $x = \eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}$, where $\nu_{\Xi_i} \kappa_{\Xi_i}$ is the minimum charge threshold, applies a penalty
-proportional to the difference of the SOC and the threshold squared.
-
-#+begin_src latex
-  \begin{figure}[htpb]
-    \centering \includegraphics{img/overlap}
-    \caption{Examples of different methods of overlapping. Space overlap: $q_{k_1} > q_{i} + 1 \therefore \psi_{ik_{1}} = 1$.
-      Time overlap $u_{k_2} < u_{j} + s_j \therefore \sigma_{k_{2}j} = 0$. Similarly, $\sigma_{k_3 i} = 0$.}
-    \label{fig:overlap}
-  \end{figure}
-#+end_src
-
-Using the form of [[eq:penalty]] with and added scalar, $D$, is employed so that the cost of deviating from the threshold
-heavily influences the outcome of the objective function. Therefore, the penalty method is written as
+Furthermore, letting $x = \eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}$, where $\nu_{\Xi_i} \kappa_{\Xi_i}$ is the minimum charge threshold, applies a
+penalty proportional to the difference of the SOC and the threshold squared. Using the form of [[eq:penalty]] with and added
+scalar, $D$, is employed so that the cost of deviating from the threshold heavily influences the outcome of the
+objective function. Particularly, this method is employed as a means of guaranteeing enough charge for each BEB to
+complete its next route. Therefore, the penalty method is written as
 
 #+name: eq:penalty-method
 \begin{equation}
@@ -179,33 +185,31 @@ heavily influences the outcome of the objective function. Therefore, the penalty
 
 *** Consumption Cost
 :PROPERTIES:
-:CUSTOM_ID: sec:consumpction-cost
+:CUSTOM_ID: sec:sa-consumpction-cost
 :END:
 
-In most cases, energy companies rely on a volumetric rate as a method of track customer electricity consumption (i.e.
-total electricity consumed over a billing period). As such, a method of reducing the total energy consumed by the system
-is desired. The energy total energy consumed by a charge schedule is defied by what is known as the consumption cost.
-The consumption cost is the summation of all the energy being used over all the active periods for each charger in the
-time horizon. This is represented by the summation
+In most cases, utility companies have a portion of the cost related to the total electricity consumed over a billing
+period, referred to herein as the consumption cost. The consumption cost is the summation of all the energy being used
+over all the active periods for each charger in the time horizon. This is represented by the summation
 
 #+name: eq:consumption-cost
 \begin{equation}
-\sum_{i=1}^{n_V} r_{q_i}s_i\text{.}
+z_c \sum_{i=1}^{n_V} r_{q_i}s_i\text{.}
 \end{equation}
 
-That is, the charge rate, $r_{q_i}$, for the active charger, $q_i$, is multiplied by the time that the charger will be
-utilized, $s_i$.
+A scaling $z_c$ is applied as utility companies have a monetary conversion rate. While that may remain the case when
+utilizing [[eq:consumption-cost]], $z_c$ may also be used simply as a weight for the consumption cost. Within the summation,
+the charge rate, $r_{q_i}$, for the active charger, $q_i$, is multiplied by the time that the charger will be utilized,
+$s_i$.
 
 *** Demand Cost
 :PROPERTIES:
-:CUSTOM_ID: sec:demand-cost
+:CUSTOM_ID: sec:sa-demand-cost
 :END:
 
-Historically for large industrial customers, energy companies often further rely on a demand cost in conjunction with a
-consumption cost for billing. The consumption cost is an important metric as it measures how much power a customer may
-require over billing period. Energy companies, having to potentially meet large peaks in demand, offset that cost to the
-customer. Thus, when a demand and consumption costs are imposed, not only is the total energy reduction desirable, but
-also how much power is consumed at a given moment.
+Utility companies often charge a "demand cost" in an effort to reduce peak demand usage. A particular example of peak
+demand is the fifteen minute average energy usage employed by Rocky Mountain Power Schedule 8
+[cite:@rocky-mountain-power].
 
 A method of calculating the demand charge is done by calculating the average power consumption over a given period of
 time. Let the average power used over an arbitrary interval, $T_p$, be represented by
@@ -215,8 +219,8 @@ time. Let the average power used over an arbitrary interval, $T_p$, be represent
 p_{T_p}(t) = \frac{1}{T_p} \int_{t-T_p}^{t} p(\tau) d\tau\text{.}
 \end{equation}
 
-Energy companies take the largest peak when calculating the demand cost. Therefore, let the cost of the peak power
-consumption be dictated by the maximum average power:
+The largest average power usage over $T_p$ is used as the demand cost for the billing period. Therefore, let the cost of
+the peak power consumption be dictated by the maximum average power:
 
 #+name: eq:pmax
 \begin{equation}
@@ -231,17 +235,16 @@ begins to increase. Let this fixed threshold be defined as $p_{fix}$, the demand
 p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 \end{equation}
 
-Hence, [[eq:pdem]] defines a cost beginning with a value of $p_{fix}$ from which it may only increase if $p_{15}(t) >
-p_{fix}$.
-
-Although the charge times for each BEB are continuous, due to the discrete nature of visits it is simpler to determine a
-vector of discrete power consumption over the time horizon from which the average power demand cost may be derived. To
-discritize $p_d$, let $h \in \{ 1, 2, ..., n_H \} \subset \mathcal{Z}$ where $n_H$ is the total number of steps. Furthermore, let $p$
-define the vector of discrete power demand over the time horizon and let $p_h \in p$ be the demand over time step $h$. For
-conciseness of notation $t_h$ will be abused to denote the time in discrete form (as opposed to $t$ being continuous)
-and let $dt = t_h - t_{h-1}$. Each entry $p_h \in p$ is found by taking the summation of $r_{v_i}$ for all the chargers
-active during the time interval $[t_h, t_h + dt]$. Thus, having an estimate of the demand over each step, the average
-demand can be calculated by taking an average of the Riemann sum over each $T_p$ interval as follows:
+Thus, \ref{eq:pdem} defines the continuous form of maximum average demand cost found during a pay period. Although the
+charge times for each BEB are continuous, due to the discrete nature of visits it difficult to determine the total
+amount of power being consumed at a given time directly. As such, it is simpler to determine a vector of discrete power
+consumption over the time horizon from which the average power demand may be derived. To discritize $p_d$, let $h \in \{
+1, 2, ..., n_H \} \subset \mathcal{Z}$ where $n_H$ is the total number of steps. Furthermore, let $p$ define the vector of discrete
+power demand over the time horizon and let $p_h \in p$ be the demand over time step $h$. For conciseness of notation $t_h$
+will be abused to denote the time in discrete form (as opposed to $t$ being continuous) and let $dt = t_h - t_{h-1}$.
+Each entry $p_h \in p$ is found by taking the summation of $r_{v_i}$ for all the chargers active during the time interval
+$[t_h, t_h + dt]$. Thus, having an estimate of the demand over each step, the average demand can be calculated by taking
+an average of the Riemann sum over each $T_p$ interval as follows:
 
 #+begin_comment
 Thus, for a given visit $i$, the corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be
@@ -271,16 +274,17 @@ where $T_p \le h \le n_H$. Similarly to before, the maximum $p_{T_p}[h]$ value i
   p_d = \max(p_{fix}, p_{max})\text{.}
 \end{equation}
 
-To conclude this section, the objective function is to written in its entirety:
+Similarly to the consumption cost, a scaling $z_d$ is applied. Again, this may be a monetary conversion or simply just a
+gain. Thus, the objective function written in its entirety is
 
 #+name: eq:objective-function
 \begin{equation}
-  J(\I) = p_d + \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i} + D \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) + r_{q_i}s_i\text{.}
+  J(\I) = z_d p_d + z_c \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i} + D \phi_i(\eta_i - \nu_{\Xi_i} \kappa_{\Xi_i}) + r_{q_i}s_i\text{.}
 \end{equation}
 
 ** Constraints
 :PROPERTIES:
-:CUSTOM_ID: sec:constraints
+:CUSTOM_ID: sec:sa-constraints
 :END:
 
 While the objectives are used to compare solutions, constraints are introduced to ensure that the solutions are
@@ -293,23 +297,24 @@ These constraints are represented as follows:
 
 # Org mode is a little silly and does not take normal referencing syntax. This note is for future reference.
 
-Constraints \ref{seq:c0}-\ref{seq:c4} are the "queuing constraints". They prevent overlap both spatially and temporally
-as shown in \ref{fig:overlap}. The y-axis represents the possible queues for a bus visit to be placed into, and the
-x-axis represents the time that can be reserved for each visit. The shaded rectangles represent time that has been
-scheduled in the horizontal direction, and the queue allocated for each bus visit in the vertical direction. In other
-words, the set of constraints \ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
+\ref{seq:c0}-\ref{seq:c4} are denoted as "queuing constraints". They prevent overlap both spatially and temporally as
+shown in \ref{fig:overlap}. The y-axis represents the possible queues for a bus visit to be placed into, and the x-axis
+represents the time that can be reserved for each visit. The shaded rectangles represent time that has been scheduled in
+the horizontal direction, and the queue allocated for each bus visit in the vertical direction. In other words, the set
+of constraints \ref{seq:c0} - \ref{seq:c4} aim to ensure that these shaded rectangles never overlap.
 
 Constraint \ref{seq:c0} states that the starting charge time for BEB $u_j$ must begin after the previous BEB departs,
-$d_i$. The constraint utilizes big-M notation to activate or deactivate the constraint. A value of $\sigma_{ij} = 1 \implies$
-bus $i$ has detached from the charger before bus $j$ has begun charging. If $\sigma_{ij} = 0$, then the constraint is of the
-form $\T + d_i > u_j$ rendering the constraint "inactive" because $u_j$ cannot be larger than $\T + d_i$. Similarly, for
-\ref{seq:c1}, $\psi_{ij}$ determines whether the vehicles are charging in the same queue. A value of $\psi_{ij} = 1 \implies$
-BEB $i$ is in a queue index that is less than BEB $j$. If $\psi_{ij} = 0$ then the constraint is deactivated. Constraints
-\ref{seq:c2} - \ref{seq:c4} enforce spatial and temporal ordering between each queue/vehicle pair. \ref{seq:c2} and
-\ref{seq:c3} ensure that BEB $i$ is not placed before and after $j$ spatially, temporally, or both because that is
-impossible. \ref{seq:c4} ensures that BEB $i$ and $j$ do not have scheduling conflicts spatially or temporally.
+$d_i$. A value of $\sigma_{ij} = 1 \implies$ bus $i$ has detached from the charger before bus $j$ has begun charging. If
+$\sigma_{ij} = 0$, then the constraint is of the form $\T + d_i > u_j$ rendering the constraint "inactive". Similarly, for
+\ref{seq:c1}, $\psi_{ij}$ determines spacial positioning of BEB $i$ and $j$ relative to one another. A value of $\psi_{ij} = 1
+\implies$ BEB $i$ is in a queue index that is less than BEB $j$. If $\psi_{ij} = 0$ then the constraint is deactivated.
+Constraints \ref{seq:c2} - \ref{seq:c4} enforce spatial and temporal ordering between each queue/vehicle pair.
+\ref{seq:c2} and \ref{seq:c3} ensure that BEB $i$ is not placed before and after $j$ spatially, temporally, or both
+because that is impossible. \ref{seq:c4} enforces at least one of the spatial or temporal relationships between each
+visit is active. This ensures there are no scheduling conflicts (i.e. either charging sessions are ordered temporally or
+are in different queues).
 
- \ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
+\ref{seq:c5} describes the service time of the bus. \ref{seq:c6} calculates the initial charge for the next visit for
 bus $b_i$. \ref{seq:c7} ensures that the bus is not being over-charged. \ref{seq:c8} ensures the continuity of the times
 (i.e. the arrival time is less than the initial charge which is less than the detach time which is less than the time
 the bus exits the station and all must be less than the time horizon).

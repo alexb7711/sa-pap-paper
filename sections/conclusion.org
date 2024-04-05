@@ -1,6 +1,6 @@
 ** Conclusion
 :PROPERTIES:
-:custom_id: sec:conclusion
+:custom_id: sec:sa-conclusion
 :END:
 
 This work developed an SA implementation derived from the works of the MILP PAP. The model is designed to reduce the
@@ -9,28 +9,29 @@ description was provided outlining the scenario in which this model is designed 
 introduced by describing the components of the objective function and outlining the MILP constraints utilized to ensure
 candidate solutions are in the solution space.
 
-An example of the SA PAP algorithm was presented and compared against the MILP PAP and Qin-Modified techniques. The SA
-PAP was run utilizing two different neighborhood searching techniques named the quick and heuristic techniques,
-respectively. The quick SA's objective was to randomly search a wide neighborhood while the heuristic technique was
-designed to incrementally search a neighborhood by randomly selecting a fast or slow charging queue and then stepping
-through the queues one at a time. The quick and heuristic have comparable run times at src_latex{\fpeval{\quicklocal *
-\tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds, respectively, but yielded vastly
-different results. The Qin-Modified utilized the fewest amount of chargers followed by the MILP, heuristic SA, then the
-quick SA. The assignment cost applied to the objective function had no effect on the results of the quick SA; however,
-the heuristic SA was more effective in minimizing the total chargers required. Furthermore, the heuristic SA technique
-generated a solution approximating that of the MILP, but was unable to minimize the charger count as efficiently. The
-quick SA utilized all the chargers available (i.e. was unable to minimize the charger count).
+An example of the SA PAP algorithm was presented and compared against the MILP PAP, which acted as a baseline for the
+other schedule. Another threshold-based strategy called the Qin-Modified technique was also introduced as a means of
+comparing the schedules. The SA PAP was run utilizing two different neighborhood searching techniques named the "quick"
+and "heuristic" techniques, respectively. The quick SA's objective was to randomly search a wide neighborhood while the
+heuristic technique was designed to incrementally search a neighborhood by randomly selecting a fast or slow charging
+queue and then stepping through the queues one at a time. The quick and heuristic have somewhat comparable run times at
+src_latex{\fpeval{\quicklocal * \tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds,
+respectively, but yielded vastly different results. The Qin-Modified utilized the fewest amount of chargers followed by
+the MILP, heuristic SA, then the quick SA. The assignment cost applied to the objective function had no effect on the
+results of the quick SA; however, when utilized with the heuristic SA the effective of minimizing the total chargers was
+profound. Furthermore, the heuristic SA technique generated a solution approximating that of the MILP, but was unable to
+minimize the charger count as efficiently. The quick SA utilized all the chargers available (i.e. was unable to minimize
+the charger count).
 
 Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to 6.34 kWh for the
-heuristic SA and 29.8 kWh. The Qin-Modified had the SOC of three BEBs fall to 0% SOC. The schedule that consumed the
-least amount of energy is the MILP PAP (4256.16 kW) with the heuristic SA coming in second (4797.75 kW). The difference
+heuristic SA and 29.8 kWh. The Qin-Modified had the SOC of two BEBs fall to 0% SOC. The schedule that consumed the least
+amount of energy is the MILP PAP (4256.16 kW) with the heuristic SA coming in second (4797.75 kW). The difference
 between the two being about src_latex{\fpeval{4797.746 - 4256.16}} kWh. The peak demands between the heuristic SA, quick
 SA, and the MILP were very similar. The MILP had a peak demand of 1910 kW and the quick and heuristic SA had demand
-peaks of 1911.9 kW. Overall, the most effective schedule was the MILP; however as SA has no guarantee of optimality, the
-heuristic SA was able to generate a schedule that was "in the ballpark" of that of the MILP while further taking the
-demand cost into consideration.
+peaks of 1911.9 kW. Overall, the heuristic SA was able to generate a schedule that was "in the ballpark" of that of the
+MILP while further taking the demand cost into consideration.
 
-Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a denser
-set of routes to schedule. It is also of interest to incorporate non-linear battery dynamics to more accurately model
-the SOC. Furthermore, "fuzzifying" the charge times is of interest to allow flexibility in the initial and final charge
+Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a
+denser set of routes. It is also of interest to incorporate non-linear battery dynamics model to the SOC with more
+fidelity. Furthermore, "fuzzifying" the charge times is of interest to allow flexibility in the initial and final charge
 times for each BEB visit.

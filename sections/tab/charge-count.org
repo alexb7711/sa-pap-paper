@@ -1,12 +1,11 @@
 #+name: tab:charge-count
-#+caption: Table of mean and max instantaneous charger usage throughout the time horizon. The schedule row indicates the number of queues required by each schedule.
-#+ATTR_LATEX: :environment tabular :align |l|ll|ll|ll|ll|
-|----------+-------+-------+--------------+-------+-----------+-------+-------+-------|
-|          |  MILP |       | Qin-Modified |       | Heuristic |       | Quick |       |
-|----------+-------+-------+--------------+-------+-----------+-------+-------+-------|
-| /        |     < |     > |            < |     > |         < |     > |     < |     > |
-|          |  Slow |  Fast |         Slow |  Fast |      Slow |  Fast |  Slow |  Fast |
-| Mean     | 1.877 | 0.133 |        0.788 | 0.441 |       1.8 | 0.159 | 1.494 | 0.234 |
-| Max      |     4 |     2 |            2 |     1 |         7 |     2 |     6 |     2 |
-| Schedule |     4 |     3 |            2 |     1 |         9 |     4 |    15 |    15 |
-|----------+-------+-------+--------------+-------+-----------+-------+-------+-------|
+#+caption: Table of the maximum amount of chargers used in parallel throughout the time horizon. The schedule row indicates the number of queues required by each schedule.
+#+ATTR_LATEX: :environment tabular :align l|ll|ll|ll|ll
+|----------+------+------+--------------+------+-----------+------+-------+------|
+|          | MILP |      | Qin-Modified |      | Heuristic |      | Quick |      |
+|----------+------+------+--------------+------+-----------+------+-------+------|
+| /        | <    |      | <            |      | <         |      | <     |      |
+|          | Slow | Fast | Slow         | Fast | Slow      | Fast | Slow  | Fast |
+| Max      | 4    |    2 | 2            |    1 | 7         |    2 | 6     |    2 |
+| Schedule | 4    |    3 | 2            |    1 | 9         |    4 | 15    |   15 |
+|----------+------+------+--------------+------+-----------+------+-------+------|

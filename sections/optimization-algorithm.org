@@ -1,12 +1,12 @@
 * Optimization Algorithm
 :PROPERTIES:
-:CUSTOM_ID: sec:optimization-algorithm
+:CUSTOM_ID: sec:sa-optimization-algorithm
 :END:
 
 #+begin_comment
 ,** Simulated Annealing Pseudo Code :noexport:
 :PROPERTIES:
-:CUSTOM_ID: sec:simulated-annealing-pseudo-code
+:CUSTOM_ID: sec:sa-simulated-annealing-pseudo-code
 :END:
 
 Let $\omega$ and $\bar{\omega}$ denote the active solution and the candidate solution, respectively. Let $\Tau$ be the temperature
@@ -34,25 +34,24 @@ $\bar{\omega}$ if the candidate solution is more fit, or updates $\omega$ with $
 #+end_comment
 
 This section combines the generation algorithms and the optimization problem into a single algorithm (\ref{alg:sa-pap}).
-While the SA PAP generally is written almost identically to that of the general SA algorithm, the general SA assumes
-that the generated candidate solutions are in the solution space of the problem, $\omega \in S$ where $S$ is the solution
-space. Initialization and the perturbation of a schedule must be verified to ensure that the generated schedule is in
-the solution space. Therefore, the objective function and constraints introduced in [[#sec:constraints]] and
-[[#sec:objective-function]], respectively, must be employed to verify that the output of
-\ref{alg:charge-schedule-generation} is in the feasible space, $S$.
+Generally, SA assumes that the generated candidate solutions are within the solution space of the problem, $\omega \in S$ where
+$S$ is the solution space. Hence, the initialization and perturbations of a schedule must be verified to ensure that the
+generated schedule is in the solution space. Therefore, the objective function and constraints introduced in
+[[#sec:sa-constraints]] and [[#sec:sa-objective-function]], respectively, must be employed to verify that the outputs of
+\ref{alg:charge-schedule-generation} and \ref{alg:perturb-schedule} are in the feasible space, $S$.
 
 As previously stated, the generating functions directly influence the values of the assigned charge queue, charge
 initialization time, and charge completion time: $q_i$, $u_i$, and $d_i$, respectively. Having generated those values,
-the rest of the decision variables may be derived. Let's begin by reviewing over the packing constraints.
-\ref{seq:c0}-\ref{seq:c1} are employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\ref{seq:c4} ensure
-the validity of the values. \ref{seq:c5} can be directly calculated and \ref{seq:c8} is fully defined.
+the rest of the decision variables may be derived. Beginning with the packing constraints, \ref{seq:c0}-\ref{seq:c1} are
+employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\ref{seq:c4} ensure the validity of the values.
+\ref{seq:c5} can be directly calculated and \ref{seq:c8} is fully defined.
 
 Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
 dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after a given
 schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method
-implemented in [[#sec:objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{\Xi_i}
+implemented in [[#sec:sa-objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{\Xi_i}
 \kappa_{\Xi_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
-solution that does not activate the penalty method (i.e. is solution is truly feasible).
+solution that does not activate the penalty method (i.e., is solution is operationally feasible).
 
 The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. The algorithm begins be creating a temperature schedule
 and creating an initial solution. The algorithm then begins to iterate through the temperature schedule (outer loop).

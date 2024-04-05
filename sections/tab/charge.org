@@ -1,6 +1,6 @@
 #+name: tab:charge
 #+caption: Table of mean, min, and max SOC (kWh) for each charging schedule.
-#+ATTR_LATEX: :environment tabular :align |l|cccc|
+#+ATTR_LATEX: :environment tabular :align l|cccc
 |------+------------------+------------------+------------------+------------------|
 |      |             MILP |      Qin-Modifid |        Heuristic |            Quick |
 |------+------------------+------------------+------------------+------------------|

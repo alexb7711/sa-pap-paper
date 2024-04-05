@@ -32,15 +32,15 @@
   ## Plots
   figure(1);
   clf();
-  plot(x, geometric(T0, x, 0.995));
-  hold on;
   plot(x, geometric(T0, x, 0.99));
+  hold on;
   plot(x, geometric(T0, x, 0.95));
-  plot(x, geometric(T0, x, 0.9));
+  plot(x, geometric(T0, x, 0.90));
+  plot(x, geometric(T0, x, 0.80));
   hold off;
 
   ## Legend
-  l = legend({'\beta = 0.995', '\beta = 0.99', '\beta = 0.95', '\beta = 0.9'});
+  l = legend({'0.99', '0.95', '0.90', '0.80'});
   set(l, "fontsize", 20);
 
   ## Configure Plot
