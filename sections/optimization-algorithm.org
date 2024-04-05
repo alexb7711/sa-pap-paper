@@ -18,13 +18,13 @@ Recall the objective of the SA algorithm is to iteratively create a neighboring 
 solution. The fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is
 always taken as the active solution. If it is not, then it may be selected as the new candidate solution with some
 probability that is a function of the difference in the objective function values and the current temperature. This
-process is iteratively done until the temperature function reaches its minimum value. With the high level summary in
+process is iteratively done until the cooling equation reaches its minimum value. With the high level summary in
 mind, the SA pseudocode is to be presented [cite:@henderson-1989-theor-pract].
 
 The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm the temperature
 schedule, $t$, and active solution, $\omega$, respectively. The outer loop on Line 3 iterates through all the temperature
 values in $t$. After each iteration of the outer loop, the temperature is decreased as specified by the selected
-temperature function. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates $n_K$
+cooling equation. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates $n_K$
 times at a constant temperature, $t_k$. Line 6, perturbs the active solution $\omega$ to a neighboring candidate solution
 $\bar{\omega} = N(\omega)$. Line 7 then calculates the difference in the fitness of $\omega$ and $\bar{\omega}$. Lines 8-13 updates $\omega$ with
 $\bar{\omega}$ if the candidate solution is more fit, or updates $\omega$ with $\bar{\omega}$ with probability $e^{\frac{-\Delta_{\omega ,
@@ -57,8 +57,8 @@ The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. The algorithm beg
 and creating an initial solution. The algorithm then begins to iterate through the temperature schedule (outer loop).
 For each iteration of the outer loop, an inner loop is executed $n_K$ times. During this inner loop, the solution is
 modified by a generating function to create a candidate solution. The candidate is solution is then compared with the
-active solution, and updated according to the acceptance criteria. These actions are performed until the temperature
-function is exhausted.
+active solution, and updated according to the acceptance criteria. These actions are performed until the cooling
+equation is exhausted.
 
 #+begin_comment
 Line 2 initializes the SA algorithm by creating a vector

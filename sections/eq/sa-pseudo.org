@@ -12,7 +12,7 @@
 
   \Begin
     {
-          \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
+          \tcc{Generate vector of temperatures given cooling equation $\Tau$ and initial temperature $\Tau_0$}
           $t \leftarrow$ \Temp{$\Tau_0$}\;
           $\omega \leftarrow$ \New{($\I$, $\C$)}\tcc*{Generate an initial solution}
 

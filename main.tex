@@ -1,4 +1,4 @@
-% Created 2024-04-05 Fri 15:08
+% Created 2024-04-05 Fri 17:03
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -358,7 +358,7 @@ Input Variables &  & Input Variables & \\[0pt]
 \(\xi_i\) & The next index bus \(b\) will arrive &  & \\[0pt]
 \(a_i\) & Arrival time of visit \(i\) & \(\Xi_i\) & ID for bus visit \(i\)\\[0pt]
 \(t_h\) & Discrete step in time horizon & \(dt\) & Discrete time slice in time horizon \(dt_h = t_h - t_{h-1}\)\\[0pt]
-\(r_q\) & Charge rate of charger \(q\) & \(t_m\) & Element of the temperature vector created by temperature function, \(t_m \in t\)\\[0pt]
+\(r_q\) & Charge rate of charger \(q\) & \(t_m\) & Element of the temperature vector created by cooling equation, \(t_m \in t\)\\[0pt]
 \(\nu_b\) & Minimum charge percentage allowed for each BEB & \(e_i\) & Time bus visit \(i\) must exit the station\\[0pt]
 \hline
 Direct Decision Variables &  & Direct Decision Variables & \\[0pt]
@@ -672,7 +672,7 @@ process and the search for global optimum in optimization problems. Within the S
 cooling schedule, acceptance criteria, and generation mechanisms
 \cite{keller-2019-multi-objec,press-1992-numer-recip}.
 
-The cooling function describes the speed at which the figurative temperature is decreased in a controlled manner over
+The cooling equation describes the speed at which the figurative temperature is decreased in a controlled manner over
 time. Throughout the SA process, many ``candidate'' solutions are generated and compared to an ``active'' solution. The
 method by which the solutions are accepted is determined by the acceptance criteria. The acceptance criteria is a
 function of the system temperature that makes the decision whether the system will accept an inferior solution in favor
@@ -969,7 +969,7 @@ through each visit and executing \ref{alg:new-visit} to place visit \(i\) at ran
 \paragraph{Perturb Schedule}
 \label{sec:sa-tweak-schedule}
 Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
-create candidate solutions. After each step of the cooling function, the active solution will be altered \(n_K\) times by
+create candidate solutions. After each step of the cooling equation, the active solution will be altered \(n_K\) times by
 a random primitive generator. During these \(n_K\) iterations the active solution is modified to create a neighboring
 candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
 \ref{sec:sa-acceptance}. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
@@ -1045,8 +1045,8 @@ The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. The algorithm beg
 and creating an initial solution. The algorithm then begins to iterate through the temperature schedule (outer loop).
 For each iteration of the outer loop, an inner loop is executed \(n_K\) times. During this inner loop, the solution is
 modified by a generating function to create a candidate solution. The candidate is solution is then compared with the
-active solution, and updated according to the acceptance criteria. These actions are performed until the temperature
-function is exhausted.
+active solution, and updated according to the acceptance criteria. These actions are performed until the cooling
+equation is exhausted.
 
 \begin{algorithm}[H]
   \scriptsize
@@ -1063,7 +1063,7 @@ function is exhausted.
 
   \Begin
     {
-      \tcc{Generate vector of temperatures given temperature function $\Tau$ and initial temperature $\Tau_0$}
+      \tcc{Generate vector of temperatures given cooling equation $\Tau$ and initial temperature $\Tau_0$}
       $t \leftarrow$ \Temp{$\Tau_0$}
 
       $\Sol \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
@@ -1463,7 +1463,7 @@ times for each BEB visit.
 
 \begin{adjustwidth}{-\extralength}{0cm}
 \reftitle{References}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref,c:/msys64/home/1556048963C/Documents/citation-database/misc}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref,/home/alex/Documents/citation-database/misc}
 \PublishersNote{}
 \end{adjustwidth}
 \end{document}
