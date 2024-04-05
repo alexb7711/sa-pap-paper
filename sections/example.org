@@ -127,7 +127,7 @@ whether a set of routes has a particularly taxing route later in the time horizo
 example scenario, the BEBs that reached charges of 0% began with a sequence of short routes, much like the other BEBs.
 However, rather than continuing this trend, these sets of routes had one or two longer routes which the Qin-Modified
 algorithm was unable to account for. To remedy this problem, a safety factor could be introduced to artificially
-increase the threshold, $S_f \nu_{\Xi_i}\kappa_{\Xi_i}$ where $S_f > 1; S_f \in R$. Interestingly, Qin-Modified strategy was able to
+increase the threshold, $S_f \nu_{\Xi_i}\kappa_{\Xi_i}$ where $S_f > 1;\; S_f \in R$. Interestingly, Qin-Modified strategy was able to
 keep the mean SOC the highest followed by the quick SA, heuristic SA, and then the MILP. This is most likely due to the
 higher placement of the low, medium, and high thresholds applied to the algorithm than what is used by Rocky Mountain
 Power. This measure is useful when viewing with respect to \ref{fig:power} and \ref{fig:energy-usage}.
