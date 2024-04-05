@@ -13,7 +13,7 @@ process and the search for global optimum in optimization problems. Within the S
 cooling schedule, acceptance criteria, and generation mechanisms
 [cite:@keller-2019-multi-objec;@press-1992-numer-recip].
 
-The cooling function describes the speed at which the figurative temperature is decreased in a controlled manner over
+The cooling equation describes the speed at which the figurative temperature is decreased in a controlled manner over
 time. Throughout the SA process, many "candidate" solutions are generated and compared to an "active" solution. The
 method by which the solutions are accepted is determined by the acceptance criteria. The acceptance criteria is a
 function of the system temperature that makes the decision whether the system will accept an inferior solution in favor
@@ -290,7 +290,7 @@ at random queue with a random charge time.
 :END:
 
 Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
-create candidate solutions. After each step of the cooling function, the active solution will be altered $n_K$ times by
+create candidate solutions. After each step of the cooling equation, the active solution will be altered $n_K$ times by
 a random primitive generator. During these $n_K$ iterations the active solution is modified to create a neighboring
 candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
 [[#sec:sa-acceptance]]. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
