@@ -68,13 +68,13 @@ allows for multiple charger types, minimizes consumption cost, and minimizes dem
 demonstrated via simulation and comparison to two other models: the Mixed Integer Linear Program (MILP) implementation
 of the PAP and what is known as the Qin-Modified technique.
 
-In what follows, the problem statement shall be provided in [[#sec:sa-problem-description]]. [[#sec:sa-optimization-problem]]
-introduces the structure of the MILP formulation as well as a description of the parameters, decision variables,
-objective function and constraints. In [[#sec:sa-simulated-annealing]], the concept and theory of SA is introduced. In
-particular the algorithms and methods utilized for the SA implementation for this work are discussed.
-[[#sec:sa-optimization-algorithm]] outlines a generic SA algorithm, and then combines the previous sections to introduce the
-particular implementation for the SA-PAP. In [[#sec:sa-example]], an example problem is provided to demonstrate the capability
-of the work provided in this paper. The results will be presented and discussed.
+The remainder of this paper goes as follows. [[#sec:sa-problem-description]] provides the problem statement associated with
+this work. [[#sec:sa-optimization-problem]] provides a description of the input parameters and decision variables then
+introduces the structure of the formulation. In [[#sec:sa-simulated-annealing]], the concept and theory of SA is introduced.
+In particular, the algorithms and methods utilized for the SA implementation for this work are discussed.
+[[#sec:sa-optimization-algorithm]] combines the previous sections to introduce the particular pseudo code for the SA PAP. In
+[[#sec:sa-example]], an example problem is provided to demonstrate the capability of the work provided in this paper. The
+results will be presented and discussed.
 
 #+begin_comment
 Literature shows an interest in solving the problem of assigning BEBs to charging queues or optimizing their
