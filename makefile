@@ -12,6 +12,7 @@ SHELL  = /bin/bash
 ##==============================================================================
 SCRIPTS = ./org-doc-scripts
 IMG     = img
+MDPI    = Definitions
 
 ##==============================================================================
 # FILES
@@ -20,7 +21,7 @@ DOC_SRC         = main.tex
 TARGET          = sa-pap.pdf
 ALL             = $(shell find . -type f -name "*.org")
 FIGURES_TEX     = $(wildcard $(IMG)/*tex)
-FIGURES_EPS     = $(wildcard Definitions/*eps)
+FIGURES_EPS     = $(wildcard $(MDPI)/*eps)
 EPS_TO_PDF      = $(patsubst %.eps, %-eps-converted-to.pdf, $(FIGURES_EPS))
 FIGURES_PDF     = $(patsubst %.tex, %.pdf, $(FIGURES_TEX))
 
@@ -68,6 +69,7 @@ set-version: ## Stamp the document with date and git commit hash
 #
 clean:	## Clean LaTeX and output figure files
 	@rm -f $(FIGURES_PDF)
+	@rm -f $(EPS_TO_PDF)
 	@rm -f $(patsubst %.pdf, %.aux, $(FIGURES_PDF))
 	@rm -f $(patsubst %.pdf, %.log, $(FIGURES_PDF))
 	@rm -f $(TARGET)
@@ -111,7 +113,7 @@ precheck: ## Ensures all the required software is installed
 
 ##------------------------------------------------------------------------------
 #
-%.pdf: %.eps ## Convert eps file to PDF
-	@echo $<
+%-eps-converted-to.pdf: %.eps ## Convert eps file to PDF
+	@printf "Generating %s...\033[K\r" "$@"
 	@epspdf -v>/dev/null 2>&1 && epspdf $< || epstopdf $<
 	mv $(basename $<).pdf $(basename $<)-eps-converted-to.pdf
