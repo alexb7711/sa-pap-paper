@@ -53,7 +53,7 @@ implemented in [[#sec:sa-objective-function]] is set in place to allow the SOC t
 \kappa_{\Xi_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
 solution that does not activate the penalty method (i.e., is solution is operationally feasible).
 
-The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. The algorithm begins be creating a temperature schedule
+The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. The algorithm begins by creating a temperature schedule
 and creating an initial solution. The algorithm then begins to iterate through the temperature schedule (outer loop).
 For each iteration of the outer loop, an inner loop is executed $n_K$ times. During this inner loop, the solution is
 modified by a generating function to create a candidate solution. The candidate is solution is then compared with the
