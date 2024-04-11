@@ -7,20 +7,19 @@ With an ever increasing interest in the electrification of vehicles in the push 
 organizations and companies have been looking to adopt the electrification of fleet of vehicles [cite:@khan-2022-inves].
 This transition is also stemming into the electrification of public bus transportation via battery power, i.e., battery
 electric buses (BEBs) [cite:@li-2016-batter-elect;@guida-2017-zeeus-repor-europ]. In particular, agencies such as the
-Utah Transit Authority (UTA), have directed focus in replacing their fleets with BEBs. Alongside all the benefits that
+Utah Transit Authority (UTA) have directed focus in replacing their fleets with BEBs. Alongside all the benefits that
 are associated with BEBs come new challenges that must be addressed prior to their integration into mainstream
 utilization. The energy storage capacity of BEBs is typically significantly less than their combustion counterparts
 while also have significantly longer refueling periods [cite:@xylia-2018-role-charg;@li-2016-batter-elect]. This is
 further complicated due to the care that must be taken in prolonging the lifespan of the battery
-[cite:@lutsey-2019-updat-elect;@edge-2021-lithium; @millner-2010-model-lithium]. As a further complication, BEB
-refueling is no longer a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to
-charging for the total energy consumed over a pay period, often further introduce a demand cost. The demand cost is
-based on the peak power drawn during the pay period (i.e., charging multiple BEBs simultaneously), and can significantly
-impact the overall monetary cost of maintaining the BEBs. Due to these factors, the charging schedules for the BEBs
-significantly impacts the overall cost of utilizing the fleet. This work introduces a scheduling framework for a
-fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types,
-allows partial charging, and attempts to minimize the monetary cost by considering the total energy consumed by the
-schedule as well as peak power use.
+[cite:@lutsey-2019-updat-elect;@edge-2021-lithium; @millner-2010-model-lithium]. As another complication, BEB refueling
+is no longer a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to charging
+for the total energy consumed over a pay period, often further introduce a demand cost. The demand cost is based on the
+peak power drawn during the pay period (i.e., charging multiple BEBs simultaneously), and can significantly impact the
+overall monetary cost of maintaining the BEBs. This work introduces a scheduling framework for a fixed-schedule fleet of
+BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging,
+and attempts to minimize the monetary cost by considering the total energy consumed by the schedule as well as peak
+power use.
 
 Works concerning charge planning often use a version of the vehicle scheduling problem [cite:@zhang-2021-optim-elect;
 @duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet; @tang-2019-robus-sched; @li-2014-trans-bus; @he-2020-optim-charg],
@@ -44,8 +43,8 @@ partial charging [cite:@whitaker-2023-a-network; @zhang-2021-optim-elect; @qin-2
 @frendo-2021-open-sourc]. Works that assumed scheduled BEBs always charge to full capacity significantly simplify the
 scheduling problem, but eliminates the key factor in reducing the demand cost, partial charging
 [cite:@tang-2019-robus-sched; @duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim]. The
-approaches that utilized non-linear charging profiles with partial charging achieve the same benefit in demand cost
-reduction, with the added benefit of a higher fidelity at the expense of computation [cite:@zhang-2021-optim-elect].
+approaches that utilized non-linear charging profiles with partial charging are able to achieve a reduction in the
+demand cost, with the added benefit of a higher fidelity at the expense of computation [cite:@zhang-2021-optim-elect].
 Exceptions to this are [cite:@he-2020-optim-charg] that utilize a piecewise-linear charging profiles. This model has the
 drawback of assuming that a charger is always available. [cite:@whitaker-2023-a-network] proposes a discrete linear
 time-invariant dynamic model that results in an exponential decay non-linear charge profile.
@@ -86,7 +85,7 @@ has received much attention [cite:@wei-2018-optim-spatio;@sebastiani-2016-evalua
 whether a set of existing combustion based buses should be replaced with BEBs [cite:@zhou-2020-bi-objec;
 @duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim], and accounting for uncertainties
 [cite:@bie-2021-optim-elect; @duan-2021-refor-mixed; @tang-2019-robus-sched;@ursavas-2016-optim-polic]. These problems
-add additional complexities that warrant simplifications for the sake of computation. Two modes of simplification are
+add additional complexities that warrant cations for the sake of computation. Two modes of simplification are
 often found: only utilizing fast chargers during planning [cite:@li-2014-trans-bus; @li-2014-trans-bus;
 @wang-2017-optim-rechar] or simplification of the charging models are made by assuming full charge
 [cite:@zhou-2020-bi-objec; @qarebagh-2019-optim-sched; @wei-2018-optim-spatio].
