@@ -85,7 +85,7 @@ has received much attention [cite:@wei-2018-optim-spatio;@sebastiani-2016-evalua
 whether a set of existing combustion based buses should be replaced with BEBs [cite:@zhou-2020-bi-objec;
 @duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet; @zhou-2020-collab-optim], and accounting for uncertainties
 [cite:@bie-2021-optim-elect; @duan-2021-refor-mixed; @tang-2019-robus-sched;@ursavas-2016-optim-polic]. These problems
-add additional complexities that warrant cations for the sake of computation. Two modes of simplification are
+add additional complexities that warrant simplification for the sake of computation. Two modes of simplification are
 often found: only utilizing fast chargers during planning [cite:@li-2014-trans-bus; @li-2014-trans-bus;
 @wang-2017-optim-rechar] or simplification of the charging models are made by assuming full charge
 [cite:@zhou-2020-bi-objec; @qarebagh-2019-optim-sched; @wei-2018-optim-spatio].
