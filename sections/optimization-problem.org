@@ -29,7 +29,7 @@ manipulate. The variables to be introduced are summarized in [[tab:sa-variables]
 :END:
 
 Parameters are used to indicate value that are assumed to be known prior to optimization. They will be presented in two
-sections: battery dynamic parameters then packing and discretization parameters. The packing and discretization
+sections: packing and discretization parameters then battery dynamic parameters. The packing and discretization
 parameters are those that are associated with visit placement and the method of discretizing the time horizon and the
 battery dynamic parameters are those associated with the SOC of the BEB.
 
@@ -40,11 +40,10 @@ battery dynamic parameters are those associated with the SOC of the BEB.
 
 Let $\xi_i$ represent the next arrival index for bus $b_i$. For example, suppose the ID of each BEB is recorded in order
 of arrival as $\{ 2,1,3,2 \}$. Using a starting index of 1, $\xi_1 = 4$ as that is the next visit by bus 2. Each visit is
-prescribed arrival and departure times, $a_i$ and $e_i$, respectively. During the time frame $[a_i, e_i]$, the BEB may
-be assigned to a queue to be charged. An associated cost is employed when a visit is assigned to a charging queue. Let
-the assignment cost be represented by $\epsilon_q$. Lastly, the time horizon is to be discretized to assist in computing the
-peak demand cost, let $t_h$ denote a discrete time step, and let $dt$ denote the discrete time step $dt = t_h -
-t_{h-1}$.
+prescribed arrival and departure times, $a_i$ and $e_i$, respectively. An associated cost is employed when a visit is
+assigned to a charging queue. Let the assignment cost be represented by $\epsilon_q$. Lastly, the time horizon is to be
+discretized to assist in computing the peak demand cost, let $t_h$ denote a discrete time step, and let $dt$ denote the
+discrete time step $dt = t_h - t_{h-1}$.
 
 **** Battery Dynamic Parameters
 :PROPERTIES:
@@ -55,12 +54,11 @@ It is assumed that each bus $b$ begins the working day with an initial SOC perce
 visits by each BEB be denoted as $\Isetinit$ where $\Isetinit \subset \Iset$ and the cardinality of the set is $\lvert
 \Isetinit \rvert = n_B$. The initial SOC for bus $b_i$ can be represented as $\eta_{i} = \alpha_{b_i}\kappa_{b_i}; \forall i \in \Isetinit$
 where $\kappa_{b_i}$ is the battery capacity for bus $b_i$. Each visit, with the exception of the final visit for each BEB,
-is paired with a route that has an associated amount energy required to complete. Let the amount of energy required to
-complete the route after visit $i$ be denoted as $\Delta_i$. As alluded to earlier, there are no routes after the last visit
-for each BEB. Thus, similarly to the set of initial visits, let the set of final visits for all BEBs be denoted as
-$\Isetfinal$. The discharge for the final visit of each BEB is then defined as $\Delta_{i} = 0; \forall i \in \Isetfinal$. After each
-arrival, the BEB is assigned to a charging queue. Let $r_q$ represent the power supplied from the charger in queue $q \in
-Q$.
+is paired with a route that has an associated amount energy required to complete, $\Delta_i$. As alluded to earlier, there
+are no routes after the last visit for each BEB. Thus, similarly to the set of initial visits, let the set of final
+visits for all BEBs be denoted as $\Isetfinal$. The discharge for the final visit of each BEB is then defined as $\Delta_{i}
+= 0; \forall i \in \Isetfinal$. After each arrival, the BEB is assigned to a charging queue. Let $r_q$ represent the power
+supplied from the charger in queue $q \in Q$.
 
 *** Decision Variables
 :PROPERTIES:
@@ -84,8 +82,8 @@ times, the bus is also assigned a charging queue, $q_i \in \Qset$.
 :CUSTOM_ID: sec:sa-slack-decision-variables
 :END:
 
-Let the initial SOC for a visit be written as $\eta_i$, where $i \in \Iset \setminus \Iset_0$. Recall the set of initial visits,
-$\Iset_0$, have an assumed known SOC (i.e., the initial SOC of each BEB at the beginning of the working day is
+Recall the initial SOC for a visit is written as $\eta_i$, where $i \in \Iset \setminus \Iset_0$. Further recall the set of initial
+visits, $\Iset_0$, have an assumed known SOC (i.e., the initial SOC of each BEB at the beginning of the working day is
 considered as an input parameter). The exclusion $i \in \Iset \setminus \Iset_0$ extracts the set of indices for which the initial
 SOC of the visit is unknown as the initial charge for visit $i \in \Iset \setminus \Iset_0$ forms the foundation from which the
 SOC of the next visit, $\eta_{\xi_i}$, is calculated. The charge for bus $i$'s next visit is equal to the initial charge for
@@ -244,14 +242,14 @@ p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 
 Thus, \ref{eq:pdem} defines the continuous form of maximum average demand cost found during a pay period. Although the
 charge times for each BEB are continuous, due to the discrete nature of visits, it difficult to determine the
-instantaneous power usage in continuous terms. As such, it is simpler to calculate a vector of discrete power
-consumption over the time horizon from which the average power demand may be approximated. To discritize $p_d$, let $h \in \{
-1, 2, ..., n_H \} \subset \mathcal{Z}$ where $n_H$ is the total number of steps. Furthermore, let $p$ define the vector of discrete
-power demand over the time horizon and let $p_h \in p$ be the demand over time step $h$. For conciseness of notation $t_h$
-will be abused to denote the time in discrete form (as opposed to $t$ being continuous) and let $dt = t_h - t_{h-1}$.
-Each entry $p_h \in p$ is found by taking the summation of $r_{v_i}$ for all the chargers active during the time interval
-$[t_h, t_h + dt]$. Thus, having an estimate of the demand over each step, the average demand can be calculated by taking
-an average of the Riemann sum over each $T_p$ interval as follows:
+instantaneous power usage in continuous terms. As such, it is simpler to calculate a vector of discrete power use over
+the time horizon from which the average power demand may be approximated. To discritize $p_d$, let $h \in \{ 1, 2, ...,
+n_H \} \subset \mathcal{Z}$ where $n_H$ is the total number of steps. Furthermore, let $p$ define the vector of discrete power demand
+over the time horizon and let $p_h \in p$ be the demand over time step $h$. For conciseness of notation $t_h$ will be
+abused to denote the time in discrete form (as opposed to $t$ being continuous) and let $dt = t_h - t_{h-1}$. Each entry
+$p_h \in p$ is found by taking the summation of $r_{v_i}$ for all the chargers active during the time interval $[t_h,
+t_h + dt]$. Thus, having an estimate of the demand over each step, the average demand can be calculated by taking an
+average of the Riemann sum over each $T_p$ interval as follows:
 
 #+begin_comment
 Thus, for a given visit $i$, the corresponding discrete indices of $h \in \Hset$ for the range $[u_i, d_i]$ can be
