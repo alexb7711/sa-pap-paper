@@ -1,4 +1,4 @@
-% Created 2024-04-19 Fri 08:51
+% Created 2024-04-19 Fri 17:28
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -164,12 +164,12 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \usepackage{xfp}                             % No trailing zeros
 \lstset{language=Rust, style=boxed}
 \usetikzlibrary{arrows.meta}                % Arrows for tikz
-\renewcommand*{\chapterautorefname}{Chapter}
-\renewcommand*{\sectionautorefname}{Section}
-\renewcommand*{\subsectionautorefname}{Section}
-\renewcommand*{\subsubsectionautorefname}{Section}
-\renewcommand*{\paragraphautorefname}{Section}
-\renewcommand*{\algorithmautorefname}{Algorithm}
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+\renewcommand{\paragraphautorefname}{Section}
+\renewcommand{\algorithmautorefname}{Algorithm}
 \newcommand{\definitionautorefname}{Definition}
 \newcommand{\Or}{\textbf{ or }}
 \renewcommand*{\And}{\textbf{ and }}
@@ -1519,7 +1519,7 @@ times for each BEB visit.
 
 \begin{adjustwidth}{-\extralength}{0cm}
 \reftitle{References}
-\bibliography{c:/msys64/home/jamie/Documents/citation-database/lit-ref,c:/msys64/home/jamie/Documents/citation-database/lib-ref,c:/msys64/home/jamie/Documents/citation-database/misc}
+\bibliography{ citation-database/misc,citation-database/lib-ref,citation-database/lit-ref }
 \PublishersNote{}
 \end{adjustwidth}
 \end{document}
