@@ -18,6 +18,13 @@
 # ======================================================================================================================
 # Document
 
+#+latex: \renewcommand{\chapterautorefname}{Chapter}
+#+latex: \renewcommand{\sectionautorefname}{Section}
+#+latex: \renewcommand{\subsectionautorefname}{Section}
+#+latex: \renewcommand{\subsubsectionautorefname}{Section}
+#+latex: \renewcommand{\paragraphautorefname}{Section}
+#+latex: \renewcommand{\algorithmautorefname}{Algorithm}
+
 #+include: sections/introduction.org
 #+include: sections/problem-description.org
 #+include: sections/tab/variables.org

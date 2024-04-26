@@ -1,4 +1,4 @@
-% Created 2024-04-20 Sat 08:21
+% Created 2024-04-26 Fri 10:01
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -164,12 +164,6 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \usepackage{xfp}                             % No trailing zeros
 \lstset{language=Rust, style=boxed}
 \usetikzlibrary{arrows.meta}                % Arrows for tikz
-\renewcommand*{\chapterautorefname}{Chapter}
-\renewcommand*{\sectionautorefname}{Section}
-\renewcommand*{\subsectionautorefname}{Section}
-\renewcommand*{\subsubsectionautorefname}{Section}
-\renewcommand*{\paragraphautorefname}{Section}
-\renewcommand*{\algorithmautorefname}{Algorithm}
 \newcommand{\definitionautorefname}{Definition}
 \newcommand{\Or}{\textbf{ or }}
 \renewcommand*{\And}{\textbf{ and }}
@@ -242,6 +236,13 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \parskip 3mm                                % Set the vetical space between paragraphs
 \let\ref\autoref                            % Redifine `\ref` as `\autoref` because lazy
 \SetCommentSty{mycommfont}                  % Set the comment color
+
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+\renewcommand{\paragraphautorefname}{Section}
+\renewcommand{\algorithmautorefname}{Algorithm}
 
 \section{Introduction}
 \label{sec:sa-introduction}
@@ -1519,7 +1520,7 @@ times for each BEB visit.
 
 \begin{adjustwidth}{-\extralength}{0cm}
 \reftitle{References}
-\bibliography{c:/msys64/home/jamie/Documents/citation-database/lit-ref,c:/msys64/home/jamie/Documents/citation-database/lib-ref,c:/msys64/home/jamie/Documents/citation-database/misc}
+\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref,c:/msys64/home/1556048963C/Documents/citation-database/misc}
 \PublishersNote{}
 \end{adjustwidth}
 \end{document}

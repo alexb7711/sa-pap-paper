@@ -23,13 +23,7 @@
 
 # =========================================================================================================================
 # `autoref' formatting
-#+latex_header: \renewcommand*{\chapterautorefname}{Chapter}
-#+latex_header: \renewcommand*{\sectionautorefname}{Section}
-#+latex_header: \renewcommand*{\subsectionautorefname}{Section}
-#+latex_header: \renewcommand*{\subsubsectionautorefname}{Section}
-#+latex_header: \renewcommand*{\paragraphautorefname}{Section}
-#+latex_header: \renewcommand*{\algorithmautorefname}{Algorithm}
-#+latex_header:\newcommand{\definitionautorefname}{Definition}
+#+latex_header: \newcommand{\definitionautorefname}{Definition}
 
 # =========================================================================================================================
 # Custom `Algoritm2e' commands
