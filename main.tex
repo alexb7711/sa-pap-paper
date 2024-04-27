@@ -164,12 +164,6 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \usepackage{xfp}                             % No trailing zeros
 \lstset{language=Rust, style=boxed}
 \usetikzlibrary{arrows.meta}                % Arrows for tikz
-\renewcommand*{\chapterautorefname}{Chapter}
-\renewcommand*{\sectionautorefname}{Section}
-\renewcommand*{\subsectionautorefname}{Section}
-\renewcommand*{\subsubsectionautorefname}{Section}
-\renewcommand*{\paragraphautorefname}{Section}
-\renewcommand*{\algorithmautorefname}{Algorithm}
 \newcommand{\definitionautorefname}{Definition}
 \newcommand{\Or}{\textbf{ or }}
 \renewcommand*{\And}{\textbf{ and }}
@@ -242,6 +236,13 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \parskip 3mm                                % Set the vetical space between paragraphs
 \let\ref\autoref                            % Redifine `\ref` as `\autoref` because lazy
 \SetCommentSty{mycommfont}                  % Set the comment color
+
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+\renewcommand{\paragraphautorefname}{Section}
+\renewcommand{\algorithmautorefname}{Algorithm}
 
 \section{Introduction}
 \label{sec:sa-introduction}
