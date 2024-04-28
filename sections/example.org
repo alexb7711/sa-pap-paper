@@ -26,18 +26,18 @@ between $n_B = \A$ buses. Each BEB is assumed to have a battery capacity of $\ka
 stay above an SOC of $\nu_b =$ \mincharge (src_latex{\fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to begin
 the working day with $\alpha =$ src_latex{\fpeval{\acharge*100}}% charge (src_latex{\fpeval{\acharge * \batsize}} kWh). A
 total of $n_C =$ src_latex{\fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers are slow charging
-(\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p = \Cgain$, $z_c = 1$, and $z_d
-= 10000$ are used. As previously introduced, to encourage the SA PAP to utilize the fewest number of
-chargers, the value of $\epsilon_q$ in the objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B +
-2, ..., n_Q\}; \epsilon_q = 100q$. The SA algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0
-= \tempinit$ with $\beta_2 = 0.999$, resulting in a total of $n_M = \tempcnt$ steps. Rocky Mountain Power utilizes fifteen
-minute intervals to calculate the demand cost [cite:@rocky-mountain-power]. Thus, the demand cost is calculated
-utilizing $T_p =$ src_latex{\fpeval{15*60}} second intervals. A weight vector of $[3, 3, 2, 1]$ is used to influence
-the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm
-also assumes a total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total, that
-results in src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant temperature
-search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
-src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
+(\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p = \Cgain$, $z_c = 1$, and $z_d = 10000$ are used.
+As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
+objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q$. The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\beta = 0.999$,
+resulting in a total of $n_M = \tempcnt$ steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the
+demand cost [cite:@rocky-mountain-power]. Thus, the demand cost is calculated utilizing $T_p =$
+src_latex{\fpeval{15*60}} second intervals. A weight vector of $[3, 3, 2, 1]$ is used to influence the distribution of
+selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm also assumes a
+total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total, that results in
+src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant temperature search took
+an average of $\quicklocal$ seconds to complete, resulting in a total runtime of src_latex{\fpeval{\quicklocal *
+\tempcnt}} seconds.
 
 [[#sec:sa-heuristic-implementation]] introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in [[#sec:sa-generation-mechanisms]], let this
@@ -66,7 +66,7 @@ MILP implementation of the PAP derived from [cite:@qarebagh-2019-optim-sched]. B
 can guarantee optimality, the MILP implementation is utilized in this work as a benchmark for the other schedules. The
 inputs to the system are the same as those discussed above. It is of note that the MILP PAP does not implement the
 demand cost in its objective function. In an attempt to compare the solution of the MILP with the SA output more
-directly, a similar solve time of 3600 seconds is utilized. The MILP was executed using the Gurobi MILP solver
+directly, a similar solve time of 1700 seconds is utilized. The MILP was executed using the Gurobi MILP solver
 [cite:@gurobi-2021-gurob-optim]. The previously described simulations were run on a machine equipped with an AMD Ryzen 9
 5900X 12 - Processor (24 core) at 4.95GHz.
 
@@ -104,7 +104,7 @@ reduced. Similarly, the MILP used a maximum of 4 chargers in parallel which is t
 by the schedule. By referencing \ref{subfig:schedule-milp}, it can be seen that the slow chargers cannot be minimized
 any further. The quick SA technique utilized every slow charger, but only employed a maximum of six chargers in
 parallel. This gives a measure to how the queues were sparsely placed as with appropriate packing, only six queues are
-theoretically required with the provided schedule. The heuristic SA utilized a maximum of seven chargers although the
+theoretically required with the provided schedule. The heuristic SA utilized a maximum of seven chargers, although the
 total queues required by the schedule is nine. As stated before, post-processing could be applied to alleviate this
 problem, although the schedule would still not being quite as well packed as the Qin-Modified or MILP schedules.
 
@@ -155,5 +155,5 @@ energy consumed by each schedule.
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the MILP PAP. The respective energy consumption for each
-technique is: 10198.799 kWh, 6303.1704 kWh, 4797.746 kWh, and 4256.746 kWh. The heuristic SA consuming about 988 kWh
-more than the MILP PAP.
+technique is: 10,198.800 kWh, 4480.091 kWh, 4420.091 kWh, and 4237.2 kWh. The heuristic SA consuming about 185.356 kWh more
+than the MILP PAP.

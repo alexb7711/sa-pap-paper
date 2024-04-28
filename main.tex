@@ -1,4 +1,4 @@
-% Created 2024-04-28 Sun 06:53
+% Created 2024-04-28 Sun 12:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -213,9 +213,9 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \newcommand{\intvars}{328,282 }
 \newcommand{\localcnt}{500 }                                                    % Number of local search iterations
 \newcommand{\tempinit}{9000 }                                                   % Initial temperature
-\newcommand{\tempcnt}{9101 }                                                    % Number of steps in temperature
-\newcommand{\quicklocal}{0.25 }                                                % Time to finish local quick
-\newcommand{\heuristiclocal}{0.4 }                                             % Time to finish local heuristic
+\newcommand{\tempcnt}{3832 }                                                    % Number of steps in temperature
+\newcommand{\quicklocal}{0.4 }                                                  % Time to finish local quick
+\newcommand{\heuristiclocal}{0.5 }                                              % Time to finish local heuristic
 %%-------------------------------------------------------------------------------
 %% Solve output
 %% Solve output
@@ -1032,10 +1032,15 @@ candidate solution. This candidate solution will then be compared against the ac
 \ref{sec:sa-acceptance}. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
 schedule. The method that will be employed to generate neighboring solutions is as follows: pick a visit, pick a
 primitive generator, and execute said primitive generator once. Let \(\W^y_{[\cdot]}\) denote a random selection with a
-distribution specified by a weight vector \(y \in \mathbb{R}\). Thus, \ref{alg:perturb-schedule} is as follows: select a visit with a
-uniform distribution, select a primitive with a weighted distribution. Letting \(n_G\) denote the number of primitive
-generating functions, the selected primitive with a weighted distribution is denoted as \(\W^y_{[1, n_G]}\). The primitive
-is then executed, and the results are returned.
+distribution specified by a weight vector \(y \in \mathbb{R}\). Thus, \ref{alg:perturb-schedule} is as follows: Lines 2-12 generate a
+vector of weights for the visit index selection. The weights have a default value of one. Each visit is then indexed in
+reverse order. If the SOC of the visit is less than \(\nu_b \kappa_b\), then the weight for the visit is calculated as shown on
+Line 10. The route for BEB \(b\) is then set as a ``priority'' on Line 9 to propagate the previously calculated weight in
+earlier visits for BEB \(b\) as shown on Line 5. This is done in an attempt to encourage the SA algorithm to ``fix'' the
+current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
+with weighted distribution \(y^i\), then selects a primitive with a weighted distribution, \(y^p\). Letting \(n_G\) denote the
+number of primitive generating functions, the selected primitive with a weighted distribution is denoted as \(\W^y_{[1,
+n_G]}\). The primitive is then executed, and the results are returned.
 
 \begin{algorithm}[H]
 \scriptsize
@@ -1050,10 +1055,23 @@ is then executed, and the results are returned.
 
     \Begin
     {
-        $\I_i\leftarrow\; \U_{\I}$\tcc*{Randomly select a visit}
+        $p \leftarrow [false; n_A]$\tcc*{Create vector to track priority routes}
+        $y^i \leftarrow [1.0; n_V]$\tcc*{Create weight vector for index selection}
+        \tcc{Loop through the visits in reverse order}
+        \ForEach{$\I_i \leftarrow \I_{|\I|} \text{ TO } \I_{1}$}
+        {
+            \tcc{If the current visit is part of a priority route}
+            \If{$p_{\I_{i.b}} = true$}{$y^i_{\I_i} = y^i_{\I_{i.\xi}}$\;}
+            \tcc{Else if the current visit's SOC does below the allowed threshold}
+            \ElseIf{$\I_{i.\eta} \le \nu_{\I_{i.b}} \kappa_{\I_{i.b}}$}{
+                $p_{\I_{i.b}} = true$\tcc*{Indicate the current BEB's routes are to be prioritized}
+                $y^i_{\I_i} = \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
+            }
+        }
+        $\I_i\leftarrow\; \W^{y^i}_{\I}$\tcc*{Select an index with a weighted distribution}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
-        $y \leftarrow [y_1, y_2, ...]$\tcc*{Define the weight of each primitive generator}
-        $PGF \leftarrow\; \W^y_{[1,n_G]}$\tcc*{Select one of the generator functions}
+        $y^p \leftarrow [y^p_1, y^p_2, ...]$\tcc*{Define the weight of each primitive generator}
+        $PGF \leftarrow\; \W^{y^p}_{[1,n_G]}$\tcc*{Select a generator function with weighted distribution}
         $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
         \Return{($0, \bar{\I}$, $\bar{\C}$)}
     }
@@ -1158,18 +1176,17 @@ between \(n_B = \A\) buses. Each BEB is assumed to have a battery capacity of \(
 stay above an SOC of \(\nu_b =\) \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin
 the working day with \(\alpha =\) \fpeval{\acharge*100}\% charge (\fpeval{\acharge * \batsize} kWh). A
 total of \(n_C =\) \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are slow charging
-(\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p = \Cgain\), \(z_c = 1\), and \(z_d
-= 10000\) are used. As previously introduced, to encourage the SA PAP to utilize the fewest number of
-chargers, the value of \(\epsilon_q\) in the objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_B + 1, n_B +
-2, ..., n_Q\}; \epsilon_q = 100q\). The SA algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0
-= \tempinit\) with \(\beta_2 = 0.999\), resulting in a total of \(n_M = \tempcnt\) steps. Rocky Mountain Power utilizes fifteen
-minute intervals to calculate the demand cost \cite{rocky-mountain-power}. Thus, the demand cost is calculated
-utilizing \(T_p =\) \fpeval{15*60} second intervals. A weight vector of \([3, 3, 2, 1]\) is used to influence
-the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm
-also assumes a total of \(n_K = \localcnt\) iterations for the local search at a constant temperature. In total, that
-results in \fpeval{\localcnt * \tempcnt} configurations being searched. On average each constant temperature
-search took an average of \(\quicklocal\) seconds to complete, resulting in a total runtime of
-\fpeval{\quicklocal * \tempcnt} seconds.
+(\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p = \Cgain\), \(z_c = 1\), and \(z_d = 10000\) are used.
+As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of \(\epsilon_q\) in the
+objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q\). The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0 = \tempinit\) with \(\beta = 0.999\),
+resulting in a total of \(n_M = \tempcnt\) steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the
+demand cost \cite{rocky-mountain-power}. Thus, the demand cost is calculated utilizing \(T_p =\)
+\fpeval{15*60} second intervals. A weight vector of \([3, 3, 2, 1]\) is used to influence the distribution of
+selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm also assumes a
+total of \(n_K = \localcnt\) iterations for the local search at a constant temperature. In total, that results in
+\fpeval{\localcnt * \tempcnt} configurations being searched. On average each constant temperature search took
+an average of \(\quicklocal\) seconds to complete, resulting in a total runtime of \fpeval{\quicklocal * \tempcnt} seconds.
 
 \ref{sec:sa-heuristic-implementation} introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in \ref{sec:sa-generation-mechanisms}, let this
@@ -1197,7 +1214,7 @@ MILP implementation of the PAP derived from \cite{qarebagh-2019-optim-sched}. Be
 can guarantee optimality, the MILP implementation is utilized in this work as a benchmark for the other schedules. The
 inputs to the system are the same as those discussed above. It is of note that the MILP PAP does not implement the
 demand cost in its objective function. In an attempt to compare the solution of the MILP with the SA output more
-directly, a similar solve time of 3600 seconds is utilized. The MILP was executed using the Gurobi MILP solver
+directly, a similar solve time of 1700 seconds is utilized. The MILP was executed using the Gurobi MILP solver
 \cite{gurobi-2021-gurob-optim}. The previously described simulations were run on a machine equipped with an AMD Ryzen 9
 5900X 12 - Processor (24 core) at 4.95GHz.
 
@@ -1232,7 +1249,7 @@ reduced. Similarly, the MILP used a maximum of 4 chargers in parallel which is t
 by the schedule. By referencing \ref{subfig:schedule-milp}, it can be seen that the slow chargers cannot be minimized
 any further. The quick SA technique utilized every slow charger, but only employed a maximum of six chargers in
 parallel. This gives a measure to how the queues were sparsely placed as with appropriate packing, only six queues are
-theoretically required with the provided schedule. The heuristic SA utilized a maximum of seven chargers although the
+theoretically required with the provided schedule. The heuristic SA utilized a maximum of seven chargers, although the
 total queues required by the schedule is nine. As stated before, post-processing could be applied to alleviate this
 problem, although the schedule would still not being quite as well packed as the Qin-Modified or MILP schedules.
 
@@ -1250,8 +1267,7 @@ pack the schedule the most efficiently followed by the MILP and heuristic SA sch
  & MILP &  & Qin-Modified &  & Heuristic &  & Quick & \\[0pt]
 \hline
  & Slow & Fast & Slow & Fast & Slow & Fast & Slow & Fast\\[0pt]
-Max & 4 & 2 & 2 & 1 & 7 & 2 & 6 & 2\\[0pt]
-Schedule & 4 & 3 & 2 & 1 & 9 & 4 & 15 & 15\\[0pt]
+Max & 4 & 2 & 2 & 7 & 9 & 1 & 7 & 1\\[0pt]
 \hline
 \end{tabular}
 \end{table}
@@ -1279,9 +1295,9 @@ Mountain Power. This measure is useful when viewing with respect to \ref{fig:pow
 \hline
  & MILP & Qin-Modifid & Heuristic & Quick\\[0pt]
 \hline
-Mean & 179.580229533742 & 292.615759538128 & 189.525113828846 & 216.523166855178\\[0pt]
-Min & 96.9999999999463 & 0 & 6.3432083 & 29.862568\\[0pt]
-Max & 388 & 368.6 & 388 & 388\\[0pt]
+Mean & 181.327 & 302.932 & 188.967 & 192.686\\[0pt]
+Min & 97.000 & 0.000 & 91.26 & 95.905\\[0pt]
+Max & 382.93 & 368.600 & 388.000 & 388.000\\[0pt]
 \hline
 \end{tabular}
 \end{table}
@@ -1310,16 +1326,16 @@ energy consumed by each schedule.
 \hline
  & MILP & Qin-Modified & Heuristic & Quick\\[0pt]
 \hline
-Mean & 177.34 & 424.95 & 198.84105 & 257.9823\\[0pt]
-Max & 1910 & 970 & 1911.9 & 1911.9\\[0pt]
+Mean & 176.550 & 424.950 & 184.272 & 186.668\\[0pt]
+Max & 1910.000 & 970.000 & 1150.950 & 2031.8999\\[0pt]
 \hline
 \end{tabular}
 \end{table}
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the MILP PAP. The respective energy consumption for each
-technique is: 10198.799 kWh, 6303.1704 kWh, 4797.746 kWh, and 4256.746 kWh. The heuristic SA consuming about 988 kWh
-more than the MILP PAP.
+technique is: 10,198.800 kWh, 4480.091 kWh, 4420.091 kWh, and 4237.2 kWh. The heuristic SA consuming about 185.356 kWh more
+than the MILP PAP.
 
 \begin{figure}
   \centering

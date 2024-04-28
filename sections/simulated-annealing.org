@@ -294,17 +294,15 @@ candidate solution. This candidate solution will then be compared against the ac
 [[#sec:sa-acceptance]]. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
 schedule. The method that will be employed to generate neighboring solutions is as follows: pick a visit, pick a
 primitive generator, and execute said primitive generator once. Let $\W^y_{[\cdot]}$ denote a random selection with a
-distribution specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: select a visit with a
-uniform distribution, select a primitive with a weighted distribution. Letting $n_G$ denote the number of primitive
-generating functions, the selected primitive with a weighted distribution is denoted as $\W^y_{[1, n_G]}$. The primitive
-is then executed, and the results are returned.
-
-#+begin_comment
- Line 2 selects
-a visit at random with a uniform distribution. Line 3 extracts the visit index and Line 4 creates a vector of weights
-associated with a primitive generator. Letting $n_G$ denote the number of primitive generating functions, Line 5 selects
-a primitive generator with a weighted distribution. Line 6 executes the primitive, and Line 7 returns the result.
-#+end_comment
+distribution specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: Lines 2-12 generate a
+vector of weights for the visit index selection. The weights have a default value of one. Each visit is then indexed in
+reverse order. If the SOC of the visit is less than $\nu_b \kappa_b$, then the weight for the visit is calculated as shown on
+Line 10. The route for BEB $b$ is then set as a "priority" on Line 9 to propagate the previously calculated weight in
+earlier visits for BEB $b$ as shown on Line 5. This is done in an attempt to encourage the SA algorithm to "fix" the
+current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
+with weighted distribution $y^i$, then selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the
+number of primitive generating functions, the selected primitive with a weighted distribution is denoted as $\W^y_{[1,
+n_G]}$. The primitive is then executed, and the results are returned.
 
 #+include: eq/tweak-schedule.org
 
