@@ -11,7 +11,7 @@
 
 \begin{document}
 
-\pgfplotstableread[col sep = comma]{data/qm-acc-energy-usage.csv}\accenergydataquin
+\pgfplotstableread[col sep = comma]{data/qm-acc-energy-usage.csv}\accenergydataqin
 \pgfplotstableread[col sep = comma]{data/sa-quick-acc-energy-usage.csv}\accenergydatasaquick
 \pgfplotstableread[col sep = comma]{data/sa-heuristic-acc-energy-usage.csv}\accenergydatasaheuristic
 \pgfplotstableread[col sep = comma]{data/milp-acc-energy-usage.csv}\accenergydatamilp
@@ -24,10 +24,10 @@
     xlabel={Time [hr]}, ylabel={Energy Usage [kWh]},
     xmin=4, xmax=24, ymin=0,
     legend pos = north west]
-    % Quin ----------
+    % Qin ----------
     \addplot[blue!100!black, no markers]
-             table[x=time, y=power] {\accenergydataquin};
-    \addlegendentry{Quin}
+             table[x=time, y=power] {\accenergydataqin};
+    \addlegendentry{Qin}
 
     % MILP ----------
     \addplot[red!100!black, no markers]
