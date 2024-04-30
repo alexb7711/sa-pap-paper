@@ -1,4 +1,4 @@
-% Created 2024-04-29 Mon 14:34
+% Created 2024-04-30 Tue 15:08
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -152,6 +152,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 %}
 
 \usepackage{subcaption}                     % Subfigures
+\usepackage{ulem}                           % Underline
 \usepackage[ruled]{algorithm2e}             % Algorithms
 \usepackage{listings}                       % Code in LaTeX
 \usepackage{listings-rust}                  % Code in LaTeX
@@ -1233,7 +1234,7 @@ by the Qin schedule is due to the extensive use of fast chargers throughout the 
 techniques utilized them more sparingly. At the expense of many slow chargers, the SA techniques were able to utilize
 fast chargers less frequently in their respective schedules showing an emphasis on battery health.
 
-As shown in \ref{fig:schedule-heuristic-sa} and \ref{fig:schedule-quick-sa}, the SA techniques were able to create
+As shown in \ref{subfig:schedule-heuristic-sa} and \ref{subfig:schedule-quick-sa}, the SA techniques were able to create
 schedules that are ``dense'' spatially, but not temporally. In other words the SA techniques did not utilize the allotted
 time quite as effectively as the Qin or PAP. As there were no constraints encouraging the ``closeness'' of scheduled
 times, no effort was made by the SA algorithm to pack the schedules temporally.

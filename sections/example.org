@@ -88,12 +88,12 @@ by the Qin schedule is due to the extensive use of fast chargers throughout the 
 techniques utilized them more sparingly. At the expense of many slow chargers, the SA techniques were able to utilize
 fast chargers less frequently in their respective schedules showing an emphasis on battery health.
 
-As shown in \ref{fig:schedule-heuristic-sa} and \ref{fig:schedule-quick-sa}, the SA techniques were able to create
+As shown in \ref{subfig:schedule-heuristic-sa} and \ref{subfig:schedule-quick-sa}, the SA techniques were able to create
 schedules that are "dense" spatially, but not temporally. In other words the SA techniques did not utilize the allotted
 time quite as effectively as the Qin or PAP. As there were no constraints encouraging the "closeness" of scheduled
 times, no effort was made by the SA algorithm to pack the schedules temporally.
 
-\ref{fig:charge} depicts the SOC for each visit throughout the simulation of each framework. \ref{tab:charge} tabulates
+\ref{fig:charge} depicts the SOC for each visit throughout the simulation of each framework. [[tab:charge]] tabulates
 the mean, minimum, and maximum SOC upon arrival for each visit. The PAP requires each BEB to stay above an SOC of 25%
 while the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go below the 25% SOC
 threshold. The PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge}) while both SA
@@ -103,7 +103,7 @@ remedy to ensure the SA schedules stay above the threshold, a safety factor coul
 the threshold, $S_f \nu_{\Xi_i}\kappa_{\Xi_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$.
 
 The SOC of the quick SA approach dropped to a minimum of _95.9_ kWh and the heuristic had a minimum SOC of _91.26_ kWh as
-shown in \ref{tab:charge}. The Qin model allowed the SOC for one of the BEBs to reach 0% as shown in
+shown in [[tab:charge]]. The Qin model allowed the SOC for one of the BEBs to reach 0% as shown in
 \ref{subfig:qin-charge}. The Qin-Modified strategy, being a purely reactive model, does not have foresight to determine
 whether a set of routes has a particularly taxing route later in the time horizon. As such, and in the case of the
 example scenario, the BEB that reached a charge of 0% began with a sequence of short routes, much like the other BEBs.
@@ -133,6 +133,6 @@ least is as follows: Qin-Modified, quick SA, heuristic SA, and the PAP. The resp
 technique is: 10,198.800 kWh, 4480.091 kWh, 4420.091 kWh, and 4237.2 kWh. The heuristic SA consuming about 185.356 kWh
 more than the PAP. While the quick and heuristic SA were unable to match the PAP in energy consumption, it is a trade
 off made by increasing the number of slow chargers and charge duration, and reducing the peak demand. Referencing
-\ref{tab:charge} and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of consumed
+[[tab:charge]] and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of consumed
 energy is correlated to the descending order of the mean SOC and the descending order of the mean power demand. This
 makes sense as a higher mean SOC implies the chargers being active more often; similarly for the mean demand.
