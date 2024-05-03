@@ -3,36 +3,6 @@
 :CUSTOM_ID: sec:sa-optimization-algorithm
 :END:
 
-#+begin_comment
-,** Simulated Annealing Pseudo Code :noexport:
-:PROPERTIES:
-:CUSTOM_ID: sec:sa-simulated-annealing-pseudo-code
-:END:
-
-Let $\omega$ and $\bar{\omega}$ denote the active solution and the candidate solution, respectively. Let $\Tau$ be the temperature
-function and $\Tau_0$ the initial temperature. Furthermore, let $t$ be defined as the vector of temperatures defined by
-$t = \Tau(\Tau_0)$, and let $t_m$ be defined as being an element of $t$, $t_m \in t$. Let $n_K$ be the repetition counter,
-it defines the number of iterations to execute exploit a solution at a constant temperature $t_m$.
-
-Recall the objective of the SA algorithm is to iteratively create a neighboring candidate solution from the active
-solution. The fitness of the two solutions are compared and if the candidate solution is of a higher quality, it is
-always taken as the active solution. If it is not, then it may be selected as the new candidate solution with some
-probability that is a function of the difference in the objective function values and the current temperature. This
-process is iteratively done until the cooling equation reaches its minimum value. With the high level summary in
-mind, the SA pseudocode is to be presented [cite:@henderson-1989-theor-pract].
-
-The algorithm behaves as follows: Lines 1 and 2 of \ref{alg:sa-pseudo} initialize the SA algorithm the temperature
-schedule, $t$, and active solution, $\omega$, respectively. The outer loop on Line 3 iterates through all the temperature
-values in $t$. After each iteration of the outer loop, the temperature is decreased as specified by the selected
-cooling equation. Line 4 resets the iteration counter to 0. Line 5 specifies the inner loop that iterates $n_K$
-times at a constant temperature, $t_k$. Line 6, perturbs the active solution $\omega$ to a neighboring candidate solution
-$\bar{\omega} = N(\omega)$. Line 7 then calculates the difference in the fitness of $\omega$ and $\bar{\omega}$. Lines 8-13 updates $\omega$ with
-$\bar{\omega}$ if the candidate solution is more fit, or updates $\omega$ with $\bar{\omega}$ with probability $e^{\frac{-\Delta_{\omega ,
-\bar{\omega}}}{t_m}}$ if the candidate solution is less fit than the active solution. Line 14 updates the repetition counter.
-
-,#+include: eq/sa-pseudo.org
-#+end_comment
-
 This section combines the generation algorithms and the optimization problem into a single algorithm (\ref{alg:sa-pap}).
 Generally, SA assumes that the generated candidate solutions are within the solution space of the problem, $\omega \in S$ where
 $S$ is the solution space. Hence, the initialization and perturbations of a schedule must be verified to ensure that the
@@ -49,16 +19,16 @@ employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\r
 Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
 dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after a given
 schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method
-implemented in [[#sec:sa-objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{\Xi_i}
-\kappa_{\Xi_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
+implemented in [[#sec:sa-objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{b_i}
+\kappa_{b_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
 solution that does not activate the penalty method (i.e., is solution is operationally feasible).
 
-The SA-PAP algorithm in \ref{alg:sa-pap} will now be outlined. The algorithm begins by creating a temperature schedule
-and creating an initial solution. The algorithm then begins to iterate through the temperature schedule (outer loop).
-For each iteration of the outer loop, an inner loop is executed $n_K$ times. During this inner loop, the solution is
-modified by a generating function to create a candidate solution. The candidate is solution is then compared with the
-active solution, and updated according to the acceptance criteria. These actions are performed until the cooling
-equation is exhausted.
+The implementation of the SA PAP is outlined in \ref{alg:sa-pap} will now be outlined. The algorithm begins by creating
+a temperature schedule and creating an initial solution. The algorithm then begins to iterate through the temperature
+schedule (outer loop). For each iteration of the outer loop, an inner loop is executed $n_K$ times. During this inner
+loop, the solution is modified by a primitive generating function to create a candidate solution. The candidate is
+solution is then compared with the active solution, and updated according to the acceptance criteria. These actions are
+performed until the cooling equation is exhausted.
 
 #+begin_comment
 Line 2 initializes the SA algorithm by creating a vector

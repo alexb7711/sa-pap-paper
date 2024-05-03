@@ -9,7 +9,7 @@
 | Constants                 |                                                                                      | Constants                 |                                                                          |
 | $\T$                      | Time horizon                                                                         | $n_K$                     | Number of iterations in the repetition schedule                          |
 | $n_M$                     | Total number of steps created by initial temperature, $\Tau_0$, and cooling schedule | $n_Q$                     | Number of chargers                                                       |
-| $n_V$                     | Total number of visits                                                               | $n_h$                     | Number of discrete steps in time horizon                                 |
+| $n_V$                     | Total number of visits                                                               | $n_H$                     | Number of discrete steps in time horizon                                 |
 | $n_B$                     | Number of buses in use                                                               |                           |                                                                          |
 |---------------------------+--------------------------------------------------------------------------------------+---------------------------+--------------------------------------------------------------------------|
 | Input Variables           |                                                                                      | Input Variables           |                                                                          |

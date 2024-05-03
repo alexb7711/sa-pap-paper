@@ -115,9 +115,9 @@ queues are for when a bus is not to be placed on a charger. Rather, it will be p
 satisfies the previously defined spatial constraints while allowing the bus to be "set aside". The charge queues are
 denoted by $q \in \{1, ..., n_B , n_B + 1, ..., n_Q\}$.
 
-Recall the dot notation is used to extract variables from tuples. For example, suppose the arrival time is desired to be
-extracted from visit $i$. Given $\I$, the notation that describes extracting the initial charge time for visit $i$ is
-written as $u_i \equiv \I_{i.u}$.
+As a means of keeping notation consistent, dot notation is used to extract variables from tuples. For example, suppose
+the arrival time is desired to be extracted from visit $i$. Given $\I$, the notation that describes extracting the
+initial charge time for visit $i$ is written as $u_i \equiv \I_{i.u}$.
 
 **** New visit
 :PROPERTIES:
@@ -261,8 +261,8 @@ of \ref{alg:new-visit}.
 :CUSTOM_ID: sec:sa-generator-wrappers
 :END:
 
-The generator wrappers provide the highest level of abstraction from which the SA algorithm will directly interact.
-These wrapper functions utilize the primitive generators previously described to either create a new charge schedule to
+The generator wrappers provide the highest level of abstraction from which the SA algorithm directly interacts. These
+wrapper functions utilize the primitive generators previously described to either create a new charge schedule to
 initialize the SA algorithm, or to modify an existing schedule.
 
 **** Charge Schedule Generation
@@ -271,7 +271,7 @@ initialize the SA algorithm, or to modify an existing schedule.
 :END:
 
 The objective of \ref{alg:charge-schedule-generation} is introduce a method that provides the SA algorithm with an
-initial charging schedule. The schedule generation is chosen to initialize the algorithm in a greedier manner by looping
+initial charging schedule. The schedule generation is chosen to initialize the algorithm in a greedy manner by looping
 through each visit and executing \ref{alg:new-visit} to place visit $i$ at random queue with a random charge time.
 
 #+begin_comment
@@ -294,17 +294,15 @@ candidate solution. This candidate solution will then be compared against the ac
 [[#sec:sa-acceptance]]. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
 schedule. The method that will be employed to generate neighboring solutions is as follows: pick a visit, pick a
 primitive generator, and execute said primitive generator once. Let $\W^y_{[\cdot]}$ denote a random selection with a
-distribution specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: select a visit with a
-uniform distribution, select a primitive with a weighted distribution. Letting $n_G$ denote the number of primitive
-generating functions, the selected primitive with a weighted distribution is denoted as $\W^y_{[1, n_G]}$. The primitive
-is then executed, and the results are returned.
-
-#+begin_comment
- Line 2 selects
-a visit at random with a uniform distribution. Line 3 extracts the visit index and Line 4 creates a vector of weights
-associated with a primitive generator. Letting $n_G$ denote the number of primitive generating functions, Line 5 selects
-a primitive generator with a weighted distribution. Line 6 executes the primitive, and Line 7 returns the result.
-#+end_comment
+distribution specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: Lines 2-12 generate a
+vector of weights for the visit index selection. The weights have a default value of one. Each visit is then indexed in
+reverse order. If the SOC of the visit is less than $\nu_b \kappa_b$, then the weight for the visit is calculated as shown on
+Line 10. The route for BEB $b$ is then set as a "priority" on Line 9 to propagate the previously calculated weight in
+earlier visits for BEB $b$ as shown on Line 5. This is done in an attempt to encourage the SA algorithm to "fix" the
+current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
+with weighted distribution $y^i$, then selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the
+number of primitive generating functions, the selected primitive with a weighted distribution is denoted as $\W^y_{[1,
+n_G]}$. The primitive is then executed, and the results are returned.
 
 #+include: eq/tweak-schedule.org
 
@@ -326,7 +324,4 @@ n_B + 2$. This is done incrementally until all the queues have been exhausted. T
 approach is to explore whether the added up-front computation cost by including the heuristic will positively influence
 the output of the results and to what degree.
 
-At the expense of an additional up-front
-computation cost, the heuristic will attempt to pack the visit optimally in the spacial sense.
-
-#  LocalWords:  metaheuristic linearities BEBs BEB
+#  LocalWords: metaheuristic linearities BEBs BEB

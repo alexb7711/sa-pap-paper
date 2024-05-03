@@ -24,7 +24,7 @@
     \begin{subfigure}[t]{\textwidth}
       \centering
       \includegraphics[width=\textwidth]{img/schedule-milp}
-      \caption{Charging schedule generating by the MILP PAP algorithm.}
+      \caption{Charging schedule generating by the PAP algorithm.}
       \label{subfig:schedule-milp}
     \end{subfigure}
   \end{figure}
@@ -63,7 +63,7 @@
       \begin{subfigure}[t]{\textwidth}
       \centering
           \includegraphics[width=\textwidth]{img/charger-count-fast-milp-qin}
-          \caption{Number of fast chargers for Qin and MILP PAP.}
+          \caption{Number of fast chargers for Qin and PAP.}
           \label{subfig:fast-charger-usage-milp-qinn}
       \end{subfigure}
 
@@ -81,7 +81,7 @@
       \begin{subfigure}[t]{\textwidth}
       \centering
           \includegraphics[width=\textwidth]{img/charger-count-slow-milp-qin}
-          \caption{Number of slow chargers for Qin and MILP PAP.}
+          \caption{Number of slow chargers for Qin and PAP.}
           \label{subfig:slow-charger-usage-milp-qinn}
       \end{subfigure}
       \begin{subfigure}[t]{\textwidth}
@@ -111,7 +111,7 @@
     \begin{subfigure}[t]{\textwidth}
       \centering
       \includegraphics[width=\textwidth]{img/charge-milp}
-      \caption{The bus charges for the MILP PAP charging schedule.}
+      \caption{The bus charges for the PAP charging schedule.}
       \label{subfig:milp-charge}
     \end{subfigure}
     \hfill

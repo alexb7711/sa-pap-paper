@@ -11,10 +11,10 @@
 :END:
 
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
-[[#sec:sa-beb-scenario]] a description of the example scenario is presented followed by a brief introduction of the original
-MILP PAP. An alternative threshold based planning strategy called the Qin-Modified technique, and a heuristic
-modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work. [[#sec:sa-results]]
-presents the results for each of planning strategies. The results are then analyzed and discussed.
+[[#sec:sa-beb-scenario]] a description of the example scenario is presented followed by a brief introduction of the BEB
+implementation of the PAP. An alternative threshold based planning strategy called the Qin-Modified technique, and a
+heuristic modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work.
+[[#sec:sa-results]] presents the results for each of planning strategies. The results are then analyzed and discussed.
 
 ** BEB Scenario
 :PROPERTIES:
@@ -25,19 +25,19 @@ The test scenario was run over a time horizon of $T=24$ hours, with a total of $
 between $n_B = \A$ buses. Each BEB is assumed to have a battery capacity of $\kappa_b =$ \batsize kWh that is required to
 stay above an SOC of $\nu_b =$ \mincharge (src_latex{\fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to begin
 the working day with $\alpha =$ src_latex{\fpeval{\acharge*100}}% charge (src_latex{\fpeval{\acharge * \batsize}} kWh). A
-total of $n_C =$ src_latex{\fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers are slow charging
-(\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p = \Cgain$, $z_c = 1$, and $z_d
-= 10000$ are used. As previously introduced, to encourage the SA PAP to utilize the fewest number of
-chargers, the value of $\epsilon_q$ in the objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B +
-2, ..., n_Q\}; \epsilon_q = 100q$. The SA algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0
-= \tempinit$ with $\beta_2 = 0.999$, resulting in a total of $n_M = \tempcnt$ steps. Rocky Mountain Power utilizes fifteen
-minute intervals to calculate the demand cost [cite:@rocky-mountain-power]. Thus, the demand cost is calculated
-utilizing $T_p =$ src_latex{\fpeval{15*60}} second intervals. A weight vector of $[3, 3, 2, 1]$ is used to influence
-the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm
-also assumes a total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total, that
-results in src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant temperature
-search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
-src_latex{\fpeval{\quicklocal * \tempcnt}} seconds.
+total of src_latex{\fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers are slow charging
+(\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p = \Cgain$, $z_c = 1$, and $z_d = 10000$ are used.
+As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
+objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q$. The SA
+algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\beta = 0.997$,
+resulting in a total of $n_M = \tempcnt$ steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the
+demand cost [cite:@rocky-mountain-power]. Thus, the demand cost is calculated utilizing $T_p =$
+src_latex{\fpeval{15*60}} second intervals. A weight vector of $[3, 3, 2, 1]$ is used to influence the distribution of
+selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm also assumes a
+total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total, that results in
+src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant temperature search took
+an average of $\quicklocal$ seconds to complete, resulting in a total runtime of src_latex{\fpeval{\quicklocal *
+\tempcnt}} seconds.
 
 [[#sec:sa-heuristic-implementation]] introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in [[#sec:sa-generation-mechanisms]], let this
@@ -61,12 +61,12 @@ at the station, or it reaches 95% charge, whichever comes first. Note that UTA s
 other respective thresholds being lowered as well. The higher thresholds implemented in this work were selected in
 attempt to improve the results of the Qin-Modified technique given the specified scenario.
 
-Another methods utilized to compare with against SA PAP is what is known as the MILP PAP. This framework is the original
+Another methods utilized to compare with against SA PAP is what is known as the PAP. This framework is the original
 MILP implementation of the PAP derived from [cite:@qarebagh-2019-optim-sched]. Because this method employs a solver that
 can guarantee optimality, the MILP implementation is utilized in this work as a benchmark for the other schedules. The
-inputs to the system are the same as those discussed above. It is of note that the MILP PAP does not implement the
+inputs to the system are the same as those discussed above. It is of note that the PAP does not implement the
 demand cost in its objective function. In an attempt to compare the solution of the MILP with the SA output more
-directly, a similar solve time of 3600 seconds is utilized. The MILP was executed using the Gurobi MILP solver
+directly, a similar solve time of 1900 seconds is utilized. The MILP was executed using the Gurobi MILP solver
 [cite:@gurobi-2021-gurob-optim]. The previously described simulations were run on a machine equipped with an AMD Ryzen 9
 5900X 12 - Processor (24 core) at 4.95GHz.
 
@@ -77,83 +77,65 @@ directly, a similar solve time of 3600 seconds is utilized. The MILP was execute
 
 The schedules generated by each of the methods is presented in \ref{fig:schedule}. Rows 0-14 represent slow charging
 queues and rows 15-29 represent fast charging queues. The symbols represent the initial charge times, and the horizontal
-line with the vertical tick signifies the region of time the charger is active. A qualitative comparison between the
-different schedules is the sparsity of the quick SA technique. Although the assignment cost was set in place, due to the
-random nature of the queue assignments the simulation was not able to converge to a well-packed or "dense" solution. The
-heuristic approach was able to more successfully able to pack its schedule similarly to the schedule of the MILP PAP.
-The Qin-Modified strategy was able to create a very dense schedule that is simple to employ.
-
-On the quantitative side of the minimization/packing discussion, the Qin-Modified schedule utilizes one fast and two
-slow chargers as can be seen in \ref{subfig:schedule-qin}. The MILP PAP framework generated a schedule that utilizes
+line with the vertical tick signifies the region of time the charger is active. The Qin-Modified schedule utilized two
+fast and slow chargers as can be seen in \ref{subfig:schedule-qin}. The PAP framework generated a schedule that utilizes
 three fast charges and four slow chargers as shown in \ref{subfig:schedule-milp}. The heuristic SA strategy created a
-schedule with eight slow charger queues and four fast charging queues as shown in \ref{subfig:schedule-heuristic-sa}.
-The quick strategy for the SA algorithm created a schedule utilizing fifteen slow and fast chargers as is demonstrated
-in \ref{subfig:schedule-quick-sa}. That is to say, the Qin-Modified schedule was able to most effectively minimize the
-charger count followed by the MILP PAP, and the heuristic SA, the worst being the quick SA technique. The MILP produced
-a schedule with a three charger gap in the fast queues, where the intermediate queues were never used. The heuristic SA,
-while possibly being able to move some assignments to a lower charge queue index (i.e., create a "denser" schedule), did
-not contain any gaps of unused queues. The Qin-Modified utilized the fewest chargers overall. It is worth noting here
-that the SA algorithm has no guarantee of optimality; therefore, post-processing could be applied to further minimize
-the charger indices in an attempt to create a more dense schedule.
+schedule with nine slow charger queues and one fast charging queue as shown in \ref{subfig:schedule-heuristic-sa}. The
+quick strategy for the SA algorithm created a schedule utilizing seven slow chargers and two fast chargers as is
+demonstrated in \ref{subfig:schedule-quick-sa}. That is to say, the Qin-Modified schedule was able to most effectively
+minimize the charger count followed by the PAP, the quick SA, and then the heuristic SA technique. The low charger count
+by the Qin schedule is due to the extensive use of fast chargers throughout the time horizon whereas the PAP and SA
+techniques utilized them more sparingly. At the expense of many slow chargers, the SA techniques chose to utilize fast
+chargers less frequently in their respective schedules showing an emphasis on battery health.
 
-The row labeled "max" in \ref{tab:charge-count} tabulates the total amount of queues the system actually utilized in
-parallel while the schedule row represents the amount of queues the particular schedule requests. Referencing the slow
-charger columns in \ref{tab:charge-count}, the Qin-Modified only utilized 2 slow chargers and only requests two slow
-charging queues. Looking at \ref{subfig:schedule-qin} it is observed that the slow charging queues cannot be further
-reduced. Similarly, the MILP used a maximum of 4 chargers in parallel which is the same as the required amount of queues
-by the schedule. By referencing \ref{subfig:schedule-milp}, it can be seen that the slow chargers cannot be minimized
-any further. The quick SA technique utilized every slow charger, but only employed a maximum of six chargers in
-parallel. This gives a measure to how the queues were sparsely placed as with appropriate packing, only six queues are
-theoretically required with the provided schedule. The heuristic SA utilized a maximum of seven chargers although the
-total queues required by the schedule is nine. As stated before, post-processing could be applied to alleviate this
-problem, although the schedule would still not being quite as well packed as the Qin-Modified or MILP schedules.
+As shown in \ref{subfig:schedule-heuristic-sa} and \ref{subfig:schedule-quick-sa}, the SA techniques were able to create
+schedules that are "dense" spatially, but not temporally. In other words the SA techniques did not utilize the allotted
+time quite as effectively as the Qin or PAP. As there were no constraints encouraging the "closeness" of scheduled
+times, no effort was made by the SA algorithm to pack the schedules temporally.
 
-Similarly for the fast chargers, the Qin-Modified only utilized a single charging queue. The MILP calls for a total of
-three queues, but only ever has a maximum use of two with being utilized at any given moment. The quick SA again
-utilized every fast charger available with a maximum of two chargers being utilized in parallel. The heuristic SA
-technique required four fast charging queues but only used two in parallel. Thus, the Qin-Modified scheduled was able to
-pack the schedule the most efficiently followed by the MILP and heuristic SA schedules.
+\ref{fig:charge} depicts the SOC for each visit throughout the simulation of each framework. [[tab:charge]] tabulates the
+mean, minimum, and maximum SOC upon arrival for each visit. The PAP requires each BEB to stay above an SOC of 25% while
+the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go below the 25% SOC threshold.
+The PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge}) while both SA approaches
+were a few kWh below the threshold. This is further discussed shortly. Due to the threshold constraint being soft, the
+SA objective function may find it more "optimal" to allow a small deficit in the threshold penalty function in favor for
+of another action. As a remedy to ensure the SA schedules stay above the threshold, a safety factor could be introduced
+to artificially increase the threshold, $S_f \nu_{\Xi_i}\kappa_{\Xi_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$.
 
-#+include: tab/charge-count.org
-
-\ref{fig:charge} depicts the initial SOC for each visit throughout the simulation of each framework. \ref{tab:charge}
-tabulates the mean, minimum, and maximum SOC upon arrival for each visit. The MILP PAP requires each BEB to stay above
-an SOC of 25% while the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go below the
-25% SOC threshold. The MILP PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge})
-while both SA approaches were not. The SOC of the quick SA approach dropped to a minimum of 29.9 kWh and the heuristic
-had a minimum SOC of 6.3 kWh as shown in \ref{tab:charge}. The Qin model allowed the SOC of two BEBs to reach an SOC of
-0% as shown in \ref{subfig:qin-charge}. The Qin-Modified strategy, being a purely reactive model, is unable to "sense"
-whether a set of routes has a particularly taxing route later in the time horizon. As such, and in the case of the
-example scenario, the BEBs that reached charges of 0% began with a sequence of short routes, much like the other BEBs.
-However, rather than continuing this trend, these sets of routes had one or two longer routes which the Qin-Modified
-algorithm was unable to account for. To remedy this problem, a safety factor could be introduced to artificially
-increase the threshold, $S_f \nu_{\Xi_i}\kappa_{\Xi_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$. Interestingly, Qin-Modified strategy was able
-to keep the mean SOC the highest followed by the quick SA, heuristic SA, and then the MILP. This is most likely due to
-the higher placement of the low, medium, and high thresholds applied to the algorithm than what is used by Rocky
-Mountain Power. This measure is useful when viewing with respect to \ref{fig:power} and \ref{fig:energy-usage}.
+The SOC of the quick SA approach dropped to a minimum of 95.9 kWh and the heuristic had a minimum SOC of 91.26 kWh as
+shown in [[tab:charge]]. The Qin model allowed the SOC for one of the BEBs to reach 0% as shown in \ref{subfig:qin-charge}.
+The Qin-Modified strategy, being a purely reactive model, does not have foresight to determine whether a set of routes
+has a particularly taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB
+that reached a charge of 0% began with a sequence of short routes, much like the other BEBs. However, rather than
+continuing this trend, these sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to
+account for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA,
+heuristic SA, and then the PAP. The Qin mean SOC being so high is due to the elevated placements of the low, medium, and
+high thresholds applied to the algorithm than what is used by Rocky Mountain Power.
 
 #+include: tab/charge.org
 
-\ref{fig:power} depicts the power consumption over the time horizon for each model. As previous stated, the Qin-Modified
-schedule had the highest mean SOC over the working day. Referencing \ref{fig:power-usage-milp-qin}, the Qin, while
-staying below 1000 kW, is held at that level of power consumption for long periods of time. Similarly, the quick SA,
-heuristic SA, and the MILP show that as the average SOC goes down, so does the demand. That is, there is a correlation
-that suggests that if a schedule has a lower average SOC, the required demand (and total energy consumption which will
-be discussed shortly) is also lower.
+\ref{fig:power} depicts the power utilized over the time horizon for each model. As previous stated, the Qin-Modified
+schedule had the highest mean SOC over the working day. Referencing \ref{fig:power-usage-milp-qin}, the Qin maintained
+long periods of steady slow and fast charger use. This is again a symptom of the Qin-Modified strategy placing BEBs on
+chargers solely based on the SOC upon arrival. The PAP and SA techniques, while having peaks in the first half of the
+time horizon, were able to effectively maintain low demand profiles during slower moments throughout the day.
+\ref{fig:power} is also of interest as it shows the peak power demand over the time horizon. The peaks for each schedule
+in descending order are: the Qin-Modified at 3640 kW, the quick SA at 2032 kW, the PAP at 1910 kW, and the heuristic SA
+at 1151 kW. These values are also tabulated in \ref{tab:power}. While the quick SA was unable to beat the PAP in peak
+demand (881 kW difference), the heuristic SA was able to keep the peak power demand at 1151 kW, which is 759 kW less
+than the PAP peak demand. The added queue selection bias toward slow chargers assisted the heuristic SA to converge more
+quickly. The quick SA technique has a slower rate of convergence due to its random queue placement.
 
-\ref{fig:power} is also of interest as it plots the peak power demand over the time horizon. The peaks in descending
-order are: the quick and heuristic SA, tied at 1191.9 kW, the MILP at 1910 kW, and then the Qin at 970 kW. Although the
-Qin had the lowest peak, it is again worth noting that the Qin-Modified technique was unable to keep the SOC of all the
-BEBs above 0%. The MILP and quick and heuristic SA are comparable in terms of the demand cost having a total difference
-of src_latex{\fpeval{1191.9 - 1910}} kW. However, when viewing the mean power consumption in descending order paints a
-different picture. The largest mean power demand is the Qin-Modified at 424.95 kW, quick SA at 257.98 kW, heuristic SA
-at 198.84 kW, and then the MILP at 177.34 kW. The Qin-Modified, as shown in \ref{fig:power-usage-milp-qin}, although
-having the lowest peak, holds the power for a long duration as previously discussed. This directly correlates into the
-energy consumed by each schedule.
+The heuristic SA was more effective as it was able to remove a fast charger by encouraging the
+use of slow chargers whereas the quick technique did not.
 
 #+include: tab/power.org
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
-least is as follows: Qin-Modified, quick SA, heuristic SA, and the MILP PAP. The respective energy consumption for each
-technique is: 10198.799 kWh, 6303.1704 kWh, 4797.746 kWh, and 4256.746 kWh. The heuristic SA consuming about 988 kWh
-more than the MILP PAP.
+least is as follows: Qin-Modified, quick SA, heuristic SA, and the PAP. The respective energy consumption for each
+technique is: 10,198.800 kWh, 4480.091 kWh, 4422.556 kWh, and 4237.200 kWh. The heuristic SA consuming about 185.356 kWh
+more than the PAP. While the quick and heuristic SA were unable to match the PAP in energy consumption, it is a trade
+off made by increasing the number of slow chargers and charge duration, and reducing the peak demand. Referencing
+[[tab:charge]] and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of consumed
+energy is correlated to the descending order of the mean SOC and the descending order of the mean power demand. This
+makes sense as a higher mean SOC implies the chargers being active more often; similarly for the mean demand.
