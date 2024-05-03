@@ -115,9 +115,9 @@ queues are for when a bus is not to be placed on a charger. Rather, it will be p
 satisfies the previously defined spatial constraints while allowing the bus to be "set aside". The charge queues are
 denoted by $q \in \{1, ..., n_B , n_B + 1, ..., n_Q\}$.
 
-Recall the dot notation is used to extract variables from tuples. For example, suppose the arrival time is desired to be
-extracted from visit $i$. Given $\I$, the notation that describes extracting the initial charge time for visit $i$ is
-written as $u_i \equiv \I_{i.u}$.
+As a means of keeping notation consistent, dot notation is used to extract variables from tuples. For example, suppose
+the arrival time is desired to be extracted from visit $i$. Given $\I$, the notation that describes extracting the
+initial charge time for visit $i$ is written as $u_i \equiv \I_{i.u}$.
 
 **** New visit
 :PROPERTIES:
@@ -261,8 +261,8 @@ of \ref{alg:new-visit}.
 :CUSTOM_ID: sec:sa-generator-wrappers
 :END:
 
-The generator wrappers provide the highest level of abstraction from which the SA algorithm will directly interact.
-These wrapper functions utilize the primitive generators previously described to either create a new charge schedule to
+The generator wrappers provide the highest level of abstraction from which the SA algorithm directly interacts. These
+wrapper functions utilize the primitive generators previously described to either create a new charge schedule to
 initialize the SA algorithm, or to modify an existing schedule.
 
 **** Charge Schedule Generation
@@ -271,7 +271,7 @@ initialize the SA algorithm, or to modify an existing schedule.
 :END:
 
 The objective of \ref{alg:charge-schedule-generation} is introduce a method that provides the SA algorithm with an
-initial charging schedule. The schedule generation is chosen to initialize the algorithm in a greedier manner by looping
+initial charging schedule. The schedule generation is chosen to initialize the algorithm in a greedy manner by looping
 through each visit and executing \ref{alg:new-visit} to place visit $i$ at random queue with a random charge time.
 
 #+begin_comment
@@ -324,7 +324,4 @@ n_B + 2$. This is done incrementally until all the queues have been exhausted. T
 approach is to explore whether the added up-front computation cost by including the heuristic will positively influence
 the output of the results and to what degree.
 
-At the expense of an additional up-front
-computation cost, the heuristic will attempt to pack the visit optimally in the spacial sense.
-
-#  LocalWords:  metaheuristic linearities BEBs BEB
+#  LocalWords: metaheuristic linearities BEBs BEB

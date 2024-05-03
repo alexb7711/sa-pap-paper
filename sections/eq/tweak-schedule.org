@@ -22,7 +22,7 @@
             \tcc{Else if the current visit's SOC does below the allowed threshold}
             \ElseIf{$\I_{i.\eta} \le \nu_{\I_{i.b}} \kappa_{\I_{i.b}}$}{
                 $p_{\I_{i.b}} = true$\tcc*{Indicate the current BEB's routes are to be prioritized}
-                $y^i_{\I_i} = \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
+                $y^i_{\I_i} = \kappa_{\I_{i.b}} + \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
             }
         }
         $\I_i\leftarrow\; \W^{y^i}_{\I}$\tcc*{Select an index with a weighted distribution}

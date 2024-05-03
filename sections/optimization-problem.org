@@ -85,10 +85,9 @@ times, the bus is also assigned a charging queue, $q_i \in \Qset$.
 Recall the initial SOC for a visit is written as $\eta_i$, where $i \in \Iset \setminus \Iset_0$. Further recall the set of initial
 visits, $\Iset_0$, have an assumed known SOC (i.e., the initial SOC of each BEB at the beginning of the working day is
 considered as an input parameter). The exclusion $i \in \Iset \setminus \Iset_0$ extracts the set of indices for which the initial
-SOC of the visit is unknown as the initial charge for visit $i \in \Iset \setminus \Iset_0$ forms the foundation from which the
-SOC of the next visit, $\eta_{\xi_i}$, is calculated. The charge for bus $i$'s next visit is equal to the initial charge for
-visit $i$ plus the charge added to it by charger $q_i$ over duration $s_i = d_i - u_i$ minus the discharge accumulated
-over route $i$,
+SOC of the visit are unknown. The initial SOC for each visit in $i \in \Iset \setminus \Iset_0$ forms the foundation for the SOC
+of the next visit, $\eta_{\xi_i}$. The charge for bus $i$'s next visit is equal to the initial charge for visit $i$ plus the
+charge added to it by charger $q_i$ over duration $s_i = d_i - u_i$ minus the discharge accumulated over route $i$,
 
 #+name: eq:bat-chain
 \begin{equation}
@@ -142,8 +141,8 @@ $[d_i, \T]$.
 
 This work aims to minimize the total "cost" of utilizing a given charge schedule. Let $J(\I)$ represent the objective
 function. The objective function for this problem has four main considerations: charger assignment, consumption cost,
-demand cost, and penalty for an insufficient initial SOC. Each of which will be discussed in turn throughout the
-subsequent sections.
+demand cost, and a penalty method for visits with insufficient SOCs. Each of which will be discussed in turn throughout
+the subsequent sections.
 
 *** Assignment Cost
 :PROPERTIES:
@@ -157,32 +156,33 @@ The assignment cost represents the costs of assigning a bus to a particular queu
 \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i}\text{.}
 \end{equation}
 
-This is effectively the cost of selecting queue $q_i$. In [[#sec:sa-example]], a particular choice for the assignment cost
-is made to encourage the use of slow chargers over fast for the sake of battery health. The charger queue indices are
-ordered such that the first $n_B$ queues correspond to idle queues. This allows all BEBs to simultaneously sit idle if
-needed. All $n_B$ idle queues have assignment costs of zero to denote that there is no cost when not charging. The next
-group of chargers is assumed to be the slow chargers subsequently followed by the fast. Let the set of slow and fast
-charging queues be of the form $[P, 2P, ..., n_QP]$. Concatenating these vectors yields $\epsilon = [[0; n_B], [P, 2P, 3P,
-...]$, where $\epsilon$ describes the vector of assignment costs and $[0; n_B]$ is used to denote a vector populated with zeros
-of length $n_B$.
+This is effectively the cost of selecting queue $q_i$. While any set of weight may be selected, in [[#sec:sa-example]], a
+particular choice for the assignment cost, $\epsilon_{q_i}$, is made to encourage the use of slow chargers over fast for the
+sake of battery health. The charger queue indices are ordered such that the first $n_B$ queues correspond to idle
+queues. This allows all BEBs to simultaneously sit idle if needed. All $n_B$ idle queues have assignment costs of zero
+to denote that there is no cost when not charging. The next group of chargers is assumed to be the slow chargers
+subsequently followed by the fast. Let the set of slow and fast charging queues be of the form $[P, 2P, ..., n_QP]$.
+Concatenating these vectors yields $\epsilon = [[0; n_B], [P, 2P, 3P, ...]$, where $\epsilon$ describes the vector of assignment costs
+and $[0; n_B]$ is used to denote a vector populated with zeros of length $n_B$.
 
 *** Penalty Method
 :PROPERTIES:
 :CUSTOM_ID: sec:sa-penalty-method
 :END:
 
-A penalty method is to be implemented to provide a soft constraint on the lower bound of the charge. A hard constraint
-restricts the set of allowable schedules to only operationally feasible schedules. Due to the uncertainty of the initial
-SOC for each visit, a soft constraint is employed to increase the solution space while penalizing non-operationally
-feasible solutions. Let the piecewise function that enables/disables the penalty method be of the form
+A penalty method is to be implemented to provide a soft constraint on the lower bound of the charge. Due to the
+uncertainty of the initial SOC for each visit, a soft constraint is employed to increase the solution space while
+penalizing non-operationally feasible solutions. If a hard constraint were to be implemented, the constraint would
+restrict the set of allowable schedules to only operationally feasible schedules. Let the piecewise function that
+enables/disables the penalty method be of the form
 
 #+include: eq/penalty.org
 
 Letting $x = \eta_i - \nu_{b_i} \kappa_{b_i}$ applies a penalty proportional to the difference of the SOC and the threshold
 squared, where $\eta_i$ is the initial SOC for visit $i$ and $\nu_{b_i} \kappa_{b_i}$ is the minimum charge threshold. Using the
-form of [[eq:penalty]] with and added scalar, $z_p$, is employed so that the cost of deviating from the threshold heavily
-influences the outcome of the objective function. Particularly, this method is employed as a means of guaranteeing
-enough charge for each BEB to complete its next route. Therefore, the penalty method is written as
+form of [[eq:penalty]] with and added scalar, $z_p$, is employed so that the cost of deviating from the threshold influences
+the outcome of the objective function. Particularly, this method is employed as a means of encouraging that the schedule
+has enough charge for each BEB to complete its next route. Therefore, the penalty method is written as
 
 #+name: eq:penalty-method
 \begin{equation}
@@ -212,7 +212,7 @@ that the charger will be utilized, $s_i$.
 :CUSTOM_ID: sec:sa-demand-cost
 :END:
 
-Utility companies often charge a "demand cost" in an effort to reduce peak demand usage. A particular example of peak
+Utility companies often charge a "demand cost" in an effort to reduce peak power use. A particular example of peak
 demand is the fifteen minute average energy usage employed by Rocky Mountain Power Schedule 8
 [cite:@rocky-mountain-power].
 

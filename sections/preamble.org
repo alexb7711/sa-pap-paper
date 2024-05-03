@@ -6,7 +6,7 @@
 # =========================================================================================================================
 # LaTeX packages
 #+latex_header: \usepackage{subcaption}                     % Subfigures
-#+latex_header: \usepackage{ulem}                           % Underline
+# +latex_header: \usepackage{ulem}                           % Underline
 #+latex_header: \usepackage[ruled]{algorithm2e}             % Algorithms
 #+latex_header: \usepackage{listings}                       % Code in LaTeX
 #+latex_header: \usepackage{listings-rust}                  % Code in LaTeX

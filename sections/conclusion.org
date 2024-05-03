@@ -14,11 +14,14 @@ schedule. Another threshold-based strategy called the Qin-Modified technique was
 the schedules. The SA PAP was run utilizing two different neighborhood searching techniques named the "quick" and
 "heuristic" techniques, respectively. The quick SA's objective was to randomly search a wide neighborhood while the
 heuristic technique was designed to incrementally search a neighborhood by randomly selecting a fast or slow charging
-queue and then stepping through the queues one at a time. The quick and heuristic have somewhat comparable run times at
-src_latex{\fpeval{\quicklocal * \tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds,
-respectively. The Qin-Modified utilized the fewest amount of chargers followed by the MILP, quick SA, then the heuristic
-SA. The Qin-Modified strategy heavily favored the use of fast chargers, whereas the other methods used fast charges
-sparingly. The SA techniques favored higher number of slow chargers with longer charge durations in comparison to the
+queue and then stepping through the queues one at a time. The quick SA has a faster execution time than the heuristic SA
+at src_latex{\quicklocal} and src_latex{\heuristiclocal} seconds to execute their respective inner loops. The execution
+time compounds as the number of iterations in the cooling function increases as shown by the respective quick and
+heuristic execution times: src_latex{\fpeval{\quicklocal * \tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal *
+\tempcnt}} seconds. However, this trade off for speed made up for the performance of the heuristic technique. The
+Qin-Modified utilized the fewest amount of chargers followed by the MILP, quick SA, then the heuristic SA. The
+Qin-Modified strategy heavily favored the use of fast chargers, whereas the other methods used fast charges sparingly.
+Particularly, the SA techniques favored higher number of slow chargers with longer charge durations in comparison to the
 PAP. All the schedules were able to pack their schedules spatially well, the fast chargers for MILP and quick SA being
 exceptions. However, unlike the Qin and PAP methods, the SA techniques were not as successful in packing the schedule
 temporally.
@@ -27,8 +30,8 @@ Both of the SA techniques were unable to keep the SOC above the 25% SOC threshol
 heuristic SA and 95.91 kWh for the quick SA. Due to the minimum charge threshold being a soft constraint for the SA, the
 algorithm found another action to be more favorable at the expense of breaching the threshold slightly. The
 Qin-Modified, on the other hand, had the SOC of one BEB fall to 0% SOC. The schedule that consumed the least amount of
-energy is the PAP (4237.2 kW) with the heuristic SA coming in second (4420.091 kW). The difference between the two being
-about src_latex{\fpeval{4420.091 - 4237.2}} kWh. The heuristic SA was able to lower the peak demand to 1150.95 kW
+energy is the PAP (4237.2 kW) with the heuristic SA coming in second (4422.556 kW). The difference between the two being
+about src_latex{\fpeval{4422.556 - 4237.2}} kWh. The heuristic SA was able to lower the peak demand to 1150.95 kW
 beating the MILP at 1910 kW and the quick SA at 2031.9 kW.
 
 Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a
