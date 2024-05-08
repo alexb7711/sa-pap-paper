@@ -23,30 +23,31 @@ heuristic modification to the SA PAP are also used as comparisons to the SA PAP 
 
 The test scenario was run over a time horizon of $T=24$ hours, with a total of $n_V = \N$ visits to the station shared
 between $n_B = \A$ buses. Each BEB is assumed to have a battery capacity of $\kappa_b =$ \batsize kWh that is required to
-stay above an SOC of $\nu_b =$ \mincharge (src_latex{\fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to begin
-the working day with $\alpha =$ src_latex{\fpeval{\acharge*100}}% charge (src_latex{\fpeval{\acharge * \batsize}} kWh). A
-total of src_latex{\fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers are slow charging
-(\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p = \Cgain$, $z_c = 1$, and $z_d = 10000$ are used.
-As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of $\epsilon_q$ in the
-objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q$. The SA
-algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with $\beta = 0.997$,
-resulting in a total of $n_M = \tempcnt$ steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the
-demand cost [cite:@rocky-mountain-power]. Thus, the demand cost is calculated utilizing $T_p =$
-src_latex{\fpeval{15*60}} second intervals. A weight vector of $[3, 3, 2, 1]$ is used to influence the distribution of
-selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm also assumes a
-total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total, that results in
-src_latex{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant temperature search took
-an average of $\quicklocal$ seconds to complete, resulting in a total runtime of src_latex{\fpeval{\quicklocal *
-\tempcnt}} seconds.
+stay above an SOC of $\nu_b =$ \mincharge (src_latex{\num{fpeval{\batsize * \minchargeD}}} kWh). Each bus is assumed to
+begin the working day with $\alpha =$ src_latex{\num{fpeval{\acharge*100}}}% charge (src_latex{\num{fpeval{\acharge *
+\batsize}}} kWh). A total of src_latex{\num{fpeval{\fast + \slow}}} chargers are utilized where \slow of the chargers
+are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p = \Cgain$, $z_c = 1$, and $z_d
+= 10000$ are used. As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value
+of $\epsilon_q$ in the objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q
+= 100q$. The SA algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0 = \tempinit$ with
+$\beta = 0.997$, resulting in a total of $n_M = \tempcnt$ steps. Rocky Mountain Power utilizes fifteen-minute intervals to
+calculate the demand cost [cite:@rocky-mountain-power]. Thus, the demand cost is calculated utilizing $T_p =$
+src_latex{\num{fpeval{15*60}}} second intervals. A weight vector of $[0.6255, 0.6255, 0.4170, 0.2085]$ is used to
+influence the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The
+algorithm also assumes a total of $n_K = \localcnt$ iterations for the local search at a constant temperature. In total,
+that results in src_latex{\num{\fpeval{\localcnt * \tempcnt}}} configurations being searched. On average each constant
+temperature search took an average of $\quicklocal$ seconds to complete, resulting in a total runtime of
+src_latex{\num{fpeval{\quicklocal * \tempcnt}}} seconds.
 
 [[#sec:sa-heuristic-implementation]] introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in [[#sec:sa-generation-mechanisms]], let this
 implementation be referred to as "heuristic" implementation and the previous as the "quick" implementation due to the
 fact that it is designed to execute more quickly. Using the same weights for randomly selecting the primitive
-generators, the heuristic approach further implemented a weighted distribution vector of $[3, 1]$ to decide whether to
-select a slow or fast charger, respectively. In the heuristic approach, on average the constant temperature search took
-a total of $\heuristiclocal$ seconds to complete, resulting in a total runtime of src_latex{\fpeval{\heuristiclocal *
-\tempcnt}} seconds. The heuristic generators were expected to be slightly slower due to its iterative approach.
+generators, the heuristic approach further implemented a weighted distribution vector of $[0.9487, 0.3162]$ to decide
+whether to select a slow or fast charger, respectively. In the heuristic approach, on average the constant temperature
+search took a total of $\heuristiclocal$ seconds to complete, resulting in a total runtime of
+src_latex{\num{\fpeval{\heuristiclocal * \tempcnt}}} seconds. The heuristic generators were expected to be slightly
+slower due to its iterative approach.
 
 The Qin-Modified is a threshold-based strategy that is also employed as a means of comparison with the results of the SA
 PAP. The Qin-Modified algorithm is a based on the threshold strategy of [cite:@qin-2016-numer-analy]. The algorithm has

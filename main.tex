@@ -1,4 +1,4 @@
-% Created 2024-05-03 Fri 13:28
+% Created 2024-05-08 Wed 15:21
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -158,6 +158,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \usepackage{amsfonts}                       % Cool math fonts
 \usepackage{tabularx}                       % Cool tables
 \usepackage{multicol}                       % Add capability to make columns
+\usepackage[group-separator={,}, group-minimum-digits=3]{siunitx}   % Format numbers
 \usepackage{soul}                           % Highlight text
 \usepackage[stable]{footmisc}               % Allow footnotes in section headers
 \setlength\parindent{0pt}                   % No indent for paragraphs
@@ -401,11 +402,11 @@ manipulate. The variables to be introduced are summarized in \ref{tab:sa-variabl
 \subsubsection{Input Parameters}
 \label{sec:sa-input-variables}
 Parameters are used to indicate value that are assumed to be known prior to optimization. They will be presented in two
-sections: packing and discretization parameters then battery dynamic parameters. The packing and discretization
-parameters are those that are associated with visit placement and the method of discretizing the time horizon and the
-battery dynamic parameters are those associated with the SOC of the BEB.
+sections: packing and discretization parameters then battery dynamic parameters. The spatiotemporal parameters are those
+that ensure no scheduling overlap in either space or time. The discretization parameters describe the parameters that
+discretize the time horizon, and the battery dynamic parameters are those associated with the SOC of the BEB.
 
-\paragraph{Packing and Discretization Parameters}
+\paragraph{Spaciotemporal and Discretization Parameters}
 \label{sec:sa-packing-and-discretization-paramaters}
 As previously introduced, \(\xi_i\) represents the next arrival index for bus \(b_i\). As an example of its use, suppose the
 ID of each BEB is recorded in order of arrival as \(\{ 2,1,3,2 \}\). Using a starting index of 1, \(\xi_1 = 4\) as that is the
@@ -420,31 +421,25 @@ It is assumed that each bus begins the working day with an initial SOC percentag
 visits by each BEB be denoted as \(\Isetinit\) where \(\Isetinit \subset \Iset\) and the cardinality of the set is \(\lvert
 \Isetinit \rvert = n_B\). The initial SOC for bus \(b_i\) can be represented as \(\eta_{i} = \alpha_{b_i}\kappa_{b_i}; \forall i \in \Isetinit\)
 where \(\kappa_{b_i}\) is the battery capacity for bus \(b_i\). After each arrival, the BEB is assigned to a charging queue. Let
-\(r_q\) represent the power supplied from the charger in queue \(q \in Q\). Each visit, exception for the final visit for each
-BEB, is paired with a route that has an associated amount energy required to complete, \(\Delta_i\). As alluded to earlier,
-there are no routes after the last visit for each BEB. Thus, similarly to the set of initial visits, let the set of
-final visits for all BEBs be denoted as \(\Isetfinal\). The discharge for the final visit of each BEB is then defined as
-\(\Delta_{i} = 0; \forall i \in \Isetfinal\).
+\(r_q\) represent the power supplied from the charger in queue \(q \in Q\). Each visit, except for the final visit of each
+BEB, is paired with a route that has a required amount energy to complete, \(\Delta_i\). As alluded to earlier, there are no
+routes after the last visit for each BEB. Thus, similarly to the set of initial visits, let the set of final visits for
+all BEBs be denoted as \(\Isetfinal\). The discharge for the final visit of each BEB is then defined as \(\Delta_{i} = 0; \forall i \in
+\Isetfinal\).
 
 \subsubsection{Decision Variables}
 \label{sec:sa-decision-variables}
-Decision variables are those chosen by the optimizer. The variables will be broken into two sections: direct and slack
-variables. Direct decision variables are those that the system manipulates directly, and slack variables are those that
-are functions of the direct.
+Decision variables are those chosen by the optimizer. There are three direct decision variables for each visit, i.e.,
+direct referring to the variables that the optimizer has immediate control over. The direct variables include initial
+and final charging times, \(u_i\) and \(d_i\), respectfully, as well as the bus is also assigned a charging queue, \(q_i \in
+\Qset\).
 
-\paragraph{Direct Decision Variables}
-\label{sec:sa-direct-decision-variables}
-The optimizer has direct control over the initial and final charging times, \(u_i\) and \(d_i\), respectfully. Along with
-the assigned charge times, the bus is also assigned a charging queue, \(q_i \in \Qset\).
-
-\paragraph{Slack Variables}
-\label{sec:sa-slack-decision-variables}
-Recall the initial SOC for a visit is written as \(\eta_i\), where \(i \in \Iset \setminus \Iset_0\). Further recall the set of initial
-visits, \(\Iset_0\), have an assumed known SOC (i.e., the initial SOC of each BEB at the beginning of the working day is
-considered as an input parameter). The exclusion \(i \in \Iset \setminus \Iset_0\) extracts the set of indices for which the initial
-SOC of the visit are unknown. The initial SOC for each visit in \(i \in \Iset \setminus \Iset_0\) forms the foundation for the SOC
-of the next visit, \(\eta_{\xi_i}\). The charge for bus \(i\)'s next visit is equal to the initial charge for visit \(i\) plus the
-charge added to it by charger \(q_i\) over duration \(s_i = d_i - u_i\) minus the discharge accumulated over route \(i\),
+The remaining variables are slack variables which are introduced to track the vehicle charge and queuing position based
+on the problem parameters and direct decision variables. Recall the initial SOC for a visit is written as \(\eta_i\), where
+\(i \in \Iset \setminus \Iset_0\). Further recall the set of initial visits, \(\Iset_0\), have an assumed known SOC (i.e., the initial
+SOC of each BEB at the beginning of the working day is considered as an input parameter). The charge for bus \(i\)'s next
+visit is equal to the initial charge for visit \(i\) plus the charge added to it by charger \(q_i\) over duration \(s_i =
+d_i - u_i\) minus the discharge accumulated after visit \(i\),
 
 \begin{equation}
 \label{eq:bat-chain}
@@ -478,21 +473,23 @@ the subsequent sections.
 
 \subsubsection{Assignment Cost}
 \label{sec:sa-assignment-cost}
-The assignment cost represents the costs of assigning a bus to a particular queue. The assignment cost is written as
+The assignment cost represents the cost of assigning a bus to a queue. Particularly, the cost consists of summing a
+prescribed weight for the selected charger, \(\epsilon_{q_i}\), multiplied by the charge rate, \(r_q\). Formally, the cost is
+written as follows:
 
 \begin{equation}
 \label{eq:assignment-cost}
 \sum_{i=1}^{n_V} \epsilon_{q_i}r_{q_i}\text{.}
 \end{equation}
 
-This is effectively the cost of selecting queue \(q_i\). While any set of weight may be selected, in \ref{sec:sa-example}, a
-particular choice for the assignment cost, \(\epsilon_{q_i}\), is made to encourage the use of slow chargers over fast for the
-sake of battery health. The charger queue indices are ordered such that the first \(n_B\) queues correspond to idle
-queues. This allows all BEBs to simultaneously sit idle if needed. All \(n_B\) idle queues have assignment costs of zero
-to denote that there is no cost when not charging. The next group of chargers is assumed to be the slow chargers
-subsequently followed by the fast. Let the set of slow and fast charging queues be of the form \([P, 2P, ..., n_QP]\).
-Concatenating these vectors yields \(\epsilon = [[0; n_B], [P, 2P, 3P, ...]\), where \(\epsilon\) describes the vector of assignment costs
-and \([0; n_B]\) is used to denote a vector populated with zeros of length \(n_B\).
+This is effectively the cost of selecting queue \(q_i\). While any set of weights may be selected, \ref{sec:sa-example} uses a
+particular choice for the assignment cost to encourage the use of slow chargers over fast for the sake of battery
+health. The charger queue indices are ordered such that the first \(n_B\) queues correspond to idle queues. This allows
+all BEBs to simultaneously sit idle if needed. All \(n_B\) idle queues have assignment costs of zero to denote that there
+is no cost when not charging. The next group of chargers is assumed to be the slow chargers subsequently followed by the
+fast. Let \(P \in \mathbb{R}\), then the set of slow and fast charging queues be of the form \([P, 2P, ..., n_QP]\). Concatenating
+these vectors yields \(\epsilon = [0, 0, ... P, 2P, 3P, ...]\), where \(\epsilon\) describes the vector of assignment costs and the first
+\(n_B\) values are zero.
 
 \subsubsection{Penalty Method}
 \label{sec:sa-penalty-method}
@@ -511,11 +508,11 @@ enables/disables the penalty method be of the form
   \end{cases}
 \end{equation}
 
-Letting \(x = \eta_i - \nu_{b_i} \kappa_{b_i}\) applies a penalty proportional to the difference of the SOC and the threshold
-squared, where \(\eta_i\) is the initial SOC for visit \(i\) and \(\nu_{b_i} \kappa_{b_i}\) is the minimum charge threshold. Using the
-form of \ref{eq:penalty} with and added scalar, \(z_p\), is employed so that the cost of deviating from the threshold influences
-the outcome of the objective function. Particularly, this method is employed as a means of encouraging that the schedule
-has enough charge for each BEB to complete its next route. Therefore, the penalty method is written as
+Letting \(x\) be defined by the difference of the initial SOC for visit \(i\), \(\eta_i\), and the minimum charge threshold,
+\(\nu_{b_i}\kappa_{b_i}\), applies a penalty proportional to the difference of the SOC and the threshold squared. That is, \(x =
+\eta_i - \nu_{b_i} \kappa_{b_i}\). A scalar, \(z_p\), is added which can be utilized either as a monetary conversion or a simple
+gain. This method is employed as a means of encouraging that the schedule has enough charge for each BEB to complete its
+next route. Therefore, the penalty method is written as
 
 \begin{equation}
 \label{eq:penalty-method}
@@ -567,23 +564,14 @@ begins to increase. Let this fixed threshold be defined as \(p_{fix}\), the dema
 p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 \end{equation}
 
-Thus, \ref{eq:pdem} defines the continuous form of maximum average demand cost found during a pay period. Although the
-charge times for each BEB are continuous, due to the discrete nature of visits, it difficult to determine the
-instantaneous power usage in continuous terms. As such, it is simpler to calculate a vector of discrete power use over
-the time horizon from which the average power demand may be approximated. To discritize \(p_d\), let \(h \in \{ 1, 2, ...,
-n_H \} \subset \mathcal{Z}\) where \(n_H\) is the total number of steps. Furthermore, let \(p\) define the vector of discrete power demand
-over the time horizon and let \(p_h \in p\) be the demand over time step \(h\). For conciseness of notation \(t_h\) will be
-abused to denote the time in discrete form (as opposed to \(t\) being continuous) and let \(dt = t_h - t_{h-1}\). Each entry
-\(p_h \in p\) is found by taking the summation of \(r_{v_i}\) for all the chargers active during the time interval \([t_h,
-t_h + dt]\). Thus, having an estimate of the demand over each step, the average demand can be calculated by taking an
-average of the Riemann sum over each \(T_p\) interval as follows:
+For the sake of implementation, the integral in \ref{eq:p} is discretized. Let \(dt\) denote the discretization time step and
+\(p_h\) the power at discrete step \(h\), \ref{eq:p} is approximated as
 
 \begin{equation}
-p_{T_p}[h] = \frac{1}{T_p} \sum_{h-\frac{T_p}{dt}+1}^h p_h,
+p_{T_p,h} = \frac{1}{T_p} \sum_{k = h-\frac{T_p}{dt}+1}^h p_k dt\text{.}
 \end{equation}
 
-where \(T_p \le h \le n_H\). Similarly to before, the maximum \(p_{T_p}[h]\) value is to be retained via \(p_{max} =
-\max\limits_{h \in H}p_{T_p}[h]\). Thus, the discrete demand cost is expressed as
+The discrete demand cost is expressed as
 
 \begin{equation}
 \label{eq:pd-dis}
@@ -591,7 +579,9 @@ where \(T_p \le h \le n_H\). Similarly to before, the maximum \(p_{T_p}[h]\) val
 \end{equation}
 
 Similarly to the consumption cost, a scaling \(z_d\) is applied. Again, this may be a monetary conversion or simply just a
-gain. Thus, the objective function written in its entirety is
+gain.
+
+The objective function written in its entirety is
 
 \begin{equation}
 \label{eq:objective-function}
@@ -795,11 +785,11 @@ charger, adjust a bus visits initial and final charge time within the same time 
 to another with the same charge schedule, move a bus to its idle queue. Each generator will be discussed in more detail
 in \ref{sec:sa-generators}.
 
-These generation mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
-an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate solution and alter
-it slightly in an attempt to step toward a global or local minimum. The wrapper functions will be discussed in
-\ref{sec:sa-generator-wrappers}. However, prior to discussing the primitives and wrapper generating functions, their respective
-inputs and outputs must be defined.
+These primitive generation mechanisms will, in turn, be utilized by two wrapper functions. The charge schedule generator
+is to used create an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate
+solution and alter it slightly in an attempt to step toward a global or local minimum. The wrapper functions will be
+discussed in \ref{sec:sa-generator-wrappers}. However, prior to discussing the primitives and wrapper generating functions,
+their respective inputs and outputs must be defined.
 
 \subsubsection{Generator Input/Output}
 \label{sec:sa-generator-input-output}
@@ -810,21 +800,21 @@ with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar
 
 \subsubsection{Generators}
 \label{sec:sa-generators}
-The mechanism by which candidate solutions are generated is to be introduced. Recall that to satisfy
-constraints, \(n_B\) extra idle queues are added that provide no power to the BEB. Because of this, the set of queues is
-fully defined where \(Q\) is the ordered set of idle queues, slow queues, then fast queue. The use case for the idle
-queues are for when a bus is not to be placed on a charger. Rather, it will be placed in the queue, \(q \in B\), which
+The mechanism by which candidate solutions are generated is introduced in the subsequent sections. Recall that to
+satisfy constraints, \(n_B\) extra idle queues are added that provide no power to the BEB. Because of this, the set of
+queues is fully defined where \(Q\) is the ordered set of idle queues, slow queues, then fast queue. The use case for the
+idle queues are for when a bus is not to be placed on a charger. Rather, it will be placed in the queue, \(q \in B\), which
 satisfies the previously defined spatial constraints while allowing the bus to be ``set aside''. The charge queues are
 denoted by \(q \in \{1, ..., n_B , n_B + 1, ..., n_Q\}\).
 
-As a means of keeping notation consistent, dot notation is used to extract variables from tuples. For example, suppose
-the arrival time is desired to be extracted from visit \(i\). Given \(\I\), the notation that describes extracting the
-initial charge time for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
+For the sake of ease in referring to the various variables associated with a visit, dot notation is used. For example,
+suppose the arrival time is desired to be extracted from visit \(i\). Given \(\I\), the notation that describes extracting
+the initial charge time for visit \(i\) is written as \(u_i \equiv \I_{i.u}\).
 
 \paragraph{New visit}
 \label{sec:sa-new-visit}
 The new visit generator defined in \ref{alg:new-visit} describes the process of moving a BEB, \(b \in B\), from a waiting
-queue, \(q \in B\), to a charging queue, \(q_i \in \{n_B + 1, ..., n_Q\}\), within its arrival/departure time \([a, e]\). Let
+queue, \(q \in B\), to a charging queue, \(q_i \in \{n_B + 1, ..., n_Q\}\), within its arrival/departure time \([a_i, e_i]\). Let
 \(\U_{\{\cdot\}}\) indicate that an element is selected randomly with a uniform distribution from the set \(\{\cdot\}\). For
 example, \(\U_{[a_i, e_i]}\) indicates that a value will be selected between \(a\) and \(e\) with a uniform distribution.
 \ref{alg:new-visit} begins by extracting variables. Lines 6 and 7 randomly select a charging queue and available time
@@ -1022,11 +1012,7 @@ through each visit and executing \ref{alg:new-visit} to place visit \(i\) at ran
 
 \paragraph{Perturb Schedule}
 \label{sec:sa-tweak-schedule}
-Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
-create candidate solutions. After each step of the cooling equation, the active solution will be altered \(n_K\) times by
-a random primitive generator. During these \(n_K\) iterations the active solution is modified to create a neighboring
-candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
-\ref{sec:sa-acceptance}. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
+\ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb a given charge
 schedule. The method that will be employed to generate neighboring solutions is as follows: pick a visit, pick a
 primitive generator, and execute said primitive generator once. Let \(\W^y_{[\cdot]}\) denote a random selection with a
 distribution specified by a weight vector \(y \in \mathbb{R}\). Thus, \ref{alg:perturb-schedule} is as follows: Lines 2-12 generate a
@@ -1035,8 +1021,8 @@ reverse order. If the SOC of the visit is less than \(\nu_b \kappa_b\), then the
 Line 10. The route for BEB \(b\) is then set as a ``priority'' on Line 9 to propagate the previously calculated weight in
 earlier visits for BEB \(b\) as shown on Line 5. This is done in an attempt to encourage the SA algorithm to ``fix'' the
 current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
-with weighted distribution \(y^i\), then selects a primitive with a weighted distribution, \(y^p\). Letting \(n_G\) denote the
-number of primitive generating functions, the selected primitive with a weighted distribution is denoted as \(\W^y_{[1,
+with weighted distribution \(y_v\), then selects a primitive with a weighted distribution, \(y^p\). Letting \(n_G\) denote the
+number of primitive generating functions, the selected primitive with a weighted distribution is denoted as \(\W^{y_v}_{[1,
 n_G]}\). The primitive is then executed, and the results are returned.
 
 \begin{algorithm}[H]
@@ -1053,19 +1039,19 @@ n_G]}\). The primitive is then executed, and the results are returned.
     \Begin
     {
         $p \leftarrow [false; n_A]$\tcc*{Create vector to track priority routes}
-        $y^i \leftarrow [1.0; n_V]$\tcc*{Create weight vector for index selection}
+        $y_v \leftarrow [1.0; n_V]$\tcc*{Create weight vector for index selection}
         \tcc{Loop through the visits in reverse order}
         \ForEach{$\I_i \leftarrow \I_{|\I|} \text{ TO } \I_{1}$}
         {
             \tcc{If the current visit is part of a priority route}
-            \If{$p_{\I_{i.b}} = true$}{$y^i_{\I_i} = y^i_{\I_{i.\xi}}$\;}
+            \If{$p_{\I_{i.b}} = true$}{$y_v_{\I_i} = y_v_{\I_{i.\xi}}$\;}
             \tcc{Else if the current visit's SOC does below the allowed threshold}
             \ElseIf{$\I_{i.\eta} \le \nu_{\I_{i.b}} \kappa_{\I_{i.b}}$}{
                 $p_{\I_{i.b}} = true$\tcc*{Indicate the current BEB's routes are to be prioritized}
-                $y^i_{\I_i} = \kappa_{\I_{i.b}} + \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
+                $y_v_{\I_i} = \kappa_{\I_{i.b}} + \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
             }
         }
-        $\I_i\leftarrow\; \W^{y^i}_{\I}$\tcc*{Select an index with a weighted distribution}
+        $\I_i\leftarrow\; \W^{y_v}_{\I}$\tcc*{Select an index with a weighted distribution}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
         $y^p \leftarrow [y^p_1, y^p_2, ...]$\tcc*{Define the weight of each primitive generator}
         $PGF \leftarrow\; \W^{y^p}_{[1,n_G]}$\tcc*{Select a generator function with weighted distribution}
@@ -1104,18 +1090,18 @@ employed to enable and disable \(\sigma_{ij}\) and \(\psi_{ij}\) and \ref{seq:c2
 \ref{seq:c5} can be directly calculated and \ref{seq:c8} is fully defined.
 
 Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
-dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after a given
-schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method
-implemented in \ref{sec:sa-objective-function} is set in place to allow the SOC to go below the specified threshold, \(\nu_{b_i}
-\kappa_{b_i}\), but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
-solution that does not activate the penalty method (i.e., is solution is operationally feasible).
+dynamic constraints are also fully defined. \ref{seq:c6} is sequentially calculated after a given schedule has been
+fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method implemented in
+\ref{sec:sa-objective-function} is set in place to allow the SOC to go below the specified threshold, \(\nu_{b_i} \kappa_{b_i}\), but
+punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a solution that
+does not activate the penalty method (i.e., is solution is operationally feasible).
 
 The implementation of the SA PAP is outlined in \ref{alg:sa-pap} will now be outlined. The algorithm begins by creating
-a temperature schedule and creating an initial solution. The algorithm then begins to iterate through the temperature
-schedule (outer loop). For each iteration of the outer loop, an inner loop is executed \(n_K\) times. During this inner
-loop, the solution is modified by a primitive generating function to create a candidate solution. The candidate is
-solution is then compared with the active solution, and updated according to the acceptance criteria. These actions are
-performed until the cooling equation is exhausted.
+a temperature schedule and creating an initial solution. The algorithm then iterates through the temperature schedule
+(outer loop). For each iteration of the outer loop, an inner loop is executed \(n_K\) times. During this inner loop, the
+solution is modified by a primitive generating function to create a candidate solution. The candidate is solution is
+then compared with the active solution, and updated according to the acceptance criteria. These actions are performed
+until the cooling equation is exhausted.
 
 \begin{algorithm}[H]
   \scriptsize
@@ -1167,28 +1153,30 @@ heuristic modification to the SA PAP are also used as comparisons to the SA PAP 
 \label{sec:sa-beb-scenario}
 The test scenario was run over a time horizon of \(T=24\) hours, with a total of \(n_V = \N\) visits to the station shared
 between \(n_B = \A\) buses. Each BEB is assumed to have a battery capacity of \(\kappa_b =\) \batsize kWh that is required to
-stay above an SOC of \(\nu_b =\) \mincharge (\fpeval{\batsize * \minchargeD} kWh). Each bus is assumed to begin
-the working day with \(\alpha =\) \fpeval{\acharge*100}\% charge (\fpeval{\acharge * \batsize} kWh). A
-total of \fpeval{\fast + \slow} chargers are utilized where \slow of the chargers are slow charging
-(\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p = \Cgain\), \(z_c = 1\), and \(z_d = 10000\) are used.
-As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value of \(\epsilon_q\) in the
-objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q\). The SA
-algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0 = \tempinit\) with \(\beta = 0.997\),
-resulting in a total of \(n_M = \tempcnt\) steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the
-demand cost \cite{rocky-mountain-power}. Thus, the demand cost is calculated utilizing \(T_p =\)
-\fpeval{15*60} second intervals. A weight vector of \([3, 3, 2, 1]\) is used to influence the distribution of
-selecting the new charger, new window, wait, and slide visit primitives, respectively. The algorithm also assumes a
-total of \(n_K = \localcnt\) iterations for the local search at a constant temperature. In total, that results in
-\fpeval{\localcnt * \tempcnt} configurations being searched. On average each constant temperature search took
-an average of \(\quicklocal\) seconds to complete, resulting in a total runtime of \fpeval{\quicklocal * \tempcnt} seconds.
+stay above an SOC of \(\nu_b =\) \mincharge (\num{fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to
+begin the working day with \(\alpha =\) \num{fpeval{\acharge*100}}\% charge (\num{fpeval{\acharge * \batsize}} kWh). A total of \num{fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers
+are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p = \Cgain\), \(z_c = 1\), and \(z_d
+= 10000\) are used. As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value
+of \(\epsilon_q\) in the objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q
+= 100q\). The SA algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0 = \tempinit\) with
+\(\beta = 0.997\), resulting in a total of \(n_M = \tempcnt\) steps. Rocky Mountain Power utilizes fifteen-minute intervals to
+calculate the demand cost \cite{rocky-mountain-power}. Thus, the demand cost is calculated utilizing \(T_p =\)
+\num{fpeval{15*60}} second intervals. A weight vector of \([0.6255, 0.6255, 0.4170, 0.2085]\) is used to
+influence the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The
+algorithm also assumes a total of \(n_K = \localcnt\) iterations for the local search at a constant temperature. In total,
+that results in \num{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant
+temperature search took an average of \(\quicklocal\) seconds to complete, resulting in a total runtime of
+\num{fpeval{\quicklocal * \tempcnt}} seconds.
 
 \ref{sec:sa-heuristic-implementation} introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in \ref{sec:sa-generation-mechanisms}, let this
 implementation be referred to as ``heuristic'' implementation and the previous as the ``quick'' implementation due to the
 fact that it is designed to execute more quickly. Using the same weights for randomly selecting the primitive
-generators, the heuristic approach further implemented a weighted distribution vector of \([3, 1]\) to decide whether to
-select a slow or fast charger, respectively. In the heuristic approach, on average the constant temperature search took
-a total of \(\heuristiclocal\) seconds to complete, resulting in a total runtime of \fpeval{\heuristiclocal * \tempcnt} seconds. The heuristic generators were expected to be slightly slower due to its iterative approach.
+generators, the heuristic approach further implemented a weighted distribution vector of \([0.9487, 0.3162]\) to decide
+whether to select a slow or fast charger, respectively. In the heuristic approach, on average the constant temperature
+search took a total of \(\heuristiclocal\) seconds to complete, resulting in a total runtime of
+\num{\fpeval{\heuristiclocal * \tempcnt}} seconds. The heuristic generators were expected to be slightly
+slower due to its iterative approach.
 
 The Qin-Modified is a threshold-based strategy that is also employed as a means of comparison with the results of the SA
 PAP. The Qin-Modified algorithm is a based on the threshold strategy of \cite{qin-2016-numer-analy}. The algorithm has
