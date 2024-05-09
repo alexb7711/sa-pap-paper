@@ -1,4 +1,4 @@
-% Created 2024-05-09 Thu 14:01
+% Created 2024-05-09 Thu 14:44
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -247,20 +247,20 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 
 \section{Introduction}
 \label{sec:sa-introduction}
-With an ever-increasing interest in the electrification of vehicles in the push for greener transportation, many
-organizations and companies have been looking to adopt the electrification of fleet of vehicles \cite{khan-2022-inves}.
-This transition is also stemming into the electrification of public bus transportation via battery power, i.e., battery
-electric buses (BEBs) \cite{li-2016-batter-elect,guida-2017-zeeus-repor-europ}. In particular, agencies such as the
-Utah Transit Authority (UTA) have directed focus in replacing their fleets with BEBs. Alongside all the benefits that
-are associated with BEBs come new challenges that must be addressed prior to their integration into mainstream
-utilization. The energy storage capacity of BEBs is typically significantly less than their combustion counterparts
-while also have significantly longer refueling periods \cite{xylia-2018-role-charg,li-2016-batter-elect}. This is
-further complicated due to the care that must be taken in prolonging the lifespan of the battery
+With an ever-increasing interest in the electrification of vehicles in the push for green transportation, many
+organizations and companies have been looking to adopt electric fleet vehicles \cite{khan-2022-inves}. This transition
+is also stemming into the electrification of public bus transportation via battery power, i.e., battery electric buses
+(BEBs) \cite{li-2016-batter-elect,guida-2017-zeeus-repor-europ}. In particular, agencies such as the Utah Transit
+Authority (UTA) have directed focus in replacing their fleets with BEBs. Alongside all the benefits that are associated
+with BEBs come new challenges that must be addressed prior to their integration into mainstream utilization. The energy
+storage capacity of BEBs is typically significantly less than their combustion counterparts while also having
+significantly longer refueling periods \cite{xylia-2018-role-charg,li-2016-batter-elect}. This is further complicated
+due to the care that must be taken in prolonging the lifespan of the battery
 \cite{lutsey-2019-updat-elect,edge-2021-lithium,millner-2010-model-lithium}. As another complication, BEB refueling
-is no longer a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to charging
-for the total energy consumed over a pay period, often further introduce a demand cost. The demand cost is based on the
-peak power drawn during the pay period and can significantly impact the overall monetary cost of maintaining the BEBs.
-This work introduces a scheduling framework for a fleet of BEBs that minimizes charging costs while considering other
+is not a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to charging for the
+total energy consumed over a pay period, often charge a cost on the power demand. The demand cost is based on the peak
+power drawn during the pay period and can significantly impact the overall monetary cost of maintaining the BEBs. This
+work introduces a scheduling framework for a fleet of BEBs that minimizes charging costs while considering other
 constraints pertinent for operation.
 
 Works concerning charge planning often use a version of the vehicle scheduling problem \cite{zhang-2021-optim-elect,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,tang-2019-robus-sched,li-2014-trans-bus,he-2020-optim-charg},
@@ -269,7 +269,7 @@ while others have based their implementation on alternative methods
 approach to model the scheduling while \cite{qarebagh-2019-optim-sched} utilizes what is known as the Position
 Allocation Problem (PAP). The vehicle scheduling problem and the work of \cite{whitaker-2023-a-network} involve the
 discretization of the time horizon, whereas the PAP models the charge durations in a continuous manner reducing the
-variable count. Regardless of the method utilized, nearly all the literature reviewed considered consumption costs
+variable count. Regardless of the method utilized, nearly all the literature reviewed considers consumption costs
 \cite{jahic-2019-preem,frendo-2021-open-sourc,qin-2016-numer-analy,zhou-2020-bi-objec,duan-2021-refor-mixed,mortensen-2023-cost-minim,zhou-2020-collab-optim,rinaldi-2020-mixed-fleet,zhou-2020-collab-optim}, while fewer
 consider demand costs \cite{jahic-2019-preem,frendo-2021-open-sourc,qin-2016-numer-analy,mortensen-2023-cost-minim,he-2020-optim-charg}. Many of these works introduce simplifying assumptions for the sake of
 computation. For example, some approaches only consider fast chargers during planing \cite{zhou-2020-collab-optim,li-2014-trans-bus,wang-2017-optim-rechar,sebastiani-2016-evaluat-elect,wei-2018-optim-spatio}. Approaches that
