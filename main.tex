@@ -1,4 +1,4 @@
-% Created 2024-05-08 Wed 15:21
+% Created 2024-05-09 Thu 14:01
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -222,7 +222,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 %% Solve output
 \newcommand{\timeran}{4.2 }                                                    % Time ran for MILP [s]
 % Abstract (Do not insert blank lines, i.e. \\)
-\abstract{With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation is developed for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use is developed. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled form the Utah Transit Authority (UTA) and comparing the results againts two other models: the PAP and the Qin-Modified. The PAP is presented as a baseline for the other models. The results presented show that both techniques offer a means of generating near-optimal results. The heuristic technique, hower, shows a quick rate of convergence.}
+\abstract{With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation is developed for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled form the Utah Transit Authority (UTA) and comparing the results againts two other models: the PAP and the Qin-Modified. The results presented show that both techniques offer a means of generating oprationally feasible schedules quickly while minimizing the cost of operation and considering battery health. The heuristic technique, hower, shaws a quicker rate of convergence.}
 
 % Keywords
 \keyword{Battery Electric Bus (BEB), Charge Scheduling, Simulated Annealing, Position Allocation Problem (PAP), Mixed Integer Linear Program (MILP)}
@@ -1039,19 +1039,19 @@ n_G]}\). The primitive is then executed, and the results are returned.
     \Begin
     {
         $p \leftarrow [false; n_A]$\tcc*{Create vector to track priority routes}
-        $y_v \leftarrow [1.0; n_V]$\tcc*{Create weight vector for index selection}
+        $y^v \leftarrow [1.0; n_V]$\tcc*{Create weight vector for index selection}
         \tcc{Loop through the visits in reverse order}
         \ForEach{$\I_i \leftarrow \I_{|\I|} \text{ TO } \I_{1}$}
         {
             \tcc{If the current visit is part of a priority route}
-            \If{$p_{\I_{i.b}} = true$}{$y_v_{\I_i} = y_v_{\I_{i.\xi}}$\;}
+            \If{$p_{\I_{i.b}} = true$}{$y^v_{\I_i} = y^v_{\I_{i.\xi}}$\;}
             \tcc{Else if the current visit's SOC does below the allowed threshold}
             \ElseIf{$\I_{i.\eta} \le \nu_{\I_{i.b}} \kappa_{\I_{i.b}}$}{
                 $p_{\I_{i.b}} = true$\tcc*{Indicate the current BEB's routes are to be prioritized}
-                $y_v_{\I_i} = \kappa_{\I_{i.b}} + \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
+                $y^v_{\I_i} = \kappa_{\I_{i.b}} + \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
             }
         }
-        $\I_i\leftarrow\; \W^{y_v}_{\I}$\tcc*{Select an index with a weighted distribution}
+        $\I_i\leftarrow\; \W^{y^v}_{\I}$\tcc*{Select an index with a weighted distribution}
         $i \leftarrow\; \I_i$\tcc*{Extract visit index}
         $y^p \leftarrow [y^p_1, y^p_2, ...]$\tcc*{Define the weight of each primitive generator}
         $PGF \leftarrow\; \W^{y^p}_{[1,n_G]}$\tcc*{Select a generator function with weighted distribution}
@@ -1153,28 +1153,27 @@ heuristic modification to the SA PAP are also used as comparisons to the SA PAP 
 \label{sec:sa-beb-scenario}
 The test scenario was run over a time horizon of \(T=24\) hours, with a total of \(n_V = \N\) visits to the station shared
 between \(n_B = \A\) buses. Each BEB is assumed to have a battery capacity of \(\kappa_b =\) \batsize kWh that is required to
-stay above an SOC of \(\nu_b =\) \mincharge (\num{fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to
-begin the working day with \(\alpha =\) \num{fpeval{\acharge*100}}\% charge (\num{fpeval{\acharge * \batsize}} kWh). A total of \num{fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers
-are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p = \Cgain\), \(z_c = 1\), and \(z_d
-= 10000\) are used. As previously introduced, to encourage the SA PAP to utilize the fewest number of chargers, the value
-of \(\epsilon_q\) in the objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q
-= 100q\). The SA algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0 = \tempinit\) with
-\(\beta = 0.997\), resulting in a total of \(n_M = \tempcnt\) steps. Rocky Mountain Power utilizes fifteen-minute intervals to
-calculate the demand cost \cite{rocky-mountain-power}. Thus, the demand cost is calculated utilizing \(T_p =\)
-\num{fpeval{15*60}} second intervals. A weight vector of \([0.6255, 0.6255, 0.4170, 0.2085]\) is used to
-influence the distribution of selecting the new charger, new window, wait, and slide visit primitives, respectively. The
-algorithm also assumes a total of \(n_K = \localcnt\) iterations for the local search at a constant temperature. In total,
-that results in \num{\fpeval{\localcnt * \tempcnt}} configurations being searched. On average each constant
-temperature search took an average of \(\quicklocal\) seconds to complete, resulting in a total runtime of
-\num{fpeval{\quicklocal * \tempcnt}} seconds.
+stay above an SOC of \(\nu_b =\) \mincharge (\num{\fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to
+begin the working day with \(\alpha =\) \num{\fpeval{\acharge*100}}\% charge (\num{\fpeval{\acharge * \batsize}} kWh). A total of \num{\fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers
+are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p\) \num{\Cgain}, \(z_c
+= 1\), and \(z_d =\) \num{10000} are used. As previously introduced, to encourage the SA PAP to utilize the
+fewest number of chargers, the value of \(\epsilon_q\) in the objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in
+\{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q\). The SA algorithm utilizes the geometric cooling schedule with an initial
+temperature of \(T_0 =\) \num{\tempinit} with \(\beta = 0.997\), resulting in a total of \(n_M =\)
+\num{\tempcnt} steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the demand cost
+\cite{rocky-mountain-power}. To estimate the method by which Rocky Mountain Power determines its demand cost, this work
+employed an interval of \(T_p =\) \num{\fpeval{15*60}} seconds in its demand cost calculation. A weight vector
+of \([0.6255, 0.6255, 0.4170, 0.2085]\) is used to influence the distribution of selecting the new charger, new window,
+wait, and slide visit primitives, respectively. The algorithm also assumes a total of \(n_K = \localcnt\) iterations for
+the local search at a constant temperature. In total, that results in \num{\fpeval{\localcnt * \tempcnt}}
+configurations being searched in a total runtime of \num{\fpeval{\quicklocal * \tempcnt}} seconds.
 
 \ref{sec:sa-heuristic-implementation} introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in \ref{sec:sa-generation-mechanisms}, let this
 implementation be referred to as ``heuristic'' implementation and the previous as the ``quick'' implementation due to the
 fact that it is designed to execute more quickly. Using the same weights for randomly selecting the primitive
 generators, the heuristic approach further implemented a weighted distribution vector of \([0.9487, 0.3162]\) to decide
-whether to select a slow or fast charger, respectively. In the heuristic approach, on average the constant temperature
-search took a total of \(\heuristiclocal\) seconds to complete, resulting in a total runtime of
+whether to select a slow or fast charger, respectively. The heuristic approach had a total runtime of
 \num{\fpeval{\heuristiclocal * \tempcnt}} seconds. The heuristic generators were expected to be slightly
 slower due to its iterative approach.
 
@@ -1187,16 +1186,14 @@ fast chargers then are allowed to utilize slow chargers if no fast chargers are 
 medium threshold prioritize slow chargers first and utilize fast chargers only if no slow chargers are available. Buses
 above the medium threshold and below high will only be assigned to slow chargers. Buses above the high threshold will
 not be charged. Once a bus has been assigned to a charger, it remains on the charger for the duration of the time it is
-at the station, or it reaches 95\% charge, whichever comes first. Note that UTA sets their high threshold at 70\% with the
-other respective thresholds being lowered as well. The higher thresholds implemented in this work were selected in
-attempt to improve the results of the Qin-Modified technique given the specified scenario.
+at the station, or it reaches 95\% charge, whichever comes first. The higher thresholds implemented in this work were
+selected in attempt to improve the results of the Qin-Modified technique given the specified scenario.
 
-Another methods utilized to compare with against SA PAP is what is known as the PAP. This framework is the original
-MILP implementation of the PAP derived from \cite{qarebagh-2019-optim-sched}. Because this method employs a solver that
-can guarantee optimality, the MILP implementation is utilized in this work as a benchmark for the other schedules. The
-inputs to the system are the same as those discussed above. It is of note that the PAP does not implement the
-demand cost in its objective function. In an attempt to compare the solution of the MILP with the SA output more
-directly, a similar solve time of 1900 seconds is utilized. The MILP was executed using the Gurobi MILP solver
+Another method utilized to compare with against SA PAP is the BEB implementation of the PAP. The MILP implementation is
+utilized in this work as a benchmark for the other schedules as it is implemented utilizing a commercial solver. The
+inputs to the system are the same as those discussed above. It is of note that the PAP does not implement the demand
+cost in its objective function. In an attempt to compare the solution of the MILP with the SA output more directly, a
+similar solve time of 1900 seconds is utilized. The MILP was executed using the Gurobi MILP solver
 \cite{gurobi-2021-gurob-optim}. The previously described simulations were run on a machine equipped with an AMD Ryzen 9
 5900X 12 - Processor (24 core) at 4.95GHz.
 
