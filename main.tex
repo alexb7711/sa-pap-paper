@@ -1,4 +1,4 @@
-% Created 2024-05-02 Thu 19:31
+% Created 2024-05-09 Thu 17:32
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -287,10 +287,8 @@ of the produced schedule, does not impact the considerations of battery health. 
 when over-charging, under-charging, utilizing fast chargers extensively, or forcing the battery to perform ``deep'' cycles
 \cite{zhou-2020-bi-objec,millner-2010-model-lithium,edge-2021-lithium}. Furthermore, other works have suggested
 that charging a battery nearly to capacity is detrimental to the health and can significantly reduce the total charge
-cycles a battery may undergo \cite{edge-2021-lithium,millner-2010-model-lithium}. While the charge profile for
-batteries are inherently non-linear, some works have assumed proportional charging as linear battery dynamics remain a
-valid assumption when the battery SOC is below 80\% \cite{liu-2020-batter-elect}. Thus, this work assumes that a linear
-model is sufficiently accurate to produce an operationally valid schedule while maintaining battery health.
+cycles a battery may undergo \cite{edge-2021-lithium,millner-2010-model-lithium}. Thus, this work assumes that a
+linear model is sufficiently accurate to produce an operationally valid schedule while maintaining battery health.
 
 In respect to the state of the art provided, this work aims to expand on the PAP by introducing a Simulated Annealing
 (SA) framework that utilizes a proportional battery dynamics model, considers battery health by encouraging slow charger
