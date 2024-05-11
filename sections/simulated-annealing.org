@@ -304,9 +304,9 @@ reverse order. If the SOC of the visit is less than $\nu_b \kappa_b$, then the w
 Line 10. The route for BEB $b$ is then set as a "priority" on Line 9 to propagate the previously calculated weight in
 earlier visits for BEB $b$ as shown on Line 5. This is done in an attempt to encourage the SA algorithm to "fix" the
 current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
-with weighted distribution $y_v$, then selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the
-number of primitive generating functions, the selected primitive with a weighted distribution is denoted as $\W^{y_v}_{[1,
-n_G]}$. The primitive is then executed, and the results are returned.
+with weighted distribution $y^v$, then selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the
+number of primitive generating functions, the selected primitive with a weighted distribution is denoted as
+$\W^{y^v}_{[1, n_G]}$. The primitive is then executed, and the results are returned.
 
 #+include: eq/tweak-schedule.org
 
