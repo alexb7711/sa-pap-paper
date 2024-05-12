@@ -41,6 +41,11 @@
 #+latex_header:\newcommand{\mathcolorbox}[1]{\colorbox{yellow}{$\displaystyle #1$}}
 
 # =========================================================================================================================
+# Subcaptions
+#+latex_header: \newcommand\mysubcaption[1]{\phantomcaption%
+#+latex_header:        \caption*{\figurename~\thefigure(\thesubfigure). #1}}
+
+# =========================================================================================================================
 # Custom commands
 #+latex_header: \newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{gray}{#1}}
 

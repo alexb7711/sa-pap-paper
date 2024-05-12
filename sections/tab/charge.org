@@ -2,10 +2,10 @@
 #+caption: Table of mean, min, and max SOC (kWh) for each charging schedule.
 #+ATTR_LATEX: :environment tabular :align l|cccc
 |------+---------+-------------+-----------+---------|
-|      |    MILP | Qin-Modifid | Heuristic |   Quick |
+|      |    BPAP | Qin-Modifid | Heuristic |   Quick |
 |------+---------+-------------+-----------+---------|
 | /    |       < |           < |         < |       < |
 | Mean | 181.327 |     275.045 |   185.443 | 191.937 |
-| Min  |  97.000 |       0.000 |     91.27 |  96.996 |
-| Max  |  382.93 |     380.840 |   388.000 | 388.000 |
+| Min  |  97.000 |       0.000 |    96.270 |  96.996 |
+| Max  |  382.93 |     380.840 |   388.907 | 388.000 |
 |------+---------+-------------+-----------+---------|

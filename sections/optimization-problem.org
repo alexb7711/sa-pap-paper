@@ -5,9 +5,8 @@
 
 The objective of this work is to present a framework that optimizes the assignment of $n_V$ BEB visits to a set of $n_Q$
 charging queues during the interval $[0,\T]$ provided a fleet of $n_A$ BEBs with fixed route schedules. Particularly,
-the framework aims to minimize over peak power usage, energy consumption, and the total amount of chargers utilized
-while maintaining encouraging battery health via slow charging and maintaining the SOC of each BEB above a minimum SOC
-threshold.
+the framework aims to minimize over peak power usage, energy consumption, encouraging battery health via slow charging,
+and maintaining the SOC of each BEB above a minimum SOC threshold.
 
 The optimization problem outlined in this work is presented in form of an objective function with constraints. The
 constraints ensure that candidate solutions are operationally feasible. The variables of optimization are to be
@@ -67,8 +66,7 @@ all BEBs be denoted as $\Isetfinal$. The discharge for the final visit of each B
 :END:
 Decision variables are those chosen by the optimizer. There are three direct decision variables for each visit, i.e.,
 direct referring to the variables that the optimizer has immediate control over. The direct variables include initial
-and final charging times, $u_i$ and $d_i$, respectfully, as well as the bus is also assigned a charging queue, $q_i \in
-\Qset$.
+and final charging times, $u_i$ and $d_i$, respectfully, and the selected charging queue, $q_i \in \Qset$.
 
 The remaining variables are slack variables which are introduced to track the vehicle charge and queuing position based
 on the problem parameters and direct decision variables. Recall the initial SOC for a visit is written as $\eta_i$, where
@@ -203,7 +201,7 @@ health. The charger queue indices are ordered such that the first $n_B$ queues c
 all BEBs to simultaneously sit idle if needed. All $n_B$ idle queues have assignment costs of zero to denote that there
 is no cost when not charging. The next group of chargers is assumed to be the slow chargers subsequently followed by the
 fast. Let $P \in \mathbb{R}$, then the set of slow and fast charging queues be of the form $[P, 2P, ..., n_QP]$. Concatenating
-these vectors yields $\epsilon = [0, 0, ... P, 2P, 3P, ...]$, where $\epsilon$ describes the vector of assignment costs and the first
+these vectors yields $\epsilon = [0, 0, ..., P, 2P, 3P, ...]$, where $\epsilon$ describes the vector of assignment costs and the first
 $n_B$ values are zero.
 
 *** Penalty Method
@@ -282,7 +280,7 @@ p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 \end{equation}
 
 For the sake of implementation, the integral in [[eq:p]] is discretized. Let $dt$ denote the discretization time step and
-$p_h$ the power at discrete step $h$, [[eq:p]] is approximated as
+$p_h$ the power for the $h^{\text{th}}$ step, [[eq:p]] is approximated as
 
 \begin{equation}
 p_{T_p,h} = \frac{1}{T_p} \sum_{k = h-\frac{T_p}{dt}+1}^h p_k dt\text{.}

@@ -9,7 +9,7 @@
     \KwOut{$\bar{\Sol}$}
 
     \SetKwFunction{Union}{Union}
-    \SetKwFunction{findFreeTime}{findFreeTime}
+    \SetKwFunction{FindFreeTime}{FindFreeTime}
 
     \Begin
       {
@@ -20,7 +20,7 @@
         $\bar{q} \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
         $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
 
-        \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, i, q, a, e$} $\not\in \varnothing$}
+        \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \FindFreeTime{$C, i, q, a, e$} $\not\in \varnothing$}
            {
              \Return{($i, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
            }

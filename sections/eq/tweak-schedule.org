@@ -5,10 +5,10 @@
 
     \LinesNumbered
     \TitleOfAlgo{Perturb Schedule}
-    \KwIn{$\Sol$}
-    \KwOut{$\bar{\Sol}$}
+    \KwIn{$(\I, \C)$}
+    \KwOut{$(\bar{\I}, \bar{\C})$}
 
-    \SetKwFunction{PGF}{PGF}
+    \SetKwFunction{PrimitiveGeneratingFunction}{PrimitiveGeneratingFunction}
 
     \Begin
     {
@@ -26,11 +26,11 @@
             }
         }
         $\I_i\leftarrow\; \W^{y^v}_{\I}$\tcc*{Select an index with a weighted distribution}
-        $i \leftarrow\; \I_i$\tcc*{Extract visit index}
         $y^p \leftarrow [y^p_1, y^p_2, ...]$\tcc*{Define the weight of each primitive generator}
-        $PGF \leftarrow\; \W^{y^p}_{[1,n_G]}$\tcc*{Select a generator function with weighted distribution}
-        $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($0, \bar{\I}$, $\bar{\C}$)}
+        \tcc{Select a generator function with weighted distribution}
+        $PrimitiveGeneratingFunction \leftarrow\; \W^{y^p}_{[1,n_G]}$\;
+        $\bar{\Sol} \leftarrow$ \PrimitiveGeneratingFunction{($\I_i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
+        \Return{($\bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 #+end_export

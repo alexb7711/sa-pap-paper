@@ -3,36 +3,37 @@
 :custom_id: sec:sa-conclusion
 :END:
 
-This work developed an SA implementation derived from the works of the PAP. The model is designed to reduce the total
+This work developed an SA implementation derived from the works of the BPAP. The model is designed to reduce the total
 number of utilized chargers, minimize the peak energy consumption and the total energy consumed. The problem description
 was provided outlining the scenario in which this model is designed for. The optimization problem was then introduced by
-describing the components of the objective function and outlining the MILP constraints utilized to ensure candidate
+describing the components of the objective function and outlining the constraints utilized to ensure candidate
 solutions are in the solution space.
 
-An example of the SA PAP algorithm was presented and compared against the PAP, which acted as a baseline for the other
+An example of the SA PAP algorithm was presented and compared against the BPAP, which acted as a baseline for the other
 schedule. Another threshold-based strategy called the Qin-Modified technique was also introduced as a means of comparing
 the schedules. The SA PAP was run utilizing two different neighborhood searching techniques named the "quick" and
 "heuristic" techniques, respectively. The quick SA's objective was to randomly search a wide neighborhood while the
 heuristic technique was designed to incrementally search a neighborhood by randomly selecting a fast or slow charging
-queue and then stepping through the queues one at a time. The quick SA has a faster execution time than the heuristic SA
-at src_latex{\quicklocal} and src_latex{\heuristiclocal} seconds to execute their respective inner loops. The execution
-time compounds as the number of iterations in the cooling function increases as shown by the respective quick and
-heuristic execution times: src_latex{\fpeval{\quicklocal * \tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal *
-\tempcnt}} seconds. However, this trade off for speed made up for the performance of the heuristic technique. The
-Qin-Modified utilized the fewest amount of chargers followed by the MILP, quick SA, then the heuristic SA. The
-Qin-Modified strategy heavily favored the use of fast chargers, whereas the other methods used fast charges sparingly.
-Particularly, the SA techniques favored higher number of slow chargers with longer charge durations in comparison to the
-PAP. All the schedules were able to pack their schedules spatially well, the fast chargers for MILP and quick SA being
-exceptions. However, unlike the Qin and PAP methods, the SA techniques were not as successful in packing the schedule
-temporally.
+queue and then stepping through the queues one at a time. The execution time compounds as the number of iterations in
+the cooling function increases as shown by the respective quick and heuristic execution times:
+src_latex{\fpeval{\quicklocal * \tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds. However,
+this trade-off for speed made up for the performance of the heuristic technique. The BPAP utilized the fewest amount of
+chargers followed by the quick SA, the heuristic SA, and then the Qin-Modified. The Qin-Modified strategy favored the
+use of fast chargers due to its inability to identify when demanding routes were on the horizon, whereas the other
+methods used fast charges sparingly. Particularly, the SA techniques favored higher number of slow chargers with longer
+charge durations in comparison to the BPAP.
+
+# All the schedules were able to pack their schedules spatially well, the fast
+# chargers for MILP and quick SA being exceptions. However, unlike the Qin and BPAP methods, the SA techniques were not as
+# successful in packing the schedule temporally.
 
 Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to 91.26 kWh for the
 heuristic SA and 95.91 kWh for the quick SA. Due to the minimum charge threshold being a soft constraint for the SA, the
 algorithm found another action to be more favorable at the expense of breaching the threshold slightly. The
 Qin-Modified, on the other hand, had the SOC of one BEB fall to 0% SOC. The schedule that consumed the least amount of
-energy is the PAP (4237.2 kW) with the heuristic SA coming in second (4422.556 kW). The difference between the two being
+energy is the BPAP (4237.2 kW) with the heuristic SA coming in second (4422.556 kW). The difference between the two being
 about src_latex{\fpeval{4422.556 - 4237.2}} kWh. The heuristic SA was able to lower the peak demand to 1150.95 kW
-beating the MILP at 1910 kW and the quick SA at 2031.9 kW.
+beating the BPAP at 1910 kW and the quick SA at 2031.9 kW.
 
 Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a
 denser set of routes, constraints that encourage tighter temporal packing, combining the heuristic and quick SA

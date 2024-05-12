@@ -3,7 +3,7 @@
 #+caption: Table of mean and max power demand for each charging schedule.
 #+ATTR_LATEX: :environment tabular :align l|cccc
 |------+----------+--------------+-----------+-----------|
-|      |     MILP | Qin-Modified | Heuristic |     Quick |
+|      |     BPAP | Qin-Modified | Heuristic |     Quick |
 |------+----------+--------------+-----------+-----------|
 | /    |        < |            < |         < |         < |
 | Mean |  176.550 |       394.13 |   181.583 |   186.858 |

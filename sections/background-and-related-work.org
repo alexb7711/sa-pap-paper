@@ -41,13 +41,13 @@ accounting for multiple charger types, partial charging, non-linear battery char
 [cite:@whitaker-2023-a-network]. The directed graph approach provides an easy method of modeling the scheduling by
 discretizing the time horizon to $n_Q$ sets of nodes. The nodes represent the chargers availability and can have a
 maximum of one bus at a time. The buses can flow into a node to be charged and then later can exit allowing a new bus to
-enter. Another method similar to the directed graph that fits the modeling of the BEB charging scenario is the PAP
-[cite:@qarebagh-2019-optim-sched]. The PAP is derived from the BAP which takes an input of vessel arrival times and
-outputs the selection of the berthing quay. The PAP utilizes this model and redefines its inputs to EV arrival times and
+enter. Another method similar to the directed graph that fits the modeling of the BEB charging scenario is the BPAP
+[cite:@qarebagh-2019-optim-sched]. The BPAP is derived from the BAP which takes an input of vessel arrival times and
+outputs the selection of the berthing quay. The BPAP utilizes this model and redefines its inputs to EV arrival times and
 outputs queues for the EVs to be charged. While the visits remain as discrete events, the time that the BEB is on the
 charger is modeled in continuous time similar to [cite:@frojan-2015-contin-berth;
-@qarebagh-2019-optim-sched;@zhou-2020-collab-optim]. Due to the close relationship between the BAP and PAP, BAP
-literature may be used for the PAP. The literature shows methods of handling multiple quays (sets of chargers) to handle
+@qarebagh-2019-optim-sched;@zhou-2020-collab-optim]. Due to the close relationship between the BAP and BPAP, BAP
+literature may be used for the BPAP. The literature shows methods of handling multiple quays (sets of chargers) to handle
 general berthing scenarios [cite:@frojan-2015-contin-berth;@dai-2008-suppl-chain-analy]. Heuristic procedures for
 quicker solve times have also been introduced [cite:@imai-2001-dynam-berth]. Methods of defining static (full time
 horizon) and dynamic (rolling-time horizon) models have been created for daily and real-time solutions, respectively,
