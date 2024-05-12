@@ -91,24 +91,23 @@ schedules that are "dense" spatially, but not temporally. In other words the SA 
 time quite as effectively as the Qin or PAP. As there were no constraints encouraging the "closeness" of scheduled
 times, no effort was made by the SA algorithm to pack the schedules temporally.
 
-\ref{fig:charge} depicts the SOC for each visit throughout the simulation of each framework. [[tab:charge]] tabulates the
-mean, minimum, and maximum SOC upon arrival for each visit. The PAP requires each BEB to stay above an SOC of 25% while
-the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go below the 25% SOC threshold.
-The PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge}) while both SA approaches
+[[tab:charge]] tabulates the mean, minimum, and maximum SOC upon arrival for each visit. The PAP requires each BEB to stay
+above an SOC of 25% while the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go
+below the 25% SOC threshold. The PAP was able to successfully keep the SOC above the threshold while both SA approaches
 were a few kWh below the threshold. This is further discussed shortly. Due to the threshold constraint being soft, the
 SA objective function may find it more "optimal" to allow a small deficit in the threshold penalty function in favor for
 of another action. As a remedy to ensure the SA schedules stay above the threshold, a safety factor could be introduced
-to artificially increase the threshold, $S_f \nu_{\Xi_i}\kappa_{\Xi_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$.
+to artificially increase the threshold, $S_f \nu_{b_i}\kappa_{b_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$.
 
 The SOC of the quick SA approach dropped to a minimum of 95.9 kWh and the heuristic had a minimum SOC of 91.26 kWh as
-shown in [[tab:charge]]. The Qin model allowed the SOC for one of the BEBs to reach 0% as shown in \ref{subfig:qin-charge}.
-The Qin-Modified strategy, being a purely reactive model, does not have foresight to determine whether a set of routes
-has a particularly taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB
-that reached a charge of 0% began with a sequence of short routes, much like the other BEBs. However, rather than
-continuing this trend, these sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to
-account for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA,
-heuristic SA, and then the PAP. The Qin mean SOC being so high is due to the elevated placements of the low, medium, and
-high thresholds applied to the algorithm than what is used by Rocky Mountain Power.
+shown in [[tab:charge]]. The Qin model allowed the SOC for one of the BEBs to reach 0% as shown in [[tab:charge]]. The
+Qin-Modified strategy, being a purely reactive model, does not have foresight to determine whether a set of routes has a
+particularly taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB that
+reached a charge of 0% began with a sequence of short routes, much like the other BEBs. However, rather than continuing
+this trend, these sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to account
+for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA, heuristic
+SA, and then the PAP. The Qin mean SOC being so high is due to the elevated placements of the low, medium, and high
+thresholds applied to the algorithm than what is used by Rocky Mountain Power.
 
 #+include: tab/charge.org
 

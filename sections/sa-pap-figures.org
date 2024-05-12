@@ -95,50 +95,50 @@
 
 # --------------------------------------------------------------------------------
 # Bus charges
-#+begin_src latex
-  \begin{figure}
-    %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    % Qin
-    \begin{subfigure}[t]{\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{img/charge-quinn}
-      \caption{Bus charges for the Qin Modified charging schedule.}
-      \label{subfig:qin-charge}
-    \end{subfigure}
-    \hfill
-    %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    % MILP
-    \begin{subfigure}[t]{\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{img/charge-milp}
-      \caption{The bus charges for the PAP charging schedule.}
-      \label{subfig:milp-charge}
-    \end{subfigure}
-    \hfill
-  \end{figure}
-
-  \begin{figure}\ContinuedFloat
-    %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    % SA Quick
-    \begin{subfigure}[t]{\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{img/charge-sa-quick}
-      \caption{The bus charges for the quick SA PAP charging schedule.}
-      \label{subfig:sa-quick-charge}
-    \end{subfigure}
-    \hfill
-    %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    % SA Heuristic
-    \begin{subfigure}[t]{\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{img/charge-sa-heuristic}
-      \caption{The bus charges for the heuristic SA PAP charging schedule.}
-      \label{subfig:sa-heuristic-charge}
-    \end{subfigure}
-    \caption{}
-    \label{fig:charge}
-  \end{figure}
-#+end_src
+# #+begin_src latex
+#   \begin{figure}
+#     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     % Qin
+#     \begin{subfigure}[t]{\textwidth}
+#       \centering
+#       \includegraphics[width=\textwidth]{img/charge-quinn}
+#       \caption{Bus charges for the Qin Modified charging schedule.}
+#       \label{subfig:qin-charge}
+#     \end{subfigure}
+#     \hfill
+#     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     % MILP
+#     \begin{subfigure}[t]{\textwidth}
+#       \centering
+#       \includegraphics[width=\textwidth]{img/charge-milp}
+#       \caption{The bus charges for the PAP charging schedule.}
+#       \label{subfig:milp-charge}
+#     \end{subfigure}
+#     \hfill
+#   \end{figure}
+#
+#   \begin{figure}\ContinuedFloat
+#     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     % SA Quick
+#     \begin{subfigure}[t]{\textwidth}
+#       \centering
+#       \includegraphics[width=\textwidth]{img/charge-sa-quick}
+#       \caption{The bus charges for the quick SA PAP charging schedule.}
+#       \label{subfig:sa-quick-charge}
+#     \end{subfigure}
+#     \hfill
+#     %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     % SA Heuristic
+#     \begin{subfigure}[t]{\textwidth}
+#       \centering
+#       \includegraphics[width=\textwidth]{img/charge-sa-heuristic}
+#       \caption{The bus charges for the heuristic SA PAP charging schedule.}
+#       \label{subfig:sa-heuristic-charge}
+#     \end{subfigure}
+#     \caption{}
+#     \label{fig:charge}
+#   \end{figure}
+# #+end_src
 
 # --------------------------------------------------------------------------------
 # Power consumption

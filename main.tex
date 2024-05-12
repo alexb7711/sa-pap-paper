@@ -1,4 +1,4 @@
-% Created 2024-05-09 Thu 14:44
+% Created 2024-05-11 Sat 21:44
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -152,7 +152,6 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 %}
 
 \usepackage{subcaption}                     % Subfigures
-\usepackage{ulem}                           % Underline
 \usepackage[ruled]{algorithm2e}             % Algorithms
 \usepackage{listings}                       % Code in LaTeX
 \usepackage{listings-rust}                  % Code in LaTeX
@@ -249,20 +248,20 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \section{Introduction}
 \label{sec:sa-introduction}
 With an ever-increasing interest in the electrification of vehicles in the push for green transportation, many
-organizations and companies have been looking to adopt electric fleet vehicles \cite{khan-2022-inves}. This transition
-is also stemming into the electrification of public bus transportation via battery power, i.e., battery electric buses
-(BEBs) \cite{li-2016-batter-elect,guida-2017-zeeus-repor-europ}. In particular, agencies such as the Utah Transit
-Authority (UTA) have directed focus in replacing their fleets with BEBs. Alongside all the benefits that are associated
-with BEBs come new challenges that must be addressed prior to their integration into mainstream utilization. The energy
-storage capacity of BEBs is typically significantly less than their combustion counterparts while also having
-significantly longer refueling periods \cite{xylia-2018-role-charg,li-2016-batter-elect}. This is further complicated
-due to the care that must be taken in prolonging the lifespan of the battery
+organizations and companies have been looking to adopt a fleet of electric vehicles \cite{khan-2022-inves}. This
+transition is also stemming into the electrification of public bus transportation via battery power, i.e., battery
+electric buses (BEBs) \cite{li-2016-batter-elect,guida-2017-zeeus-repor-europ}. In particular, agencies such as the
+Utah Transit Authority (UTA) have directed focus in replacing their fleets with BEBs. Alongside all the benefits that
+are associated with BEBs come new challenges that must be addressed prior to their integration into mainstream
+utilization. The energy storage capacity of BEBs is typically significantly less than their combustion counterparts
+while also having significantly longer refueling periods \cite{xylia-2018-role-charg,li-2016-batter-elect}. This is
+further complicated due to the care that must be taken in prolonging the lifespan of the battery
 \cite{lutsey-2019-updat-elect,edge-2021-lithium,millner-2010-model-lithium}. As another complication, BEB refueling
 is not a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to charging for the
-total energy consumed over a pay period, often charge a cost on the power demand. The demand cost is based on the peak
-power drawn during the pay period and can significantly impact the overall monetary cost of maintaining the BEBs. This
-work introduces a scheduling framework for a fleet of BEBs that minimizes charging costs while considering other
-constraints pertinent for operation.
+total energy consumed over a pay period, often charge a demand cost. The demand cost is based on the peak power drawn
+during the pay period and can significantly impact the overall monetary cost of maintaining the BEBs. This work
+introduces a scheduling framework for a fleet of BEBs that minimizes charging costs while considering other constraints
+pertinent for operation.
 
 Works concerning charge planning often use a version of the vehicle scheduling problem \cite{zhang-2021-optim-elect,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,tang-2019-robus-sched,li-2014-trans-bus,he-2020-optim-charg},
 while others have based their implementation on alternative methods
@@ -288,17 +287,14 @@ of the produced schedule, does not impact the considerations of battery health. 
 when over-charging, under-charging, utilizing fast chargers extensively, or forcing the battery to perform ``deep'' cycles
 \cite{zhou-2020-bi-objec,millner-2010-model-lithium,edge-2021-lithium}. Furthermore, other works have suggested
 that charging a battery nearly to capacity is detrimental to the health and can significantly reduce the total charge
-cycles a battery may undergo \cite{edge-2021-lithium,millner-2010-model-lithium}. While the charge profile for
-batteries are inherently non-linear, some works have assumed proportional charging as linear battery dynamics remain a
-valid assumption when the battery SOC is below 80\% \cite{liu-2020-batter-elect}. Thus, this work assumes that a linear
-model is sufficiently accurate to produce an operationally valid schedule while maintaining battery health.
+cycles a battery may undergo \cite{edge-2021-lithium,millner-2010-model-lithium}. Thus, this work assumes that a
+linear model is sufficiently accurate to produce an operationally valid schedule while maintaining battery health.
 
 In respect to the state of the art provided, this work aims to expand on the PAP by introducing a Simulated Annealing
 (SA) framework that utilizes a proportional battery dynamics model, considers battery health by encouraging slow charger
-use, allows for partial charging, minimizes total charger count, allows for multiple charger types, minimizes
-consumption cost, and minimizes demand cost. These contributions are demonstrated via simulation and comparison to two
-other models: the implementation of the PAP for BEBs and what is known as the Qin-Modified
-technique.
+use, allows for partial charging, allows for multiple charger types, minimizes consumption cost, and minimizes demand
+cost. These contributions are demonstrated via simulation and comparison to two other models: the implementation of the
+PAP for BEBs and what is known as the Qin-Modified technique.
 
 The remainder of this paper goes as follows. \ref{sec:sa-problem-description} provides the problem statement associated with
 this work. \ref{sec:sa-optimization-problem} provides a description of the input parameters and decision variables then
@@ -1022,9 +1018,9 @@ reverse order. If the SOC of the visit is less than \(\nu_b \kappa_b\), then the
 Line 10. The route for BEB \(b\) is then set as a ``priority'' on Line 9 to propagate the previously calculated weight in
 earlier visits for BEB \(b\) as shown on Line 5. This is done in an attempt to encourage the SA algorithm to ``fix'' the
 current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
-with weighted distribution \(y_v\), then selects a primitive with a weighted distribution, \(y^p\). Letting \(n_G\) denote the
-number of primitive generating functions, the selected primitive with a weighted distribution is denoted as \(\W^{y_v}_{[1,
-n_G]}\). The primitive is then executed, and the results are returned.
+with weighted distribution \(y^v\), then selects a primitive with a weighted distribution, \(y^p\). Letting \(n_G\) denote the
+number of primitive generating functions, the selected primitive with a weighted distribution is denoted as
+\(\W^{y^v}_{[1, n_G]}\). The primitive is then executed, and the results are returned.
 
 \begin{algorithm}[H]
 \scriptsize
@@ -1190,7 +1186,7 @@ not be charged. Once a bus has been assigned to a charger, it remains on the cha
 at the station, or it reaches 95\% charge, whichever comes first. The higher thresholds implemented in this work were
 selected in attempt to improve the results of the Qin-Modified technique given the specified scenario.
 
-Another method utilized to compare with against SA PAP is the BEB implementation of the PAP. The MILP implementation is
+Another method utilized to compare with against SA PAP is the BEB implementation of the PAP. The PAP implementation is
 utilized in this work as a benchmark for the other schedules as it is implemented utilizing a commercial solver. The
 inputs to the system are the same as those discussed above. It is of note that the PAP does not implement the demand
 cost in its objective function. In an attempt to compare the solution of the MILP with the SA output more directly, a
@@ -1218,24 +1214,23 @@ schedules that are ``dense'' spatially, but not temporally. In other words the S
 time quite as effectively as the Qin or PAP. As there were no constraints encouraging the ``closeness'' of scheduled
 times, no effort was made by the SA algorithm to pack the schedules temporally.
 
-\ref{fig:charge} depicts the SOC for each visit throughout the simulation of each framework. \ref{tab:charge} tabulates the
-mean, minimum, and maximum SOC upon arrival for each visit. The PAP requires each BEB to stay above an SOC of 25\% while
-the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go below the 25\% SOC threshold.
-The PAP was able to successfully keep the SOC above the threshold (\ref{subfig:milp-charge}) while both SA approaches
+\ref{tab:charge} tabulates the mean, minimum, and maximum SOC upon arrival for each visit. The PAP requires each BEB to stay
+above an SOC of 25\% while the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go
+below the 25\% SOC threshold. The PAP was able to successfully keep the SOC above the threshold while both SA approaches
 were a few kWh below the threshold. This is further discussed shortly. Due to the threshold constraint being soft, the
 SA objective function may find it more ``optimal'' to allow a small deficit in the threshold penalty function in favor for
 of another action. As a remedy to ensure the SA schedules stay above the threshold, a safety factor could be introduced
-to artificially increase the threshold, \(S_f \nu_{\Xi_i}\kappa_{\Xi_i}\) where \(S_f > 1;\; S_f \in \mathbb{R}\).
+to artificially increase the threshold, \(S_f \nu_{b_i}\kappa_{b_i}\) where \(S_f > 1;\; S_f \in \mathbb{R}\).
 
 The SOC of the quick SA approach dropped to a minimum of 95.9 kWh and the heuristic had a minimum SOC of 91.26 kWh as
-shown in \ref{tab:charge}. The Qin model allowed the SOC for one of the BEBs to reach 0\% as shown in \ref{subfig:qin-charge}.
-The Qin-Modified strategy, being a purely reactive model, does not have foresight to determine whether a set of routes
-has a particularly taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB
-that reached a charge of 0\% began with a sequence of short routes, much like the other BEBs. However, rather than
-continuing this trend, these sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to
-account for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA,
-heuristic SA, and then the PAP. The Qin mean SOC being so high is due to the elevated placements of the low, medium, and
-high thresholds applied to the algorithm than what is used by Rocky Mountain Power.
+shown in \ref{tab:charge}. The Qin model allowed the SOC for one of the BEBs to reach 0\% as shown in \ref{tab:charge}. The
+Qin-Modified strategy, being a purely reactive model, does not have foresight to determine whether a set of routes has a
+particularly taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB that
+reached a charge of 0\% began with a sequence of short routes, much like the other BEBs. However, rather than continuing
+this trend, these sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to account
+for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA, heuristic
+SA, and then the PAP. The Qin mean SOC being so high is due to the elevated placements of the low, medium, and high
+thresholds applied to the algorithm than what is used by Rocky Mountain Power.
 
 \begin{table}[htbp]
 \caption{\label{tab:charge}Table of mean, min, and max SOC (kWh) for each charging schedule.}
@@ -1244,9 +1239,9 @@ high thresholds applied to the algorithm than what is used by Rocky Mountain Pow
 \hline
  & MILP & Qin-Modifid & Heuristic & Quick\\[0pt]
 \hline
-Mean & 181.327 & 302.932 & 188.967 & 192.686\\[0pt]
-Min & 97.000 & 0.000 & 91.26 & 95.905\\[0pt]
-Max & 382.93 & 368.600 & 388.000 & 388.000\\[0pt]
+Mean & 181.327 & 275.045 & 185.443 & 191.937\\[0pt]
+Min & 97.000 & 0.000 & 91.27 & 96.996\\[0pt]
+Max & 382.93 & 380.840 & 388.000 & 388.000\\[0pt]
 \hline
 \end{tabular}
 \end{table}
@@ -1273,20 +1268,20 @@ use of slow chargers whereas the quick technique did not.
 \hline
  & MILP & Qin-Modified & Heuristic & Quick\\[0pt]
 \hline
-Mean & 176.550 & 449.480 & 184.272 & 186.668\\[0pt]
-Max & 1910.000 & 3640.000 & 1150.950 & 2031.8999\\[0pt]
+Mean & 176.550 & 394.13 & 181.583 & 186.858\\[0pt]
+Max & 1910.000 & 2000 & 1180.950 & 1981.8999\\[0pt]
 \hline
 \end{tabular}
 \end{table}
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the PAP. The respective energy consumption for each
-technique is: 10,198.800 kWh, 4480.091 kWh, 4422.556 kWh, and 4237.200 kWh. The heuristic SA consuming about 185.356 kWh
-more than the PAP. While the quick and heuristic SA were unable to match the PAP in energy consumption, it is a trade
-off made by increasing the number of slow chargers and charge duration, and reducing the peak demand. Referencing
-\ref{tab:charge} and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of consumed
-energy is correlated to the descending order of the mean SOC and the descending order of the mean power demand. This
-makes sense as a higher mean SOC implies the chargers being active more often; similarly for the mean demand.
+technique is: 10,198.800 kWh, 4,480.091 kWh, 4,422.556 kWh, and 4,237.200 kWh. The heuristic SA consuming about 185.356
+kWh more than the PAP. While the quick and heuristic SA were unable to match the PAP in energy consumption, it is a
+trade-off made by increasing the number of slow chargers and charge duration, and reducing the peak demand. Referencing
+\ref{tab:charge} and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of consumed energy
+is correlated to the descending order of the mean SOC and the descending order of the mean power demand. This makes
+sense as a higher mean SOC implies the chargers being active more often; similarly for the mean demand.
 
 \begin{figure}
   \centering
@@ -1368,49 +1363,6 @@ makes sense as a higher mean SOC implies the chargers being active more often; s
         \caption{Number of slow chargers for the quick and heuristic SA executions.}
         \label{subfig:slow-charger-usage-sa}
     \end{subfigure}
-\end{figure}
-
-\begin{figure}
-  %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  % Qin
-  \begin{subfigure}[t]{\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{img/charge-quinn}
-    \caption{Bus charges for the Qin Modified charging schedule.}
-    \label{subfig:qin-charge}
-  \end{subfigure}
-  \hfill
-  %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  % MILP
-  \begin{subfigure}[t]{\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{img/charge-milp}
-    \caption{The bus charges for the PAP charging schedule.}
-    \label{subfig:milp-charge}
-  \end{subfigure}
-  \hfill
-\end{figure}
-
-\begin{figure}\ContinuedFloat
-  %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  % SA Quick
-  \begin{subfigure}[t]{\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{img/charge-sa-quick}
-    \caption{The bus charges for the quick SA PAP charging schedule.}
-    \label{subfig:sa-quick-charge}
-  \end{subfigure}
-  \hfill
-  %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  % SA Heuristic
-  \begin{subfigure}[t]{\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{img/charge-sa-heuristic}
-    \caption{The bus charges for the heuristic SA PAP charging schedule.}
-    \label{subfig:sa-heuristic-charge}
-  \end{subfigure}
-  \caption{}
-  \label{fig:charge}
 \end{figure}
 
 \begin{figure}

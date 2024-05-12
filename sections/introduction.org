@@ -14,10 +14,10 @@ while also having significantly longer refueling periods [cite:@xylia-2018-role-
 further complicated due to the care that must be taken in prolonging the lifespan of the battery
 [cite:@lutsey-2019-updat-elect;@edge-2021-lithium; @millner-2010-model-lithium]. As another complication, BEB refueling
 is not a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to charging for the
-total energy consumed over a pay period, often charge a cost based on the power demand. The demand cost is based on the
-peak power drawn during the pay period and can significantly impact the overall monetary cost of maintaining the BEBs.
-This work introduces a scheduling framework for a fleet of BEBs that minimizes charging costs while considering other
-constraints pertinent for operation.
+total energy consumed over a pay period, often charge a demand cost. The demand cost is based on the peak power drawn
+during the pay period and can significantly impact the overall monetary cost of maintaining the BEBs. This work
+introduces a scheduling framework for a fleet of BEBs that minimizes charging costs while considering other constraints
+pertinent for operation.
 
 Works concerning charge planning often use a version of the vehicle scheduling problem [cite:@zhang-2021-optim-elect;
 @duan-2021-refor-mixed; @rinaldi-2020-mixed-fleet; @tang-2019-robus-sched; @li-2014-trans-bus; @he-2020-optim-charg],
@@ -67,10 +67,9 @@ linear model is sufficiently accurate to produce an operationally valid schedule
 
 In respect to the state of the art provided, this work aims to expand on the PAP by introducing a Simulated Annealing
 (SA) framework that utilizes a proportional battery dynamics model, considers battery health by encouraging slow charger
-use, allows for partial charging, minimizes total charger count, allows for multiple charger types, minimizes
-consumption cost, and minimizes demand cost. These contributions are demonstrated via simulation and comparison to two
-other models: the implementation of the PAP for BEBs and what is known as the Qin-Modified
-technique.
+use, allows for partial charging, allows for multiple charger types, minimizes consumption cost, and minimizes demand
+cost. These contributions are demonstrated via simulation and comparison to two other models: the implementation of the
+PAP for BEBs and what is known as the Qin-Modified technique.
 
 The remainder of this paper goes as follows. [[#sec:sa-problem-description]] provides the problem statement associated with
 this work. [[#sec:sa-optimization-problem]] provides a description of the input parameters and decision variables then
