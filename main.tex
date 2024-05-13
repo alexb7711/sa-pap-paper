@@ -1,4 +1,4 @@
-% Created 2024-05-13 Mon 11:49
+% Created 2024-05-13 Mon 15:15
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -224,7 +224,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 %% Solve output
 \newcommand{\timeran}{4.2 }                                                    % Time ran for MILP [s]
 % Abstract (Do not insert blank lines, i.e. \\)
-\abstract {With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation is developed for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled form the Utah Transit Authority (UTA) and comparing the results against two other models: the BPAP and the Qin-Modified. The results presented show that both SA techniques offer a means of generating operationally feasible schedules quickly while minimizing the cost of operation and considering battery health. The heuristic technique, however, shows a quicker rate of convergence.}
+\abstract {With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation is developed for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled from the Utah Transit Authority (UTA) and comparing the results against two other models: the BPAP and the Qin-Modified. The results presented show that both SA techniques offer a means of generating operationally feasible schedules quickly while minimizing the cost of operation and considering battery health. The heuristic technique, however, shows a quicker rate of convergence.}
 
 % Keywords
 \keyword{Battery Electric Bus (BEB), Charge Scheduling, Simulated Annealing, Position Allocation Problem (PAP), Mixed Integer Linear Program (MILP)}
@@ -400,7 +400,7 @@ The variables definitions used in this work are summarized in \ref{tab:sa-variab
 
 \subsubsection{Input Parameters}
 \label{sec:sa-input-variables}
-Parameters are used to indicate value that are assumed to be known prior to optimization. They will be presented in two
+Parameters are used to indicate values that are assumed to be known prior to optimization. They will be presented in two
 sections: packing and discretization parameters then battery dynamic parameters. The spatiotemporal parameters are those
 that ensure no scheduling overlap in either space or time. The discretization parameters describe the parameters that
 discretize the time horizon, and the battery dynamic parameters are those associated with the SOC of the BEB.
@@ -726,7 +726,7 @@ components are elaborated in the subsequent sections.
 \subsection{Cooling Equation}
 \label{cooling-equation-experimental}
 The cooling equation models the rate at which the temperature decreases over time in the SA process. Initially, when the
-temperature is high, SA encourages exploration. As the process begins to ``cools down'' (in accordance to the cooling
+temperature is high, SA encourages exploration. As the process begins to ``cool down'' (in accordance to the cooling
 schedule), it begins to encourage local exploitation of the solution (rather than exploration)
 \cite{rutenbar-1989-simul-anneal-algor,henderson-1989-theor-pract}. There are three common basic types of cooling
 equations: linear, geometric, and exponential. Geometric cooling schedules are most widely used in practice
@@ -965,7 +965,7 @@ duration of its time at the station.
 New window, as shown in \ref{alg:new-window}, is a combination of \ref{alg:new-visit} (new visit) and \ref{alg:wait}
 (wait). By this it is meant that visit \(i\) is placed in its wait queue then added back in as if it were a new visit.
 This implies that the BEB may be assigned to a different queue with a new charging time frame. Upon success, the
-algorithm return the updated tuple, otherwise return the null value.
+algorithm returns the updated tuple, otherwise return the null value.
 
 \begin{algorithm}[H]
   \scriptsize
@@ -1001,7 +1001,7 @@ initialize the SA algorithm, or to modify an existing schedule.
 
 \paragraph{Charge Schedule Generation}
 \label{sec:sa-charge-schedule-generation}
-The objective of \ref{alg:charge-schedule-generation} is introduce a method that provides the SA algorithm with an
+The objective of \ref{alg:charge-schedule-generation} is to introduce a method that provides the SA algorithm with an
 initial charging schedule. The schedule generation is chosen to initialize the algorithm in a greedy manner by looping
 through each visit and executing \ref{alg:new-visit} to place visit \(i\) at random queue with a random charge time.
 
@@ -1161,8 +1161,7 @@ until the cooling equation is exhausted.
 \label{sec:sa-example}
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
 \ref{sec:sa-beb-scenario} a description of the example scenario is presented followed by a brief introduction of the BEB
-implementation of the PAP (BPAP). An alternative threshold based planning strategy called the Qin-Modified technique,
-and a heuristic modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work.
+implementation of the PAP (BPAP) and an alternative threshold based strategy called the Qin-Modified technique.
 \ref{sec:sa-results} presents the results for each of planning strategies. The results are then analyzed and discussed.
 
 \subsection{BEB Scenario}

@@ -27,7 +27,7 @@ components are elaborated in the subsequent sections.
 :END:
 
 The cooling equation models the rate at which the temperature decreases over time in the SA process. Initially, when the
-temperature is high, SA encourages exploration. As the process begins to "cools down" (in accordance to the cooling
+temperature is high, SA encourages exploration. As the process begins to "cool down" (in accordance to the cooling
 schedule), it begins to encourage local exploitation of the solution (rather than exploration)
 [cite:@rutenbar-1989-simul-anneal-algor;@henderson-1989-theor-pract]. There are three common basic types of cooling
 equations: linear, geometric, and exponential. Geometric cooling schedules are most widely used in practice
@@ -193,7 +193,7 @@ duration of its time at the station.
 New window, as shown in \ref{alg:new-window}, is a combination of \ref{alg:new-visit} (new visit) and \ref{alg:wait}
 (wait). By this it is meant that visit $i$ is placed in its wait queue then added back in as if it were a new visit.
 This implies that the BEB may be assigned to a different queue with a new charging time frame. Upon success, the
-algorithm return the updated tuple, otherwise return the null value.
+algorithm returns the updated tuple, otherwise return the null value.
 
 #+include: eq/new-window.org
 
@@ -211,7 +211,7 @@ initialize the SA algorithm, or to modify an existing schedule.
 :CUSTOM_ID: sec:sa-charge-schedule-generation
 :END:
 
-The objective of \ref{alg:charge-schedule-generation} is introduce a method that provides the SA algorithm with an
+The objective of \ref{alg:charge-schedule-generation} is to introduce a method that provides the SA algorithm with an
 initial charging schedule. The schedule generation is chosen to initialize the algorithm in a greedy manner by looping
 through each visit and executing \ref{alg:new-visit} to place visit $i$ at random queue with a random charge time.
 

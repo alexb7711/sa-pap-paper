@@ -28,7 +28,7 @@ The variables definitions used in this work are summarized in [[tab:sa-variables
 :CUSTOM_ID: sec:sa-input-variables
 :END:
 
-Parameters are used to indicate value that are assumed to be known prior to optimization. They will be presented in two
+Parameters are used to indicate values that are assumed to be known prior to optimization. They will be presented in two
 sections: packing and discretization parameters then battery dynamic parameters. The spatiotemporal parameters are those
 that ensure no scheduling overlap in either space or time. The discretization parameters describe the parameters that
 discretize the time horizon, and the battery dynamic parameters are those associated with the SOC of the BEB.

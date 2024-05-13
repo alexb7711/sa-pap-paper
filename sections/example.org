@@ -12,8 +12,7 @@
 
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
 [[#sec:sa-beb-scenario]] a description of the example scenario is presented followed by a brief introduction of the BEB
-implementation of the PAP (BPAP). An alternative threshold based planning strategy called the Qin-Modified technique,
-and a heuristic modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work.
+implementation of the PAP (BPAP) and an alternative threshold based strategy called the Qin-Modified technique.
 [[#sec:sa-results]] presents the results for each of planning strategies. The results are then analyzed and discussed.
 
 ** BEB Scenario
