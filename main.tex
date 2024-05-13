@@ -1,4 +1,4 @@
-% Created 2024-05-11 Sat 21:44
+% Created 2024-05-13 Mon 11:49
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -170,6 +170,8 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \renewcommand*{\And}{\textbf{ and }}
 \newcolumntype{L}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash}X}%
 \newcommand{\mathcolorbox}[1]{\colorbox{yellow}{$\displaystyle #1$}}
+\newcommand\mysubcaption[1]{\phantomcaption%
+\caption*{\figurename~\thefigure(\thesubfigure). #1}}
 \newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{gray}{#1}}
 \newcommand{\T}{\mathcal{T}}                % To make it clear the difference
 \newcommand{\Tau}{T}                        % between Tau and T
@@ -222,7 +224,7 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 %% Solve output
 \newcommand{\timeran}{4.2 }                                                    % Time ran for MILP [s]
 % Abstract (Do not insert blank lines, i.e. \\)
-\abstract{With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation is developed for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled form the Utah Transit Authority (UTA) and comparing the results againts two other models: the PAP and the Qin-Modified. The results presented show that both techniques offer a means of generating oprationally feasible schedules quickly while minimizing the cost of operation and considering battery health. The heuristic technique, hower, shaws a quicker rate of convergence.}
+\abstract {With an increasing adoption of Battery Electric Bus (BEB) fleets, developing a reliable charging schedule is vital to a successful migration from their fossil fuel counterparts. In this paper, a Simulated Annealing (SA) implementation is developed for a charge scheduling framework for a fixed-schedule fleet of BEBs that utilizes a proportional battery dynamics model, accounts for multiple charger types, allows partial charging, and further considers the total energy consumed by the schedule as well as peak power use. Two generation mechanisms are implemented for the SA algorithm denoted as the "quick" and "heuristic" implementations, respectively. The model validity is demonstrated by utilizing a set of routes sampled form the Utah Transit Authority (UTA) and comparing the results against two other models: the BPAP and the Qin-Modified. The results presented show that both SA techniques offer a means of generating operationally feasible schedules quickly while minimizing the cost of operation and considering battery health. The heuristic technique, however, shows a quicker rate of convergence.}
 
 % Keywords
 \keyword{Battery Electric Bus (BEB), Charge Scheduling, Simulated Annealing, Position Allocation Problem (PAP), Mixed Integer Linear Program (MILP)}
@@ -276,11 +278,11 @@ computation. For example, some approaches only consider fast chargers during pla
 consider more than one charger type typically isolate the specific charger types in different locations
 \cite{tang-2019-robus-sched,he-2020-optim-charg}.
 
-When considering battery charging, some works have assumed that BEBs always charge to full capacity
+When considering battery charging, some works assume that BEBs always charge to full capacity
 \cite{duan-2021-refor-mixed,zhang-2021-optim-elect,zhou-2020-bi-objec,wang-2017-elect-vehic}, partial charging
-utilizing a linear battery dynamics model \cite{wei-2018-optim-spatio,he-2020-optim-charg,mortensen-2023-cost-minim}, or non-linear battery dynamics with partial charging \cite{whitaker-2023-a-network,zhang-2021-optim-elect,qin-2016-numer-analy,jahic-2019-preem,frendo-2021-open-sourc}. Works that assumed
-scheduled BEBs always charge to full capacity significantly simplify the scheduling problem, but eliminates the key
-factor in reducing the demand cost, partial charging \cite{tang-2019-robus-sched,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,zhou-2020-collab-optim}.
+utilizing a linear battery dynamics model \cite{wei-2018-optim-spatio,he-2020-optim-charg,mortensen-2023-cost-minim}, or non-linear battery dynamics with partial charging \cite{whitaker-2023-a-network,zhang-2021-optim-elect,qin-2016-numer-analy,jahic-2019-preem,frendo-2021-open-sourc}. Works that assume scheduled
+BEBs always charge to full capacity significantly simplify the scheduling problem, but eliminates the key factor in
+reducing the demand cost, partial charging \cite{tang-2019-robus-sched,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,zhou-2020-collab-optim}.
 
 The selected model for the battery charge dynamics, although pertinent to this work as it directly affects the quality
 of the produced schedule, does not impact the considerations of battery health. Battery health begins to be of concern
@@ -291,10 +293,11 @@ cycles a battery may undergo \cite{edge-2021-lithium,millner-2010-model-lithium}
 linear model is sufficiently accurate to produce an operationally valid schedule while maintaining battery health.
 
 In respect to the state of the art provided, this work aims to expand on the PAP by introducing a Simulated Annealing
-(SA) framework that utilizes a proportional battery dynamics model, considers battery health by encouraging slow charger
-use, allows for partial charging, allows for multiple charger types, minimizes consumption cost, and minimizes demand
-cost. These contributions are demonstrated via simulation and comparison to two other models: the implementation of the
-PAP for BEBs and what is known as the Qin-Modified technique.
+(SA) framework that generates a charging schedule for a fleet of BEBs that utilizes a proportional battery dynamics
+model, considers battery health by encouraging slow charger use, allows for partial charging, allows for multiple
+charger types, minimizes consumption cost, and minimizes demand cost. These contributions are demonstrated via
+simulation and comparison to two other models: an implementation of the PAP for BEBs, denoted as BPAP, and what is known
+as the Qin-Modified technique.
 
 The remainder of this paper goes as follows. \ref{sec:sa-problem-description} provides the problem statement associated with
 this work. \ref{sec:sa-optimization-problem} provides a description of the input parameters and decision variables then
@@ -331,12 +334,12 @@ where the \(i^{\text{th}}\) visit is denoted is \(\I_i\). Furthermore, let a par
 be written as \(\cdot_i\). For example, the arrival time for visit \(i\) is written as \(a_i\).
 
 The amount of time the BEB is allowed to charge during visit \(i\) is dictated by the scheduled arrival time and required
-departure time, \([a_i, e_i]\). Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity and
-the SOC is desired to stay above some minimum percentage of the battery capacity, \(\nu_b \in [0,1]\). The battery dynamics in
-this work is modeled as linear, which remains accurate up to about an SOC of 80\% charge \cite{liu-2020-batter-elect}.
-Note that excessively charging the BEBs is undesirable due to battery health concerns as at higher SOCs overshoot become
-a concern and may also cause the battery to undergo deep cycles may accelerate battery degradation
-\cite{edge-2021-lithium,millner-2010-model-lithium}.
+departure time, \([a_i, e_i]\). Partial charging is allowed; however, the SOC may not exceed the BEB battery capacity,
+\(\kappa_b\), and the SOC is desired to stay above some minimum percentage of the battery capacity, \(\nu_b \in [0,1]\). The battery
+dynamics in this work is modeled as linear, which remains accurate up to about an SOC of 80\%
+\cite{liu-2020-batter-elect}. Note that excessively charging the BEBs is undesirable due to battery health concerns as
+at higher SOCs overshoot become a concern and may also cause the battery to undergo deep cycles may accelerate battery
+degradation \cite{edge-2021-lithium,millner-2010-model-lithium}.
 
 Each BEB arrival, except for the last arrival for each BEB, has a paired ``route'' that the BEB must perform after the
 visit. This route, as one would expect, causes the BEB to discharge by some certain amount. Each bus route is assumed to
@@ -354,14 +357,14 @@ Constants &  & Constants & \\[0pt]
 \(\T\) & Time horizon & \(n_K\) & Number of iterations in the repetition schedule\\[0pt]
 \(n_M\) & Total number of steps created by initial temperature, \(\Tau_0\), and cooling schedule & \(n_Q\) & Number of chargers\\[0pt]
 \(n_V\) & Total number of visits & \(n_H\) & Number of discrete steps in time horizon\\[0pt]
-\(n_B\) & Number of buses in use &  & \\[0pt]
+\(n_B\) & Number of buses in the fleet &  & \\[0pt]
 \hline
 Input Variables &  & Input Variables & \\[0pt]
 \(\Delta_i\) & Discharge of visit over after visit \(i\) & \(\alpha_b\) & Initial charge percentage time for bus \(b\)\\[0pt]
 \(\epsilon_q\) & Cost of using charger \(q\) & \(\kappa_b\) & Battery capacity for each BEB\\[0pt]
 \(\xi_i\) & The next index bus \(b\) will arrive &  & \\[0pt]
-\(a_i\) & Arrival time of visit \(i\) & \(e_i\) & Time bus visit \(i\) must exit the station\\[0pt]
-\(t_h\) & Discrete step in time horizon & \(dt\) & Discrete time slice in time horizon \(dt_h = t_h - t_{h-1}\)\\[0pt]
+\(a_i\) & Arrival time of visit \(i\) & \(e_i\) & Departure time for visit \(i\)\\[0pt]
+\(t_h\) & Discrete step in time horizon & \(dt\) & Step size \(dt_h = t_h - t_{h-1}\)\\[0pt]
 \(r_q\) & Charge rate of charger \(q\) & \(t_m\) & Element of the temperature vector created by cooling equation, \(t_m \in t\)\\[0pt]
 \(\nu_b\) & Minimum charge percentage allowed for each BEB &  & \\[0pt]
 \hline
@@ -369,9 +372,9 @@ Direct Decision Variables &  & Direct Decision Variables & \\[0pt]
 \(u_i\) & Initial charge time for visit \(i\) & \(d_i\) & Final charge time for charger for visit \(i\)\\[0pt]
 \(q_i\) & Assigned queue for visit \(i\) &  & \\[0pt]
 Slack Variables &  & Slack Variables & \\[0pt]
-\(\eta_i\) & Charge for the bus upon arrival visit \(i\) & \(s_i\) & Amount of time spent on charger for visit \(i\)\\[0pt]
+\(\eta_i\) & Charge for the bus upon arrival for visit \(i\) & \(s_i\) & Amount of time spent on charger for visit \(i\)\\[0pt]
 \(\sigma_{ij}\) & Binary variable determining temporal ordering of vehicles \(i\) and \(j\) & \(\psi_{ij}\) & Binary variable determining spatial ordering of vehicles \(i\) and \(j\)\\[0pt]
-\(p_{d}\) & Demand cost of the schedule & \(\phi_i\) & Penalty method for visit \(i\)\\[0pt]
+\(p_{d}\) & Demand cost of the schedule & \(\phi_i\) & Charge penalty for visit \(i\)\\[0pt]
 \(\C\) & Set of available charging times &  & \\[0pt]
 \hline
 \end{tabularx}
@@ -379,10 +382,9 @@ Slack Variables &  & Slack Variables & \\[0pt]
 \section{Optimization Problem}
 \label{sec:sa-optimization-problem}
 The objective of this work is to present a framework that optimizes the assignment of \(n_V\) BEB visits to a set of \(n_Q\)
-charging queues during the interval \([0,\T]\) provided a fleet of \(n_A\) BEBs with fixed route schedules. Particularly,
-the framework aims to minimize over peak power usage, energy consumption, and the total amount of chargers utilized
-while maintaining encouraging battery health via slow charging and maintaining the SOC of each BEB above a minimum SOC
-threshold.
+charging queues over the interval \([0,\T]\) provided a fleet of \(n_A\) BEBs with fixed route schedules. Particularly, the
+framework aims to minimize over peak power usage, energy consumption, encouraging battery health via slow charging, and
+maintaining the SOC of each BEB above a minimum SOC threshold.
 
 The optimization problem outlined in this work is presented in form of an objective function with constraints. The
 constraints ensure that candidate solutions are operationally feasible. The variables of optimization are to be
@@ -393,8 +395,8 @@ objective function is employed to allow relative comparisons between candidate s
 \subsection{Variable Definitions}
 \label{sec:sa-parameter-definitions}
 This section defines the input and decision variables used in this work. The input parameters are assumed to be fixed
-prior to optimizing the system, whereas the decision variables are the values that the SA algorithm has the freedom to
-manipulate. The variables to be introduced are summarized in \ref{tab:sa-variables}.
+prior to optimizing, whereas the decision variables are the values that the SA algorithm has the freedom to manipulate.
+The variables definitions used in this work are summarized in \ref{tab:sa-variables}.
 
 \subsubsection{Input Parameters}
 \label{sec:sa-input-variables}
@@ -403,7 +405,7 @@ sections: packing and discretization parameters then battery dynamic parameters.
 that ensure no scheduling overlap in either space or time. The discretization parameters describe the parameters that
 discretize the time horizon, and the battery dynamic parameters are those associated with the SOC of the BEB.
 
-\paragraph{Spaciotemporal and Discretization Parameters}
+\paragraph{Spatiotemporal and Discretization Parameters}
 \label{sec:sa-packing-and-discretization-paramaters}
 As previously introduced, \(\xi_i\) represents the next arrival index for bus \(b_i\). As an example of its use, suppose the
 ID of each BEB is recorded in order of arrival as \(\{ 2,1,3,2 \}\). Using a starting index of 1, \(\xi_1 = 4\) as that is the
@@ -428,8 +430,7 @@ all BEBs be denoted as \(\Isetfinal\). The discharge for the final visit of each
 \label{sec:sa-decision-variables}
 Decision variables are those chosen by the optimizer. There are three direct decision variables for each visit, i.e.,
 direct referring to the variables that the optimizer has immediate control over. The direct variables include initial
-and final charging times, \(u_i\) and \(d_i\), respectfully, as well as the bus is also assigned a charging queue, \(q_i \in
-\Qset\).
+and final charging times, \(u_i\) and \(d_i\), respectfully, and the selected charging queue, \(q_i \in \Qset\).
 
 The remaining variables are slack variables which are introduced to track the vehicle charge and queuing position based
 on the problem parameters and direct decision variables. Recall the initial SOC for a visit is written as \(\eta_i\), where
@@ -464,8 +465,8 @@ contain available charger times for each queue \(q \in Q\). Let a set of availab
 \subsection{Objective Function}
 \label{sec:sa-objective-function}
 This work aims to minimize the total ``cost'' of utilizing a given charge schedule. Let \(J(\I)\) represent the objective
-function. The objective function for this problem has four main considerations: charger assignment, consumption cost,
-demand cost, and a penalty method for visits with insufficient SOCs. Each of which will be discussed in turn throughout
+function. The objective function for this problem has four main considerations: an assignment cost, a penalty method for
+visits with insufficient SOCs, consumption cost, and a demand cost. Each of which will be discussed in turn throughout
 the subsequent sections.
 
 \subsubsection{Assignment Cost}
@@ -484,14 +485,14 @@ particular choice for the assignment cost to encourage the use of slow chargers 
 health. The charger queue indices are ordered such that the first \(n_B\) queues correspond to idle queues. This allows
 all BEBs to simultaneously sit idle if needed. All \(n_B\) idle queues have assignment costs of zero to denote that there
 is no cost when not charging. The next group of chargers is assumed to be the slow chargers subsequently followed by the
-fast. Let \(P \in \mathbb{R}\), then the set of slow and fast charging queues be of the form \([P, 2P, ..., n_QP]\). Concatenating
-these vectors yields \(\epsilon = [0, 0, ... P, 2P, 3P, ...]\), where \(\epsilon\) describes the vector of assignment costs and the first
+fast. Letting \(P \in \mathbb{R}\), then the set of slow and fast charging queues be of the form \([P, 2P, ..., n_QP]\). Concatenating
+these vectors yields \(\epsilon = [0, 0, ..., P, 2P, 3P, ...]\), where \(\epsilon\) describes the vector of assignment costs and the first
 \(n_B\) values are zero.
 
 \subsubsection{Penalty Method}
 \label{sec:sa-penalty-method}
 A penalty method is to be implemented to provide a soft constraint on the lower bound of the charge. Due to the
-uncertainty of the initial SOC for each visit, a soft constraint is employed to increase the solution space while
+uncertainty of the initial SOC for each visit, a soft constraint is desired to increase the solution space while
 penalizing non-operationally feasible solutions. If a hard constraint were to be implemented, the constraint would
 restrict the set of allowable schedules to only operationally feasible schedules. Let the piecewise function that
 enables/disables the penalty method be of the form
@@ -520,16 +521,13 @@ next route. Therefore, the penalty method is written as
 \label{sec:sa-consumpction-cost}
 In most cases, utility companies have a portion of the cost related to the total electricity consumed over a billing
 period, referred to herein as the consumption cost. The consumption cost is the summation of all the energy being used
-over all the active periods for each charger in the time horizon. This is represented by the summation
+over all the active periods for each charger in the time horizon. A scaling \(z_c\) is applied as a weight on the
+summation (this could correspond to a monetary cost imposed by the utility). This is represented by the summation
 
 \begin{equation}
 \label{eq:consumption-cost}
 z_c \sum_{i=1}^{n_V} r_{q_i}s_i\text{.}
 \end{equation}
-
-A scaling \(z_c\) is used as a weight for the consumption cost (this could correspond to a monetary cost imposed by the
-utility). Within the summation, the charge rate, \(r_{q_i}\), for the active charger, \(q_i\), is multiplied by the time
-that the charger will be utilized, \(s_i\).
 
 \subsubsection{Demand Cost}
 \label{sec:sa-demand-cost}
@@ -562,10 +560,10 @@ p_d(t) = \max(p_{fix},p_{max}(t))\text{.}
 \end{equation}
 
 For the sake of implementation, the integral in \ref{eq:p} is discretized. Let \(dt\) denote the discretization time step and
-\(p_h\) the power at discrete step \(h\), \ref{eq:p} is approximated as
+\(p_h\) the power for the \(h^{\text{th}}\) step, \ref{eq:p} is approximated as
 
 \begin{equation}
-p_{T_p,h} = \frac{1}{T_p} \sum_{k = h-\frac{T_p}{dt}+1}^h p_k dt\text{.}
+p_{T_p,h} = \frac{1}{T_p} \sum_{k = h-\frac{T_p}{dt}+1}^h p_k\; dt\text{.}
 \end{equation}
 
 The discrete demand cost is expressed as
@@ -627,7 +625,7 @@ These constraints are represented as follows:
   \end{equation}
   \begin{equation}
       \label{seq:c7}
-      \kappa_{\Xi_i} \geq \eta_{i} + r_{q_i}s_i
+      \kappa_{b_i} \geq \eta_{i} + r_{q_i}s_i
   \end{equation}
   \begin{equation}
       \label{seq:c8}
@@ -713,8 +711,8 @@ local solutions as it employs a stochastic approach that explores the solution s
 This model is named after its analogized process where a crystalline solid is heated then allowed to cool at a slow rate
 until it achieves its most regular possible crystal lattice configuration (i.e. lowest energy state)
 \cite{henderson-1989-theor-pract,press-1992-numer-recip}. SA establishes a connection between the thermodynamic
-process and the search for global optimum in optimization problems. Within the SA process there are three key components:
-cooling schedule, acceptance criteria, and generation mechanisms
+process and the search for global optimum in optimization problems. Within the SA process there are three key
+components: cooling equation, acceptance criteria, and generation mechanisms
 \cite{keller-2019-multi-objec,press-1992-numer-recip}.
 
 The cooling equation describes the speed at which the figurative temperature is decreased in a controlled manner over
@@ -742,8 +740,8 @@ t_m = \beta t_{m-1}\text{.}
 
 In \ref{eq:cool}, \(\beta\) controls the cooling rate. Typical values of \(\beta\) are within the range \([0.8, 0.99]\)
 \cite{henderson-1989-theor-pract}. \ref{fig:geometric} demonstrates this principle by plotting the geometric schedule
-using varying values of \(\beta\). The variable \(t_m\) represents the temperature at the \(m^{\text{th}}\) step of the temperature
-function. The total amount of steps \(M\) is dictated by the initial temperature and \(\beta\).
+using varying values of \(\beta\). The variable \(t_m\) represents the temperature at the \(m^{\text{th}}\) step of the
+temperature function. The total amount of steps, \(M\), is dictated by the initial temperature and \(\beta\).
 
 \begin{figure}[t!]
   \centering \includegraphics[width=0.6\textwidth]{img/geometric.png}
@@ -777,10 +775,10 @@ f(\I,\bar{\I},t_m) =
 Generation mechanisms are used to create a neighboring candidate solution \cite{gendreau-2018-handb-metah}. That is,
 the generating function creates a solution that can be reached in a single iteration from the active solution. In
 response to the problem statement made in \ref{sec:sa-problem-description}, five primitive generation mechanism are used: new
-visit, slide visit, new charger, new window, wait. The purpose of each of these generators is to assign new visits to a
-charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from one charger
-to another with the same charge schedule, move a bus to its idle queue. Each generator will be discussed in more detail
-in \ref{sec:sa-generators}.
+visit, slide visit, new charger, wait, and new window. The purpose of each of these generators is to assign new visits
+to a charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from one
+charger to another with the same charge schedule, move a bus to its idle queue. Each generator will be discussed in more
+detail in \ref{sec:sa-generators}.
 
 These primitive generation mechanisms will, in turn, be utilized by two wrapper functions. The charge schedule generator
 is to used create an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate
@@ -790,10 +788,10 @@ their respective inputs and outputs must be defined.
 
 \subsubsection{Generator Input/Output}
 \label{sec:sa-generator-input-output}
-Each generator accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is the set of
-visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\). The output of the generating
-functions is the same as the input, but with changes applied to it by a generator. Let a modified variable be denoted
-with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
+Each generator primitive accepts a tuple \(\Sol \equiv (i, \I, \C)\) where \(i\) is the visit index being manipulated, \(\I\) is
+the set of visits, and \(\C\) is the set that describes the availability for all chargers \(q \in \Qset\). The output of the
+generating functions is the same as the input, but with changes applied to it by a generator. Let a modified variable be
+denoted with a bar, \(\bar{\cdot}\). Thus, the modified input tuple is written as \(\bar{\Sol}\).
 
 \subsubsection{Generators}
 \label{sec:sa-generators}
@@ -814,11 +812,11 @@ The new visit generator defined in \ref{alg:new-visit} describes the process of 
 queue, \(q \in B\), to a charging queue, \(q_i \in \{n_B + 1, ..., n_Q\}\), within its arrival/departure time \([a_i, e_i]\). Let
 \(\U_{\{\cdot\}}\) indicate that an element is selected randomly with a uniform distribution from the set \(\{\cdot\}\). For
 example, \(\U_{[a_i, e_i]}\) indicates that a value will be selected between \(a\) and \(e\) with a uniform distribution.
-\ref{alg:new-visit} begins by extracting variables. Lines 6 and 7 randomly select a charging queue and available time
-frame with a uniform distribution, respectively. Line 8 attempts to assign the visit the time frame found in Line 7, if
-it succeeds, the updated visit is returned. Otherwise, the null value is returned.
+\ref{alg:new-visit} begins by extracting variables. Lines 8 and 9 randomly select a charging queue and available time
+frame with a uniform distribution, respectively. Line 10 attempts to assign the visit to the previously select time
+slice, if it succeeds, the updated visit is returned. Otherwise, the null value is returned.
 
-The function \texttt{findFreeTime} is the algorithm that determines whether a visit's time at the station \([a_i, e_i]\) can be placed
+The function \texttt{FindFreeTime} is the algorithm that determines whether a visit's time at the station \([a_i, e_i]\) can be placed
 in the time availability of charger \(q\). Let the available time for charger \(q\) for visit \(i\) be denoted as \(C \equiv
 \C_{i.q}\). Furthermore, let the lower and upper bound of \(\C\) be denoted as \(C_L\) and \(C_U\), respectively. The algorithm
 checks whether the BEB time at the station, \([a_i, e_i]\) fits within the charger availability \([C_L, C_U]\). If it does,
@@ -834,20 +832,25 @@ a random charging time frame is returned such that \(a_i \le u_i \le d_i \le e_i
   \KwOut{$\bar{\Sol}$}
 
   \SetKwFunction{Union}{Union}
-  \SetKwFunction{findFreeTime}{findFreeTime}
+  \SetKwFunction{FindFreeTime}{FindFreeTime}
 
   \Begin
     {
       $i \leftarrow \Sol_{i}$\tcc*{Extract visit index}
+      $\I \leftarrow \Sol_{\I}$\tcc*{Extract visit tuple}
+      $\C \leftarrow \Sol_{\C}$\tcc*{Extract visit charger availability}
       $a \leftarrow \I_{i.a}$\tcc*{Extract the arrivial time for visit $i$}
       $e \leftarrow \I_{i.e}$\tcc*{Extract the departure time for visit $i$}
       $q \leftarrow \I_{i.q}$\tcc*{Extract the current charge queue for visit $i$}
       $\bar{q} \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
-      $C \leftarrow \mathcal{U}_{\C_q}$\tcc*{Select a random time slice from $\C_q$}
+      $C \leftarrow \mathcal{U}_{\C_{\bar{q}}}$\tcc*{Select a random time slice from $\C_{\bar{q}}$}
 
-      \If(\tcc*[f]{If there is time available in $C_q^j$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C, i, q, a, e$} $\not\in \varnothing$}
+      \If(\tcc*[f]{If there is time available in $C$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \FindFreeTime{$C, i, \bar{q}, a, e$} $\not\in \varnothing$}
          {
-           \Return{($i, (\bar{q},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return visit}
+           $\bar{I}_{i.q} \leftarrow \bar{q}$\tcc*{Update visit tuple with new charge queue}
+           $\bar{I}_{i.u} \leftarrow \bar{u}$\tcc*{Update visit tuple with new inital charge time}
+           $\bar{I}_{i.d} \leftarrow \bar{d}$\tcc*{Update visit tuple with new final charge time}
+           \Return{($i, \bar{I},\bar{C}$)}\tcc*[f]{Return visit}
          }
 
          \Return{($\varnothing$)}\tcc*{Return nothing}
@@ -858,10 +861,11 @@ a random charging time frame is returned such that \(a_i \le u_i \le d_i \le e_i
 \label{slide-visit}
 This primitive generator is used for visits that have already been scheduled. Because of the constraint \ref{seq:c8},
 there may be some slack to manipulate \([u_i, d_i]\) within the window \([a_i, e_i]\). That is, two new values, \(u_i\) and
-\(d_i\) are randomly selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\). Line 2 of
-\ref{alg:slide-visit} purges the visit from the charger availability schedule. The \texttt{Purge} function simply removes an
-assigned charge time from the set \(\C\). Without altering selected queue, the charge time randomly re-assigned with a
-uniform distribution. Upon success, the updated tuple is returned, otherwise the null value is returned.
+\(d_i\) are randomly selected with a uniform distribution that satisfy the constraint \(a_i \leq u_i \leq d_i \leq e_i\).
+\ref{alg:slide-visit} begins be extracting variables. Line 5 purges the visit from the charger availability schedule.
+The \texttt{Purge} function simply removes an assigned charge time from the set \(\C\). Without altering selected queue, the charge
+time randomly re-assigned with a uniform distribution. Upon success, the updated tuple is returned, otherwise the null
+value is returned.
 
 \begin{algorithm}[H]
   \scriptsize
@@ -875,13 +879,19 @@ uniform distribution. Upon success, the updated tuple is returned, otherwise the
 
     \Begin
     {
+      $i \leftarrow \Sol_{i}$\tcc*{Extract visit index}
+      $\I \leftarrow \Sol_{\I}$\tcc*{Extract visit tuple}
+      $\C \leftarrow \Sol_{\C}$\tcc*{Extract visit charger availability}
+
       $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $C \leftarrow \bar{C}_{i.q_i}$\tcc*{Get the time availability of the purged visit}
+      $C \leftarrow \bar{C}_{i.q}$\tcc*{Get the time availability of the purged visit}
 
       \tcc{If there is time available in $C$}
-      \If{($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$C$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
+      \If{($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \FindFreeTime{$C$, $i$, $\I_{i.q}$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
       {
-        \Return{($i, \I, (\I_{i.q_i},\bar{u},\bar{d}),\bar{C}$)}\tcc*[f]{Return updated visit}
+        $\bar{\I}_{i.u} \leftarrow \bar{u}$\tcc*{Update visit tuple with new inital charge time}
+        $\bar{\I}_{i.d} \leftarrow \bar{d}$\tcc*{Update visit tuple with new final charge time}
+        \Return{($i, \bar{\I},\bar{C}$)}\tcc*[f]{Return updated visit}
       }
 
         \Return{($\varnothing$)}\tcc*{Return nothing}
@@ -891,9 +901,9 @@ uniform distribution. Upon success, the updated tuple is returned, otherwise the
 \paragraph{New charger}
 \label{new-charger}
 The new charger generator moves a visit \(\I_i\) to a new charging queue while maintaining the same charge time, \([u_i,
-d_i]\). \ref{alg:new-charger} purges the visit from the charger availability set, a queue is selected at random with a
-uniform distribution, then the new selection is checked whether the charge time \([u_i, d_i]\) may be assigned to the new
-queue.
+d_i]\). \ref{alg:new-charger} begins be extracting variables, and then purges the visit from the charger availability
+set, a queue is selected at random with a uniform distribution, then the new selection is checked whether the charge
+time \([u_i, d_i]\) may be assigned to the new queue.
 
 \begin{algorithm}[H]
   \scriptsize
@@ -904,13 +914,18 @@ queue.
 
     \Begin
     {
-      $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $q \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
+      $i \leftarrow \Sol_{i}$\tcc*{Extract visit index}
+      $\I \leftarrow \Sol_{\I}$\tcc*{Extract visit tuple}
+      $\C \leftarrow \Sol_{\C}$\tcc*{Extract visit charger availability}
 
-      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \findFreeTime{$\bar{\C}_{i.q}$, $\Sol_i$, $\I_q$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
+      $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
+      $\bar{q} \leftarrow \mathcal{U}_{Q}$\tcc*{Select a random charging queue with a uniform distribution}
+
+      \If(\tcc*[f]{If there is time available in $C_{q}$}){($\bar{C}, \bar{u}, \bar{d}$) $\leftarrow$ \FindFreeTime{$\bar{\C}_{i.q}$, $i$, $\bar{q}$, $\I_{i.a}, \I_{i.e}$} $\not\in \varnothing$}
       {
         \tcc{Return visit, note $u$ and $d$ are the original inital/final charge times.}
-        \Return{($i, \I, (q,\I_{i.u}, \I_{i.d}),\bar{\C}$)}
+        $\bar{I}_{i.q} \leftarrow \bar{q}$\tcc*{Update visit tuple with new charge queue}
+        \Return{($i, \bar{I}, \bar{\C}$)}
       }
 
       \Return{($\varnothing$)}\tcc*{Return nothing}
@@ -936,8 +951,12 @@ duration of its time at the station.
     \Begin
     {
       $(i, \I, \bar{\C}) \leftarrow$\Purge{$\Sol$}\tcc*{Purge visit $i$ from charger availibility matrix}
-      $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\tcc*{Update the charger availability matrix for wait queue $\bar{\C}_{i.q_i}$}
-      \Return{$(i, \I, (\I_{i.b}, \I_{i.a}, \I_{i.e}), \bar{\C})$}\tcc*[f]{Return visit}
+      \tcc{Update the charger availability matrix for wait queue $\bar{\C}_{i.q_i}$}
+      $\bar{\C}'_{\I_{i.\Gamma_i}} \leftarrow \C' \cup \{[\I_{i.a}, \I_{i.e}]\}$\;
+      $\bar{\I}_{i.q} \leftarrow \I_{i.b}$\tcc*{Reassign bus to idle queue}
+      $\bar{\I}_{i.u} \leftarrow \I_{i.a}$\tcc*{Set initial charge time to the arrival time}
+      $\bar{\I}_{i.d} \leftarrow \I_{i.e}$\tcc*{Set the final charge time to the departure time}
+      \Return{$(i, \bar{\I}, \bar{\C})$}\tcc*[f]{Return visit}
     }
   \end{algorithm}
 
@@ -991,8 +1010,8 @@ through each visit and executing \ref{alg:new-visit} to place visit \(i\) at ran
 \caption{Charge schedule generation algorithm} \label{alg:charge-schedule-generation}
     \LinesNumbered
     \TitleOfAlgo{Candidate Solution Generator}
-    \KwIn{$\Sol$}
-    \KwOut{$\bar{\Sol}$}
+    \KwIn{$(\I, \C)$}
+    \KwOut{$(\bar{\I}, \bar{\C})$}
 
     \SetKwFunction{NewVisit}{NewVisit}
 
@@ -1003,7 +1022,7 @@ through each visit and executing \ref{alg:new-visit} to place visit \(i\) at ran
         {
             ($i, \bar{\I}$, $\bar{\C}$) $\leftarrow$ \NewVisit{($\I_i$, $\I$, $\C$)}\tcc*{Assign the bus to a charger}
         }
-            \Return{($0, \bar{\I}$, $\bar{\C}$)}
+            \Return{($\bar{\I}$, $\bar{\C}$)}
     }
   \end{algorithm}
 
@@ -1015,45 +1034,45 @@ primitive generator, and execute said primitive generator once. Let \(\W^y_{[\cd
 distribution specified by a weight vector \(y \in \mathbb{R}\). Thus, \ref{alg:perturb-schedule} is as follows: Lines 2-12 generate a
 vector of weights for the visit index selection. The weights have a default value of one. Each visit is then indexed in
 reverse order. If the SOC of the visit is less than \(\nu_b \kappa_b\), then the weight for the visit is calculated as shown on
-Line 10. The route for BEB \(b\) is then set as a ``priority'' on Line 9 to propagate the previously calculated weight in
-earlier visits for BEB \(b\) as shown on Line 5. This is done in an attempt to encourage the SA algorithm to ``fix'' the
+Line 10. The route for BEB \(b\) is then set as a ``priority'' on Line 9 to propagate the previously calculated weight to
+earlier visits of BEB \(b\) as shown on Line 5. This is done in an attempt to encourage the SA algorithm to ``fix'' the
 current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
-with weighted distribution \(y^v\), then selects a primitive with a weighted distribution, \(y^p\). Letting \(n_G\) denote the
-number of primitive generating functions, the selected primitive with a weighted distribution is denoted as
+with weighted distribution \(y^v\) and selects a primitive with a weighted distribution, \(y^p\). Letting \(n_G\) denote the
+number of primitive generating functions, line 15 selects a primitive generating function with a weighted distribution,
 \(\W^{y^v}_{[1, n_G]}\). The primitive is then executed, and the results are returned.
 
-\begin{algorithm}[H]
+\begin{algorithm}[h]
 \scriptsize
 \caption{Perturb schedule algorithm} \label{alg:perturb-schedule}
 
     \LinesNumbered
     \TitleOfAlgo{Perturb Schedule}
-    \KwIn{$\Sol$}
-    \KwOut{$\bar{\Sol}$}
+    \KwIn{$(\I, \C)$}
+    \KwOut{$(\bar{\I}, \bar{\C})$}
 
-    \SetKwFunction{PGF}{PGF}
+    \SetKwFunction{PrimitiveGeneratingFunction}{PrimitiveGeneratingFunction}
 
     \Begin
     {
-        $p \leftarrow [false; n_A]$\tcc*{Create vector to track priority routes}
+        $p \leftarrow [false; n_A]$\tcc*{Create vector of booleans to track priority status}
         $y^v \leftarrow [1.0; n_V]$\tcc*{Create weight vector for index selection}
         \tcc{Loop through the visits in reverse order}
-        \ForEach{$\I_i \leftarrow \I_{|\I|} \text{ TO } \I_{1}$}
+        \For{$i \leftarrow |\I| \text{ TO } 1$}
         {
-            \tcc{If the current visit is part of a priority route}
-            \If{$p_{\I_{i.b}} = true$}{$y^v_{\I_i} = y^v_{\I_{i.\xi}}$\;}
-            \tcc{Else if the current visit's SOC does below the allowed threshold}
+            \tcc{Check whether the current visit is part of a priority route}
+            \If{$p_{\I_{i.b}} = true$}{$y^v_{\I_i} = y^v_{\I_{i.\xi}}$\tcc*{Propagate the priority level to previous visit}}
+            \tcc{Prioritize if the current visit's SOC falls below the allowed threshold}
             \ElseIf{$\I_{i.\eta} \le \nu_{\I_{i.b}} \kappa_{\I_{i.b}}$}{
                 $p_{\I_{i.b}} = true$\tcc*{Indicate the current BEB's routes are to be prioritized}
                 $y^v_{\I_i} = \kappa_{\I_{i.b}} + \kappa_{\I_{i.b}} (\nu_{\I_{i.b}}\kappa_{\I_{i.b}} - \I_{i.\eta})$\tcc*{Calculate the weight of the current visit}
             }
         }
-        $\I_i\leftarrow\; \W^{y^v}_{\I}$\tcc*{Select an index with a weighted distribution}
-        $i \leftarrow\; \I_i$\tcc*{Extract visit index}
+        $i\leftarrow\; \W^{y^v}_{\I}$\tcc*{Select an index with a weighted distribution}
         $y^p \leftarrow [y^p_1, y^p_2, ...]$\tcc*{Define the weight of each primitive generator}
-        $PGF \leftarrow\; \W^{y^p}_{[1,n_G]}$\tcc*{Select a generator function with weighted distribution}
-        $\bar{\Sol} \leftarrow$ \PGF{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
-        \Return{($0, \bar{\I}$, $\bar{\C}$)}
+        \tcc{Select a primitve generating function with weighted distribution}
+        \PrimitiveGeneratingFunction $\leftarrow\; \W^{y^p}_{[1,n_G]}$\;
+        $(i, \bar{\I}, \bar{\C}) \leftarrow$ \PrimitiveGeneratingFunction{($i$, $\I$, $\C$)}\tcc*{Excecute the generator function}
+        \Return{($\bar{\I}$, $\bar{\C}$)}
     }
 \end{algorithm}
 
@@ -1074,11 +1093,11 @@ the output of the results and to what degree.
 \section{Optimization Algorithm}
 \label{sec:sa-optimization-algorithm}
 This section combines the generation algorithms and the optimization problem into a single algorithm (\ref{alg:sa-pap}).
-Generally, SA assumes that the generated candidate solutions are within the solution space of the problem, \(\omega \in S\) where
-\(S\) is the solution space. Hence, the initialization and perturbations of a schedule must be verified to ensure that the
-generated schedule is in the solution space. Therefore, the objective function and constraints introduced in
-\ref{sec:sa-constraints} and \ref{sec:sa-objective-function}, respectively, must be employed to verify that the outputs of
-\ref{alg:charge-schedule-generation} and \ref{alg:perturb-schedule} are in the feasible space, \(S\).
+Generally, SA assumes that the generated candidate solutions are within the solution space of the problem, \(\Sol \in S\)
+where \(S\) is the solution space. In other words, the initialization and perturbations of a schedule must be verified to
+ensure that the generated schedule is in the solution space. Therefore, the objective function and constraints
+introduced in \ref{sec:sa-constraints} and \ref{sec:sa-objective-function}, respectively, must be employed to verify that the
+outputs of \ref{alg:charge-schedule-generation} and \ref{alg:perturb-schedule} are in the feasible space, \(S\).
 
 As previously stated, the generating functions directly influence the values of the assigned charge queue, charge
 initialization time, and charge completion time: \(q_i\), \(u_i\), and \(d_i\), respectively. Having generated those values,
@@ -1088,12 +1107,12 @@ employed to enable and disable \(\sigma_{ij}\) and \(\psi_{ij}\) and \ref{seq:c2
 
 Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
 dynamic constraints are also fully defined. \ref{seq:c6} is sequentially calculated after a given schedule has been
-fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method implemented in
+created. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method implemented in
 \ref{sec:sa-objective-function} is set in place to allow the SOC to go below the specified threshold, \(\nu_{b_i} \kappa_{b_i}\), but
 punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a solution that
 does not activate the penalty method (i.e., is solution is operationally feasible).
 
-The implementation of the SA PAP is outlined in \ref{alg:sa-pap} will now be outlined. The algorithm begins by creating
+The implementation of the SA PAP, outlined in \ref{alg:sa-pap}, will now be discussed. The algorithm begins by creating
 a temperature schedule and creating an initial solution. The algorithm then iterates through the temperature schedule
 (outer loop). For each iteration of the outer loop, an inner loop is executed \(n_K\) times. During this inner loop, the
 solution is modified by a primitive generating function to create a candidate solution. The candidate is solution is
@@ -1109,8 +1128,8 @@ until the cooling equation is exhausted.
   \KwOut{($\bar{\I}$, $\bar{\C}$)}
 
   \SetKwFunction{Temp}{$\Tau$}
-  \SetKwFunction{CSG}{CSG}
-  \SetKwFunction{PS}{PS}
+  \SetKwFunction{ChargeScheduleGenerator}{ChargeScheduleGenerator}
+  \SetKwFunction{PerturbSchedule}{PerturbSchedule}
   \SetKwFunction{Obj}{J}
 
   \Begin
@@ -1118,7 +1137,7 @@ until the cooling equation is exhausted.
       \tcc{Generate vector of temperatures given cooling equation $\Tau$ and initial temperature $\Tau_0$}
       $t \leftarrow$ \Temp{$\Tau_0$}
 
-      $\Sol \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
+      $\Sol \leftarrow$\ChargeScheduleGenerator{($\I$, $\C$)}\tcc{Generate an initial solution}
 
       \tcc{For each item in the temperature vector}
       \ForEach{$t_k \in t$}
@@ -1126,7 +1145,7 @@ until the cooling equation is exhausted.
         \tcc{For each step in the constant temperature repitition counter}
         \ForEach{$k \in \{0, 1, ..., n_K\}$}
         {
-          $\bar{\Sol} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
+          $\bar{\Sol} \leftarrow$ \PerturbSchedule{($\I$, $\C$)} \tcc*{Generate a new solution}
           $\Delta E = $ \Obj{$\bar{\Sol}_{\I}$}  - \Obj{$\Sol_{\I}$} \tcc*{Calculate the difference of fitness scores}
 
           \If{$\bar{\I} \in S$ and $\Delta E < 0$}{$\Sol \leftarrow \bar{\Sol}$}
@@ -1142,8 +1161,8 @@ until the cooling equation is exhausted.
 \label{sec:sa-example}
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
 \ref{sec:sa-beb-scenario} a description of the example scenario is presented followed by a brief introduction of the BEB
-implementation of the PAP. An alternative threshold based planning strategy called the Qin-Modified technique, and a
-heuristic modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work.
+implementation of the PAP (BPAP). An alternative threshold based planning strategy called the Qin-Modified technique,
+and a heuristic modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work.
 \ref{sec:sa-results} presents the results for each of planning strategies. The results are then analyzed and discussed.
 
 \subsection{BEB Scenario}
@@ -1152,18 +1171,18 @@ The test scenario was run over a time horizon of \(T=24\) hours, with a total of
 between \(n_B = \A\) buses. Each BEB is assumed to have a battery capacity of \(\kappa_b =\) \batsize kWh that is required to
 stay above an SOC of \(\nu_b =\) \mincharge (\num{\fpeval{\batsize * \minchargeD}} kWh). Each bus is assumed to
 begin the working day with \(\alpha =\) \num{\fpeval{\acharge*100}}\% charge (\num{\fpeval{\acharge * \batsize}} kWh). A total of \num{\fpeval{\fast + \slow}} chargers are utilized where \slow of the chargers
-are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p\) \num{\Cgain}, \(z_c
-= 1\), and \(z_d =\) \num{10000} are used. As previously introduced, to encourage the SA PAP to utilize the
-fewest number of chargers, the value of \(\epsilon_q\) in the objective function is \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in
-\{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 100q\). The SA algorithm utilizes the geometric cooling schedule with an initial
-temperature of \(T_0 =\) \num{\tempinit} with \(\beta = 0.997\), resulting in a total of \(n_M =\)
-\num{\tempcnt} steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the demand cost
-\cite{rocky-mountain-power}. To estimate the method by which Rocky Mountain Power determines its demand cost, this work
-employed an interval of \(T_p =\) \num{\fpeval{15*60}} seconds in its demand cost calculation. A weight vector
-of \([0.6255, 0.6255, 0.4170, 0.2085]\) is used to influence the distribution of selecting the new charger, new window,
-wait, and slide visit primitives, respectively. The algorithm also assumes a total of \(n_K = \localcnt\) iterations for
-the local search at a constant temperature. In total, that results in \num{\fpeval{\localcnt * \tempcnt}}
-configurations being searched in a total runtime of \num{\fpeval{\quicklocal * \tempcnt}} seconds.
+are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of \(z_p =\) \num{\Cgain},
+\(z_c = 1\), and \(z_d =\) \num{10000} are used. As previously introduced, to encourage slow charging for battery
+health, the values of \(\epsilon\) in the objective function are \(\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0\) and \(\forall q \in \{n_B + 1, n_B +
+2, ..., n_Q\}; \epsilon_q = 10q\). The SA algorithm utilizes the geometric cooling schedule with an initial temperature of \(T_0
+=\) \num{\tempinit} with \(\beta = 0.997\), resulting in a total of \(n_M =\) \num{\tempcnt} steps. Rocky
+Mountain Power utilizes fifteen-minute intervals to calculate the demand cost \cite{rocky-mountain-power}. To match the
+method by which Rocky Mountain Power determines its demand cost, this work employed an interval of \(T_p =\)
+\num{\fpeval{15*60}} seconds in its demand cost calculation. A weight vector of \([0.6255, 0.6255, 0.4170,
+0.2085]\) is used to influence the distribution of selecting the new charger, new window, wait, and slide visit
+primitives, respectively. The algorithm also assumes a total of \(n_K = \localcnt\) iterations for the local search at a
+constant temperature. In total, that results in \num{\fpeval{\localcnt * \tempcnt}} configurations being
+searched in a total runtime of \num{\fpeval{\quicklocal * \tempcnt}} seconds.
 
 \ref{sec:sa-heuristic-implementation} introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in \ref{sec:sa-generation-mechanisms}, let this
@@ -1175,73 +1194,67 @@ whether to select a slow or fast charger, respectively. The heuristic approach h
 slower due to its iterative approach.
 
 The Qin-Modified is a threshold-based strategy that is also employed as a means of comparison with the results of the SA
-PAP. The Qin-Modified algorithm is a based on the threshold strategy of \cite{qin-2016-numer-analy}. The algorithm has
+BPAP. The Qin-Modified algorithm is a based on the threshold strategy of \cite{qin-2016-numer-analy}. The algorithm has
 been modified slightly to accommodate the case of multiple charger types without a heuristic search for the best charger
 type. The heuristic is based on a set of rules that revolve around the initial charge of the bus at visit \(i\). There are
-three different thresholds, low (85\%), medium (90\%), and high (95\%). Buses below the low threshold are prioritized to
+three different thresholds, low (40\%), medium (70\%), and high (90\%). Buses below the low threshold are prioritized to
 fast chargers then are allowed to utilize slow chargers if no fast chargers are available. Buses between the low and
 medium threshold prioritize slow chargers first and utilize fast chargers only if no slow chargers are available. Buses
 above the medium threshold and below high will only be assigned to slow chargers. Buses above the high threshold will
 not be charged. Once a bus has been assigned to a charger, it remains on the charger for the duration of the time it is
-at the station, or it reaches 95\% charge, whichever comes first. The higher thresholds implemented in this work were
-selected in attempt to improve the results of the Qin-Modified technique given the specified scenario.
+at the station, or it reaches 90\% charge, whichever comes first.
 
-Another method utilized to compare with against SA PAP is the BEB implementation of the PAP. The PAP implementation is
+Another method utilized to compare with against SA PAP is the BEB implementation of the BPAP. The BPAP implementation is
 utilized in this work as a benchmark for the other schedules as it is implemented utilizing a commercial solver. The
-inputs to the system are the same as those discussed above. It is of note that the PAP does not implement the demand
-cost in its objective function. In an attempt to compare the solution of the MILP with the SA output more directly, a
-similar solve time of 1900 seconds is utilized. The MILP was executed using the Gurobi MILP solver
+inputs to the system are the same as those discussed above. It is of note that the BPAP does not implement the demand
+cost in its objective function. In an attempt to compare the solution of the BPAP with the SA output more directly, a
+similar solve time of 1,900 seconds is utilized. The BPAP was executed using the Gurobi MILP solver
 \cite{gurobi-2021-gurob-optim}. The previously described simulations were run on a machine equipped with an AMD Ryzen 9
 5900X 12 - Processor (24 core) at 4.95GHz.
 
 \subsection{Results}
 \label{sec:sa-results}
-The schedules generated by each of the methods is presented in \ref{fig:schedule}. Rows 0-14 represent slow charging
-queues and rows 15-29 represent fast charging queues. The symbols represent the initial charge times, and the horizontal
+The schedules generated by each of the methods is presented in \ref{fig:schedule}. For the sake of conciseness of the
+schedule plots, the waiting queues are excluded. Therefore, rows 0-14 represent slow charging queues and rows 15-29
+represent fast charging queues. The hollow circles with an 'X' represent the initial charge times, and the horizontal
 line with the vertical tick signifies the region of time the charger is active. The Qin-Modified schedule utilized two
-fast and slow chargers as can be seen in \ref{subfig:schedule-qin}. The PAP framework generated a schedule that utilizes
-three fast charges and four slow chargers as shown in \ref{subfig:schedule-milp}. The heuristic SA strategy created a
-schedule with nine slow charger queues and one fast charging queue as shown in \ref{subfig:schedule-heuristic-sa}. The
-quick strategy for the SA algorithm created a schedule utilizing seven slow chargers and two fast chargers as is
-demonstrated in \ref{subfig:schedule-quick-sa}. That is to say, the Qin-Modified schedule was able to most effectively
-minimize the charger count followed by the PAP, the quick SA, and then the heuristic SA technique. The low charger count
-by the Qin schedule is due to the extensive use of fast chargers throughout the time horizon whereas the PAP and SA
-techniques utilized them more sparingly. At the expense of many slow chargers, the SA techniques chose to utilize fast
-chargers less frequently in their respective schedules showing an emphasis on battery health.
+fast and chargers and fourteen slow chargers as can be seen in \ref{subfig:schedule-qin}. The BPAP framework generated a
+schedule that utilizes three fast charges and four slow chargers as shown in \ref{subfig:schedule-milp}. The heuristic
+SA strategy created a schedule with nine slow charger queues and one fast charging queue as shown in
+\ref{subfig:schedule-heuristic-sa}. The quick strategy for the SA algorithm created a schedule utilizing seven slow
+chargers and two fast chargers as is demonstrated in \ref{subfig:schedule-quick-sa}. That is to say, while each schedule
+emphasized the utilization of slow chargers, the Qin-Modified required fast charging most frequently followed by the
+BPAP, quick SA, and then heuristic SA. At the expense of incorporating more slow chargers than the BPAP, the SA
+techniques chose to utilize fast chargers less frequently in their respective schedules showing an emphasis on battery
+health.
 
-As shown in \ref{subfig:schedule-heuristic-sa} and \ref{subfig:schedule-quick-sa}, the SA techniques were able to create
-schedules that are ``dense'' spatially, but not temporally. In other words the SA techniques did not utilize the allotted
-time quite as effectively as the Qin or PAP. As there were no constraints encouraging the ``closeness'' of scheduled
-times, no effort was made by the SA algorithm to pack the schedules temporally.
-
-\ref{tab:charge} tabulates the mean, minimum, and maximum SOC upon arrival for each visit. The PAP requires each BEB to stay
+\ref{tab:charge} tabulates the mean, minimum, and maximum SOC upon arrival for each visit. The BPAP requires each BEB to stay
 above an SOC of 25\% while the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go
-below the 25\% SOC threshold. The PAP was able to successfully keep the SOC above the threshold while both SA approaches
-were a few kWh below the threshold. This is further discussed shortly. Due to the threshold constraint being soft, the
-SA objective function may find it more ``optimal'' to allow a small deficit in the threshold penalty function in favor for
-of another action. As a remedy to ensure the SA schedules stay above the threshold, a safety factor could be introduced
-to artificially increase the threshold, \(S_f \nu_{b_i}\kappa_{b_i}\) where \(S_f > 1;\; S_f \in \mathbb{R}\).
+below the 25\% SOC threshold. The BPAP was able to successfully keep the SOC above the threshold while both SA approaches
+were a few kWh below the threshold. The SOC of the quick SA approach dropped to a minimum of 96.996 kWh and the
+heuristic had a minimum SOC of 96.270 kWh as shown in \ref{tab:charge}. Due to the threshold constraint being soft, the SA
+objective function may find it better to allow a small deficit in the threshold penalty function in favor of another
+action. As a remedy to ensure the SA schedules stays above the threshold, a safety factor could be introduced to
+artificially increase the threshold, \(S_f \nu_{b_i}\kappa_{b_i}\) where \(S_f > 1;\; S_f \in \mathbb{R}\).
 
-The SOC of the quick SA approach dropped to a minimum of 95.9 kWh and the heuristic had a minimum SOC of 91.26 kWh as
-shown in \ref{tab:charge}. The Qin model allowed the SOC for one of the BEBs to reach 0\% as shown in \ref{tab:charge}. The
-Qin-Modified strategy, being a purely reactive model, does not have foresight to determine whether a set of routes has a
-particularly taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB that
-reached a charge of 0\% began with a sequence of short routes, much like the other BEBs. However, rather than continuing
-this trend, these sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to account
-for. Interestingly, Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA, heuristic
-SA, and then the PAP. The Qin mean SOC being so high is due to the elevated placements of the low, medium, and high
-thresholds applied to the algorithm than what is used by Rocky Mountain Power.
+The Qin-Modified schedule allowed the SOC for one of the BEBs to reach 0\% as shown in \ref{tab:charge}. The Qin-Modified
+strategy, being a purely reactive model, does not have foresight to determine whether a set of routes has a particularly
+taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB that reached a charge
+of 0\% began with a sequence of short routes, much like the other BEBs. However, rather than continuing this trend, these
+sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to account for. Interestingly,
+Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA, heuristic SA, and then the
+BPAP.
 
 \begin{table}[htbp]
 \caption{\label{tab:charge}Table of mean, min, and max SOC (kWh) for each charging schedule.}
 \centering
 \begin{tabular}{l|cccc}
 \hline
- & MILP & Qin-Modifid & Heuristic & Quick\\[0pt]
+ & BPAP & Qin-Modifid & Heuristic & Quick\\[0pt]
 \hline
-Mean & 181.327 & 275.045 & 185.443 & 191.937\\[0pt]
-Min & 97.000 & 0.000 & 91.27 & 96.996\\[0pt]
-Max & 382.93 & 380.840 & 388.000 & 388.000\\[0pt]
+Mean & 181.327 & 248.864 & 185.443 & 191.937\\[0pt]
+Min & 97.000 & 0.000 & 96.270 & 96.996\\[0pt]
+Max & 382.93 & 349.200 & 388.907 & 388.000\\[0pt]
 \hline
 \end{tabular}
 \end{table}
@@ -1249,39 +1262,52 @@ Max & 382.93 & 380.840 & 388.000 & 388.000\\[0pt]
 \ref{fig:power} depicts the power utilized over the time horizon for each model. As previous stated, the Qin-Modified
 schedule had the highest mean SOC over the working day. Referencing \ref{fig:power-usage-milp-qin}, the Qin maintained
 long periods of steady slow and fast charger use. This is again a symptom of the Qin-Modified strategy placing BEBs on
-chargers solely based on the SOC upon arrival. The PAP and SA techniques, while having peaks in the first half of the
-time horizon, were able to effectively maintain low demand profiles during slower moments throughout the day.
+chargers based solely on the SOC upon arrival. The BPAP and SA techniques, while having peaks in the first half of the
+time horizon, were able to effectively maintain lower demand profiles during slower moments throughout the day.
 \ref{fig:power} is also of interest as it shows the peak power demand over the time horizon. The peaks for each schedule
-in descending order are: the Qin-Modified at 3640 kW, the quick SA at 2032 kW, the PAP at 1910 kW, and the heuristic SA
-at 1151 kW. These values are also tabulated in \ref{tab:power}. While the quick SA was unable to beat the PAP in peak
-demand (881 kW difference), the heuristic SA was able to keep the peak power demand at 1151 kW, which is 759 kW less
-than the PAP peak demand. The added queue selection bias toward slow chargers assisted the heuristic SA to converge more
-quickly. The quick SA technique has a slower rate of convergence due to its random queue placement.
-
-The heuristic SA was more effective as it was able to remove a fast charger by encouraging the
-use of slow chargers whereas the quick technique did not.
+shown in \ref{tab:power}. While the quick SA was unable to beat the BPAP in peak demand (61 kW difference), the
+heuristic SA was able to keep the peak power demand at 1180 kW (730 kW difference).
 
 \begin{table}[htbp]
 \caption{\label{tab:power}Table of mean and max power demand for each charging schedule.}
 \centering
 \begin{tabular}{l|cccc}
 \hline
- & MILP & Qin-Modified & Heuristic & Quick\\[0pt]
+ & BPAP & Qin-Modified & Heuristic & Quick\\[0pt]
 \hline
-Mean & 176.550 & 394.13 & 181.583 & 186.858\\[0pt]
-Max & 1910.000 & 2000 & 1180.950 & 1981.8999\\[0pt]
+Mean & 176.550 & 394.130 & 181.583 & 186.858\\[0pt]
+Max & 1,910.000 & 2,000.000 & 1,180.950 & 1,981.899\\[0pt]
 \hline
 \end{tabular}
 \end{table}
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
-least is as follows: Qin-Modified, quick SA, heuristic SA, and the PAP. The respective energy consumption for each
-technique is: 10,198.800 kWh, 4,480.091 kWh, 4,422.556 kWh, and 4,237.200 kWh. The heuristic SA consuming about 185.356
-kWh more than the PAP. While the quick and heuristic SA were unable to match the PAP in energy consumption, it is a
-trade-off made by increasing the number of slow chargers and charge duration, and reducing the peak demand. Referencing
-\ref{tab:charge} and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of consumed energy
-is correlated to the descending order of the mean SOC and the descending order of the mean power demand. This makes
-sense as a higher mean SOC implies the chargers being active more often; similarly for the mean demand.
+least is as follows: Qin-Modified, heuristic SA, quick SA, and the BPAP. The respective energy consumption for each
+technique is: 9,459.120 kWh, 4,357.609 kWh, 4,340.609 kWh, and 4,237.200 kWh. The quick SA consuming about 103 kWh more
+than the BPAP. While the quick and heuristic SA were unable to match the BPAP in energy consumption, it is a trade-off
+made by increasing the number of slow chargers and charge duration, and reducing the peak demand.
+
+\begin{table}[htbp]
+\caption{\label{tab:scores}Table of objective function scores for each of the schedules.}
+\centering
+\begin{tabular}{l|c}
+\hline
+Schedule & Score\\[0pt]
+\hline
+BPAP & \num{185000000}\\[0pt]
+Qin-Modified & \num{190886308}\\[0pt]
+Heuristic & \num{171367626}\\[0pt]
+Quick & \num{180175082}\\[0pt]
+\hline
+\end{tabular}
+\end{table}
+
+As a final comparison, the scores for the Qin-Modified, quick SA, BPAP, and heuristic SA as shown in \ref{tab:scores}. The
+Qin-Modified strategy naturally has the highest score as it performed the worst in each component of the objective
+function. The BPAP beat the quick SA technique due to the consumption and demand costs. The heuristic SA was able to
+successfully obtain the lowest score due to its substantial reduction in the demand cost. This shows that the added
+queue selection bias toward slow chargers assisted the heuristic SA to converge more quickly. The quick SA technique, on
+the other hand, had a slower rate of convergence due to its random queue placement.
 
 \begin{figure}
   \centering
@@ -1290,18 +1316,18 @@ sense as a higher mean SOC implies the chargers being active more often; similar
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/schedule-quinn}
-    \caption{Charging schedule generated by Qin Modified algorithm.}
+    \mysubcaption{Charging schedule generated by Qin Modified algorithm.}
     \label{subfig:schedule-qin}
   \end{subfigure}
 
   \hfill
 
   %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  % MILP
+  % BPAP
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/schedule-milp}
-    \caption{Charging schedule generating by the PAP algorithm.}
+    \mysubcaption{Charging schedule generating by the BPAP algorithm.}
     \label{subfig:schedule-milp}
   \end{subfigure}
 \end{figure}
@@ -1313,7 +1339,7 @@ sense as a higher mean SOC implies the chargers being active more often; similar
   % SA heuristic
   \begin{subfigure}[t]{\textwidth}
     \centering \includegraphics[width=\textwidth]{img/schedule-sa-heuristic}
-    \caption{Charging schedule generated by the SA PAP algorithm using the heuristic strategy.}
+    \mysubcaption{Charging schedule generated by the SA PAP algorithm using the heuristic strategy.}
     \label{subfig:schedule-heuristic-sa}
   \end{subfigure}
 
@@ -1323,7 +1349,7 @@ sense as a higher mean SOC implies the chargers being active more often; similar
   % SA quick
   \begin{subfigure}[t]{\textwidth}
     \centering \includegraphics[width=\textwidth]{img/schedule-sa-quick}
-    \caption{Charging schedule generated by SA PAP algorithm using the quick strategy.}
+    \mysubcaption{Charging schedule generated by SA PAP algorithm using the quick strategy.}
     \label{subfig:schedule-quick-sa}
   \end{subfigure}
   \caption{Vairous schedules generated by the different frameworks. The horizonontal line stemming from the nodes ending with a vertical tick indicate the charge duration for that particular visit.}
@@ -1336,14 +1362,14 @@ sense as a higher mean SOC implies the chargers being active more often; similar
     \begin{subfigure}[t]{\textwidth}
     \centering
         \includegraphics[width=\textwidth]{img/charger-count-fast-milp-qin}
-        \caption{Number of fast chargers for Qin and PAP.}
+        \mysubcaption{Number of fast chargers for Qin and BPAP.}
         \label{subfig:fast-charger-usage-milp-qinn}
     \end{subfigure}
 
     \begin{subfigure}[t]{\textwidth}
     \centering
         \includegraphics[width=\textwidth]{img/charger-count-fast-sa}
-        \caption{Number of fast chargers for quick and heuristic SA executions.}
+        \mysubcaption{Number of fast chargers for quick and heuristic SA executions.}
         \label{subfig:fast-charger-usage-sa}
     \end{subfigure}
 \end{figure}
@@ -1354,13 +1380,13 @@ sense as a higher mean SOC implies the chargers being active more often; similar
     \begin{subfigure}[t]{\textwidth}
     \centering
         \includegraphics[width=\textwidth]{img/charger-count-slow-milp-qin}
-        \caption{Number of slow chargers for Qin and PAP.}
+        \mysubcaption{Number of slow chargers for Qin and BPAP.}
         \label{subfig:slow-charger-usage-milp-qinn}
     \end{subfigure}
     \begin{subfigure}[t]{\textwidth}
     \centering
         \includegraphics[width=\textwidth]{img/charger-count-slow-sa}
-        \caption{Number of slow chargers for the quick and heuristic SA executions.}
+        \mysubcaption{Number of slow chargers for the quick and heuristic SA executions.}
         \label{subfig:slow-charger-usage-sa}
     \end{subfigure}
 \end{figure}
@@ -1369,7 +1395,7 @@ sense as a higher mean SOC implies the chargers being active more often; similar
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/power-milp-qin}
-    \caption{Amount of power consumed by Qin-Modified and MILP schedules over the time horizon.}
+    \mysubcaption{Amount of power consumed by Qin-Modified and BPAP schedules over the time horizon.}
     \label{fig:power-usage-milp-qin}
   \end{subfigure}
 
@@ -1378,50 +1404,48 @@ sense as a higher mean SOC implies the chargers being active more often; similar
   \begin{subfigure}[t]{\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/power-sa}
-    \caption{Amount of power consumed by quick and heuristic SA schedules over the time horizon.}
+    \mysubcaption{Amount of power consumed by quick and heuristic SA schedules over the time horizon.}
     \label{fig:power-usage-sa}
   \end{subfigure}
-  \caption{}
+  \caption{Power demand for each schedule over the time horizon.}
   \label{fig:power}
 \end{figure}
 
 \begin{figure}[htpb]
 \centering \includegraphics[width=\textwidth]{img/energy}
-    \caption{Total accumulated energy consumed by the Qin-Modified, MILP, quick and heuristic SA schedules throughout the time horizon.}
+    \caption{Total accumulated energy consumed by the Qin-Modified, BPAP, quick and heuristic SA schedules throughout the time horizon.}
     \label{fig:energy-usage}
 \end{figure}
 
 \section{Conclusion}
 \label{sec:sa-conclusion}
-This work developed an SA implementation derived from the works of the PAP. The model is designed to reduce the total
-number of utilized chargers, minimize the peak energy consumption and the total energy consumed. The problem description
-was provided outlining the scenario in which this model is designed for. The optimization problem was then introduced by
-describing the components of the objective function and outlining the MILP constraints utilized to ensure candidate
-solutions are in the solution space.
+This work developed an SA implementation derived from the works of the BPAP. The model is designed to encourage the use
+of slow chargers for battery health, minimize the peak energy consumption and the total energy consumed. The problem
+description was provided outlining the scenario in which this model is designed for. The optimization problem was then
+introduced by describing the components of the objective function and outlining the constraints utilized to ensure
+candidate solutions are in the solution space.
 
-An example of the SA PAP algorithm was presented and compared against the PAP, which acted as a baseline for the other
+An example of the SA PAP algorithm was presented and compared against the BPAP, which acted as a baseline for the other
 schedule. Another threshold-based strategy called the Qin-Modified technique was also introduced as a means of comparing
 the schedules. The SA PAP was run utilizing two different neighborhood searching techniques named the ``quick'' and
 ``heuristic'' techniques, respectively. The quick SA's objective was to randomly search a wide neighborhood while the
 heuristic technique was designed to incrementally search a neighborhood by randomly selecting a fast or slow charging
-queue and then stepping through the queues one at a time. The quick SA has a faster execution time than the heuristic SA
-at \quicklocal and \heuristiclocal seconds to execute their respective inner loops. The execution
-time compounds as the number of iterations in the cooling function increases as shown by the respective quick and
-heuristic execution times: \fpeval{\quicklocal * \tempcnt} seconds and \fpeval{\heuristiclocal * \tempcnt} seconds. However, this trade off for speed made up for the performance of the heuristic technique. The
-Qin-Modified utilized the fewest amount of chargers followed by the MILP, quick SA, then the heuristic SA. The
-Qin-Modified strategy heavily favored the use of fast chargers, whereas the other methods used fast charges sparingly.
-Particularly, the SA techniques favored higher number of slow chargers with longer charge durations in comparison to the
-PAP. All the schedules were able to pack their schedules spatially well, the fast chargers for MILP and quick SA being
-exceptions. However, unlike the Qin and PAP methods, the SA techniques were not as successful in packing the schedule
-temporally.
+queue and then stepping through the queues one at a time. The execution time compounds as the number of iterations in
+the cooling function increases as shown by the respective quick and heuristic execution times:
+\fpeval{\quicklocal * \tempcnt} seconds and \fpeval{\heuristiclocal * \tempcnt} seconds. However,
+this trade-off for speed by the heuristic SA was made up by its overall performance. The Qin-Modified strategy favored
+the use of fast chargers due to its inability to identify when demanding routes were on the horizon, whereas the other
+methods used fast charges sparingly. Particularly, the SA techniques favored higher number of slow chargers with longer
+charge durations in comparison to the BPAP.
 
-Both of the SA techniques were unable to keep the SOC above the 25\% SOC threshold with SOC falling to 91.26 kWh for the
-heuristic SA and 95.91 kWh for the quick SA. Due to the minimum charge threshold being a soft constraint for the SA, the
-algorithm found another action to be more favorable at the expense of breaching the threshold slightly. The
+Both of the SA techniques were unable to keep the SOC above the 25\% SOC threshold with SOC falling to 96.270 kWh for the
+heuristic SA and 96.996 kWh for the quick SA. Due to the minimum charge threshold being a soft constraint for the SA,
+the algorithm found another action to be more favorable at the expense of breaching the threshold slightly. The
 Qin-Modified, on the other hand, had the SOC of one BEB fall to 0\% SOC. The schedule that consumed the least amount of
-energy is the PAP (4237.2 kW) with the heuristic SA coming in second (4422.556 kW). The difference between the two being
-about \fpeval{4422.556 - 4237.2} kWh. The heuristic SA was able to lower the peak demand to 1150.95 kW
-beating the MILP at 1910 kW and the quick SA at 2031.9 kW.
+energy is the BPAP (4237.2 kW) with the quick SA coming in second (4340.6 kW). The difference between the two being
+about \fpeval{4340.6 - 4237.2} kWh. The heuristic SA energy consumption came in a close third at 4357.6 kW.
+The heuristic SA, however, was able to lower the peak demand to 1180.95 kW beating the BPAP at 1910 kW and the quick SA
+at 1981.9 kW.
 
 Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a
 denser set of routes, constraints that encourage tighter temporal packing, combining the heuristic and quick SA
@@ -1430,19 +1454,19 @@ incorporate non-linear battery dynamics model to the SOC with more fidelity. Fur
 is of interest to allow flexibility in the initial and final charge times for each BEB visit.
 \vspace{6pt}
 
-\authorcontributions{For research articles with several authors, a short paragraph specifying their individual contributions must be provided. The following statements should be used ``Conceptualization, X.X. and Y.Y.; methodology, X.X.; software, X.X.; validation, X.X., Y.Y. and Z.Z.; formal analysis, X.X.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing---original draft preparation, X.X.; writing---review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.; funding acquisition, Y.Y. All authors have read and agreed to the published version of the manuscript.'', please turn to the  \href{http://img.mdpi.org/data/contributor-role-instruction.pdf}{CRediT taxonomy} for the term explanation. Authorship must be limited to those who have contributed substantially to the work~reported.}
+  \authorcontributions{For research articles with several authors, a short paragraph specifying their individual contributions must be provided. The following statements should be used ``Conceptualization, A.B. and G.D..; methodology, A.B.; software, A.B.; validation, A.B., G.D.; formal analysis, A.B., G.D.; investigation, A.B. G.D.; resources, A.B., G.D.; data curation, G.D.; writing---original draft preparation, A.B.; writing---review and editing, A.B., G.D.; visualization, A.B.; supervision, G.D.; project administration, A.B., G.D.. All authors have read and agreed to the published version of the manuscript.''}
 
-\funding{This research received no external funding.}
+  \funding{This research received no external funding.}
 
-\informedconsent{Not applicable.}
+  \informedconsent{Not applicable.}
 
-\dataavailability{We encourage all authors of articles published in MDPI journals to share their research data. In this section, please provide details regarding where data supporting reported results can be found, including links to publicly archived datasets analyzed or generated during the study. Where no new data were created, or where data is unavailable due to privacy or ethical restrictions, a statement is still required. Suggested Data Availability Statements are available in section ``MDPI Research Data Policies'' at \url{https://www.mdpi.com/ethics}.}
+%   \dataavailability{We encourage all authors of articles published in MDPI journals to share their research data. In this section, please provide details regarding where data supporting reported results can be found, including links to publicly archived datasets analyzed or generated during the study. Where no new data were created, or where data is unavailable due to privacy or ethical restrictions, a statement is still required. Suggested Data Availability Statements are available in section ``MDPI Research Data Policies'' at \url{https://www.mdpi.com/ethics}.}
 
-\conflictsofinterest{The authors declare no conflicts of interest.}
+  \conflictsofinterest{The authors declare no conflicts of interest.}
 
 \begin{adjustwidth}{-\extralength}{0cm}
 \reftitle{References}
-\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref,/home/alex/Documents/citation-database/misc}
+\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref,c:/msys64/home/1556048963C/Documents/citation-database/misc}
 \PublishersNote{}
 \end{adjustwidth}
 \end{document}

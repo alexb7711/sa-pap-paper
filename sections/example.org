@@ -12,8 +12,8 @@
 
 An example is now provided to demonstrate the utility of the developed SA charge scheduling technique. In
 [[#sec:sa-beb-scenario]] a description of the example scenario is presented followed by a brief introduction of the BEB
-implementation of the BPAP. An alternative threshold based planning strategy called the Qin-Modified technique, and a
-heuristic modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work.
+implementation of the PAP (BPAP). An alternative threshold based planning strategy called the Qin-Modified technique,
+and a heuristic modification to the SA PAP are also used as comparisons to the SA PAP technique presented in this work.
 [[#sec:sa-results]] presents the results for each of planning strategies. The results are then analyzed and discussed.
 
 ** BEB Scenario
@@ -26,18 +26,18 @@ between $n_B = \A$ buses. Each BEB is assumed to have a battery capacity of $\ka
 stay above an SOC of $\nu_b =$ \mincharge (src_latex{\num{\fpeval{\batsize * \minchargeD}}} kWh). Each bus is assumed to
 begin the working day with $\alpha =$ src_latex{\num{\fpeval{\acharge*100}}}% charge (src_latex{\num{\fpeval{\acharge *
 \batsize}}} kWh). A total of src_latex{\num{\fpeval{\fast + \slow}}} chargers are utilized where \slow of the chargers
-are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p$ src_latex{\num{\Cgain}}, $z_c
-= 1$, and $z_d =$ src_latex{\num{10000}} are used. As previously introduced, to encourage the SA PAP to utilize the
-fewest number of chargers, the value of $\epsilon_q$ in the objective function is $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in
-\{n_B + 1, n_B + 2, ..., n_Q\}; \epsilon_q = 10q$. The SA algorithm utilizes the geometric cooling schedule with an initial
-temperature of $T_0 =$ src_latex{\num{\tempinit}} with $\beta = 0.997$, resulting in a total of $n_M =$
-src_latex{\num{\tempcnt}} steps. Rocky Mountain Power utilizes fifteen-minute intervals to calculate the demand cost
-[cite:@rocky-mountain-power]. To estimate the method by which Rocky Mountain Power determines its demand cost, this work
-employed an interval of $T_p =$ src_latex{\num{\fpeval{15*60}}} seconds in its demand cost calculation. A weight vector
-of $[0.6255, 0.6255, 0.4170, 0.2085]$ is used to influence the distribution of selecting the new charger, new window,
-wait, and slide visit primitives, respectively. The algorithm also assumes a total of $n_K = \localcnt$ iterations for
-the local search at a constant temperature. In total, that results in src_latex{\num{\fpeval{\localcnt * \tempcnt}}}
-configurations being searched in a total runtime of src_latex{\num{\fpeval{\quicklocal * \tempcnt}}} seconds.
+are slow charging (\slows kW) and \fast are fast charging (\fasts kW). The gains of $z_p =$ src_latex{\num{\Cgain}},
+$z_c = 1$, and $z_d =$ src_latex{\num{10000}} are used. As previously introduced, to encourage slow charging for battery
+health, the values of $\epsilon$ in the objective function are $\forall q \in \{1,2,..., n_B \}; \epsilon_q = 0$ and $\forall q \in \{n_B + 1, n_B +
+2, ..., n_Q\}; \epsilon_q = 10q$. The SA algorithm utilizes the geometric cooling schedule with an initial temperature of $T_0
+=$ src_latex{\num{\tempinit}} with $\beta = 0.997$, resulting in a total of $n_M =$ src_latex{\num{\tempcnt}} steps. Rocky
+Mountain Power utilizes fifteen-minute intervals to calculate the demand cost [cite:@rocky-mountain-power]. To match the
+method by which Rocky Mountain Power determines its demand cost, this work employed an interval of $T_p =$
+src_latex{\num{\fpeval{15*60}}} seconds in its demand cost calculation. A weight vector of $[0.6255, 0.6255, 0.4170,
+0.2085]$ is used to influence the distribution of selecting the new charger, new window, wait, and slide visit
+primitives, respectively. The algorithm also assumes a total of $n_K = \localcnt$ iterations for the local search at a
+constant temperature. In total, that results in src_latex{\num{\fpeval{\localcnt * \tempcnt}}} configurations being
+searched in a total runtime of src_latex{\num{\fpeval{\quicklocal * \tempcnt}}} seconds.
 
 [[#sec:sa-heuristic-implementation]] introduced the idea of an alternative heuristic implementation for the SA algorithm. To
 distinguish the heuristic implementation from the method derived in [[#sec:sa-generation-mechanisms]], let this
@@ -96,22 +96,24 @@ above an SOC of 25% while the quick and heuristic SA approaches heavily penalize
 below the 25% SOC threshold. The BPAP was able to successfully keep the SOC above the threshold while both SA approaches
 were a few kWh below the threshold. The SOC of the quick SA approach dropped to a minimum of 96.996 kWh and the
 heuristic had a minimum SOC of 96.270 kWh as shown in [[tab:charge]]. Due to the threshold constraint being soft, the SA
-objective function may find it bettor to allow a small deficit in the threshold penalty function in favor of another
-action. As a remedy to ensure the SA schedules stay above the threshold, a safety factor could be introduced to
-artificially increase the threshold, $S_f \nu_{b_i}\kappa_{b_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$. The Qin-Modified schedule allowed
-the SOC for one of the BEBs to reach 0% as shown in [[tab:charge]]. The Qin-Modified strategy, being a purely reactive
-model, does not have foresight to determine whether a set of routes has a particularly taxing route later in the time
-horizon. As such, and in the case of the example scenario, the BEB that reached a charge of 0% began with a sequence of
-short routes, much like the other BEBs. However, rather than continuing this trend, these sets of routes had one or two
-longer routes which the Qin-Modified algorithm was unable to account for. Interestingly, Qin-Modified strategy was able
-to keep the mean SOC the highest followed by the quick SA, heuristic SA, and then the BPAP.
+objective function may find it better to allow a small deficit in the threshold penalty function in favor of another
+action. As a remedy to ensure the SA schedules stays above the threshold, a safety factor could be introduced to
+artificially increase the threshold, $S_f \nu_{b_i}\kappa_{b_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$.
+
+The Qin-Modified schedule allowed the SOC for one of the BEBs to reach 0% as shown in [[tab:charge]]. The Qin-Modified
+strategy, being a purely reactive model, does not have foresight to determine whether a set of routes has a particularly
+taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB that reached a charge
+of 0% began with a sequence of short routes, much like the other BEBs. However, rather than continuing this trend, these
+sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to account for. Interestingly,
+Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA, heuristic SA, and then the
+BPAP.
 
 #+include: tab/charge.org
 
 \ref{fig:power} depicts the power utilized over the time horizon for each model. As previous stated, the Qin-Modified
 schedule had the highest mean SOC over the working day. Referencing \ref{fig:power-usage-milp-qin}, the Qin maintained
 long periods of steady slow and fast charger use. This is again a symptom of the Qin-Modified strategy placing BEBs on
-chargers solely based on the SOC upon arrival. The BPAP and SA techniques, while having peaks in the first half of the
+chargers based solely on the SOC upon arrival. The BPAP and SA techniques, while having peaks in the first half of the
 time horizon, were able to effectively maintain lower demand profiles during slower moments throughout the day.
 \ref{fig:power} is also of interest as it shows the peak power demand over the time horizon. The peaks for each schedule
 shown in \ref{tab:power}. While the quick SA was unable to beat the BPAP in peak demand (61 kW difference), the

@@ -32,7 +32,7 @@
   \end{equation}
   \begin{equation}
       \label{seq:c7}
-      \kappa_{\Xi_i} \geq \eta_{i} + r_{q_i}s_i
+      \kappa_{b_i} \geq \eta_{i} + r_{q_i}s_i
   \end{equation}
   \begin{equation}
       \label{seq:c8}

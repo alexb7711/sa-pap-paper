@@ -4,9 +4,9 @@
 :END:
 
 The objective of this work is to present a framework that optimizes the assignment of $n_V$ BEB visits to a set of $n_Q$
-charging queues during the interval $[0,\T]$ provided a fleet of $n_A$ BEBs with fixed route schedules. Particularly,
-the framework aims to minimize over peak power usage, energy consumption, encouraging battery health via slow charging,
-and maintaining the SOC of each BEB above a minimum SOC threshold.
+charging queues over the interval $[0,\T]$ provided a fleet of $n_A$ BEBs with fixed route schedules. Particularly, the
+framework aims to minimize over peak power usage, energy consumption, encouraging battery health via slow charging, and
+maintaining the SOC of each BEB above a minimum SOC threshold.
 
 The optimization problem outlined in this work is presented in form of an objective function with constraints. The
 constraints ensure that candidate solutions are operationally feasible. The variables of optimization are to be
@@ -20,8 +20,8 @@ objective function is employed to allow relative comparisons between candidate s
 :END:
 
 This section defines the input and decision variables used in this work. The input parameters are assumed to be fixed
-prior to optimizing the system, whereas the decision variables are the values that the SA algorithm has the freedom to
-manipulate. The variables to be introduced are summarized in [[tab:sa-variables]].
+prior to optimizing, whereas the decision variables are the values that the SA algorithm has the freedom to manipulate.
+The variables definitions used in this work are summarized in [[tab:sa-variables]].
 
 *** Input Parameters
 :PROPERTIES:
@@ -33,7 +33,7 @@ sections: packing and discretization parameters then battery dynamic parameters.
 that ensure no scheduling overlap in either space or time. The discretization parameters describe the parameters that
 discretize the time horizon, and the battery dynamic parameters are those associated with the SOC of the BEB.
 
-**** Spaciotemporal and Discretization Parameters
+**** Spatiotemporal and Discretization Parameters
 :PROPERTIES:
 :CUSTOM_ID: sec:sa-packing-and-discretization-paramaters
 :END:
@@ -177,8 +177,8 @@ $[d_i, \T]$.
 :END:
 
 This work aims to minimize the total "cost" of utilizing a given charge schedule. Let $J(\I)$ represent the objective
-function. The objective function for this problem has four main considerations: charger assignment, consumption cost,
-demand cost, and a penalty method for visits with insufficient SOCs. Each of which will be discussed in turn throughout
+function. The objective function for this problem has four main considerations: an assignment cost, a penalty method for
+visits with insufficient SOCs, consumption cost, and a demand cost. Each of which will be discussed in turn throughout
 the subsequent sections.
 
 *** Assignment Cost
@@ -200,7 +200,7 @@ particular choice for the assignment cost to encourage the use of slow chargers 
 health. The charger queue indices are ordered such that the first $n_B$ queues correspond to idle queues. This allows
 all BEBs to simultaneously sit idle if needed. All $n_B$ idle queues have assignment costs of zero to denote that there
 is no cost when not charging. The next group of chargers is assumed to be the slow chargers subsequently followed by the
-fast. Let $P \in \mathbb{R}$, then the set of slow and fast charging queues be of the form $[P, 2P, ..., n_QP]$. Concatenating
+fast. Letting $P \in \mathbb{R}$, then the set of slow and fast charging queues be of the form $[P, 2P, ..., n_QP]$. Concatenating
 these vectors yields $\epsilon = [0, 0, ..., P, 2P, 3P, ...]$, where $\epsilon$ describes the vector of assignment costs and the first
 $n_B$ values are zero.
 
@@ -210,7 +210,7 @@ $n_B$ values are zero.
 :END:
 
 A penalty method is to be implemented to provide a soft constraint on the lower bound of the charge. Due to the
-uncertainty of the initial SOC for each visit, a soft constraint is employed to increase the solution space while
+uncertainty of the initial SOC for each visit, a soft constraint is desired to increase the solution space while
 penalizing non-operationally feasible solutions. If a hard constraint were to be implemented, the constraint would
 restrict the set of allowable schedules to only operationally feasible schedules. Let the piecewise function that
 enables/disables the penalty method be of the form
@@ -235,16 +235,13 @@ next route. Therefore, the penalty method is written as
 
 In most cases, utility companies have a portion of the cost related to the total electricity consumed over a billing
 period, referred to herein as the consumption cost. The consumption cost is the summation of all the energy being used
-over all the active periods for each charger in the time horizon. This is represented by the summation
+over all the active periods for each charger in the time horizon. A scaling $z_c$ is applied as a weight on the
+summation (this could correspond to a monetary cost imposed by the utility). This is represented by the summation
 
 #+name: eq:consumption-cost
 \begin{equation}
 z_c \sum_{i=1}^{n_V} r_{q_i}s_i\text{.}
 \end{equation}
-
-A scaling $z_c$ is used as a weight for the consumption cost (this could correspond to a monetary cost imposed by the
-utility). Within the summation, the charge rate, $r_{q_i}$, for the active charger, $q_i$, is multiplied by the time
-that the charger will be utilized, $s_i$.
 
 *** Demand Cost
 :PROPERTIES:
@@ -283,7 +280,7 @@ For the sake of implementation, the integral in [[eq:p]] is discretized. Let $dt
 $p_h$ the power for the $h^{\text{th}}$ step, [[eq:p]] is approximated as
 
 \begin{equation}
-p_{T_p,h} = \frac{1}{T_p} \sum_{k = h-\frac{T_p}{dt}+1}^h p_k dt\text{.}
+p_{T_p,h} = \frac{1}{T_p} \sum_{k = h-\frac{T_p}{dt}+1}^h p_k\; dt\text{.}
 \end{equation}
 
 The discrete demand cost is expressed as
