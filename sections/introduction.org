@@ -66,10 +66,11 @@ linear model is sufficiently accurate to produce an operationally valid schedule
 # model is sufficiently accurate to produce an operationally valid schedule while maintaining battery health.
 
 In respect to the state of the art provided, this work aims to expand on the PAP by introducing a Simulated Annealing
-(SA) framework that utilizes a proportional battery dynamics model, considers battery health by encouraging slow charger
-use, allows for partial charging, allows for multiple charger types, minimizes consumption cost, and minimizes demand
-cost. These contributions are demonstrated via simulation and comparison to two other models: an implementation of the
-PAP for BEBs, denoted as BPAP, and what is known as the Qin-Modified technique.
+(SA) framework that generates a charging schedule for a fleet of BEBs that utilizes a proportional battery dynamics
+model, considers battery health by encouraging slow charger use, allows for partial charging, allows for multiple
+charger types, minimizes consumption cost, and minimizes demand cost. These contributions are demonstrated via
+simulation and comparison to two other models: an implementation of the PAP for BEBs, denoted as BPAP, and what is known
+as the Qin-Modified technique.
 
 The remainder of this paper goes as follows. [[#sec:sa-problem-description]] provides the problem statement associated with
 this work. [[#sec:sa-optimization-problem]] provides a description of the input parameters and decision variables then
