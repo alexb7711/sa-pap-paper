@@ -51,7 +51,7 @@ The Qin-Modified is a threshold-based strategy that is also employed as a means 
 BPAP. The Qin-Modified algorithm is a based on the threshold strategy of [cite:@qin-2016-numer-analy]. The algorithm has
 been modified slightly to accommodate the case of multiple charger types without a heuristic search for the best charger
 type. The heuristic is based on a set of rules that revolve around the initial charge of the bus at visit $i$. There are
-three different thresholds, low (40%), medium (70%), and high (90%). Buses below the low threshold are prioritized to
+three different thresholds, low (60%), medium (70%), and high (90%). Buses below the low threshold are prioritized to
 fast chargers then are allowed to utilize slow chargers if no fast chargers are available. Buses between the low and
 medium threshold prioritize slow chargers first and utilize fast chargers only if no slow chargers are available. Buses
 above the medium threshold and below high will only be assigned to slow chargers. Buses above the high threshold will
