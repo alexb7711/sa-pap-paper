@@ -1,10 +1,10 @@
 #+name: tab:charge-count
-#+caption: Table of the maximum amount of chargers used in parallel throughout the time horizon. The schedule row indicates the number of queues required by each schedule.
+#+caption: Table of the maximum amount of chargers used in parallel throughout the time horizon.
 #+ATTR_LATEX: :environment tabular :align l|ll|ll|ll|ll
 |-----+------+------+--------------+------+-----------+------+-------+------|
 |     | BPAP |      | Qin-Modified |      | Heuristic |      | Quick |      |
 |-----+------+------+--------------+------+-----------+------+-------+------|
 | /   | <    |      | <            |      | <         |      | <     |      |
 |     | Slow | Fast | Slow         | Fast | Slow      | Fast | Slow  | Fast |
-| Max | 4    |    2 | 14           |    2 | 9         |    1 | 7     |    2 |
+| Max | 4    |    2 | 14           |    2 | 8         |    1 | 7     |    1 |
 |-----+------+------+--------------+------+-----------+------+-------+------|

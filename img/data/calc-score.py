@@ -36,9 +36,9 @@ def calcConsumptionAssignment(p):
                 if row[i + 1] != "nan":
                     # Consumption
                     if q > 35 and q < 35 + 15:
-                        consumption += 100 * p * slow
+                        consumption += p * slow
                     elif q > 35 + 15:
-                        consumption += 100 * p * fast
+                        consumption += p * fast
 
     return consumption + assignment
 
@@ -94,9 +94,19 @@ def calcDemand(p):
 J = calcConsumptionAssignment("./milp-schedule.csv")
 J += calcPenalty("./milp-charge.csv")
 J += calcDemand("./milp-power-usage.csv")
-print("PAP: ", 1 * J)
+print("PAP: ", J)
 
 J = calcConsumptionAssignment("./qm-schedule.csv")
 J += calcPenalty("./qm-charge.csv")
 J += calcDemand("./qm-power-usage.csv")
-print("Qin: ", 1 * J)
+print("Qin: ", J)
+
+J = calcConsumptionAssignment("./sa-quick-schedule.csv")
+J += calcPenalty("./sa-quick-charge.csv")
+J += calcDemand("./sa-quick-power-usage.csv")
+print("Quick: ", J)
+
+J = calcConsumptionAssignment("./sa-heuristic-schedule.csv")
+J += calcPenalty("./sa-heuristic-charge.csv")
+J += calcDemand("./sa-heuristic-power-usage.csv")
+print("Heuristic: ", J)
