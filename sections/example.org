@@ -104,25 +104,26 @@ BPAP.
 
 #+include: tab/charge.org
 
-\ref{fig:power} depicts the power utilized over the time horizon for each model. As previous stated, the Qin-Modified
-schedule had the highest mean SOC over the working day. Referencing \ref{fig:power-usage-milp-qin}, the Qin maintained
-long periods of steady slow and fast charger use. This is again a symptom of the Qin-Modified strategy placing BEBs on
-chargers based solely on the SOC upon arrival. The BPAP and SA techniques, having demand peaks in the first half of the
-time horizon, were able to effectively maintain lower demand profiles during slower moments throughout the day (the SA
-techniques more so than the BPAP). \ref{fig:power} is also of interest as it shows the peak power demand over the time
-horizon. The peaks for each schedule shown in \ref{tab:power}. Both the quick and heuristic SA techniques were able to
-maintain peak power use below 1,200 kW whereas the BPAP and Qin had peaks above 1,800 kW.
+\ref{fig:power} depicts the power utilized over the time horizon for each model. Referencing
+\ref{fig:power-usage-milp-qin}, the Qin maintained long periods of steady slow and fast charger use. This is again a
+symptom of the Qin-Modified strategy placing BEBs on chargers based solely on the SOC upon arrival. The BPAP and SA
+techniques, having demand peaks in the first half of the time horizon, were able to effectively maintain lower demand
+profiles during slower moments throughout the day (the SA techniques more so than the BPAP). \ref{fig:power} is also of
+interest as it shows the peak power demand over the time horizon. The peaks for each schedule shown in \ref{tab:power}.
+Both the quick and heuristic SA techniques were able to maintain peak power use below 1,130 kW whereas the BPAP and Qin
+had peaks above 1,900 kW demonstrating significant demand cost reduction.
 
 #+include: tab/power.org
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the BPAP. The respective energy consumption for each
-technique is: 9,459.120 kWh, 4,428.670 kWh, 4,295.660 kWh, and 4,237.200 kWh. The quick SA consuming about 103 kWh more
-than the BPAP. While the quick and heuristic SA were unable to match the BPAP in energy consumption, it is a trade-off
-made by increasing the number of slow chargers and charge duration, and reducing the peak demand. Referencing [[tab:charge]]
-and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of consumed energy is
-correlated to the descending order of the mean SOC and the descending order of the mean power demand. This makes sense
-as a higher mean SOC implies the chargers being active more often; similarly for the mean demand.
+technique is: 9,459.120 kWh, 4,428.670 kWh, 4,295.660 kWh, and 4,237.200 kWh. The heuristic SA consuming about
+src_latex{\num{\fpeval{4295.7 - 4237.2}}} kWh more than the BPAP. While the quick and heuristic SA were slightly above
+the BPAP in energy consumption, it is a trade-off made by increasing the number of slow chargers and charge duration,
+and reducing the peak demand. Referencing [[tab:charge]] and \ref{tab:power} for the mean SOC and mean demand, respectively,
+the descending order of consumed energy is correlated to the descending order of the mean SOC and the descending order
+of the mean power demand. This makes sense as a higher mean SOC implies the chargers being active more often; similarly
+for the mean demand.
 
 #+name: tab:scores
 #+caption: Table of objective function scores for each of the schedules.
@@ -136,13 +137,11 @@ as a higher mean SOC implies the chargers being active more often; similarly for
 | Quick        | \num{11234577} |
 |--------------+----------------|
 
-As a final comparison, the scores for the Qin-Modified, quick SA, BPAP, and heuristic SA as shown in [[tab:scores]]. The
+As a final comparison, the scores for the Qin-Modified, quick SA, BPAP, and heuristic SA are shown in [[tab:scores]]. The
 Qin-Modified strategy naturally has the highest score as it performed the worst in each metric of the objective
-function. Although the BPAP was able to maintain the SOC of each BEB above the minimum charge threshold, due to the
-peaks the in power demand in the BPAP schedule, both SA techniques were able to achieve lower scores. In other words,
+function. Although the BPAP was able to maintain the SOC of each BEB above the minimum charge threshold, due to large
+peaks in the power demand in the BPAP schedule, both SA techniques were able to achieve lower scores. In other words,
 although the SA techniques allowed small breaches in the minimum SOC, the objective function found the quick and
-heuristic SA schedule qualities to be more desirable than that of the BPAP. The quick SA was able to successfully obtain
-the lowest score due to its substantial reduction in the demand cost and its smaller breach of the minimum SOC
-threshold. This shows that the added queue selection bias toward slow chargers assisted the heuristic SA to converge
-more quickly. The quick SA technique, on the other hand, had a slower rate of convergence due to its random queue
-placement.
+heuristic SA schedule configurations to be more desirable than that of the BPAP. The quick SA was able to successfully
+obtain the lowest score due to its substantial reduction in the demand cost and its smaller breach of the minimum SOC
+threshold.
