@@ -17,17 +17,17 @@ the schedules. The SA PAP was run utilizing two different neighborhood searching
 heuristic technique was designed to incrementally search a neighborhood by randomly selecting a fast or slow charging
 queue and then stepping through the queues one at a time. The execution time compounds as the number of iterations in
 the cooling function increases as shown by the respective quick and heuristic execution times:
-src_latex{\fpeval{\quicklocal * \tempcnt}} seconds and src_latex{\fpeval{\heuristiclocal * \tempcnt}} seconds. The
-Qin-Modified strategy favored the use of fast chargers due to its inability to identify when demanding routes were on
-the horizon, whereas the other methods used fast charges sparingly. Particularly, the SA techniques favored higher
-number of slow chargers with longer charge durations in comparison to the BPAP.
+src_latex{\num{\fpeval{\quicklocal * \tempcnt}}} seconds and src_latex{\num{\fpeval{\heuristiclocal * \tempcnt}}}
+seconds. The Qin-Modified strategy favored the use of fast chargers due to its inability to identify when demanding
+routes were on the horizon, whereas the other methods used fast charges sparingly. Particularly, the SA techniques
+favored higher number of slow chargers with longer charge durations in comparison to the BPAP.
 
 Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to 91.265. kWh for
 the heuristic SA and 94.760 kWh for the quick SA. Due to the minimum charge threshold being a soft constraint for the
 SA, the algorithm found another actions to be more favorable at the expense of moderately breaching the threshold. The
 Qin-Modified, on the other hand, had the SOC of one BEB fall to 0% SOC. The schedule that consumed the least amount of
 energy is the BPAP (4,237.2 kWh) followed by the heuristic SA (4,295.6 kWh). The difference between the two being about
-src_latex{\num{\fpeval{4295.6 - 4237.2}}} kWh. The quick SA energy consumption came in a close third at 4428.7 kWh. Both
+src_latex{\num{\fpeval{4295.6 - 4237.2}}} kWh. The quick SA energy consumption came in a close third at 4,428.7 kWh. Both
 the quick and SA techniques were able to significantly reduce the peak power demand having peaks below 1,200 kW. The
 BPAP and Qin both had peak power demands above 1,800 kW. The best scoring schedule was the quick SA due to its
 significant reduction in demand cost, similar energy consumption as the heuristic SA and BPAP, and its small minimum SOC

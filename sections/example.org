@@ -58,7 +58,7 @@ above the medium threshold and below high will only be assigned to slow chargers
 not be charged. Once a bus has been assigned to a charger, it remains on the charger for the duration of the time it is
 at the station, or it reaches 90% charge, whichever comes first.
 
-Another method utilized to compare with against SA PAP is the BEB implementation of the BPAP. The BPAP implementation is
+Another method utilized to compare with against SA PAP is the BEB implementation of the PAP. The BPAP implementation is
 utilized in this work as a benchmark for the other schedules as it is implemented utilizing a commercial solver. The
 inputs to the system are the same as those discussed above. It is of note that the BPAP does not implement the demand
 cost in its objective function. In an attempt to compare the solution of the BPAP with the SA output more directly, a

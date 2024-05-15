@@ -43,7 +43,7 @@
 # =========================================================================================================================
 # Subcaptions
 #+latex_header: \newcommand\mysubcaption[1]{\phantomcaption%
-#+latex_header:        \caption*{\figurename~\thefigure(\thesubfigure). #1}}
+#+latex_header:        \caption*{\figurename~\thefigure(\thesubfigure) #1}}
 
 # =========================================================================================================================
 # Custom commands
