@@ -22,8 +22,8 @@ A host of strategies have been proposed to solve the BEB charger scheduling prob
 basic formulation, many using variations of the vehicle scheduling problem
 [cite:@zhang-2021-optim-elect;@duan-2021-refor-mixed;@rinaldi-2020-mixed-fleet;@tang-2019-robus-sched;@li-2014-trans-bus;@he-2020-optim-charg]
 while [cite:@whitaker-2023-a-network] utilizes a network flow approach and [cite:@brown-2024-posit-alloc] utilizes a
-rectangle packing approach referred to as the BEB implementation of the Position Allocation Problem (BPAP). Some works
-assume that BEBs always charge to full capacity each time they connect to a charger
+rectangle packing approach referred to as the Position Allocation Problem (PAP). Some works assume that BEBs always
+charge to full capacity each time they connect to a charger
 [cite:@duan-2021-refor-mixed;@zhang-2021-optim-elect;@zhou-2020-bi-objec;@wang-2017-elect-vehic], while others allow for
 partial charging using a linear battery charge model
 [cite:@wei-2018-optim-spatio;@he-2020-optim-charg;@mortensen-2023-cost-minim], and others use a higher-fidelity,

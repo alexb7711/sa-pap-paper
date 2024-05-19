@@ -1,6 +1,6 @@
-% Created 2024-05-19 Sun 17:15
+% Created 2024-05-19 Sun 17:29
 % Intended LaTeX compiler: pdflatex
-\documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
+\documentclass[futuretransp,article,submit,moreauthors]{Definitions/mdpi}
 
 %--------------------
 % Class Options:
@@ -268,8 +268,8 @@ A host of strategies have been proposed to solve the BEB charger scheduling prob
 basic formulation, many using variations of the vehicle scheduling problem
 \cite{zhang-2021-optim-elect,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,tang-2019-robus-sched,li-2014-trans-bus,he-2020-optim-charg}
 while \cite{whitaker-2023-a-network} utilizes a network flow approach and \cite{brown-2024-posit-alloc} utilizes a
-rectangle packing approach referred to as the BEB implementation of the Position Allocation Problem (BPAP). Some works
-assume that BEBs always charge to full capacity each time they connect to a charger
+rectangle packing approach referred to as the Position Allocation Problem (PAP). Some works assume that BEBs always
+charge to full capacity each time they connect to a charger
 \cite{duan-2021-refor-mixed,zhang-2021-optim-elect,zhou-2020-bi-objec,wang-2017-elect-vehic}, while others allow for
 partial charging using a linear battery charge model
 \cite{wei-2018-optim-spatio,he-2020-optim-charg,mortensen-2023-cost-minim}, and others use a higher-fidelity,
@@ -425,18 +425,17 @@ visits by each BEB be denoted as \(\Isetinit\) where \(\Isetinit \subset \Iset\)
 \Isetinit \rvert = n_B\). The initial SOC for bus \(b_i\) can be represented as \(\eta_{i} = \alpha_{b_i}\kappa_{b_i}; \forall i \in \Isetinit\)
 where \(\kappa_{b_i}\) is the battery capacity for bus \(b_i\). After each arrival, the BEB is assigned to a charging queue. Let
 \(r_q\) represent the power supplied from the charger in queue \(q \in Q\). Each visit, except for the final visit of each
-BEB, is paired with a route that has a required amount energy to complete, \(\Delta_i\). As alluded to earlier, there are no
-routes after the last visit for each BEB. Thus, similarly to the set of initial visits, let the set of final visits for
-all BEBs be denoted as \(\Isetfinal\). The discharge for the final visit of each BEB is then defined as \(\Delta_{i} = 0; \forall i \in
-\Isetfinal\).
+BEB, is paired with a subsequent route to be executed with a corresponding energy requirement, \(\Delta_i\). As alluded to
+earlier, there are no routes after the last visit for each BEB. Thus, similarly to the set of initial visits, let the
+set of final visits for all BEBs be denoted as \(\Isetfinal\). The discharge for the final visit of each BEB is then
+defined as \(\Delta_{i} = 0; \forall i \in \Isetfinal\).
 
 \subsubsection{Decision Variables}
 \label{sec:sa-decision-variables}
-Decision variables are those chosen by the optimizer. There are three direct decision variables for each visit, i.e.,
-direct referring to the variables that the optimizer has immediate control over. The direct variables include initial
-and final charging times, \(u_i\) and \(d_i\), respectfully, and the selected charging queue, \(q_i \in \Qset\).
+Decision variables are those chosen by the optimizer. There are three direct decision variables for each visit: the
+initial and final charging times, \(u_i\) and \(d_i\), respectfully, and the selected charging queue, \(q_i \in \Qset\).
 
-The remaining variables are slack variables which are introduced to track the vehicle charge and queuing position based
+The remaining variables are slack variables, which are introduced to track the vehicle charge and queuing position based
 on the problem parameters and direct decision variables. Recall the initial SOC for a visit is written as \(\eta_i\), where
 \(i \in \Iset \setminus \Iset_0\). Further recall the set of initial visits, \(\Iset_0\), have an assumed known SOC (i.e., the initial
 SOC of each BEB at the beginning of the working day is considered as an input parameter). The charge for bus \(i\)'s next
@@ -1479,7 +1478,7 @@ is of interest to allow flexibility in the initial and final charge times for ea
 
 \begin{adjustwidth}{-\extralength}{0cm}
 \reftitle{References}
-\bibliography{ citation-database/misc,citation-database/lib-ref,citation-database/lit-ref }
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref,/home/alex/Documents/citation-database/misc}
 \PublishersNote{}
 \end{adjustwidth}
 \end{document}
