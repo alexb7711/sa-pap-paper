@@ -1,4 +1,4 @@
-% Created 2024-05-15 Wed 09:19
+% Created 2024-05-19 Sun 17:12
 % Intended LaTeX compiler: pdflatex
 \documentclass[energies,article,submit,moreauthors]{Definitions/mdpi}
 
@@ -251,52 +251,57 @@ $^{2}$ \quad Utah State University; greg.droge@usu.edu}
 \label{sec:sa-introduction}
 With an ever-increasing interest in the electrification of vehicles in the push for green transportation, many
 organizations and companies have been looking to adopt a fleet of electric vehicles \cite{khan-2022-inves}. This
-transition is also stemming into the electrification of public bus transportation via battery power, i.e., battery
-electric buses (BEBs) \cite{li-2016-batter-elect,guida-2017-zeeus-repor-europ}. In particular, agencies such as the
-Utah Transit Authority (UTA) have directed focus in replacing their fleets with BEBs. Alongside all the benefits that
-are associated with BEBs come new challenges that must be addressed prior to their integration into mainstream
-utilization. The energy storage capacity of BEBs is typically significantly less than their combustion counterparts
-while also having significantly longer refueling periods \cite{xylia-2018-role-charg,li-2016-batter-elect}. This is
-further complicated due to the care that must be taken in prolonging the lifespan of the battery
-\cite{lutsey-2019-updat-elect,edge-2021-lithium,millner-2010-model-lithium}. As another complication, BEB refueling
-is not a fixed cost (i.e. price per gallon multiplied by tank size). Utility companies, in addition to charging for the
-total energy consumed over a pay period, often charge a demand cost. The demand cost is based on the peak power drawn
-during the pay period and can significantly impact the overall monetary cost of maintaining the BEBs. This work
-introduces a scheduling framework for a fleet of BEBs that minimizes charging costs while considering other constraints
-pertinent for operation.
+transition includes battery electric buses (BEBs) \cite{li-2016-batter-elect,guida-2017-zeeus-repor-europ}. In
+particular, agencies such as the Utah Transit Authority (UTA) have directed focus in replacing their fleets with BEBs.
+Alongside all the benefits that are associated with BEBs come new challenges that must be addressed prior to their
+integration into mainstream utilization. The energy storage capacity of BEBs is typically significantly less than their
+combustion counterparts while also having significantly longer refueling periods
+\cite{xylia-2018-role-charg,li-2016-batter-elect}. This is further complicated due to the care that must be taken in
+prolonging the lifespan of the battery \cite{lutsey-2019-updat-elect,edge-2021-lithium,millner-2010-model-lithium}.
+As another complication, BEB refueling is not a fixed cost (i.e. price per gallon multiplied by tank size). Utility
+companies, in addition to charging for the total energy consumed over a pay period, often charge a demand cost. The
+demand cost is based on the peak power drawn during the pay period and can significantly impact the overall monetary
+cost of maintaining the BEBs. This work introduces a scheduling framework for a fleet of BEBs that minimizes charging
+costs while considering other constraints pertinent for operation.
 
-Works concerning charge planning often use a version of the vehicle scheduling problem \cite{zhang-2021-optim-elect,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,tang-2019-robus-sched,li-2014-trans-bus,he-2020-optim-charg},
-while others have based their implementation on alternative methods
-\cite{qarebagh-2019-optim-sched,whitaker-2023-a-network}. \cite{whitaker-2023-a-network} utilizes a network flow
-approach to model the scheduling while \cite{qarebagh-2019-optim-sched} utilizes what is known as the Position
-Allocation Problem (PAP). The vehicle scheduling problem and the work of \cite{whitaker-2023-a-network} involve the
-discretization of the time horizon, whereas the PAP models the charge durations in a continuous manner reducing the
-variable count. Regardless of the method utilized, nearly all the literature reviewed considers consumption costs
-\cite{jahic-2019-preem,frendo-2021-open-sourc,qin-2016-numer-analy,zhou-2020-bi-objec,duan-2021-refor-mixed,mortensen-2023-cost-minim,zhou-2020-collab-optim,rinaldi-2020-mixed-fleet}, while fewer consider demand costs
-\cite{jahic-2019-preem,frendo-2021-open-sourc,qin-2016-numer-analy,mortensen-2023-cost-minim,he-2020-optim-charg}. Many of these works introduce simplifying assumptions for the sake of computation. For example,
-some approaches only consider fast chargers during planing \cite{zhou-2020-collab-optim,li-2014-trans-bus,wang-2017-optim-rechar,sebastiani-2016-evaluat-elect,wei-2018-optim-spatio}. Approaches that consider more than one
-charger type typically isolate the specific charger types in different locations \cite{tang-2019-robus-sched,he-2020-optim-charg}.
+A host of strategies have been proposed to solve the BEB charger scheduling problem. Strategies vary in terms of their
+basic formulation, many using variations of the vehicle scheduling problem
+\cite{zhang-2021-optim-elect,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,tang-2019-robus-sched,li-2014-trans-bus,he-2020-optim-charg}
+while \cite{whitaker-2023-a-network} utilizes a network flow approach and \cite{brown-2024-posit-alloc} utilizes a
+rectangle packing approach referred to as the BEB implementation of the Position Allocation Problem (BPAP). Some works
+assume that BEBs always charge to full capacity each time they connect to a charger
+\cite{duan-2021-refor-mixed,zhang-2021-optim-elect,zhou-2020-bi-objec,wang-2017-elect-vehic}, while others allow for
+partial charging using a linear battery charge model
+\cite{wei-2018-optim-spatio,he-2020-optim-charg,mortensen-2023-cost-minim}, and others use a higher-fidelity,
+non-linear battery model
+\cite{whitaker-2023-a-network,zhang-2021-optim-elect,qin-2016-numer-analy,jahic-2019-preem,frendo-2021-open-sourc}.
+Some works consider only fast chargers during planing
+\cite{zhou-2020-collab-optim,li-2014-trans-bus,wang-2017-optim-rechar,sebastiani-2016-evaluat-elect,wei-2018-optim-spatio},
+while others assume that different types of chargers can exist in different locations
+\cite{tang-2019-robus-sched,he-2020-optim-charg}.
 
-When considering battery charging, some works assume that BEBs always charge to full capacity
-\cite{duan-2021-refor-mixed,zhang-2021-optim-elect,zhou-2020-bi-objec,wang-2017-elect-vehic}, partial charging
-utilizing a linear battery dynamics model \cite{wei-2018-optim-spatio,he-2020-optim-charg,mortensen-2023-cost-minim}, or non-linear battery dynamics with partial charging \cite{whitaker-2023-a-network,zhang-2021-optim-elect,qin-2016-numer-analy,jahic-2019-preem,frendo-2021-open-sourc}. Works that assume scheduled
-BEBs always charge to full capacity significantly simplify the scheduling problem, but eliminates the key factor in
-reducing the demand cost, partial charging \cite{tang-2019-robus-sched,duan-2021-refor-mixed,rinaldi-2020-mixed-fleet,zhou-2020-collab-optim}.
+When considering the utility rate schedules, two key elements must be considered: the consumption cost and the demand
+cost. Most approaches consider a consumption cost
+\cite{jahic-2019-preem,frendo-2021-open-sourc,qin-2016-numer-analy,zhou-2020-bi-objec,duan-2021-refor-mixed,mortensen-2023-cost-minim,zhou-2020-collab-optim,rinaldi-2020-mixed-fleet}.
+This is akin to the combustion engine fuel cost. Fewer works, however, consider the demand cost
+\cite{jahic-2019-preem,frendo-2021-open-sourc,qin-2016-numer-analy,mortensen-2023-cost-minim,he-2020-optim-charg}.
+The demand cost calculation requires a fine sampling of the power usage at any given time. Approaches that assume a full
+charge whenever the bus connects typically employ a coarse sampling of charger time periods and may not be well-suited
+to demand cost calculations. Furthermore, the assumption of always using fast-chargers is detrimental for battery health
+\cite{zhou-2020-bi-objec,millner-2010-model-lithium,edge-2021-lithium}.
 
-The selected model for the battery charge dynamics, although pertinent to this work as it directly affects the quality
-of the produced schedule, does not impact the considerations of battery health. Battery health begins to be of concern
-when over-charging, under-charging, utilizing fast chargers extensively, or forcing the battery to perform ``deep'' cycles
-\cite{zhou-2020-bi-objec,millner-2010-model-lithium,edge-2021-lithium}. Furthermore, other works have suggested
-that charging a battery nearly to capacity is detrimental to the health and can significantly reduce the total charge
-cycles a battery may undergo \cite{edge-2021-lithium,millner-2010-model-lithium}. Thus, this work assumes that a
-linear model is sufficiently accurate to produce an operationally valid schedule while maintaining battery health.
+To accurately calculate the demand cost, an inherent tradeoff exists between the low computation of a representative
+linear model and the high computation of a high-fidelity nonlinear model. A linear, proportional model is used in this
+work as they have been shown to be accurate below an 80\% threshold \cite{li-2016-batter-elect}. This is considered
+sufficient for this work as charging a battery nearly to capacity is detrimental to the health and can significantly
+reduce the total charge cycles a battery may undergo \cite{edge-2021-lithium,millner-2010-model-lithium}. Thus,
+staying within the linear operating region is desirable for battery health.
 
-In respect to the state of the art provided, this work aims to expand on the PAP by introducing a Simulated Annealing
-(SA) framework that generates a charging schedule for a fleet of BEBs that utilizes a proportional battery dynamics
-model, considers battery health by encouraging slow charger use, allows for partial charging, allows for multiple
-charger types, minimizes consumption cost, and minimizes demand cost. These contributions are demonstrated via
-simulation and comparison to two other models: an implementation of the PAP for BEBs, denoted as BPAP, and what is known
-as the Qin-Modified technique.
+The contributions of this work lie in the formulation of a Simulated Annealing (SA) framework that generates a charging
+schedule that considers 1) Different types of chargers at the same location, 2) Minimization of the consumption and
+demand utility costs, 3) Partial charging through a representative linear charge model. These contributions are
+demonstrated via simulation and comparison to two other models: an implementation of the PAP for BEBs, denoted as BPAP,
+and what is known as the Qin-Modified technique.
 
 The remainder of this paper goes as follows. \ref{sec:sa-problem-description} provides the problem statement associated with
 this work. \ref{sec:sa-optimization-problem} provides a description of the input parameters and decision variables then
@@ -1474,7 +1479,7 @@ is of interest to allow flexibility in the initial and final charge times for ea
 
 \begin{adjustwidth}{-\extralength}{0cm}
 \reftitle{References}
-\bibliography{c:/msys64/home/1556048963C/Documents/citation-database/lit-ref,c:/msys64/home/1556048963C/Documents/citation-database/lib-ref,c:/msys64/home/1556048963C/Documents/citation-database/misc}
+\bibliography{/home/alex/Documents/citation-database/lit-ref,/home/alex/Documents/citation-database/lib-ref,/home/alex/Documents/citation-database/misc}
 \PublishersNote{}
 \end{adjustwidth}
 \end{document}
