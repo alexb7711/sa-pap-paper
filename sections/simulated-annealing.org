@@ -9,8 +9,8 @@ local solutions as it employs a stochastic approach that explores the solution s
 This model is named after its analogized process where a crystalline solid is heated then allowed to cool at a slow rate
 until it achieves its most regular possible crystal lattice configuration (i.e. lowest energy state)
 [cite:@henderson-1989-theor-pract;@press-1992-numer-recip]. SA establishes a connection between the thermodynamic
-process and the search for global optimum in optimization problems. Within the SA process there are three key components:
-cooling schedule, acceptance criteria, and generation mechanisms
+process and the search for global optimum in optimization problems. Within the SA process there are three key
+components: cooling equation, acceptance criteria, and generation mechanisms
 [cite:@keller-2019-multi-objec;@press-1992-numer-recip].
 
 The cooling equation describes the speed at which the figurative temperature is decreased in a controlled manner over
@@ -27,7 +27,7 @@ components are elaborated in the subsequent sections.
 :END:
 
 The cooling equation models the rate at which the temperature decreases over time in the SA process. Initially, when the
-temperature is high, SA encourages exploration. As the process begins to "cools down" (in accordance to the cooling
+temperature is high, SA encourages exploration. As the process begins to "cool down" (in accordance to the cooling
 schedule), it begins to encourage local exploitation of the solution (rather than exploration)
 [cite:@rutenbar-1989-simul-anneal-algor;@henderson-1989-theor-pract]. There are three common basic types of cooling
 equations: linear, geometric, and exponential. Geometric cooling schedules are most widely used in practice
@@ -41,8 +41,8 @@ equation
 
 In [[eq:cool]], $\beta$ controls the cooling rate. Typical values of $\beta$ are within the range $[0.8, 0.99]$
 [cite:@henderson-1989-theor-pract]. \ref{fig:geometric} demonstrates this principle by plotting the geometric schedule
-using varying values of $\beta$. The variable $t_m$ represents the temperature at the $m^{\text{th}}$ step of the temperature
-function. The total amount of steps $M$ is dictated by the initial temperature and $\beta$.
+using varying values of $\beta$. The variable $t_m$ represents the temperature at the $m^{\text{th}}$ step of the
+temperature function. The total amount of steps, $M$, is dictated by the initial temperature and $\beta$.
 
 #+begin_src latex
   \begin{figure}[t!]
@@ -82,97 +82,62 @@ f(\I,\bar{\I},t_m) =
 Generation mechanisms are used to create a neighboring candidate solution [cite:@gendreau-2018-handb-metah]. That is,
 the generating function creates a solution that can be reached in a single iteration from the active solution. In
 response to the problem statement made in [[#sec:sa-problem-description]], five primitive generation mechanism are used: new
-visit, slide visit, new charger, new window, wait. The purpose of each of these generators is to assign new visits to a
-charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from one charger
-to another with the same charge schedule, move a bus to its idle queue. Each generator will be discussed in more detail
-in [[#sec:sa-generators]].
+visit, slide visit, new charger, wait, and new window. The purpose of each of these generators is to assign new visits
+to a charger, adjust a bus visits initial and final charge time within the same time frame/queue, move a BEB from one
+charger to another with the same charge schedule, move a bus to its idle queue. Each generator will be discussed in more
+detail in [[#sec:sa-generators]].
 
-These generation mechanisms will in turn be utilized by two wrapper functions. The schedule generation is to used create
-an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate solution and alter
-it slightly in an attempt to step toward a global or local minimum. The wrapper functions will be discussed in
-[[#sec:sa-generator-wrappers]]. However, prior to discussing the primitives and wrapper generating functions, their respective
-inputs and outputs must be defined.
+These primitive generation mechanisms will, in turn, be utilized by two wrapper functions. The charge schedule generator
+is to used create an initial candidate solutions for SA and the perturb schedule generator is used to take a candidate
+solution and alter it slightly in an attempt to step toward a global or local minimum. The wrapper functions will be
+discussed in [[#sec:sa-generator-wrappers]]. However, prior to discussing the primitives and wrapper generating functions,
+their respective inputs and outputs must be defined.
 
 *** Generator Input/Output
 :PROPERTIES:
 :CUSTOM_ID: sec:sa-generator-input-output
 :END:
 
-Each generator accepts a tuple $\Sol \equiv (i, \I, \C)$ where $i$ is the visit index being manipulated, $\I$ is the set of
-visits, and $\C$ is the set that describes the availability for all chargers $q \in \Qset$. The output of the generating
-functions is the same as the input, but with changes applied to it by a generator. Let a modified variable be denoted
-with a bar, $\bar{\cdot}$. Thus, the modified input tuple is written as $\bar{\Sol}$.
+Each generator primitive accepts a tuple $\Sol \equiv (i, \I, \C)$ where $i$ is the visit index being manipulated, $\I$ is
+the set of visits, and $\C$ is the set that describes the availability for all chargers $q \in \Qset$. The output of the
+generating functions is the same as the input, but with changes applied to it by a generator. Let a modified variable be
+denoted with a bar, $\bar{\cdot}$. Thus, the modified input tuple is written as $\bar{\Sol}$.
 
 *** Generators
 :PROPERTIES:
 :CUSTOM_ID: sec:sa-generators
 :END:
 
-The mechanism by which candidate solutions are generated is to be introduced. Recall that to satisfy
-constraints, $n_B$ extra idle queues are added that provide no power to the BEB. Because of this, the set of queues is
-fully defined where $Q$ is the ordered set of idle queues, slow queues, then fast queue. The use case for the idle
-queues are for when a bus is not to be placed on a charger. Rather, it will be placed in the queue, $q \in B$, which
-satisfies the previously defined spatial constraints while allowing the bus to be "set aside". The charge queues are
-denoted by $q \in \{1, ..., n_B , n_B + 1, ..., n_Q\}$.
+The mechanism by which candidate solutions are generated are now introduced. Recall that to satisfy constraints, $n_B$
+extra idle queues are added that provide no power to the BEB. Because of this, the set of queues is fully defined where
+$Q$ is the ordered set of idle queues, slow queues, then fast queue. The use case for the idle queues are for when a bus
+is not to be placed on a charger. Rather, it will be placed in the queue, $q \in B$, which satisfies the previously
+defined spatial constraints while allowing the bus to be "set aside". The charge queues are denoted by $q \in \{1, ...,
+n_B , n_B + 1, ..., n_Q\}$.
 
-As a means of keeping notation consistent, dot notation is used to extract variables from tuples. For example, suppose
-the arrival time is desired to be extracted from visit $i$. Given $\I$, the notation that describes extracting the
-initial charge time for visit $i$ is written as $u_i \equiv \I_{i.u}$.
+For the sake of ease in referring to the various variables associated with a visit, dot notation is used. For example,
+suppose the arrival time is desired to be extracted from visit $i$. Given $\I$, the notation that describes extracting
+the initial charge time for visit $i$ is written as $u_i \equiv \I_{i.u}$.
 
 **** New visit
 :PROPERTIES:
 :CUSTOM_ID: sec:sa-new-visit
 :END:
 The new visit generator defined in \ref{alg:new-visit} describes the process of moving a BEB, $b \in B$, from a waiting
-queue, $q \in B$, to a charging queue, $q_i \in \{n_B + 1, ..., n_Q\}$, within its arrival/departure time $[a, e]$. Let
+queue, $q \in B$, to a charging queue, $q_i \in \{n_B + 1, ..., n_Q\}$, within its arrival/departure time $[a_i, e_i]$. Let
 $\U_{\{\cdot\}}$ indicate that an element is selected randomly with a uniform distribution from the set $\{\cdot\}$. For
 example, $\U_{[a_i, e_i]}$ indicates that a value will be selected between $a$ and $e$ with a uniform distribution.
-\ref{alg:new-visit} begins by extracting variables. Lines 6 and 7 randomly select a charging queue and available time
-frame with a uniform distribution, respectively. Line 8 attempts to assign the visit the time frame found in Line 7, if
-it succeeds, the updated visit is returned. Otherwise, the null value is returned.
+\ref{alg:new-visit} begins by extracting variables. Lines 8 and 9 randomly select a charging queue and available time
+frame with a uniform distribution, respectively. Line 10 attempts to assign the visit to the previously select time
+slice, if it succeeds, the updated visit is returned. Otherwise, the null value is returned.
 
-#+begin_comment
-Line 2 extracts the index of the visit. Lines 3 through 4 of extract the arrival and departure times of visit $i$. Line
-5 retrieves the currently assigned charge queue. Lines 6 and 7 select a charging queue, $q$, and time slice for which
-$q$ is available at random with uniform distributions, respectively. Line 8 verifies that the inactive period selected
-is viable and returns a random charging time, $[u, d]$. If the time frames of the visit and the charger availability do
-not align, the null value is returned.
-#+end_comment
-
-The function =findFreeTime= is the algorithm that determines whether a visit's time at the station $[a_i, e_i]$ can be placed
+The function =FindFreeTime= is the algorithm that determines whether a visit's time at the station $[a_i, e_i]$ can be placed
 in the time availability of charger $q$. Let the available time for charger $q$ for visit $i$ be denoted as $C \equiv
 \C_{i.q}$. Furthermore, let the lower and upper bound of $\C$ be denoted as $C_L$ and $C_U$, respectively. The algorithm
 checks whether the BEB time at the station, $[a_i, e_i]$ fits within the charger availability $[C_L, C_U]$. If it does,
 a random charging time frame is returned such that $a_i \le u_i \le d_i \le e_i$. Otherwise the null value is returned.
 
-#+begin_comment
-The function =findFreeTime= is the algorithm that determines whether a visit's time at the station $[a, e]$ can be placed
-in the time availability of charger $q$. Let the available time for charger $q$ for visit $i$ be denoted as $C \equiv
-\C_{i.q}$. The algorithm is defined in \ref{alg:find-free-time}. Let $C_L$ and $C_U$ be the lower and upper bound of the
-time between active times for charger $q$. The set of cases in which the ranges $[a, e]$ and $[C_L, C_U]$ may interact
-is shown in [[fig:find-free]]. In each case depicted by [[fig:find-free]], the red lines depict the arrival and departure time
-for a BEB visit, $i$. The blue lines indicate regions in which charger $q$ is active. $C \in \C_q$ represents one of the
-ranges between the blue lines, $[C_L, C_U]$.
-
-The =findFreeTime= algorithm is outlined in \ref{alg:find-free-time} and behaves as follows. Lines 2 and 3 extract the
-lower and upper bounds of the charger availability. Lines 4 - 23 check whether the BEB visit can be assigned to the
-charger available time slice. Lines 4 - 7 relate to the scenario in \ref{subfig:sandwich}. That is, the BEB visit fits
-entirely within the charger availability and the charge time may be anywhere in the range $[a, e]$. Lines 8 - 11
-coincides with \ref{subfig:all} where the BEB arrives before the charger is available. Therefore, the BEB may charge
-anywhere in the time $[L, e]$. On the opposite end, Lines 12 - 15 represents the scenario in \ref{subfig:egu} in which
-the BEB departs after the upper bound of the charger availability. Thus, the BEB may be charged anywhere in the time
-frame of $[a, U]$. Lines 16 - 19 corresponds to the scenario in \ref{subfig:invertsandwhich} where the upper and lower
-bound of the visit is constrained by the charger availability such that the time that the BEB can charge is between the
-time slice $[L,U]$. Lines 20-24 relate to the scenarios in which the BEB visit does not fall within the charger
-availability and assigns the null value to both $\bar{u}$ and $\bar{d}$. Lines 24-28 check if a time range has been
-assigned. If one has, the time slice $[\bar{u}, \bar{d}]$ is assigned to the compliment of the charger availability.
-Line 26 returns tuple of the updated charger availability and the initial and final charging times. Line 29 returns the
-original charger availability and null values for the charge times upon failure.
-#+end_comment
-
 #+include: eq/new-visit.org
-# +include: ../img/find-free.org
-# +include: eq/find-free.org
 
 **** Purge :noexport:
 :PROPERTIES:
@@ -191,17 +156,11 @@ returns the updated set of charger availability.
 :END:
 This primitive generator is used for visits that have already been scheduled. Because of the constraint \ref{seq:c8},
 there may be some slack to manipulate $[u_i, d_i]$ within the window $[a_i, e_i]$. That is, two new values, $u_i$ and
-$d_i$ are randomly selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$. Line 2 of
-\ref{alg:slide-visit} purges the visit from the charger availability schedule. The =Purge= function simply removes an
-assigned charge time from the set $\C$. Without altering selected queue, the charge time randomly re-assigned with a
-uniform distribution. Upon success, the updated tuple is returned, otherwise the null value is returned.
-
-#+begin_comment
-Line 2 from
-\ref{alg:slide-visit} purges the visit from the charger availability schedule. Line 4 retrieves the window that was
-opened up by purging visit $i$. Line 4 sets the new charge time frame, $[u_i, d_i]$. Line 5 returns the updated visit
-information. If =findFreeTime= was unsuccessful, then the generator returns a tuple of null values.
-#+end_comment
+$d_i$ are randomly selected with a uniform distribution that satisfy the constraint $a_i \leq u_i \leq d_i \leq e_i$.
+\ref{alg:slide-visit} begins be extracting variables. Line 5 purges the visit from the charger availability schedule.
+The =Purge= function simply removes an assigned charge time from the set $\C$. Without altering selected queue, the charge
+time randomly re-assigned with a uniform distribution. Upon success, the updated tuple is returned, otherwise the null
+value is returned.
 
 #+include: eq/slide-visit.org
 
@@ -210,15 +169,9 @@ information. If =findFreeTime= was unsuccessful, then the generator returns a tu
 :CUSTOM_ID: new-charger
 :END:
 The new charger generator moves a visit $\I_i$ to a new charging queue while maintaining the same charge time, $[u_i,
-d_i]$. \ref{alg:new-charger} purges the visit from the charger availability set, a queue is selected at random with a
-uniform distribution, then the new selection is checked whether the charge time $[u_i, d_i]$ may be assigned to the new
-queue.
-
-#+begin_comment
-Line 2 from \ref{alg:new-charger} purges the visit from the charger availability set. Line 3 randomly selects a
-charger queue index, $q$. Line 4 checks if there is an available time slice $[a_i, e_i]$ for charger $q$. Line 5 returns
-the updated visit data. If =findFreetime= was unsuccessful, then the generator returns a tuple of null values.
-#+end_comment
+d_i]$. \ref{alg:new-charger} begins be extracting variables, and then purges the visit from the charger availability
+set, a queue is selected at random with a uniform distribution, then the new selection is checked whether the charge
+time $[u_i, d_i]$ may be assigned to the new queue.
 
 #+include: eq/new-charger.org
 
@@ -230,11 +183,6 @@ The wait generator simply removes a bus from a charger queue and places it in it
 begins by purging the visit from the charger availability set, the visit is then assigned to its idle queue for the
 duration of its time at the station.
 
-#+begin_comment
-Line 2 from \ref{alg:wait} purges the visit from the charger availability set. Line 4 updates the complement charger
-availability schedule of the wait queue for bus $b$. Line 5 returns the updated visit.
-#+end_comment
-
 #+include: eq/wait.org
 
 **** New Window
@@ -245,14 +193,7 @@ availability schedule of the wait queue for bus $b$. Line 5 returns the updated 
 New window, as shown in \ref{alg:new-window}, is a combination of \ref{alg:new-visit} (new visit) and \ref{alg:wait}
 (wait). By this it is meant that visit $i$ is placed in its wait queue then added back in as if it were a new visit.
 This implies that the BEB may be assigned to a different queue with a new charging time frame. Upon success, the
-algorithm return the updated tuple, otherwise return the null value.
-
-#+begin_comment
-Line 2 purges the BEB visit
-from the schedule producing $\bar{\Sol}$. Line 3 places the BEB back into the schedule using the new visit generator,
-producing $\bar{\bar{\Sol}}$. Line 4 assigns and returns the updated visit. Line 6 returns the null visit upon failure
-of \ref{alg:new-visit}.
-#+end_comment
+algorithm returns the updated tuple, otherwise return the null value.
 
 #+include: eq/new-window.org
 
@@ -270,7 +211,7 @@ initialize the SA algorithm, or to modify an existing schedule.
 :CUSTOM_ID: sec:sa-charge-schedule-generation
 :END:
 
-The objective of \ref{alg:charge-schedule-generation} is introduce a method that provides the SA algorithm with an
+The objective of \ref{alg:charge-schedule-generation} is to introduce a method that provides the SA algorithm with an
 initial charging schedule. The schedule generation is chosen to initialize the algorithm in a greedy manner by looping
 through each visit and executing \ref{alg:new-visit} to place visit $i$ at random queue with a random charge time.
 
@@ -287,21 +228,17 @@ at random queue with a random charge time.
 :CUSTOM_ID: sec:sa-tweak-schedule
 :END:
 
-Once the active solution has been created by \ref{alg:charge-schedule-generation}, the SA process begins modifying it to
-create candidate solutions. After each step of the cooling equation, the active solution will be altered $n_K$ times by
-a random primitive generator. During these $n_K$ iterations the active solution is modified to create a neighboring
-candidate solution. This candidate solution will then be compared against the active solution in the manner discussed in
-[[#sec:sa-acceptance]]. \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb the
+\ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb a given charge
 schedule. The method that will be employed to generate neighboring solutions is as follows: pick a visit, pick a
 primitive generator, and execute said primitive generator once. Let $\W^y_{[\cdot]}$ denote a random selection with a
-distribution specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: Lines 2-12 generate a
-vector of weights for the visit index selection. The weights have a default value of one. Each visit is then indexed in
-reverse order. If the SOC of the visit is less than $\nu_b \kappa_b$, then the weight for the visit is calculated as shown on
-Line 10. The route for BEB $b$ is then set as a "priority" on Line 9 to propagate the previously calculated weight in
-earlier visits for BEB $b$ as shown on Line 5. This is done in an attempt to encourage the SA algorithm to "fix" the
-current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
-with weighted distribution $y^i$, then selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the
-number of primitive generating functions, the selected primitive with a weighted distribution is denoted as $\W^y_{[1,
+distribution specified by a weight vector $y \in \mathbb{R}$. Lines 2-12 of \ref{alg:perturb-schedule} generate a vector of weights
+for the visit index selection. The weights have a default value of one. Each visit is then indexed in reverse order. If
+the SOC of the visit is less than $\nu_b \kappa_b$, then the weight for the visit is calculated as shown on Line 10. The route
+for BEB $b$ is then set as a "priority" on Line 9 to propagate the previously calculated weight to earlier visits of BEB
+$b$ as shown on Line 5. This is done in an attempt to encourage the SA algorithm to "fix" the current or previous visits
+so that the SOC stays above the minimum threshold. The algorithm then selects a visit index with weighted distribution
+$y^v$ and selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the number of primitive
+generating functions, line 15 selects a primitive generating function with a weighted distribution, $\W^{y^v}_{[1,
 n_G]}$. The primitive is then executed, and the results are returned.
 
 #+include: eq/tweak-schedule.org

@@ -6,13 +6,13 @@
 # =========================================================================================================================
 # LaTeX packages
 #+latex_header: \usepackage{subcaption}                     % Subfigures
-# +latex_header: \usepackage{ulem}                           % Underline
 #+latex_header: \usepackage[ruled]{algorithm2e}             % Algorithms
 #+latex_header: \usepackage{listings}                       % Code in LaTeX
 #+latex_header: \usepackage{listings-rust}                  % Code in LaTeX
 #+latex_header: \usepackage{amsfonts}                       % Cool math fonts
 #+latex_header: \usepackage{tabularx}                       % Cool tables
 #+latex_header: \usepackage{multicol}                       % Add capability to make columns
+#+latex_header: \usepackage[group-separator={,}, group-minimum-digits=3]{siunitx}   % Format numbers
 #+latex_header: \usepackage{soul}                           % Highlight text
 #+latex_header: \usepackage[stable]{footmisc}               % Allow footnotes in section headers
 #+latex_header: \setlength\parindent{0pt}                   % No indent for paragraphs
@@ -39,6 +39,11 @@
 # Highlight math blocks
 # https://tex.stackexchange.com/questions/318991/highlighting-math
 #+latex_header:\newcommand{\mathcolorbox}[1]{\colorbox{yellow}{$\displaystyle #1$}}
+
+# =========================================================================================================================
+# Subcaptions
+#+latex_header: \newcommand\mysubcaption[1]{\phantomcaption%
+#+latex_header:        \caption*{\figurename~\thefigure(\thesubfigure) #1}}
 
 # =========================================================================================================================
 # Custom commands

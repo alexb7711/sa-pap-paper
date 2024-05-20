@@ -4,11 +4,11 @@
 :END:
 
 This section combines the generation algorithms and the optimization problem into a single algorithm (\ref{alg:sa-pap}).
-Generally, SA assumes that the generated candidate solutions are within the solution space of the problem, $\omega \in S$ where
-$S$ is the solution space. Hence, the initialization and perturbations of a schedule must be verified to ensure that the
-generated schedule is in the solution space. Therefore, the objective function and constraints introduced in
-[[#sec:sa-constraints]] and [[#sec:sa-objective-function]], respectively, must be employed to verify that the outputs of
-\ref{alg:charge-schedule-generation} and \ref{alg:perturb-schedule} are in the feasible space, $S$.
+Generally, SA assumes that the generated candidate solutions are within the solution space of the problem, $\Sol \in S$
+where $S$ is the solution space. In other words, the initialization and perturbations of a schedule must be verified to
+ensure that the generated schedule is in the solution space. Therefore, the objective function and constraints
+introduced in [[#sec:sa-constraints]] and [[#sec:sa-objective-function]], respectively, must be employed to verify that the
+outputs of \ref{alg:charge-schedule-generation} and \ref{alg:perturb-schedule} are in the feasible space, $S$.
 
 As previously stated, the generating functions directly influence the values of the assigned charge queue, charge
 initialization time, and charge completion time: $q_i$, $u_i$, and $d_i$, respectively. Having generated those values,
@@ -17,32 +17,17 @@ employed to enable and disable $\sigma_{ij}$ and $\psi_{ij}$ and \ref{seq:c2}-\r
 \ref{seq:c5} can be directly calculated and \ref{seq:c8} is fully defined.
 
 Changing the focus over to the dynamic constraints, similarly to what was seen with the packing constraints, the battery
-dynamic constraints are also fully defined and can be calculated. \ref{seq:c6} is sequentially calculated after a given
-schedule has been fully defined. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method
-implemented in [[#sec:sa-objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{b_i}
-\kappa_{b_i}$, but punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a
-solution that does not activate the penalty method (i.e., is solution is operationally feasible).
+dynamic constraints are also fully defined. \ref{seq:c6} is sequentially calculated after a given schedule has been
+created. \ref{seq:c7} is evaluated to ensure the BEB is not overcharged. The penalty method implemented in
+[[#sec:sa-objective-function]] is set in place to allow the SOC to go below the specified threshold, $\nu_{b_i} \kappa_{b_i}$, but
+punish the solution for doing so. Thus, over time, the candidate solutions will be encouraged toward a solution that
+does not activate the penalty method (i.e., is solution is operationally feasible).
 
-The implementation of the SA PAP is outlined in \ref{alg:sa-pap} will now be outlined. The algorithm begins by creating
-a temperature schedule and creating an initial solution. The algorithm then begins to iterate through the temperature
-schedule (outer loop). For each iteration of the outer loop, an inner loop is executed $n_K$ times. During this inner
-loop, the solution is modified by a primitive generating function to create a candidate solution. The candidate is
-solution is then compared with the active solution, and updated according to the acceptance criteria. These actions are
-performed until the cooling equation is exhausted.
-
-#+begin_comment
-Line 2 initializes the SA algorithm by creating a vector
-of temperature values based on a temperature schedule $\Tau$, and initial temperature $\Tau_0$. Line 3 generates the
-initial candidate solution $\omega$, note that $CSG(\cdot)$ (candidate solution generator) is used to denote the specific
-candidate solution generator being utilized. For SA PAP it is \ref{alg:charge-schedule-generation}. Line 4 loops through
-each of the step in the temperature schedule $t_m \in t$. Line 5 resets the iteration count to 0. Line 6 specifies the
-inner loop that iterates $n_K$ times at a constant temperature, $t_k$. Line 7, perturbs the active solution $\omega$ to a
-neighboring candidate solution $\bar{\omega} = PS(\omega)$, where $PS(\cdot)$ (perturb schedule) is \ref{alg:perturb-schedule}. Line 8
-calculates the difference in the fitness of $\omega$ and $\bar{\omega}$. Lines 8-14 are similar to \ref{alg:sa-pseudo} where it
-updates $\omega$ with $\bar{\omega}$ if the candidate solution is more fit, or updates $\omega$ with $\bar{\omega}$ with probability
-$e^{\frac{-\Delta_{\bar{\omega},\omega}}{t_m}}$ if the candidate solution is less fit than the active solution. What makes these lines
-unique is that the active solution is only updated if the candidate is within the solution space. That it, it satisfies
-the constraints defined in \ref{eq:constraints}.
-#+end_comment
+The implementation of the SA PAP, outlined in \ref{alg:sa-pap}, will now be discussed. The algorithm begins by creating
+a temperature schedule and creating an initial solution. The algorithm then iterates through the temperature schedule
+(outer loop). For each iteration of the outer loop, an inner loop is executed $n_K$ times. During this inner loop, the
+solution is modified by a primitive generating function to create a candidate solution. The candidate is solution is
+then compared with the active solution, and updated according to the acceptance criteria. These actions are performed
+until the cooling equation is exhausted.
 
 #+include: eq/sa-pap-pseudo.org

@@ -8,8 +8,8 @@
     \KwOut{($\bar{\I}$, $\bar{\C}$)}
 
     \SetKwFunction{Temp}{$\Tau$}
-    \SetKwFunction{CSG}{CSG}
-    \SetKwFunction{PS}{PS}
+    \SetKwFunction{ChargeScheduleGenerator}{ChargeScheduleGenerator}
+    \SetKwFunction{PerturbSchedule}{PerturbSchedule}
     \SetKwFunction{Obj}{J}
 
     \Begin
@@ -17,7 +17,7 @@
         \tcc{Generate vector of temperatures given cooling equation $\Tau$ and initial temperature $\Tau_0$}
         $t \leftarrow$ \Temp{$\Tau_0$}
 
-        $\Sol \leftarrow$\CSG{($\I$, $\C$)}\tcc{Generate an initial solution}
+        $\Sol \leftarrow$\ChargeScheduleGenerator{($\I$, $\C$)}\tcc{Generate an initial solution}
 
         \tcc{For each item in the temperature vector}
         \ForEach{$t_k \in t$}
@@ -25,7 +25,7 @@
           \tcc{For each step in the constant temperature repitition counter}
           \ForEach{$k \in \{0, 1, ..., n_K\}$}
           {
-            $\bar{\Sol} \leftarrow$ \PS{($\I$, $\C$)} \tcc*{Generate a new solution}
+            $\bar{\Sol} \leftarrow$ \PerturbSchedule{($\I$, $\C$)} \tcc*{Generate a new solution}
             $\Delta E = $ \Obj{$\bar{\Sol}_{\I}$}  - \Obj{$\Sol_{\I}$} \tcc*{Calculate the difference of fitness scores}
 
             \If{$\bar{\I} \in S$ and $\Delta E < 0$}{$\Sol \leftarrow \bar{\Sol}$}
