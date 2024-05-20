@@ -108,12 +108,12 @@ denoted with a bar, $\bar{\cdot}$. Thus, the modified input tuple is written as 
 :CUSTOM_ID: sec:sa-generators
 :END:
 
-The mechanism by which candidate solutions are generated is introduced in the subsequent sections. Recall that to
-satisfy constraints, $n_B$ extra idle queues are added that provide no power to the BEB. Because of this, the set of
-queues is fully defined where $Q$ is the ordered set of idle queues, slow queues, then fast queue. The use case for the
-idle queues are for when a bus is not to be placed on a charger. Rather, it will be placed in the queue, $q \in B$, which
-satisfies the previously defined spatial constraints while allowing the bus to be "set aside". The charge queues are
-denoted by $q \in \{1, ..., n_B , n_B + 1, ..., n_Q\}$.
+The mechanism by which candidate solutions are generated are now introduced. Recall that to satisfy constraints, $n_B$
+extra idle queues are added that provide no power to the BEB. Because of this, the set of queues is fully defined where
+$Q$ is the ordered set of idle queues, slow queues, then fast queue. The use case for the idle queues are for when a bus
+is not to be placed on a charger. Rather, it will be placed in the queue, $q \in B$, which satisfies the previously
+defined spatial constraints while allowing the bus to be "set aside". The charge queues are denoted by $q \in \{1, ...,
+n_B , n_B + 1, ..., n_Q\}$.
 
 For the sake of ease in referring to the various variables associated with a visit, dot notation is used. For example,
 suppose the arrival time is desired to be extracted from visit $i$. Given $\I$, the notation that describes extracting
@@ -231,14 +231,14 @@ at random queue with a random charge time.
 \ref{alg:perturb-schedule} describes the method by which the SA algorithm decides how to perturb a given charge
 schedule. The method that will be employed to generate neighboring solutions is as follows: pick a visit, pick a
 primitive generator, and execute said primitive generator once. Let $\W^y_{[\cdot]}$ denote a random selection with a
-distribution specified by a weight vector $y \in \mathbb{R}$. Thus, \ref{alg:perturb-schedule} is as follows: Lines 2-12 generate a
-vector of weights for the visit index selection. The weights have a default value of one. Each visit is then indexed in
-reverse order. If the SOC of the visit is less than $\nu_b \kappa_b$, then the weight for the visit is calculated as shown on
-Line 10. The route for BEB $b$ is then set as a "priority" on Line 9 to propagate the previously calculated weight to
-earlier visits of BEB $b$ as shown on Line 5. This is done in an attempt to encourage the SA algorithm to "fix" the
-current or previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index
-with weighted distribution $y^v$ and selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the
-number of primitive generating functions, line 15 selects a primitive generating function with a weighted distribution,
+distribution specified by a weight vector $y \in \mathbb{R}$. Thus, Lines 2-12 of \ref{alg:perturb-schedule} generate a vector of
+weights for the visit index selection. The weights have a default value of one. Each visit is then indexed in reverse
+order. If the SOC of the visit is less than $\nu_b \kappa_b$, then the weight for the visit is calculated as shown on Line 10.
+The route for BEB $b$ is then set as a "priority" on Line 9 to propagate the previously calculated weight to earlier
+visits of BEB $b$ as shown on Line 5. This is done in an attempt to encourage the SA algorithm to "fix" the current or
+previous visits so that the SOC stays above the minimum threshold. The algorithm then selects a visit index with
+weighted distribution $y^v$ and selects a primitive with a weighted distribution, $y^p$. Letting $n_G$ denote the number
+of primitive generating functions, line 15 selects a primitive generating function with a weighted distribution,
 $\W^{y^v}_{[1, n_G]}$. The primitive is then executed, and the results are returned.
 
 #+include: eq/tweak-schedule.org

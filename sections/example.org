@@ -32,8 +32,8 @@ health, the values of $\epsilon$ in the objective function are $\forall q \in \{
 =$ src_latex{\num{\tempinit}} with $\beta = 0.997$, resulting in a total of $n_M =$ src_latex{\num{\tempcnt}} steps. Rocky
 Mountain Power utilizes fifteen-minute intervals to calculate the demand cost [cite:@rocky-mountain-power]. To match the
 method by which Rocky Mountain Power determines its demand cost, this work employed an interval of $T_p =$
-src_latex{\num{\fpeval{15*60}}} seconds in its demand cost calculation. A weight vector of $[0.6255, 0.6255, 0.4170,
-0.2085]$ is used to influence the distribution of selecting the new charger, new window, wait, and slide visit
+src_latex{\num{\fpeval{15*60}}} seconds in its demand cost calculation. A weight vector of $[0.3333, 0.3333, 0.1667,
+0.1667]$ is used to influence the distribution of selecting the new charger, new window, wait, and slide visit
 primitives, respectively. The algorithm also assumes a total of $n_K = \localcnt$ iterations for the local search at a
 constant temperature. In total, that results in src_latex{\num{\fpeval{\localcnt * \tempcnt}}} configurations being
 searched in a total runtime of src_latex{\num{\fpeval{\quicklocal * \tempcnt}}} seconds.
@@ -42,7 +42,7 @@ searched in a total runtime of src_latex{\num{\fpeval{\quicklocal * \tempcnt}}} 
 distinguish the heuristic implementation from the method derived in [[#sec:sa-generation-mechanisms]], let this
 implementation be referred to as "heuristic" implementation and the previous as the "quick" implementation due to the
 fact that it is designed to execute more quickly. Using the same weights for randomly selecting the primitive
-generators, the heuristic approach further implemented a weighted distribution vector of $[0.9487, 0.3162]$ to decide
+generators, the heuristic approach further implemented a weighted distribution vector of $[0.75, 0.25]$ to decide
 whether to select a slow or fast charger, respectively. The heuristic approach had a total runtime of
 src_latex{\num{\fpeval{\heuristiclocal * \tempcnt}}} seconds. The heuristic generators were expected to be slightly
 slower due to its iterative approach.
@@ -58,13 +58,13 @@ above the medium threshold and below high will only be assigned to slow chargers
 not be charged. Once a bus has been assigned to a charger, it remains on the charger for the duration of the time it is
 at the station, or it reaches 90% charge, whichever comes first.
 
-Another method utilized to compare with against SA PAP is the BEB implementation of the PAP. The BPAP implementation is
-utilized in this work as a benchmark for the other schedules as it is implemented utilizing a commercial solver. The
-inputs to the system are the same as those discussed above. It is of note that the BPAP does not implement the demand
-cost in its objective function. In an attempt to compare the solution of the BPAP with the SA output more directly, a
-similar solve time of 1,900 seconds is utilized. The BPAP was executed using the Gurobi MILP solver
-[cite:@gurobi-2021-gurob-optim]. The previously described simulations were run on a machine equipped with an AMD Ryzen 9
-5900X 12 - Processor (24 core) at 4.95GHz.
+Another method utilized to compare with against SA PAP is the BEB implementation of the PAP
+[cite:@brown-2024-posit-alloc]. The BPAP implementation is utilized in this work as a benchmark for the other schedules
+as it is implemented utilizing a commercial solver. The inputs to the system are the same as those discussed above. It
+is of note that the BPAP does not implement the demand cost in its objective function. In an attempt to compare the
+solution of the BPAP with the SA output more directly, a similar solve time of 1,900 seconds is utilized. The BPAP was
+executed using the Gurobi MILP solver [cite:@gurobi-2021-gurob-optim]. The previously described simulations were run on
+a machine equipped with an AMD Ryzen 9 5900X 12 - Processor (24 core) at 4.95GHz.
 
 ** Results
 :PROPERTIES:
@@ -89,7 +89,7 @@ health.
 above an SOC of 25% while the quick and heuristic SA approaches heavily penalize a schedule for allowing a BEB to go
 below the 25% SOC threshold. The BPAP was able to successfully keep the SOC above the threshold while both SA approaches
 were a few kWh below the threshold. The SOC of the quick SA approach dropped to a minimum of 94.760 kWh and the
-heuristic had a minimum SOC of 91.265 kWh as shown in [[tab:charge]]. Due to the threshold constraint being soft, the SA
+heuristic had a minimum SOC of 91.265 kWh, as shown in [[tab:charge]]. Due to the threshold constraint being soft, the SA
 objective function may find it better to allow a small deficit in the threshold penalty function in favor of another
 action. As a remedy to ensure the SA schedules stays above the threshold, a safety factor could be introduced to
 artificially increase the threshold, $S_f \nu_{b_i}\kappa_{b_i}$ where $S_f > 1;\; S_f \in \mathbb{R}$.
@@ -99,8 +99,8 @@ strategy, being a purely reactive model, does not have foresight to determine wh
 taxing route later in the time horizon. As such, and in the case of the example scenario, the BEB that reached a charge
 of 0% began with a sequence of short routes, much like the other BEBs. However, rather than continuing this trend, these
 sets of routes had one or two longer routes which the Qin-Modified algorithm was unable to account for. Interestingly,
-Qin-Modified strategy was able to keep the mean SOC the highest followed by the quick SA, heuristic SA, and then the
-BPAP.
+despite having a bus drop to zero charge, the Qin-Modified strategy had the highest mean SOC, followed by the quick SA,
+heuristic SA, and then the BPAP.
 
 #+include: tab/charge.org
 
@@ -118,12 +118,12 @@ had peaks above 1,900 kW demonstrating significant demand cost reduction.
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the BPAP. The respective energy consumption for each
 technique is: 9,459.120 kWh, 4,428.670 kWh, 4,295.660 kWh, and 4,237.200 kWh. The heuristic SA consuming about
-src_latex{\num{\fpeval{4295.7 - 4237.2}}} kWh more than the BPAP. While the quick and heuristic SA were slightly above
-the BPAP in energy consumption, it is a trade-off made by increasing the number of slow chargers and charge duration,
-and reducing the peak demand. Referencing [[tab:charge]] and \ref{tab:power} for the mean SOC and mean demand, respectively,
-the descending order of consumed energy is correlated to the descending order of the mean SOC and the descending order
-of the mean power demand. This makes sense as a higher mean SOC implies the chargers being active more often; similarly
-for the mean demand.
+src_latex{\num{\fpeval{4295.7 - 4237.2}}} kWh more than the BPAP. While the quick and heuristic SA techniques were
+slightly above the BPAP in energy consumption, it is expected that the BPAP would have the lowest consumed energy as it
+only considers consumption cost. Despite considering peak demand, the SA methods had nearly the same consumption as the
+BPAP. Referencing [[tab:charge]] and \ref{tab:power} for the mean SOC and mean demand, respectively, the descending order of
+consumed energy is correlated to the descending order of the mean SOC and the descending order of the mean power demand.
+This makes sense as a higher mean SOC implies the chargers being active more often; similarly for the mean demand.
 
 #+name: tab:scores
 #+caption: Table of objective function scores for each of the schedules.
