@@ -117,7 +117,7 @@ had peaks above 1,900 kW demonstrating significant demand cost reduction.
 
 The total energy consumed by each schedule is shown in \ref{fig:energy-usage}. The ordering of most energy consumed to
 least is as follows: Qin-Modified, quick SA, heuristic SA, and the BPAP. The respective energy consumption for each
-technique is: 9,459.120 kWh, 4,428.670 kWh, 4,295.660 kWh, and 4,237.200 kWh. The heuristic SA consuming about
+technique is: 9,459.120 kWh, 4,428.670 kWh, 4,295.660 kWh, and 4,237.200 kWh with the heuristic SA consuming about
 src_latex{\num{\fpeval{4295.7 - 4237.2}}} kWh more than the BPAP. While the quick and heuristic SA techniques were
 slightly above the BPAP in energy consumption, it is expected that the BPAP would have the lowest consumed energy as it
 only considers consumption cost. Despite considering peak demand, the SA methods had nearly the same consumption as the

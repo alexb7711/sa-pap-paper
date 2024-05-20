@@ -4,11 +4,11 @@
 :END:
 
 This work developed an SA implementation of the BEB charge scheduling problem derived from the works of the Position
-Allocation Problem [cite:@qarebagh-2019-optim-sched]. The model is designed to encourage the use of slow chargers for
+Allocation Problem [cite:@brown-2024-posit-alloc]. The model is designed to encourage the use of slow chargers for
 battery health, minimize the peak energy consumption, and minimize the total energy consumed. The problem description
-was provided outlining the scenario in which this model is designed for. The optimization problem was then introduced by
-describing the components of the objective function and outlining the constraints utilized to ensure candidate solutions
-are in the solution space.
+was provided along with the assumptions made about the structure of the BEB route schedule. The optimization problem was
+then introduced by describing the components of the objective function and outlining the constraints utilized to ensure
+candidate solutions are in the solution space.
 
 An example of the SA PAP algorithm was presented and compared against the BPAP, which acted as a baseline for the other
 schedule. Another threshold-based strategy called the Qin-Modified technique was also introduced as a means of comparing
@@ -22,19 +22,13 @@ seconds. The Qin-Modified strategy favored the use of fast chargers due to its i
 routes were on the horizon, whereas the other methods used fast charges sparingly. Particularly, the SA techniques
 favored higher number of slow chargers with longer charge durations in comparison to the BPAP.
 
-Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to 91.265. kWh for
-the heuristic SA and 94.760 kWh for the quick SA. Due to the minimum charge threshold being a soft constraint for the
-SA, the algorithm found another actions to be more favorable at the expense of moderately breaching the threshold. The
+Both of the SA techniques were unable to keep the SOC above the 25% SOC threshold with SOC falling to 23.5% for the
+heuristic SA and 24.4% for the quick SA. Due to the minimum charge threshold being a soft constraint for the SA, the
+algorithm found another actions to be more favorable at the expense of moderately breaching the threshold. The
 Qin-Modified, on the other hand, had the SOC of one BEB fall to 0% SOC. The schedule that consumed the least amount of
 energy is the BPAP (4,237.2 kWh) followed by the heuristic SA (4,295.6 kWh). The difference between the two being about
-src_latex{\num{\fpeval{4295.6 - 4237.2}}} kWh. The quick SA energy consumption came in a close third at 4,428.7 kWh. Both
-the quick and SA techniques were able to significantly reduce the peak power demand having peaks below 1,200 kW. The
-BPAP and Qin both had peak power demands above 1,800 kW. The best scoring schedule was the quick SA due to its
+src_latex{\num{\fpeval{4295.6 - 4237.2}}} kWh. The quick SA energy consumption came in a close third at 4,428.7 kWh.
+Both the quick and SA techniques were able to significantly reduce the peak power demand having peaks below 1,200 kW.
+The BPAP and Qin both had peak power demands above 1,800 kW. The best scoring schedule was the quick SA due to its
 significant reduction in demand cost, similar energy consumption as the heuristic SA and BPAP, and its small minimum SOC
 threshold deficit.
-
-Further fields of interest are to investigate the performance of the quick and heuristic SA approaches utilizing a
-denser set of routes, constraints that encourage tighter temporal packing, combining the heuristic and quick SA
-techniques, or applying a similar weighting scheme from the heuristic on the quick SA. It is also of interest to
-incorporate non-linear battery dynamics model to the SOC with more fidelity. Furthermore, "fuzzifying" the charge times
-is of interest to allow flexibility in the initial and final charge times for each BEB visit.
